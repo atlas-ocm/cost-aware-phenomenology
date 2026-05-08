@@ -63,7 +63,7 @@ Initial live LLM benchmark: proxy-level CAP 5/5 on comet and silicon
 Third-model transfer probe: Mistral Nemo exposed prompt/scorer sensitivity
 Exact-model hardened v2 rerun: lexical CAP-mode score unchanged
 Qwen reasoning-budget run: proxy-level CAP 4/5 with max_tokens=8192
-Hard-holdout stress track: complete Mistral + Qwen no-thinking runs, Gemini Flash partial
+Hard-holdout stress track: complete Mistral + Qwen no-thinking runs, Gemini 2.5 Flash paid 45/45 three-mode control
 Release-gate boundary pack: 25 blinded items, Codex draft labels only
 Release-gate v0.2: preregistered hardening report, not a benchmark win
 Post-gate rewrite shaper: deterministic release-candidate artifacts, not raw model scores

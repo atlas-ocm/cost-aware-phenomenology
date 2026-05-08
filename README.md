@@ -45,7 +45,8 @@ CAP Lite reference middleware:    4/4 unit tests
 LLM Dialogue Benchmark scaffold:  5 cases x 5 modes, synthetic smoke report
 LLM Dialogue Benchmark baseline:  proxy-level CAP 5/5 comet, 5/5 silicon, 4/5 qwen
 Hard-holdout stress track:        Mistral + Qwen no-thinking complete
-Gemini API-access note:           2.5 Flash partial run only; incomplete due to access/quota limits
+Gemini 2.5 Flash paid control:    45/45 three-mode run; v0.2 gate releases 0/15, 3/15, 5/15
+Gemini free-tier access note:      2.5 Flash partial attempt retained as quota/access note
 Proxy release gate:               deterministic hard-holdout gate reports + 25-item boundary pack
 Release-gate v0.2:                preregistered hardening comparison, separate reports
 Proxy rewrite shaper:             deterministic post-gate release candidates, not raw model scores
@@ -55,13 +56,15 @@ Current adjudication status:      Codex draft labels only; human adjudication st
 ```
 
 Local LM Studio runs were identity-verified against the `/v1/models` surface.
-Gemini controls are documented separately: Gemini 2.5 Flash remains a partial
-API-access/quota attempt, not a benchmark lane or external ceiling estimate.
-Gemini 3.1 Pro is a complete presentable five-mode architecture comparison.
-Status remains `research-only`: validation supports the framework as a usable
-working surface, not as certified canon.
+Gemini controls are documented separately: Gemini 2.5 Flash now has a paid-key
+45/45 three-mode hard-holdout run, while the earlier free-tier attempt remains
+a partial API-access/quota note. Flash is still an external transfer-stress
+control, not a frontier ceiling estimate. Gemini 3.1 Pro is a complete
+presentable five-mode architecture comparison. Status remains `research-only`:
+validation supports the framework as a usable working surface, not as certified
+canon.
 
-These results validate boundary consistency and machine-checkability across multiple inference surfaces. The baseline live dialogue benchmark is an initial small-pack result with a lexical/heuristic scorer. The Qwen run required a larger generation budget because smaller budgets produced empty released outputs. The hard-holdout runs, Gemini 2.5 Flash access/quota note, Gemini 3.1 Pro and CAP-only controls, deterministic release-gate reports, and deterministic rewrite-shaper reports are deliberately reported as transfer-stress and pipeline-boundary artifacts, not as polished benchmark wins. Codex draft labels are debugging aids, not independent human labels. These artifacts do not constitute broad empirical truth claims.
+These results validate boundary consistency and machine-checkability across multiple inference surfaces. The baseline live dialogue benchmark is an initial small-pack result with a lexical/heuristic scorer. The Qwen run required a larger generation budget because smaller budgets produced empty released outputs. The hard-holdout runs, Gemini 2.5 Flash paid and free-tier controls, Gemini 3.1 Pro and CAP-only controls, deterministic release-gate reports, and deterministic rewrite-shaper reports are deliberately reported as transfer-stress and pipeline-boundary artifacts, not as polished benchmark wins. Codex draft labels are debugging aids, not independent human labels. These artifacts do not constitute broad empirical truth claims.
 
 The deterministic rewrite shaper demonstrates the next runtime boundary:
 non-release outputs can be transformed into case-contract release candidates and

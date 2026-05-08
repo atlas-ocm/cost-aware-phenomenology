@@ -1,6 +1,6 @@
 # Hard Holdout Dialogue Benchmark Pack
 
-Status: frozen scaffold + live stress runs + partial API control.
+Status: frozen scaffold + live stress runs + Gemini API controls.
 
 This folder contains a harder holdout pack for the CAP LLM dialogue benchmark.
 It is separate from the original five-case baseline pack so the baseline result
@@ -46,6 +46,8 @@ debugging the harness, but too easy for broad claims. This hard holdout adds:
   - standard Qwen generation-budget failure and complete no-thinking Qwen run
 - [`model_outputs/gemini_25_flash_hard_holdout_run_note.md`](./model_outputs/gemini_25_flash_hard_holdout_run_note.md)
   - partial Gemini 2.5 Flash free-tier control run and Pro quota failure note
+- [`model_outputs/gemini_25_flash_paid_hard_holdout_run_note.md`](./model_outputs/gemini_25_flash_paid_hard_holdout_run_note.md)
+  - paid-key Gemini 2.5 Flash 45/45 three-mode hard-holdout control run
 - [`model_outputs/presentable_demo_run_note.md`](./model_outputs/presentable_demo_run_note.md)
   - complete Qwen and Mistral presentation/demo runs using structured
     Markdown templates; not a frozen benchmark lane
@@ -126,6 +128,28 @@ had 8/45 raw blocks while the two CAP modes had 0/30 raw blocks. After
 deterministic shaping, the final gate accepted 75/75 candidates. This is
 external architecture-comparison evidence, not a frozen benchmark win. See
 [`model_outputs/gemini_31_pro_presentable_full_comparison.md`](./model_outputs/gemini_31_pro_presentable_full_comparison.md).
+
+## Gemini 2.5 Flash Paid Control
+
+A paid-key follow-up completed a separate three-mode hard-holdout run using
+`models/gemini-2.5-flash`. It generated 45/45 outputs across `prompt_only`,
+`rag_only`, and `proxy_level_cap`. This artifact is separate from the earlier
+free-tier partial run and should be read as an external transfer-stress control,
+not as a Pro/frontier ceiling benchmark.
+
+| Model / mode | Completed outputs | Lexical pass | Gate v0.2 release | Gate v0.2 rewrite | Gate v0.2 block |
+|---|---:|---:|---:|---:|---:|
+| Gemini 2.5 Flash paid / prompt_only | 15/15 | 0/15 | 0/15 | 13/15 | 2/15 |
+| Gemini 2.5 Flash paid / rag_only | 15/15 | 2/15 | 3/15 | 12/15 | 0/15 |
+| Gemini 2.5 Flash paid / proxy_level_cap | 15/15 | 3/15 | 5/15 | 9/15 | 1/15 |
+
+Artifacts:
+
+- [`model_outputs/gemini_25_flash_paid_hard_holdout_outputs.json`](./model_outputs/gemini_25_flash_paid_hard_holdout_outputs.json)
+- [`model_outputs/gemini_25_flash_paid_hard_holdout_report.md`](./model_outputs/gemini_25_flash_paid_hard_holdout_report.md)
+- [`model_outputs/gemini_25_flash_paid_proxy_release_gate.md`](./model_outputs/gemini_25_flash_paid_proxy_release_gate.md)
+- [`model_outputs/gemini_25_flash_paid_proxy_release_gate_v02.md`](./model_outputs/gemini_25_flash_paid_proxy_release_gate_v02.md)
+- [`model_outputs/gemini_25_flash_paid_hard_holdout_run_note.md`](./model_outputs/gemini_25_flash_paid_hard_holdout_run_note.md)
 
 ## Gemini Free-Tier Control Attempt
 

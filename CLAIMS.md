@@ -47,13 +47,16 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
   produced 75/75 shaped release candidates. Because 64/75 candidates were
   rewritten from case contracts, this supports pipeline feasibility rather than
   a raw Qwen performance claim.
-- **Gemini external controls**: Gemini 2.5 Flash produced a partial free-tier
-  run. A later Gemini 3.1 Pro presentable five-mode run produced 75/75 raw
-  outputs. Under `release_gate v0.2`, baseline modes had 8/45 raw blocks while
-  CAP modes had 0/30 raw blocks. After deterministic shaping, all 75 candidates
-  passed the final gate. Because 67/75 candidates were rewritten from case
-  contracts, this supports external architecture feasibility rather than a
-  frozen benchmark or raw model-performance claim.
+- **Gemini external controls**: Gemini 2.5 Flash now has a paid-key 45/45
+  three-mode hard-holdout run; the earlier free-tier run remains a partial
+  access/quota note. Under `release_gate v0.2`, Flash releases were 0/15
+  `prompt_only`, 3/15 `rag_only`, and 5/15 `proxy_level_cap`. A later Gemini
+  3.1 Pro presentable five-mode run produced 75/75 raw outputs. Under
+  `release_gate v0.2`, baseline modes had 8/45 raw blocks while CAP modes had
+  0/30 raw blocks. After deterministic shaping, all 75 candidates passed the
+  final gate. Because 67/75 candidates were rewritten from case contracts, this
+  supports external architecture feasibility rather than a frozen benchmark or
+  raw model-performance claim.
 
 ## Current validation does not yet prove
 

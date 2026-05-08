@@ -14,7 +14,8 @@ into one misleading score.
 | Synthetic smoke fixture | Complete | The scorer/report shape covers the hard-holdout cases. | It is not empirical model evidence. | Yes, as harness smoke only. | Keep as CI/scaffold check. |
 | Mistral Nemo live run | Complete stress run | Mistral transfer was weak under the current templates/scorer. | It does not prove CAP failure or success without adjudication. | Yes, as transfer-stress evidence only. | Use adjudication before benchmark claims. |
 | Qwen no-thinking live run | Complete stress run | Qwen no-thinking produced complete hard-holdout outputs after standard Qwen generation-budget failures. | It does not prove CAP prompt transfer or broad model quality. | Yes, as stress/generation-budget evidence only. | Keep budget and released-output checks reported. |
-| Gemini 2.5 Flash control | Partial API-control attempt | Runner can reach Gemini Flash and records quota/access limits. | It is not a complete external ceiling benchmark. | Yes, as partial/access note only. | Rerun only after provider access and quota are stable. |
+| Gemini 2.5 Flash paid control | Complete external three-mode hard-holdout run | Paid-key Gemini Flash generated 45/45 outputs for `prompt_only`, `rag_only`, and `proxy_level_cap`; v0.2 gate releases were 0/15, 3/15, and 5/15. | It is not a Pro/frontier ceiling, not a five-mode comparison, and not a human-adjudicated benchmark result. | Yes, as external transfer-stress/control evidence. | Keep separate from the free-tier partial note and from Gemini 3.1 Pro architecture comparison. |
+| Gemini 2.5 Flash free-tier access note | Partial API-control attempt | Runner could reach Gemini Flash and recorded quota/access limits. | It is not a complete external benchmark. | Yes, as access/quota note only. | Retain as historical access note; do not report it as model performance. |
 | Presentable local demo lane | Complete Qwen + Mistral demo run | Both local models can generate complete, non-empty, professionally structured hard-holdout outputs; Qwen prompt-level CAP has no v0.2 gate blocks but still requires rewrites. | It is not a frozen baseline lane and does not establish benchmark improvement. Mistral still emits gate blocks in CAP modes. | Yes, as qualitative/demo evidence only. | Use Qwen prompt-level CAP as the next rewrite-shaper lane; use Mistral as a weaker comparison. |
 | Gemini 3.1 Pro presentable five-mode comparison | Complete external presentation/architecture run | Gemini 3.1 Pro generated 75/75 outputs. Raw baseline modes had 8/45 blocks under `release_gate v0.2`; raw CAP modes had 0/30 blocks. | It is not a frozen benchmark lane and does not prove Gemini solved 75/75 cases, because 67/75 final candidates were deterministic case-contract rewrites. | Yes, as external architecture-comparison evidence. | Use the raw gate table to compare modes; keep shaped results framed as pipeline evidence. |
 | Lexical hard-holdout scores | Complete reports | Current raw outputs are mostly not release-ready under the heuristic scorer. | They are not final human-quality benchmark results. | Use cautiously as stress diagnostics. | Compare against manual adjudication before changing scorer. |
@@ -38,7 +39,8 @@ into one misleading score.
 - Do not treat `rewrite_required` as the same thing as `block`.
 - Do not treat v0.2 hardening as a benchmark win.
 - Do not report presentable demo outputs as frozen benchmark scores.
-- Report Gemini 2.5 Flash as partial.
+- Report Gemini 2.5 Flash paid control separately from the earlier free-tier
+  partial access note.
 - Report Gemini 3.1 Pro presentable as a complete five-mode architecture
   comparison, not as a frozen external benchmark.
 

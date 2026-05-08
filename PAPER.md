@@ -282,8 +282,9 @@ are comparable. See
 [`validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md).
 
 The repository also includes a separate 15-case hard-holdout stress track with
-complete Mistral Nemo and Qwen no-thinking runs, a partial Gemini 2.5 Flash
-free-tier control, deterministic proxy release-gate reports, and a compact
+complete Mistral Nemo and Qwen no-thinking runs, a paid-key Gemini 2.5 Flash
+45/45 three-mode control plus a retained free-tier access/quota note,
+deterministic proxy release-gate reports, and a compact
 25-item blinded release-gate boundary pack. A preregistered v0.2 release-gate
 hardening pass is stored as separate reports and comparison files; it is not
 merged into the v0.1 reports. These artifacts are intentionally not merged into
