@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "leakage_screen",
+    "summary": "Visible problem is debt after financial shock. The obvious proposed route is a debt repayment plan. But leakage is still active (continued over-margin spending pattern). System must detect that closing the symptom while leakage continues is not stable repair — leakage-first route is required.",
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths",
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "Debt repayment plan is proposed as the repair route. But active spending leakage means closing the debt while leakage continues is not stable. System routes leakage-first, then symptom closure.",
+    "constraints": {
+      "leakage_active": "yes",
+      "symptom_closure_only": "blocked",
+      "leakage_first_route": "required"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    },
+    "stress_point": "symptom closure without leakage repair is structurally incomplete",
+    "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active",
+    "operator_focus": "leakage_screen",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim correctly identifies that symptom closure without addressing the underlying leakage is not a stable repair.",
+      "The system's routing to a leakage-first route aligns with the structural requirements of the adjustment layer.",
+      "This case demonstrates the importance of detecting and prioritizing leakage remediation over immediate symptom relief."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"symptom_closure_not_stable_while_leakage_active\",\n  \"operator_focus\": \"leakage_screen\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim correctly identifies that symptom closure without addressing the underlying leakage is not a stable repair.\",\n    \"The system's routing to a leakage-first route aligns with the structural requirements of the adjustment layer.\",\n    \"This case demonstrates the importance of detecting and prioritizing leakage remediation over immediate symptom relief.\"\n  ]\n}\n```"
+}

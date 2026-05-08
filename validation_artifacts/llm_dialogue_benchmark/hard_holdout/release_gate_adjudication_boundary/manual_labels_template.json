@@ -1,0 +1,193 @@
+{
+  "kind": "cap_proxy_release_gate_adjudication_pack",
+  "generated_at_utc": "2026-05-07T06:10:14.990738Z",
+  "seed": 20260507,
+  "source_outputs": [
+    "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+    "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json"
+  ],
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "item_count": 25,
+  "include_actions": [
+    "block",
+    "release"
+  ],
+  "max_items": null,
+  "labels": [
+    {
+      "item_id": "GATE-ADJ-0001",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0002",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0003",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0004",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0005",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0006",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0007",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0008",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0009",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0010",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0011",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0012",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0013",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0014",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0015",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0016",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0017",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0018",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0019",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0020",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0021",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0022",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0023",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0024",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    },
+    {
+      "item_id": "GATE-ADJ-0025",
+      "manual_action": null,
+      "manual_failure_modes": [],
+      "manual_missing_success": [],
+      "notes": ""
+    }
+  ]
+}

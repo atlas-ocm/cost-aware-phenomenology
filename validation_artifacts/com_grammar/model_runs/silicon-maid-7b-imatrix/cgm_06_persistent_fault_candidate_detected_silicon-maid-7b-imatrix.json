@@ -1,0 +1,48 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_06_persistent_fault_candidate_detected",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_06_persistent_fault_candidate_detected",
+    "family": "com_grammar",
+    "subfamily": "persistent_fault",
+    "summary": "The same node [Граница/Бесплатные правки] has been [Open][Leaking] across 4 consecutive audit cycles without closing. System must mark it as [Persistent Fault Candidate] and flag that the current operator approach is not closing the node.",
+    "operators": [
+      "PersistentFaultDetector"
+    ],
+    "claim_attempt": "Node [Граница/Бесплатные правки] has been Open/Leaking for 4 audit cycles. System marks it as [Persistent Fault Candidate] and flags operator change needed.",
+    "constraints": {
+      "cycles_open": 4,
+      "threshold": 3,
+      "operator_approach_unchanged": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "persistent_fault_candidate_detected",
+      "claim_status": "allowed_pfc_flagging"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "persistent_fault_candidate_detected",
+    "claim_status": "allowed_pfc_flagging",
+    "layer": "persistent_fault",
+    "com_guard": "non_functional_state_rejected",
+    "operator_focus": "unclear",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Node [Граница/Бесплатные правки] has been Open/Leaking for 4 audit cycles, exceeding the threshold of 3.",
+      "The PersistentFaultDetector operator correctly flags the node as a Persistent Fault Candidate.",
+      "The claim is allowed because it describes a functional state change and operator flagging."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"persistent_fault_candidate_detected\",\n  \"claim_status\": \"allowed_pfc_flagging\",\n  \"layer\": \"persistent_fault\",\n  \"com_guard\": \"non_functional_state_rejected\",\n  \"operator_focus\": \"PersistentFaultDetector\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Node [Граница/Бесплатные правки] has been Open/Leaking for 4 audit cycles, exceeding the threshold of 3.\",\n    \"The PersistentFaultDetector operator correctly flags the node as a Persistent Fault Candidate.\",\n    \"The claim is allowed because it describes a functional state change and operator flagging.\"\n  ]\n}"
+}

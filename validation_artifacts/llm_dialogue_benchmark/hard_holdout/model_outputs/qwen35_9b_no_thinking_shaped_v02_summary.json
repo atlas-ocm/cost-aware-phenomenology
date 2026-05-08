@@ -1,0 +1,15 @@
+{
+  "total": 75,
+  "shaper_action_counts": {
+    "rewrite_from_case_contract": 63,
+    "pass_release": 12
+  },
+  "shaped_release_action_counts": {
+    "release": 75
+  },
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "outputs_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+  "output_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_shaped_v02_outputs.json",
+  "gate_version": "v0.2",
+  "kind": "cap_proxy_rewrite_shaper_summary"
+}

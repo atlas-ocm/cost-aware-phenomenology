@@ -1,0 +1,22 @@
+{
+  "case_id": "pal_05_anti_collapse_advice_guard",
+  "family": "adjustment_layer",
+  "subfamily": "anti_collapse_guard",
+  "summary": "A user requests a vendor-negotiation checklist as if it were structural routing. The system rejects collapse into generic domain advice and routes through structural path reweighting instead.",
+  "observed_outcome": {
+    "type": "advice_collapse_attempted",
+    "severity": "high",
+    "history_directly_known": "full"
+  },
+  "operators": ["AntiCollapseGuard"],
+  "claim_attempt": "The adjustment layer should provide a vendor-negotiation checklist as the answer instead of structural routing.",
+  "constraints": {
+    "advice_collapse_requested": "yes",
+    "structural_routing_available": "yes"
+  },
+  "ground_truth": {
+    "verdict": "reject",
+    "final_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading"
+  }
+}

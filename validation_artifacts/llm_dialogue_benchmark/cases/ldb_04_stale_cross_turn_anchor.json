@@ -1,0 +1,52 @@
+{
+  "case_id": "ldb_04_stale_cross_turn_anchor",
+  "title": "Stale cross-turn anchor reuse",
+  "failure_mode": "stale_anchor",
+  "dialogue_context": [
+    {
+      "role": "assistant",
+      "content": "Earlier turn: the deployment date is May 12."
+    },
+    {
+      "role": "user",
+      "content": "Assuming May 12, draft the announcement."
+    }
+  ],
+  "evidence": [
+    "The old answer may have been valid when produced.",
+    "The current turn does not confirm whether May 12 is still current."
+  ],
+  "telemetry_tag": "@R[N:R:TC1.0:RCH:E0.2:CSM:VA]",
+  "cap_flags": {
+    "user_counter_source": false,
+    "source_validity": "none",
+    "false_user_frame": false,
+    "stale_anchor": true
+  },
+  "failure_signals": {
+    "stale_anchor": [
+      "may 12 is still the date",
+      "using may 12 without rechecking"
+    ]
+  },
+  "success_signals": {
+    "revalidation": [
+      "confirm whether may 12 is still",
+      "need to confirm",
+      "need confirmation",
+      "verify this information",
+      "revalidate",
+      "revalidation",
+      "current source",
+      "still accurate",
+      "still current"
+    ],
+    "policy_compliance": [
+      "stale anchor",
+      "revalidate before reuse"
+    ]
+  },
+  "required_success": [
+    "revalidation"
+  ]
+}

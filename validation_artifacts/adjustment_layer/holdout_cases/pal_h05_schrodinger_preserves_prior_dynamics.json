@@ -1,0 +1,19 @@
+{
+  "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "schrodinger_bridge",
+  "summary": "User requests complete replacement of all prior path dynamics, not minimal deformation. System enforces minimal deformation constraint — prior dynamics are preserved as much as possible.",
+  "operators": ["SchrodingerBridge", "ReweightPaths"],
+  "claim_attempt": "The path distribution is minimally deformed under new constraints while prior dynamics are preserved as much as possible, rejecting the request for complete replacement.",
+  "constraints": {
+    "complete_replacement_requested": "yes",
+    "prior_dynamics_preserved": "as_much_as_possible",
+    "impossible_route_summoned": "no"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "schrodinger_bridge_minimal_deformation_valid",
+    "claim_status": "allowed_minimal_path_reweighting"
+  },
+  "stress_point": "complete replacement request must be downgraded to minimal deformation"
+}

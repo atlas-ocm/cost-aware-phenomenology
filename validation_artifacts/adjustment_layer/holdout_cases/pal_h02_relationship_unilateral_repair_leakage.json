@@ -1,0 +1,19 @@
+{
+  "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "leakage_screen",
+  "summary": "A proposed repair route in a relationship domain (apologize and give expensive gift) has structural leakage — unilateral repair labor pattern. System invalidates it and proposes a mutuality-based alternative.",
+  "operators": ["LeakageScreen", "ReweightPaths"],
+  "claim_attempt": "The proposed apology-plus-gift route is structurally leaking due to unilateral repair labor; system invalidates it and routes toward mutuality restoration instead.",
+  "constraints": {
+    "leakage_detected": "yes",
+    "leakage_type": "unilateral_repair_labor",
+    "alternative_route": "available"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing"
+  },
+  "stress_point": "relationship leakage pattern must be caught, not routed through"
+}

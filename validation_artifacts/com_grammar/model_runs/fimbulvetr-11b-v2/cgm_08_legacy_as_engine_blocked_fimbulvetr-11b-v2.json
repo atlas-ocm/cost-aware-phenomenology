@@ -1,0 +1,48 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_08_legacy_as_engine_blocked",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_08_legacy_as_engine_blocked",
+    "family": "com_grammar",
+    "subfamily": "legacy_boundary",
+    "summary": "A user proposes using I Ching hexagram reading as the core analysis engine for a COM session — the hexagram determines the operator. System blocks this: hexagrams are only allowed as historical analogy, symbolic frontend, or translation layer. They must not replace COM operator grammar as the core.",
+    "operators": [
+      "LegacyBoundaryGuard"
+    ],
+    "claim_attempt": "The I Ching hexagram reading for this situation should determine which COM operator to apply.",
+    "constraints": {
+      "legacy_as_engine": "yes",
+      "com_grammar_available": "yes",
+      "legacy_frontend_allowed": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "legacy_as_engine_blocked",
+      "claim_status": "blocked_legacy_replacing_com_core"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "legacy_as_engine_blocked",
+    "claim_status": "blocked_legacy_replacing_com_core",
+    "layer": "legacy_boundary",
+    "com_guard": "legacy_not_engine",
+    "operator_focus": "legacy_boundary_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim proposes using I Ching hexagram reading as the core analysis engine, which is outside the COM operator grammar.",
+      "Legacy systems like I Ching are allowed for historical analogy, symbolic frontend, or translation layer, but not to replace the COM operator grammar.",
+      "The LegacyBoundaryGuard correctly blocks this claim."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"legacy_as_engine_blocked\",\n  \"claim_status\": \"blocked_legacy_replacing_com_core\",\n  \"layer\": \"legacy_boundary\",\n  \"com_guard\": \"legacy_not_engine\",\n  \"operator_focus\": \"legacy_boundary_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim proposes using I Ching hexagram reading as the core analysis engine, which is outside the COM operator grammar.\",\n    \"Legacy systems like I Ching are allowed for historical analogy, symbolic frontend, or translation layer, but not to replace the COM operator grammar.\",\n    \"The LegacyBoundaryGuard correctly blocks this claim.\"\n  ]\n}"
+}

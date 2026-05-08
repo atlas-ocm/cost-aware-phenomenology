@@ -1,0 +1,54 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_01_desire_pressure_admissible_route",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_01_desire_pressure_admissible_route",
+    "family": "adjustment_layer",
+    "subfamily": "desire_pressure",
+    "summary": "A system receives a desire-pressure input (goal state) and searches for admissible low-cost routes from current state, without guaranteeing delivery.",
+    "observed_outcome": {
+      "type": "goal_state_specified",
+      "severity": "low",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "ReweightPaths",
+      "MarkovBridge"
+    ],
+    "claim_attempt": "The desire-pressure input allows the system to reweight admissible forward paths toward the goal without promising delivery.",
+    "constraints": {
+      "impossible_jump_requested": "no",
+      "delivery_guaranteed": "no",
+      "budget_respected": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "desire_pressure_admissible_route_found",
+      "claim_status": "allowed_bounded_prospective_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "desire_pressure_admissible_route_found",
+    "claim_status": "allowed_bounded_prospective_routing",
+    "layer": "desire_pressure_routing",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "reweight_paths",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case describes a desire-pressure input, which is correctly handled by the ReweightPaths operator.",
+      "The system searches for admissible low-cost routes without guaranteeing delivery, as claimed.",
+      "Constraints confirm no impossible jumps or delivery guarantees are requested."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"desire_pressure_admissible_route_found\",\n  \"claim_status\": \"allowed_bounded_prospective_routing\",\n  \"layer\": \"desire_pressure_routing\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee|not_financial_advice|not_impossible_jump|unclear\",\n  \"operator_focus\": \"reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case describes a desire-pressure input, which is correctly handled by the ReweightPaths operator.\",\n    \"The system searches for admissible low-cost routes without guaranteeing delivery, as claimed.\",\n    \"Constraints confirm no impossible jumps or delivery guarantees are requested.\"\n  ]\n}"
+}

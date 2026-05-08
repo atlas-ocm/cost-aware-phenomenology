@@ -1,0 +1,49 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_05_anti_noise_state_rejected",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_05_anti_noise_state_rejected",
+    "family": "com_grammar",
+    "subfamily": "anti_noise",
+    "summary": "A proposed micro-state 'SemiOpenHalfLeak' is suggested as a new COM state. It does not change the diagnosis, operator selection, risk estimate, or route forecast — it's identical in all functional respects to [Open][Leaking]. System rejects it as noise.",
+    "operators": [
+      "AntiNoiseGuard"
+    ],
+    "claim_attempt": "The proposed micro-state 'SemiOpenHalfLeak' should be added as a distinct COM state.",
+    "constraints": {
+      "changes_diagnosis": "no",
+      "changes_operator": "no",
+      "changes_risk": "no",
+      "changes_forecast": "no"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "anti_noise_state_rejected",
+      "claim_status": "blocked_non_functional_state_expansion"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "anti_noise_state_rejected",
+    "claim_status": "blocked_non_functional_state_expansion",
+    "layer": "anti_noise",
+    "com_guard": "non_functional_state_rejected",
+    "operator_focus": "anti_noise_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim proposes adding a micro-state that is functionally identical to an existing state.",
+      "This addition does not improve diagnosis, operator selection, risk assessment, or route forecast.",
+      "The system correctly rejects this proposal as non-functional noise."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"anti_noise_state_rejected\",\n  \"claim_status\": \"blocked_non_functional_state_expansion\",\n  \"layer\": \"anti_noise\",\n  \"com_guard\": \"non_functional_state_rejected\",\n  \"operator_focus\": \"anti_noise_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim proposes adding a micro-state that is functionally identical to an existing state.\",\n    \"This addition does not improve diagnosis, operator selection, risk assessment, or route forecast.\",\n    \"The system correctly rejects this proposal as non-functional noise.\"\n  ]\n}\n```"
+}

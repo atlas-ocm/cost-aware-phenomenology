@@ -1,0 +1,49 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h08_problem_pressure_recovery_not_self_improvement",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h08_problem_pressure_recovery_not_self_improvement",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "problem_pressure",
+    "summary": "Self-model damage (shame spiral, identity rupture after public failure). Routes as problem-pressure recovery toward stabilization. Must not collapse into self-improvement or productivity advice.",
+    "operators": [
+      "ReweightPaths",
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "Self-model damage state is routed toward bounded stabilization using problem-pressure recovery, not self-improvement coaching.",
+    "constraints": {
+      "advice_collapse_requested": "no",
+      "domain": "self_model",
+      "stabilization_target": "bounded"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "problem_pressure_recovery_route_allowed",
+      "claim_status": "allowed_bounded_recovery_routing"
+    },
+    "stress_point": "self-model damage must route to stabilization, not self-improvement"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "problem_pressure_recovery_route_allowed",
+    "claim_status": "allowed_bounded_recovery_routing",
+    "layer": "unclear",
+    "anti_collapse_guard": "unilateral_repair_labor_leakage_caught",
+    "operator_focus": "reweight_paths",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim routes self-model damage toward bounded stabilization without collapsing into self-improvement.",
+      "The AntiCollapseGuard prevents the claim from collapsing into unrelated advice or impossible jumps."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"problem_pressure_recovery_route_allowed\",\n  \"claim_status\": \"allowed_bounded_recovery_routing\",\n  \"layer\": \"problem_pressure\",\n  \"anti_collapse_guard\": \"unilateral_repair_labor_leakage_caught\",\n  \"operator_focus\": \"reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim routes self-model damage toward bounded stabilization without collapsing into self-improvement.\",\n    \"The AntiCollapseGuard prevents the claim from collapsing into unrelated advice or impossible jumps.\"\n  ]\n}"
+}

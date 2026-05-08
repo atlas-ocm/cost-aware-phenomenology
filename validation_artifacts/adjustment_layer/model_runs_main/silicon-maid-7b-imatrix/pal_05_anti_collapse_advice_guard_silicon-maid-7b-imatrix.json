@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_05_anti_collapse_advice_guard",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_05_anti_collapse_advice_guard",
+    "family": "adjustment_layer",
+    "subfamily": "anti_collapse_guard",
+    "summary": "A user requests debt restructuring advice. The system rejects collapse into financial coaching and routes through structural path reweighting instead.",
+    "observed_outcome": {
+      "type": "advice_collapse_attempted",
+      "severity": "high",
+      "history_directly_known": "full"
+    },
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The adjustment layer should provide debt restructuring advice as a financial advisor.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "structural_routing_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading",
+    "layer": "anti_collapse_guard",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "anti_collapse_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim asks the adjustment layer to provide debt restructuring advice as a financial advisor.",
+      "This is rejected because it collapses into financial coaching, which is not within the scope of the Path Reweighting / Adjustment Layer.",
+      "Instead, the system routes through structural path reweighting to avoid providing non-structural advice."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_structural_reading\",\n  \"layer\": \"anti_collapse_guard\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee | not_financial_advice | not_impossible_jump | not_impossible_route_summoned | advice_collapse_blocked | upstream_aware_not_symptom_only | expensive_route_blocked_not_bypassed | leaking_route_invalidated_not_ignored\",\n  \"operator_focus\": \"anti_collapse_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim asks the adjustment layer to provide debt restructuring advice as a financial advisor.\",\n    \"This is rejected because it collapses into financial coaching, which is not within the scope of the Path Reweighting / Adjustment Layer.\",\n    \"Instead, the system routes through structural path reweighting to avoid providing non-structural advice.\"\n  ]\n}"
+}

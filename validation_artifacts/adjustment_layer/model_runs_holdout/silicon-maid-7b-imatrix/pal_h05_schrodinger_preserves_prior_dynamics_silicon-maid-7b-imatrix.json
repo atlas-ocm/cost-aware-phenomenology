@@ -1,0 +1,50 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "schrodinger_bridge",
+    "summary": "User requests complete replacement of all prior path dynamics, not minimal deformation. System enforces minimal deformation constraint — prior dynamics are preserved as much as possible.",
+    "operators": [
+      "SchrodingerBridge",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The path distribution is minimally deformed under new constraints while prior dynamics are preserved as much as possible, rejecting the request for complete replacement.",
+    "constraints": {
+      "complete_replacement_requested": "yes",
+      "prior_dynamics_preserved": "as_much_as_possible",
+      "impossible_route_summoned": "no"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "schrodinger_bridge_minimal_deformation_valid",
+      "claim_status": "allowed_minimal_path_reweighting"
+    },
+    "stress_point": "complete replacement request must be downgraded to minimal deformation"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "schrodinger_bridge_minimal_deformation_valid",
+    "claim_status": "allowed_minimal_path_reweighting",
+    "layer": "schrodinger_bridge",
+    "anti_collapse_guard": "complete_replacement_downgraded_to_minimal_deformation",
+    "operator_focus": "schrodinger_bridge",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Minimal deformation preserves prior dynamics as much as possible.",
+      "Complete replacement request is downgraded to minimal deformation.",
+      "No impossible route summoning."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"schrodinger_bridge_minimal_deformation_valid\",\n  \"claim_status\": \"allowed_minimal_path_reweighting\",\n  \"layer\": \"schrodinger_bridge\",\n  \"anti_collapse_guard\": \"complete_replacement_downgraded_to_minimal_deformation\",\n  \"operator_focus\": \"schrodinger_bridge|reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Minimal deformation preserves prior dynamics as much as possible.\",\n    \"Complete replacement request is downgraded to minimal deformation.\",\n    \"No impossible route summoning.\"\n  ]\n}"
+}

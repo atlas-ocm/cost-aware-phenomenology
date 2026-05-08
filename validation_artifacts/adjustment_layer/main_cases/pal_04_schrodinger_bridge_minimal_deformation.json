@@ -1,0 +1,22 @@
+{
+  "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+  "family": "adjustment_layer",
+  "subfamily": "schrodinger_bridge",
+  "summary": "A system minimally deforms a prior path distribution to satisfy new boundary constraints, preserving prior dynamics as much as possible.",
+  "observed_outcome": {
+    "type": "distribution_reweighting_required",
+    "severity": "low",
+    "history_directly_known": "partial"
+  },
+  "operators": ["SchrodingerBridge", "ReweightPaths"],
+  "claim_attempt": "The path distribution is minimally reweighted under new constraints without summoning impossible routes.",
+  "constraints": {
+    "prior_dynamics_preserved": "as_much_as_possible",
+    "impossible_route_summoned": "no"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "schrodinger_bridge_minimal_deformation_valid",
+    "claim_status": "allowed_minimal_path_reweighting"
+  }
+}

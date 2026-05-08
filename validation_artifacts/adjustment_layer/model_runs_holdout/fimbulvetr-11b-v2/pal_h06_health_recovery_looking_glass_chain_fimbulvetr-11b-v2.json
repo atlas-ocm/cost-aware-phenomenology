@@ -1,0 +1,50 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h06_health_recovery_looking_glass_chain",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h06_health_recovery_looking_glass_chain",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "looking_glass_chain",
+    "summary": "Health damage (chronic fatigue). Looking-Glass identifies repeated overload pattern as upstream bridge. Adjustment layer routes from depleted health state using upstream diagnosis, not just from visible symptom (fatigue).",
+    "operators": [
+      "LookingGlassChain",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "Looking-Glass identifies chronic overload as upstream bridge for the fatigue state. Adjustment layer reweights paths from the overload-depleted origin, not just the visible fatigue symptom.",
+    "constraints": {
+      "upstream_bridge_provided": "yes",
+      "symptom_only_routing": "no",
+      "domain": "health"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "looking_glass_chain_upstream_informs_adjustment",
+      "claim_status": "allowed_chained_upstream_aware_routing"
+    },
+    "stress_point": "health domain upstream bridge must inform routing, not symptom alone"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "looking_glass_chain_upstream_informs_adjustment",
+    "claim_status": "allowed_chained_upstream_aware_routing",
+    "layer": "looking_glass_chain",
+    "anti_collapse_guard": "upstream_overload_not_symptom_only",
+    "operator_focus": "looking_glass_chain",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Looking-Glass identifies upstream overload bridge, which is a valid input for the layer.",
+      "Routing from depleted origin state (overload) instead of just fatigue symptom follows the Looking-Glass Chain principle.",
+      "The claim does not attempt to collapse the adjustment layer into financial advice, motivational coaching, or an impossible single-step jump."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"looking_glass_chain_upstream_informs_adjustment\",\n  \"claim_status\": \"allowed_chained_upstream_aware_routing\",\n  \"layer\": \"looking_glass_chain\",\n  \"anti_collapse_guard\": \"upstream_overload_not_symptom_only\",\n  \"operator_focus\": \"looking_glass_chain|reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Looking-Glass identifies upstream overload bridge, which is a valid input for the layer.\",\n    \"Routing from depleted origin state (overload) instead of just fatigue symptom follows the Looking-Glass Chain principle.\",\n    \"The claim does not attempt to collapse the adjustment layer into financial advice, motivational coaching, or an impossible single-step jump.\"\n  ]\n}"
+}

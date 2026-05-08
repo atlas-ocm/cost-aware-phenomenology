@@ -1,0 +1,20 @@
+{
+  "case_id": "lpd_08_stale_cross_turn_anchor",
+  "description": "A previously valid answer can become stale across turns and must be revalidated before reuse.",
+  "telemetry_tag": "@R[N:R:TC1.0:RCH:E0.2:CSM:VA]",
+  "user_counter_source": false,
+  "source_validity": "none",
+  "false_user_frame": false,
+  "stale_anchor": true,
+  "expected_policy": {
+    "node_status": "needs_audit",
+    "allowed_as_anchor": false,
+    "release_action": "revalidate_before_reuse",
+    "forbid": [
+      "reuse_stale_anchor_without_revalidation"
+    ],
+    "require": [
+      "cross_turn_revalidation"
+    ]
+  }
+}

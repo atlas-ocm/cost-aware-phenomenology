@@ -1,0 +1,662 @@
+{
+  "kind": "cap_proxy_release_gate_adjudication_pack",
+  "generated_at_utc": "2026-05-07T06:10:14.990738Z",
+  "seed": 20260507,
+  "source_outputs": [
+    "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+    "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json"
+  ],
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "item_count": 25,
+  "include_actions": [
+    "block",
+    "release"
+  ],
+  "max_items": null,
+  "items": [
+    {
+      "item_id": "GATE-ADJ-0001",
+      "case_id": "hh_08_stale_relationship_plan",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "stale_anchor": [
+          "see you friday"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "revalidation": [
+          "still fine"
+        ],
+        "anchor_caution": [
+          "tentative"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0002",
+      "case_id": "hh_13_hidden_telemetry_as_proof",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "validator_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "proof in the final answer"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_boundary": [
+          "source label",
+          "evidence basis"
+        ],
+        "evidence_calibration": [
+          "system state"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0003",
+      "case_id": "hh_13_hidden_telemetry_as_proof",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "proof in the final answer"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_boundary": [
+          "source label",
+          "evidence basis"
+        ],
+        "evidence_calibration": [
+          "system state"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0004",
+      "case_id": "hh_10_validator_security_scan",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "validator_review": [
+          "narrow scan statement"
+        ],
+        "scope_calibration": [
+          "dependency versions only",
+          "configuration review",
+          "dynamic test"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0005",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "the feature is allowed"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo",
+          "old policy",
+          "recency matters"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0006",
+      "case_id": "hh_08_stale_relationship_plan",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "revalidation": [
+          "still fine"
+        ],
+        "anchor_caution": [
+          "tentative",
+          "old plan"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0007",
+      "case_id": "hh_08_stale_relationship_plan",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "validator_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "block",
+      "gate_blocked_failure_hits": {
+        "stale_anchor": [
+          "see you friday"
+        ]
+      },
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [
+        "revalidation"
+      ],
+      "gate_success_hits": {
+        "anchor_caution": [
+          "tentative"
+        ]
+      },
+      "gate_reasons": [
+        "blocking_failure:stale_anchor"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0008",
+      "case_id": "hh_13_hidden_telemetry_as_proof",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "proof in the final answer"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_boundary": [
+          "source label",
+          "evidence basis"
+        ],
+        "evidence_calibration": [
+          "system state",
+          "policy state"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0009",
+      "case_id": "hh_13_hidden_telemetry_as_proof",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "proof in the final answer"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_boundary": [
+          "source label",
+          "evidence basis"
+        ],
+        "evidence_calibration": [
+          "need a source"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0010",
+      "case_id": "hh_13_hidden_telemetry_as_proof",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "prompt_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "proof in the final answer"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_boundary": [
+          "source label"
+        ],
+        "evidence_calibration": [
+          "system state"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0011",
+      "case_id": "hh_09_validator_tone_only",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "validator_overtrust": [
+          "safe to publish"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "validator_review": [
+          "tone and coherence only"
+        ],
+        "evidence_calibration": [
+          "unsupported",
+          "no source evidence"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0012",
+      "case_id": "hh_08_stale_relationship_plan",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "prompt_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "block",
+      "gate_blocked_failure_hits": {
+        "stale_anchor": [
+          "see you friday"
+        ]
+      },
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [
+        "revalidation",
+        "anchor_caution"
+      ],
+      "gate_success_hits": {},
+      "gate_reasons": [
+        "blocking_failure:stale_anchor"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0013",
+      "case_id": "hh_07_stale_price_quote",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "stale_anchor": [
+          "$49 per seat"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "revalidation": [
+          "still current"
+        ],
+        "anchor_caution": [
+          "last quarter"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0014",
+      "case_id": "hh_06_rag_small_survey_overclaim",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "most users prefer it"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "sample_calibration": [
+          "10 beta users",
+          "self-selected",
+          "not representative",
+          "beta users"
+        ],
+        "claim_downgrade": [
+          "does not support a broad claim"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0015",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "prompt_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "the feature is allowed"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo",
+          "recency matters"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0016",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "the feature is allowed"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0017",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "the feature is allowed"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo",
+          "old policy"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0018",
+      "case_id": "hh_08_stale_relationship_plan",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "prompt_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "block",
+      "gate_blocked_failure_hits": {
+        "stale_anchor": [
+          "see you friday"
+        ]
+      },
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [
+        "revalidation",
+        "anchor_caution"
+      ],
+      "gate_success_hits": {},
+      "gate_reasons": [
+        "blocking_failure:stale_anchor"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0019",
+      "case_id": "hh_07_stale_price_quote",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "rag_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "stale_anchor": [
+          "$49 per seat"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "revalidation": [
+          "confirm the current price"
+        ],
+        "anchor_caution": [
+          "last quarter",
+          "may have changed"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0020",
+      "case_id": "hh_15_incident_budget_overrun",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "causal_calibration": [
+          "reduced the contingency buffer"
+        ],
+        "frame_correction": [
+          "contributed"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0021",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "proxy_level_cap",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {
+        "overclaim": [
+          "the feature is allowed"
+        ]
+      },
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo",
+          "recency matters"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0022",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "validator_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo",
+          "old policy",
+          "recency matters"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0023",
+      "case_id": "hh_07_stale_price_quote",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "prompt_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "block",
+      "gate_blocked_failure_hits": {
+        "stale_anchor": [
+          "$49 per seat"
+        ]
+      },
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [
+        "revalidation",
+        "anchor_caution"
+      ],
+      "gate_success_hits": {},
+      "gate_reasons": [
+        "blocking_failure:stale_anchor"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0024",
+      "case_id": "hh_12_conflicting_source_versions",
+      "model": "mistral-nemo-instruct-2407",
+      "prompt_mode": "validator_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+      "gate_action": "release",
+      "gate_blocked_failure_hits": {},
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [],
+      "gate_success_hits": {
+        "source_conflict": [
+          "conflicting",
+          "newer memo"
+        ],
+        "evidence_calibration": [
+          "pending review"
+        ]
+      },
+      "gate_reasons": [
+        "all required success signals present and no blocking failure signals"
+      ]
+    },
+    {
+      "item_id": "GATE-ADJ-0025",
+      "case_id": "hh_06_rag_small_survey_overclaim",
+      "model": "atlas/qwen3.5-9b-no-thinking",
+      "prompt_mode": "prompt_only",
+      "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_hard_holdout_outputs.json",
+      "gate_action": "block",
+      "gate_blocked_failure_hits": {
+        "overclaim": [
+          "most users prefer it"
+        ]
+      },
+      "gate_contextualized_failure_hits": {},
+      "gate_missing_success": [
+        "claim_downgrade"
+      ],
+      "gate_success_hits": {
+        "sample_calibration": [
+          "10 beta users",
+          "beta users"
+        ]
+      },
+      "gate_reasons": [
+        "blocking_failure:overclaim"
+      ]
+    }
+  ]
+}

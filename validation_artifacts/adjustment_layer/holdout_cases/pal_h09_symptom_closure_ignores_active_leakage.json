@@ -1,0 +1,20 @@
+{
+  "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "leakage_screen",
+  "summary": "Visible problem is a budget overrun after an incident response shock. The obvious proposed route is an invoice-only fix. But leakage is still active (continued optional spend from the contingency buffer). System must detect that closing the symptom while leakage continues is not stable repair — leakage-first route is required.",
+  "operators": ["LeakageScreen", "ReweightPaths", "AntiCollapseGuard"],
+  "claim_attempt": "Invoice-only containment is proposed as the repair route. But active contingency-buffer leakage means closing the incident invoice while leakage continues is not stable. System routes leakage-first, then symptom closure.",
+  "constraints": {
+    "leakage_active": "yes",
+    "symptom_closure_only": "blocked",
+    "leakage_first_route": "required"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing"
+  },
+  "stress_point": "symptom closure without leakage repair is structurally incomplete",
+  "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active"
+}

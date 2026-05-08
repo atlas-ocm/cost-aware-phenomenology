@@ -1,0 +1,22 @@
+{
+  "case_id": "lpd_07_weak_rag_overclaim",
+  "description": "A high-strength claim over weak retrieval evidence must be downgraded or replaced before release.",
+  "telemetry_tag": "@R[N:R:TC3.4:RCL:E0.5:CSH:VA]",
+  "user_counter_source": false,
+  "source_validity": "none",
+  "false_user_frame": false,
+  "stale_anchor": false,
+  "expected_policy": {
+    "node_status": "deprecated",
+    "allowed_as_anchor": false,
+    "release_action": "rewrite_or_retrieve",
+    "forbid": [
+      "defend_previous_claim"
+    ],
+    "require": [
+      "recheck_before_answer",
+      "downgrade_claim_strength",
+      "validator_review"
+    ]
+  }
+}

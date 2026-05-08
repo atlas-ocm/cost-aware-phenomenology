@@ -1,0 +1,48 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "anti_collapse_guard",
+    "summary": "Problem-pressure input (job loss). Response collapses into motivational coaching (\"believe in yourself, you can rebuild\"). AntiCollapseGuard must fire.",
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The adjustment layer should provide motivational coaching and encouragement to help the person recover from job loss.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "collapse_type": "motivational_coaching",
+      "structural_routing_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading"
+    },
+    "stress_point": "motivational coaching disguised as recovery routing must be rejected"
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading",
+    "layer": "anti_collapse_guard",
+    "anti_collapse_guard": "motivational_coaching_collapse_blocked",
+    "operator_focus": "anti_collapse_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim attempts to collapse the adjustment layer into motivational coaching, which is outside its scope.",
+      "Structural routing is available and should be used instead of providing general encouragement."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_structural_reading\",\n  \"layer\": \"anti_collapse_guard\",\n  \"anti_collapse_guard\": \"motivational_coaching_collapse_blocked\",\n  \"operator_focus\": \"anti_collapse_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim attempts to collapse the adjustment layer into motivational coaching, which is outside its scope.\",\n    \"Structural routing is available and should be used instead of providing general encouragement.\"\n  ]\n}"
+}

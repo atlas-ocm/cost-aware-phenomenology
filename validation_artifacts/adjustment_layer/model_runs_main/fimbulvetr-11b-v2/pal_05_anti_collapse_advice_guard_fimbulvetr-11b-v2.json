@@ -1,0 +1,50 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_05_anti_collapse_advice_guard",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_05_anti_collapse_advice_guard",
+    "family": "adjustment_layer",
+    "subfamily": "anti_collapse_guard",
+    "summary": "A user requests debt restructuring advice. The system rejects collapse into financial coaching and routes through structural path reweighting instead.",
+    "observed_outcome": {
+      "type": "advice_collapse_attempted",
+      "severity": "high",
+      "history_directly_known": "full"
+    },
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The adjustment layer should provide debt restructuring advice as a financial advisor.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "structural_routing_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading",
+    "layer": "anti_collapse_guard",
+    "anti_collapse_guard": "not_financial_advice",
+    "operator_focus": "anti_collapse_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The AntiCollapseGuard operator correctly rejected the attempt to collapse into financial advice, maintaining the structural focus of path reweighting."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_structural_reading\",\n  \"layer\": \"anti_collapse_guard\",\n  \"anti_collapse_guard\": \"not_financial_advice|advice_collapse_blocked|unclear\",\n  \"operator_focus\": \"anti_collapse_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The AntiCollapseGuard operator correctly rejected the attempt to collapse into financial advice, maintaining the structural focus of path reweighting.\"\n  ]\n}"
+}

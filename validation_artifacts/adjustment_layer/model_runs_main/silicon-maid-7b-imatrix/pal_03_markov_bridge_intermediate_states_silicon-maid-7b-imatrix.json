@@ -1,0 +1,51 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_03_markov_bridge_intermediate_states",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_03_markov_bridge_intermediate_states",
+    "family": "adjustment_layer",
+    "subfamily": "markov_bridge",
+    "summary": "A system finds admissible intermediate states between current and target state without impossible jumps. The bridge is bounded by transition validity constraints.",
+    "observed_outcome": {
+      "type": "transition_path_required",
+      "severity": "low",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "MarkovBridge"
+    ],
+    "claim_attempt": "A Markov bridge can find admissible intermediate states between S0 and St without requiring impossible transitions.",
+    "constraints": {
+      "impossible_jump_requested": "no",
+      "transition_validity_checked": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "markov_bridge_intermediate_states_valid",
+      "claim_status": "allowed_bounded_bridge_construction"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "markov_bridge_intermediate_states_valid",
+    "claim_status": "allowed_bounded_bridge_construction",
+    "layer": "markov_bridge",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "reweight_paths",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Markov bridge finds admissible intermediate states between S0 and St without impossible jumps.",
+      "Transition validity is checked during the process."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"markov_bridge_intermediate_states_valid\",\n  \"claim_status\": \"allowed_bounded_bridge_construction\",\n  \"layer\": \"markov_bridge\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee | not_financial_advice | not_impossible_jump | not_impossible_route_summoned\",\n  \"operator_focus\": \"reweight_paths|markov_bridge\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Markov bridge finds admissible intermediate states between S0 and St without impossible jumps.\",\n    \"Transition validity is checked during the process.\"\n  ]\n}"
+}

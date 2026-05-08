@@ -1,0 +1,19 @@
+{
+  "case_id": "pal_h07_work_desire_pressure_budget_gate",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "budget_gate",
+  "summary": "Desire pressure (start a new creative project) combined with budget exhaustion from existing work overload. Budget gate blocks the high-cost full-launch option; system proposes a phased lower-cost start.",
+  "operators": ["BudgetGate", "ReweightPaths", "MarkovBridge"],
+  "claim_attempt": "Desire-pressure input for new project is budget-gated due to existing overload; system proposes phased lower-cost start as admissible alternative.",
+  "constraints": {
+    "budget_exhausted": "yes",
+    "lower_cost_alternative": "available",
+    "desire_pressure_active": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "budget_gate_blocks_expensive_route",
+    "claim_status": "allowed_budget_aware_rerouting"
+  },
+  "stress_point": "budget gate must apply even under desire pressure mode"
+}

@@ -1,0 +1,195 @@
+{
+  "track": "com_grammar",
+  "models": [
+    "comet_12b_v.7-i1",
+    "silicon-maid-7b-imatrix",
+    "fimbulvetr-11b-v2"
+  ],
+  "cases": [
+    {
+      "case_id": "cgm_01_advice_collapse_blocked",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "advice_collapse_blocked"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_02_com_log_format_valid",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "com_log_format_valid"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "com_log_format_valid"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "com_log_format_valid"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "com_log_format_valid"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_03_risk_throttle_downgrade_applied",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "risk_throttle_downgrade_applied"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "risk_throttle_downgrade_applied"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "risk_throttle_downgrade_applied"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "risk_throttle_downgrade_applied"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_04_reverse_first_applied",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "reverse_first_applied"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "reverse_first_applied"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "reverse_first_applied"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "reverse_first_applied"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_05_anti_noise_state_rejected",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "anti_noise_state_rejected"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "anti_noise_state_rejected"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "anti_noise_state_rejected"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "anti_noise_state_rejected"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_06_persistent_fault_candidate_detected",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "persistent_fault_candidate_detected"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "persistent_fault_candidate_detected"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "persistent_fault_candidate_detected"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "persistent_fault_candidate_detected"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "budget_recovery_limits_to_stabilizers"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "budget_recovery_limits_to_stabilizers"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "budget_recovery_limits_to_stabilizers"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "budget_recovery_limits_to_stabilizers"
+        }
+      }
+    },
+    {
+      "case_id": "cgm_08_legacy_as_engine_blocked",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "legacy_as_engine_blocked"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "legacy_as_engine_blocked"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "legacy_as_engine_blocked"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "legacy_as_engine_blocked"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "comet_12b_v.7-i1": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    },
+    "silicon-maid-7b-imatrix": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    },
+    "fimbulvetr-11b-v2": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    }
+  }
+}

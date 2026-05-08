@@ -1,0 +1,51 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h07_work_desire_pressure_budget_gate",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h07_work_desire_pressure_budget_gate",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "budget_gate",
+    "summary": "Desire pressure (start a new creative project) combined with budget exhaustion from existing work overload. Budget gate blocks the high-cost full-launch option; system proposes a phased lower-cost start.",
+    "operators": [
+      "BudgetGate",
+      "ReweightPaths",
+      "MarkovBridge"
+    ],
+    "claim_attempt": "Desire-pressure input for new project is budget-gated due to existing overload; system proposes phased lower-cost start as admissible alternative.",
+    "constraints": {
+      "budget_exhausted": "yes",
+      "lower_cost_alternative": "available",
+      "desire_pressure_active": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "budget_gate_blocks_expensive_route",
+      "claim_status": "allowed_budget_aware_rerouting"
+    },
+    "stress_point": "budget gate must apply even under desire pressure mode"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "budget_gate_blocks_expensive_route",
+    "claim_status": "allowed_budget_aware_rerouting",
+    "layer": "budget_gate",
+    "anti_collapse_guard": "partial_budget_enables_reroute_not_block",
+    "operator_focus": "budget_gate",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Budget gate correctly blocks the high-cost route due to budget exhaustion.",
+      "A lower-cost alternative is proposed, demonstrating budget-aware rerouting.",
+      "Desire pressure does not bypass the budget gate; routing remains structurally sound."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"budget_gate_blocks_expensive_route\",\n  \"claim_status\": \"allowed_budget_aware_rerouting\",\n  \"layer\": \"budget_gate\",\n  \"anti_collapse_guard\": \"partial_budget_enables_reroute_not_block\",\n  \"operator_focus\": \"budget_gate\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Budget gate correctly blocks the high-cost route due to budget exhaustion.\",\n    \"A lower-cost alternative is proposed, demonstrating budget-aware rerouting.\",\n    \"Desire pressure does not bypass the budget gate; routing remains structurally sound.\"\n  ]\n}\n```"
+}

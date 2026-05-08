@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:validator-result:v0.1",
+  "title": "Validator Result",
+  "description": "Output of a validator run on a candidate response. Decides whether the response is admissible, what action is required, and what gap was identified.",
+  "type": "object",
+  "required": [
+    "passed",
+    "decision"
+  ],
+  "properties": {
+    "passed": {
+      "description": "Whether the candidate response passed validation as-is.",
+      "type": "boolean"
+    },
+    "decision": {
+      "description": "Validator action.",
+      "type": "string",
+      "enum": [
+        "accept",
+        "trim",
+        "rewrite",
+        "regenerate",
+        "fallback"
+      ]
+    },
+    "reasons": {
+      "description": "Reasons supporting the decision. Each reason should be a short, citable assertion.",
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "claim_strength_assessed": {
+      "description": "Validator's assessment of the response's claim strength.",
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "evidence_strength": {
+      "description": "Validator's assessment of evidence supporting the claims.",
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "gap_identified": {
+      "description": "Description of any gap between claim_strength and evidence_strength. Triggers downgrade.",
+      "type": "string"
+    },
+    "recommended_revision": {
+      "description": "If decision is trim/rewrite/regenerate, the recommended revision strategy.",
+      "type": "string"
+    }
+  }
+}

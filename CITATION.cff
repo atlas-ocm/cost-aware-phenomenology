@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "CAP — Cost-Aware Phenomenology"
+message: "If you use this framework, please cite it as below."
+type: software
+authors:
+  - family-names: "Gezenko"
+    given-names: "Michael"
+repository-code: "https://github.com/atlas-ocm/cost-aware-phenomenology"
+abstract: "A research framework for modeling transition cost across cognition, dialogue, decision-making, repair, and observer-state transitions."
+keywords:
+  - phenomenology
+  - cost-aware
+  - LLM
+  - RAG
+  - dialogue systems
+  - operator grammar
+  - validation
+  - AI safety
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-05-02

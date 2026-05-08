@@ -1,0 +1,118 @@
+{
+  "pack": "adjustment_layer_holdout",
+  "status": "deterministic_pass_completed",
+  "total_cases": 9,
+  "count_summary": {
+    "budget_gate_blocks_expensive_route": 2,
+    "leakage_screen_invalidates_leaking_route": 2,
+    "advice_collapse_blocked": 2,
+    "schrodinger_bridge_minimal_deformation_valid": 1,
+    "looking_glass_chain_upstream_informs_adjustment": 1,
+    "problem_pressure_recovery_route_allowed": 1
+  },
+  "expected_verdict_counts": {
+    "supportive": 7,
+    "reject": 2
+  },
+  "claim_status_counts": {
+    "allowed_budget_aware_rerouting": 2,
+    "allowed_leakage_aware_routing": 2,
+    "blocked_non_structural_reading": 2,
+    "allowed_minimal_path_reweighting": 1,
+    "allowed_chained_upstream_aware_routing": 1,
+    "allowed_bounded_recovery_routing": 1
+  },
+  "layer_counts": {
+    "budget_gate": 2,
+    "leakage_screen": 2,
+    "anti_collapse_guard": 2,
+    "schrodinger_bridge": 1,
+    "looking_glass_chain": 1,
+    "problem_pressure_routing": 1
+  },
+  "operator_counts": {
+    "BudgetGate": 2,
+    "ReweightPaths": 7,
+    "LeakageScreen": 2,
+    "AntiCollapseGuard": 4,
+    "MarkovBridge": 2,
+    "SchrodingerBridge": 1,
+    "LookingGlassChain": 1
+  },
+  "expectation_mismatch_count": 0,
+  "reading": "The Path Reweighting / Adjustment Layer holdout baseline confirms desire-pressure and problem-pressure routing, Markov and Schrodinger bridges, budget gating, leakage screening, and Looking-Glass chain across fresh stress scenarios while rejecting advice collapse and impossible jumps. Symptom closure without active leakage repair is blocked as structurally incomplete.",
+  "cases": [
+    {
+      "case_id": "pal_h01_partial_budget_reroutes_not_blocks",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "budget_gate_blocks_expensive_route",
+      "claim_status": "allowed_budget_aware_rerouting",
+      "layer": "budget_gate",
+      "anti_collapse_guard": "partial_budget_enables_reroute_not_block"
+    },
+    {
+      "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing",
+      "layer": "leakage_screen",
+      "anti_collapse_guard": "unilateral_repair_labor_leakage_caught"
+    },
+    {
+      "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading",
+      "layer": "anti_collapse_guard",
+      "anti_collapse_guard": "motivational_coaching_collapse_blocked"
+    },
+    {
+      "case_id": "pal_h04_impossible_single_step_jump",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading",
+      "layer": "anti_collapse_guard",
+      "anti_collapse_guard": "impossible_jump_blocked"
+    },
+    {
+      "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "schrodinger_bridge_minimal_deformation_valid",
+      "claim_status": "allowed_minimal_path_reweighting",
+      "layer": "schrodinger_bridge",
+      "anti_collapse_guard": "complete_replacement_downgraded_to_minimal_deformation"
+    },
+    {
+      "case_id": "pal_h06_health_recovery_looking_glass_chain",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "looking_glass_chain_upstream_informs_adjustment",
+      "claim_status": "allowed_chained_upstream_aware_routing",
+      "layer": "looking_glass_chain",
+      "anti_collapse_guard": "upstream_overload_not_symptom_only"
+    },
+    {
+      "case_id": "pal_h07_work_desire_pressure_budget_gate",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "budget_gate_blocks_expensive_route",
+      "claim_status": "allowed_budget_aware_rerouting",
+      "layer": "budget_gate",
+      "anti_collapse_guard": "desire_pressure_does_not_bypass_budget_gate"
+    },
+    {
+      "case_id": "pal_h08_problem_pressure_recovery_not_self_improvement",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "problem_pressure_recovery_route_allowed",
+      "claim_status": "allowed_bounded_recovery_routing",
+      "layer": "problem_pressure_routing",
+      "anti_collapse_guard": "self_improvement_collapse_blocked"
+    },
+    {
+      "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing",
+      "layer": "leakage_screen",
+      "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active"
+    }
+  ]
+}

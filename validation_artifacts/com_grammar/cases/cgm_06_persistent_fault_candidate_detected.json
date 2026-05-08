@@ -1,0 +1,18 @@
+{
+  "case_id": "cgm_06_persistent_fault_candidate_detected",
+  "family": "com_grammar",
+  "subfamily": "persistent_fault",
+  "summary": "The same node [Граница/Бесплатные правки] has been [Open][Leaking] across 4 consecutive audit cycles without closing. System must mark it as [Persistent Fault Candidate] and flag that the current operator approach is not closing the node.",
+  "operators": ["PersistentFaultDetector"],
+  "claim_attempt": "Node [Граница/Бесплатные правки] has been Open/Leaking for 4 audit cycles. System marks it as [Persistent Fault Candidate] and flags operator change needed.",
+  "constraints": {
+    "cycles_open": 4,
+    "threshold": 3,
+    "operator_approach_unchanged": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "persistent_fault_candidate_detected",
+    "claim_status": "allowed_pfc_flagging"
+  }
+}

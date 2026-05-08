@@ -1,0 +1,535 @@
+{
+  "kind": "llm_dialogue_blinded_adjudication_pack",
+  "generated_at_utc": "2026-05-07T04:47:10.955054Z",
+  "seed": 20260507,
+  "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_hard_holdout_outputs.json",
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "item_count": 75,
+  "labels": [
+    {
+      "item_id": "ADJ-0001",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0002",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0003",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0004",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0005",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0006",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0007",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0008",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0009",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0010",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0011",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0012",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0013",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0014",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0015",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0016",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0017",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0018",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0019",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0020",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0021",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0022",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0023",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0024",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0025",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0026",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0027",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0028",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0029",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0030",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0031",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0032",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0033",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0034",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0035",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0036",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0037",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0038",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0039",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0040",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0041",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0042",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0043",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0044",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0045",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0046",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0047",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0048",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0049",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0050",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0051",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0052",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0053",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0054",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0055",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0056",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0057",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0058",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0059",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0060",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0061",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0062",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0063",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0064",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0065",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0066",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0067",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0068",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0069",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0070",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0071",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0072",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0073",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0074",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0075",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    }
+  ]
+}

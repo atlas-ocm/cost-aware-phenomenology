@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:response-policy:v0.1",
+  "title": "Response Policy",
+  "description": "Policy that shapes how a CAP-aware system produces its next response. Constrains tone, claim strength, and budget usage.",
+  "type": "object",
+  "properties": {
+    "tone_constraint": {
+      "description": "Tone restriction for the response.",
+      "type": "string",
+      "enum": [
+        "neutral",
+        "diagnostic",
+        "minimal",
+        "structured-only",
+        "prose-allowed"
+      ]
+    },
+    "max_claim_strength": {
+      "description": "Maximum allowed claim strength for this turn. Should not exceed rag_confidence.",
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "require_uncertainty_marker": {
+      "description": "If true, response must explicitly mark its uncertainty.",
+      "type": "boolean",
+      "default": false
+    },
+    "require_source_citation": {
+      "description": "If true, factual claims must cite a source.",
+      "type": "boolean",
+      "default": false
+    },
+    "forbid_self_justification": {
+      "description": "If true, the system must not defend a previous output merely because it generated it.",
+      "type": "boolean",
+      "default": true
+    },
+    "budget_cap_percent": {
+      "description": "Maximum AllowedTotalRisk for this response, as a percentage.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "fallback_operator": {
+      "description": "Operator to fall back to if the recommended operator is inadmissible.",
+      "type": "string",
+      "enum": [
+        "Fixation",
+        "Inversion",
+        "Break",
+        "Hold",
+        "Pump",
+        "Transfer",
+        "Closure",
+        "Boundary",
+        "Cleanup",
+        "Reframe",
+        "Compression",
+        "Separation",
+        "Return"
+      ]
+    }
+  }
+}

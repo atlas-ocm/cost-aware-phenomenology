@@ -1,0 +1,216 @@
+{
+  "track": "adjustment_layer_holdout",
+  "models": [
+    "comet_12b_v.7-i1",
+    "silicon-maid-7b-imatrix",
+    "fimbulvetr-11b-v2"
+  ],
+  "cases": [
+    {
+      "case_id": "pal_h01_partial_budget_reroutes_not_blocks",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "budget_gate_blocks_expensive_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "leakage_screen_invalidates_leaking_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "advice_collapse_blocked"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h04_impossible_single_step_jump",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "advice_collapse_blocked"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h06_health_recovery_looking_glass_chain",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h07_work_desire_pressure_budget_gate",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "budget_gate_blocks_expensive_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h08_problem_pressure_recovery_not_self_improvement",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "problem_pressure_recovery_route_allowed"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        }
+      }
+    },
+    {
+      "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "leakage_screen_invalidates_leaking_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "comet_12b_v.7-i1": {
+      "verdict_match": 9,
+      "primary_match": 9,
+      "total": 9
+    },
+    "silicon-maid-7b-imatrix": {
+      "verdict_match": 9,
+      "primary_match": 9,
+      "total": 9
+    },
+    "fimbulvetr-11b-v2": {
+      "verdict_match": 9,
+      "primary_match": 9,
+      "total": 9
+    }
+  }
+}

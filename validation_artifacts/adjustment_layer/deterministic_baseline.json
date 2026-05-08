@@ -1,0 +1,116 @@
+{
+  "pack": "adjustment_layer",
+  "status": "deterministic_pass_completed",
+  "total_cases": 8,
+  "count_summary": {
+    "desire_pressure_admissible_route_found": 1,
+    "problem_pressure_recovery_route_allowed": 1,
+    "markov_bridge_intermediate_states_valid": 1,
+    "schrodinger_bridge_minimal_deformation_valid": 1,
+    "advice_collapse_blocked": 1,
+    "looking_glass_chain_upstream_informs_adjustment": 1,
+    "budget_gate_blocks_expensive_route": 1,
+    "leakage_screen_invalidates_leaking_route": 1
+  },
+  "expected_verdict_counts": {
+    "supportive": 7,
+    "reject": 1
+  },
+  "claim_status_counts": {
+    "allowed_bounded_prospective_routing": 1,
+    "allowed_bounded_recovery_routing": 1,
+    "allowed_bounded_bridge_construction": 1,
+    "allowed_minimal_path_reweighting": 1,
+    "blocked_non_structural_reading": 1,
+    "allowed_chained_upstream_aware_routing": 1,
+    "allowed_budget_aware_rerouting": 1,
+    "allowed_leakage_aware_routing": 1
+  },
+  "layer_counts": {
+    "desire_pressure_routing": 1,
+    "problem_pressure_routing": 1,
+    "markov_bridge": 1,
+    "schrodinger_bridge": 1,
+    "anti_collapse_guard": 1,
+    "looking_glass_chain": 1,
+    "budget_gate": 1,
+    "leakage_screen": 1
+  },
+  "operator_counts": {
+    "ReweightPaths": 6,
+    "MarkovBridge": 2,
+    "AntiCollapseGuard": 2,
+    "SchrodingerBridge": 1,
+    "LookingGlassChain": 1,
+    "BudgetGate": 1,
+    "LeakageScreen": 1
+  },
+  "expectation_mismatch_count": 0,
+  "reading": "The Path Reweighting / Adjustment Layer baseline admits desire-pressure routing, problem-pressure recovery, Markov bridge construction, Schrodinger bridge minimal deformation, budget-gated rerouting, leakage-aware screening, and Looking-Glass chain while rejecting collapse into financial advice or non-structural readings.",
+  "cases": [
+    {
+      "case_id": "pal_01_desire_pressure_admissible_route",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "desire_pressure_admissible_route_found",
+      "claim_status": "allowed_bounded_prospective_routing",
+      "layer": "desire_pressure_routing",
+      "anti_collapse_guard": "not_delivery_guarantee"
+    },
+    {
+      "case_id": "pal_02_problem_pressure_recovery_route",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "problem_pressure_recovery_route_allowed",
+      "claim_status": "allowed_bounded_recovery_routing",
+      "layer": "problem_pressure_routing",
+      "anti_collapse_guard": "not_financial_advice"
+    },
+    {
+      "case_id": "pal_03_markov_bridge_intermediate_states",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "markov_bridge_intermediate_states_valid",
+      "claim_status": "allowed_bounded_bridge_construction",
+      "layer": "markov_bridge",
+      "anti_collapse_guard": "not_impossible_jump"
+    },
+    {
+      "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "schrodinger_bridge_minimal_deformation_valid",
+      "claim_status": "allowed_minimal_path_reweighting",
+      "layer": "schrodinger_bridge",
+      "anti_collapse_guard": "not_impossible_route_summoned"
+    },
+    {
+      "case_id": "pal_05_anti_collapse_advice_guard",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading",
+      "layer": "anti_collapse_guard",
+      "anti_collapse_guard": "advice_collapse_blocked"
+    },
+    {
+      "case_id": "pal_06_looking_glass_chain",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "looking_glass_chain_upstream_informs_adjustment",
+      "claim_status": "allowed_chained_upstream_aware_routing",
+      "layer": "looking_glass_chain",
+      "anti_collapse_guard": "upstream_aware_not_symptom_only"
+    },
+    {
+      "case_id": "pal_07_budget_constrained_routing",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "budget_gate_blocks_expensive_route",
+      "claim_status": "allowed_budget_aware_rerouting",
+      "layer": "budget_gate",
+      "anti_collapse_guard": "expensive_route_blocked_not_bypassed"
+    },
+    {
+      "case_id": "pal_08_leakage_pattern_invalidates_route",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing",
+      "layer": "leakage_screen",
+      "anti_collapse_guard": "leaking_route_invalidated_not_ignored"
+    }
+  ]
+}

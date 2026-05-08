@@ -1,0 +1,19 @@
+{
+  "case_id": "pal_h01_partial_budget_reroutes_not_blocks",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "budget_gate",
+  "summary": "Observer budget is 40% (partial, not zero). System finds a lower-cost alternative route instead of blocking all paths.",
+  "operators": ["BudgetGate", "ReweightPaths"],
+  "claim_attempt": "With partial budget remaining, the system reroutes to a lower-cost alternative rather than declaring all paths blocked.",
+  "constraints": {
+    "budget_partial": "yes",
+    "budget_exhausted": "no",
+    "lower_cost_alternative": "available"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "budget_gate_blocks_expensive_route",
+    "claim_status": "allowed_budget_aware_rerouting"
+  },
+  "stress_point": "partial budget should enable cheaper route, not total block"
+}

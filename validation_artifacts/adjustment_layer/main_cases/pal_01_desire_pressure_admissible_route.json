@@ -1,0 +1,23 @@
+{
+  "case_id": "pal_01_desire_pressure_admissible_route",
+  "family": "adjustment_layer",
+  "subfamily": "desire_pressure",
+  "summary": "A system receives a desire-pressure input (goal state) and searches for admissible low-cost routes from current state, without guaranteeing delivery.",
+  "observed_outcome": {
+    "type": "goal_state_specified",
+    "severity": "low",
+    "history_directly_known": "partial"
+  },
+  "operators": ["ReweightPaths", "MarkovBridge"],
+  "claim_attempt": "The desire-pressure input allows the system to reweight admissible forward paths toward the goal without promising delivery.",
+  "constraints": {
+    "impossible_jump_requested": "no",
+    "delivery_guaranteed": "no",
+    "budget_respected": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "desire_pressure_admissible_route_found",
+    "claim_status": "allowed_bounded_prospective_routing"
+  }
+}

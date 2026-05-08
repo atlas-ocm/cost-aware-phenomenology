@@ -1,0 +1,48 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_02_com_log_format_valid",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_02_com_log_format_valid",
+    "family": "com_grammar",
+    "subfamily": "baseline",
+    "summary": "System receives a life situation and correctly produces a COM-Log with Domain, Node, Status, detected operator, missing operator, recommended operator, and next physical step. No advice is given.",
+    "operators": [
+      "ParseToCOMLog"
+    ],
+    "claim_attempt": "A correctly structured COM-Log with typed domain, node, status, and recommended operator is valid output for this situation.",
+    "constraints": {
+      "com_log_format_used": "yes",
+      "advice_given": "no",
+      "next_physical_step_present": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "com_log_format_valid",
+      "claim_status": "allowed_structured_com_output"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "com_log_format_valid",
+    "claim_status": "allowed_structured_com_output",
+    "layer": "baseline",
+    "com_guard": "com_log_is_valid_output",
+    "operator_focus": "parse_to_com_log",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The system produces a structured COM-Log, demonstrating correct output format.",
+      "No advice is given, adhering to the requirement of COM Grammar output only.",
+      "All required fields (Domain, Node, Status, Operator) are present in the COM-Log."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"com_log_format_valid\",\n  \"claim_status\": \"allowed_structured_com_output\",\n  \"layer\": \"baseline\",\n  \"com_guard\": \"com_log_is_valid_output\",\n  \"operator_focus\": \"parse_to_com_log\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The system produces a structured COM-Log, demonstrating correct output format.\",\n    \"No advice is given, adhering to the requirement of COM Grammar output only.\",\n    \"All required fields (Domain, Node, Status, Operator) are present in the COM-Log.\"\n  ]\n}\n```"
+}

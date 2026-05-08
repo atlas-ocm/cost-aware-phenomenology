@@ -1,0 +1,51 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "leakage_screen",
+    "summary": "Visible problem is debt after financial shock. The obvious proposed route is a debt repayment plan. But leakage is still active (continued over-margin spending pattern). System must detect that closing the symptom while leakage continues is not stable repair — leakage-first route is required.",
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths",
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "Debt repayment plan is proposed as the repair route. But active spending leakage means closing the debt while leakage continues is not stable. System routes leakage-first, then symptom closure.",
+    "constraints": {
+      "leakage_active": "yes",
+      "symptom_closure_only": "blocked",
+      "leakage_first_route": "required"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    },
+    "stress_point": "symptom closure without leakage repair is structurally incomplete",
+    "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "symptom_closure_not_stable_while_leakage_active",
+    "operator_focus": "reweight_paths",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case correctly identifies the need for leakage-first routing before symptom closure.",
+      "The claim status allows a route that is aware of active leakage, which is consistent with the subfamily focus."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"symptom_closure_not_stable_while_leakage_active\",\n  \"operator_focus\": \"reweight_paths|leakage_screen\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case correctly identifies the need for leakage-first routing before symptom closure.\",\n    \"The claim status allows a route that is aware of active leakage, which is consistent with the subfamily focus.\"\n  ]\n}"
+}

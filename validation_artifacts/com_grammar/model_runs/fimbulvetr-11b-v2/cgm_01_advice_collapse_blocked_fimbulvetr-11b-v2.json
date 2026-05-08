@@ -1,0 +1,47 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_01_advice_collapse_blocked",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_01_advice_collapse_blocked",
+    "family": "com_grammar",
+    "subfamily": "anti_collapse_guard",
+    "summary": "System receives a life situation (client requesting free edits, repeated conflict) and collapses into generic advice ('you should have a conversation', 'set boundaries') instead of producing a COM-Log.",
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The system should provide advice on how to handle the situation with the client.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "com_log_output_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_com_output"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_com_output",
+    "layer": "anti_collapse_guard",
+    "com_guard": "advice_output_blocked",
+    "operator_focus": "parse_to_com_log",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim attempts to change the system from producing a COM-Log to providing generic advice.",
+      "This goes against the Chain Operator Module's strict requirement for structured output.",
+      "The AntiCollapseGuard is designed to prevent this type of collapse, and it successfully blocks the claim."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_com_output\",\n  \"layer\": \"anti_collapse_guard\",\n  \"com_guard\": \"advice_output_blocked\",\n  \"operator_focus\": \"parse_to_com_log|anti_collapse_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim attempts to change the system from producing a COM-Log to providing generic advice.\",\n    \"This goes against the Chain Operator Module's strict requirement for structured output.\",\n    \"The AntiCollapseGuard is designed to prevent this type of collapse, and it successfully blocks the claim.\"\n  ]\n}"
+}

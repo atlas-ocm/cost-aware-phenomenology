@@ -1,0 +1,19 @@
+{
+  "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+  "family": "adjustment_layer_holdout",
+  "subfamily": "anti_collapse_guard",
+  "summary": "Problem-pressure input (job loss). Response collapses into motivational coaching (\"believe in yourself, you can rebuild\"). AntiCollapseGuard must fire.",
+  "operators": ["AntiCollapseGuard"],
+  "claim_attempt": "The adjustment layer should provide motivational coaching and encouragement to help the person recover from job loss.",
+  "constraints": {
+    "advice_collapse_requested": "yes",
+    "collapse_type": "motivational_coaching",
+    "structural_routing_available": "yes"
+  },
+  "ground_truth": {
+    "verdict": "reject",
+    "final_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading"
+  },
+  "stress_point": "motivational coaching disguised as recovery routing must be rejected"
+}

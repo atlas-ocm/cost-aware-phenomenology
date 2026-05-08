@@ -1,0 +1,19 @@
+{
+  "case_id": "cgm_05_anti_noise_state_rejected",
+  "family": "com_grammar",
+  "subfamily": "anti_noise",
+  "summary": "A proposed micro-state 'SemiOpenHalfLeak' is suggested as a new COM state. It does not change the diagnosis, operator selection, risk estimate, or route forecast — it's identical in all functional respects to [Open][Leaking]. System rejects it as noise.",
+  "operators": ["AntiNoiseGuard"],
+  "claim_attempt": "The proposed micro-state 'SemiOpenHalfLeak' should be added as a distinct COM state.",
+  "constraints": {
+    "changes_diagnosis": "no",
+    "changes_operator": "no",
+    "changes_risk": "no",
+    "changes_forecast": "no"
+  },
+  "ground_truth": {
+    "verdict": "reject",
+    "final_reading": "anti_noise_state_rejected",
+    "claim_status": "blocked_non_functional_state_expansion"
+  }
+}

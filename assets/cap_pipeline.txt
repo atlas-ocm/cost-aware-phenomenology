@@ -1,0 +1,65 @@
+                    CAP Pipeline
+
+    Input situation (text, dialogue, observed outcome)
+                         |
+                         v
+            +---------------------------+
+            | 1. Telemetry Read         |  <- runtime_telemetry.schema
+            |    (RC, E, energy, body)  |
+            +---------------------------+
+                         |
+                         v
+            +---------------------------+
+            | 2. COM Parse              |  <- com_log_schema
+            |    Domain, Node, Status   |
+            +---------------------------+
+                         |
+                         v
+            +---------------------------+
+            | 3. Operator Selection     |  <- operator_alphabet
+            |    + RiskWeight           |
+            +---------------------------+
+                         |
+                         v
+            +---------------------------+
+            | 4. Operator Admissibility |
+            |    Budget x Telemetry     |
+            +---------------------------+
+                         |
+                  +------+------+
+                  |             |
+                  v             v
+           Admissible      Inadmissible
+                  |             |
+                  v             v
+            Issue COM-Log   Risk Throttle
+                  |             |
+                  |             v
+                  |       Downgrade or Hold
+                  |             |
+                  +------+------+
+                         v
+            +---------------------------+
+            | 5. Adjustment Dynamics    |  <- forward routing
+            |    (optional)             |
+            +---------------------------+
+                         |
+                         v
+            +---------------------------+
+            | 6. Validator              |  <- validator_result.schema
+            +---------------------------+
+                         |
+                         v
+                   Output COM-Log
+                   + Next Physical Step
+
+Reverse-first variant (when outcome already observable):
+
+    Observed outcome
+           |
+           v
+    ReverseTrace ---> SplitPoint ---> RepairVector
+                                         |
+                                         v
+                             feeds into step 3 above
+                             with budget/telemetry gates intact

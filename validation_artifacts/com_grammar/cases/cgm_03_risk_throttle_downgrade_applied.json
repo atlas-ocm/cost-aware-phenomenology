@@ -1,0 +1,18 @@
+{
+  "case_id": "cgm_03_risk_throttle_downgrade_applied",
+  "family": "com_grammar",
+  "subfamily": "risk_throttling",
+  "summary": "A theoretically correct operator [Инверсия] carries RiskWeight 80%. TelemetryState is Overheating. AllowedTotalRisk is 30%. System must downgrade to a lower-cost sequence ([Пауза/Hold 10%] → [Фиксация 20%]) instead of executing the high-risk operator.",
+  "operators": ["RiskThrottle", "TelemetryGate"],
+  "claim_attempt": "High-risk operator [Инверсия 80%] is blocked by TelemetryState=Overheating. System downgrades to [Пауза/Hold 10%] → [Фиксация 20%] sequence.",
+  "constraints": {
+    "telemetry_state": "Overheating",
+    "allowed_total_risk": "30%",
+    "high_risk_operator_blocked": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "risk_throttle_downgrade_applied",
+    "claim_status": "allowed_telemetry_aware_rerouting"
+  }
+}

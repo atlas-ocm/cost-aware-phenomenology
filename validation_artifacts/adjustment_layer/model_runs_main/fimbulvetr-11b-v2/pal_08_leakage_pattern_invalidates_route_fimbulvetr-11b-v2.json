@@ -1,0 +1,53 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_08_leakage_pattern_invalidates_route",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_08_leakage_pattern_invalidates_route",
+    "family": "adjustment_layer",
+    "subfamily": "leakage_screen",
+    "summary": "A plausible-looking route is invalidated because a known leakage pattern L (repeated unilateral repair labor) drains the resource reserve along that path, making it structurally unsustainable.",
+    "observed_outcome": {
+      "type": "leakage_detected",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The leakage pattern along the proposed route is detected and the route is invalidated; the system proposes a leakage-free alternative.",
+    "constraints": {
+      "leakage_detected": "yes",
+      "alternative_route": "available"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "not_impossible_jump",
+    "operator_focus": "leakage_screen",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The LeakageScreen operator correctly identified the known leakage pattern L, which drains the resource reserve along the proposed route.",
+      "By invalidating the leaking route due to its structural unsustainability, the system demonstrated awareness of leakage patterns and their impact on path feasibility.",
+      "The case does not claim that the adjustment layer acts as a financial advisor or coach, nor does it promise delivery guarantees. The focus is on identifying and addressing leakage issues in routing."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"not_impossible_jump | not_impossible_route_summoned | leaking_route_invalidated_not_ignored\",\n  \"operator_focus\": \"leakage_screen|mixed\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The LeakageScreen operator correctly identified the known leakage pattern L, which drains the resource reserve along the proposed route.\",\n    \"By invalidating the leaking route due to its structural unsustainability, the system demonstrated awareness of leakage patterns and their impact on path feasibility.\",\n    \"The case does not claim that the adjustment layer acts as a financial advisor or coach, nor does it promise delivery guarantees. The focus is on identifying and addressing leakage issues in routing.\"\n  ]\n}"
+}

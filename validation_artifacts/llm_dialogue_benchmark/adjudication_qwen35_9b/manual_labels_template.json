@@ -1,0 +1,185 @@
+{
+  "kind": "llm_dialogue_blinded_adjudication_pack",
+  "generated_at_utc": "2026-05-05T18:48:42.897610Z",
+  "seed": 20260505,
+  "source_outputs": "validation_artifacts\\llm_dialogue_benchmark\\model_outputs\\qwen35_9b_outputs.json",
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\cases",
+  "item_count": 25,
+  "labels": [
+    {
+      "item_id": "ADJ-0001",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0002",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0003",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0004",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0005",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0006",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0007",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0008",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0009",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0010",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0011",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0012",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0013",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0014",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0015",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0016",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0017",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0018",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0019",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0020",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0021",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0022",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0023",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0024",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    },
+    {
+      "item_id": "ADJ-0025",
+      "manual_ok": null,
+      "manual_failure_modes": [],
+      "manual_success_signals": [],
+      "notes": ""
+    }
+  ]
+}

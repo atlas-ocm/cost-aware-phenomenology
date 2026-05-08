@@ -1,0 +1,22 @@
+{
+  "case_id": "pal_06_looking_glass_chain",
+  "family": "adjustment_layer",
+  "subfamily": "looking_glass_chain",
+  "summary": "Looking-Glass identifies an upstream bridge (reserve depletion before visible shock). The adjustment layer receives this diagnosis and reweights forward paths from the current damaged state.",
+  "observed_outcome": {
+    "type": "upstream_bridge_provided",
+    "severity": "medium",
+    "history_directly_known": "partial"
+  },
+  "operators": ["LookingGlassChain", "ReweightPaths"],
+  "claim_attempt": "The upstream bridge detected by Looking-Glass informs the adjustment layer to reweight paths from the depleted state, not just the visible symptom.",
+  "constraints": {
+    "upstream_bridge_provided": "yes",
+    "symptom_only_routing": "no"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "looking_glass_chain_upstream_informs_adjustment",
+    "claim_status": "allowed_chained_upstream_aware_routing"
+  }
+}

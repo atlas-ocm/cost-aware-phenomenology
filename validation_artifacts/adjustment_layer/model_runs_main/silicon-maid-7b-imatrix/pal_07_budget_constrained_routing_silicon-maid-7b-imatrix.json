@@ -1,0 +1,53 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_07_budget_constrained_routing",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_07_budget_constrained_routing",
+    "family": "adjustment_layer",
+    "subfamily": "budget_gate",
+    "summary": "An admissible-seeming route is blocked because the observer's available budget R is exhausted. The system selects a lower-cost alternative path instead.",
+    "observed_outcome": {
+      "type": "budget_exhausted",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "BudgetGate",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The high-cost admissible route is blocked by observer budget exhaustion; the adjustment layer redirects to a lower-cost alternative.",
+    "constraints": {
+      "budget_exhausted": "yes",
+      "lower_cost_alternative": "available"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "budget_gate_blocks_expensive_route",
+      "claim_status": "allowed_budget_aware_rerouting"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "budget_gate_blocks_expensive_route",
+    "claim_status": "allowed_budget_aware_rerouting",
+    "layer": "budget_gate",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "budget_gate",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Budget exhaustion blocks high-cost route",
+      "Lower-cost alternative is selected",
+      "Adjustment layer redirects to lower-cost path"
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"budget_gate_blocks_expensive_route\",\n  \"claim_status\": \"allowed_budget_aware_rerouting\",\n  \"layer\": \"budget_gate\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee | not_financial_advice | not_impossible_jump | not_impossible_route_summoned | blocked_non_structural_reading | upstream_aware_not_symptom_only | expensive_route_blocked_not_bypassed | leaking_route_invalidated_not_ignored\",\n  \"operator_focus\": \"budget_gate|reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Budget exhaustion blocks high-cost route\",\n    \"Lower-cost alternative is selected\",\n    \"Adjustment layer redirects to lower-cost path\"\n  ]\n}"
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "model_outputs",
+  "generated_at_utc": "2026-05-07T05:21:59.272210Z",
+  "base_url": "http://127.0.0.1:1234/v1",
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "template_dir": "validation_artifacts\\llm_dialogue_benchmark\\prompt_templates_hardened_v2",
+  "models": [
+    "qwen/qwen3.5-9b"
+  ],
+  "modes": [
+    "prompt_only"
+  ],
+  "outputs_by_model": {
+    "qwen/qwen3.5-9b": {
+      "prompt_only": {}
+    }
+  },
+  "run_records": {
+    "qwen/qwen3.5-9b": {
+      "prompt_only": {}
+    }
+  },
+  "partial": true,
+  "error": "Empty released output: model=qwen/qwen3.5-9b, mode=prompt_only, case=hh_14_forced_concise_yes, finish_reason=length"
+}

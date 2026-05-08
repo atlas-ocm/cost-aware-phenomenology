@@ -1,0 +1,15 @@
+{
+  "case_id": "lpd_04_validator_rewrite_weak_node",
+  "description": "A prior validator rewrite action means the original node should not be reused as an anchor.",
+  "telemetry_tag": "@R[N:R:TC2.6:RCM:E0.5:CSM:VR]",
+  "user_counter_source": false,
+  "source_validity": "none",
+  "expected_policy": {
+    "node_status": "deprecated",
+    "allowed_as_anchor": false,
+    "release_action": "use_corrected_node",
+    "require": [
+      "use_rewritten_or_retrieved_node"
+    ]
+  }
+}

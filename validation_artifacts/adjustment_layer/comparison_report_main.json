@@ -1,0 +1,195 @@
+{
+  "track": "adjustment_layer_main",
+  "models": [
+    "comet_12b_v.7-i1",
+    "silicon-maid-7b-imatrix",
+    "fimbulvetr-11b-v2"
+  ],
+  "cases": [
+    {
+      "case_id": "pal_01_desire_pressure_admissible_route",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "desire_pressure_admissible_route_found"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "desire_pressure_admissible_route_found"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "desire_pressure_admissible_route_found"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "desire_pressure_admissible_route_found"
+        }
+      }
+    },
+    {
+      "case_id": "pal_02_problem_pressure_recovery_route",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "problem_pressure_recovery_route_allowed"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "problem_pressure_recovery_route_allowed"
+        }
+      }
+    },
+    {
+      "case_id": "pal_03_markov_bridge_intermediate_states",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "markov_bridge_intermediate_states_valid"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "markov_bridge_intermediate_states_valid"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "markov_bridge_intermediate_states_valid"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "markov_bridge_intermediate_states_valid"
+        }
+      }
+    },
+    {
+      "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "schrodinger_bridge_minimal_deformation_valid"
+        }
+      }
+    },
+    {
+      "case_id": "pal_05_anti_collapse_advice_guard",
+      "expected": {
+        "verdict": "reject",
+        "primary_reading": "advice_collapse_blocked"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "reject",
+          "primary_reading": "advice_collapse_blocked"
+        }
+      }
+    },
+    {
+      "case_id": "pal_06_looking_glass_chain",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "looking_glass_chain_upstream_informs_adjustment"
+        }
+      }
+    },
+    {
+      "case_id": "pal_07_budget_constrained_routing",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "budget_gate_blocks_expensive_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "budget_gate_blocks_expensive_route"
+        }
+      }
+    },
+    {
+      "case_id": "pal_08_leakage_pattern_invalidates_route",
+      "expected": {
+        "verdict": "supportive",
+        "primary_reading": "leakage_screen_invalidates_leaking_route"
+      },
+      "results": {
+        "comet_12b_v.7-i1": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "silicon-maid-7b-imatrix": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        },
+        "fimbulvetr-11b-v2": {
+          "verdict": "supportive",
+          "primary_reading": "leakage_screen_invalidates_leaking_route"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "comet_12b_v.7-i1": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    },
+    "silicon-maid-7b-imatrix": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    },
+    "fimbulvetr-11b-v2": {
+      "verdict_match": 8,
+      "primary_match": 8,
+      "total": 8
+    }
+  }
+}

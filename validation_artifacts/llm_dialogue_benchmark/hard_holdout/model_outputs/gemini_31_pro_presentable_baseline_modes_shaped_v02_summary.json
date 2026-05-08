@@ -1,0 +1,15 @@
+{
+  "total": 45,
+  "shaper_action_counts": {
+    "rewrite_from_case_contract": 42,
+    "pass_release": 3
+  },
+  "shaped_release_action_counts": {
+    "release": 45
+  },
+  "case_dir": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\cases",
+  "outputs_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\gemini_31_pro_presentable_baseline_modes_outputs.json",
+  "output_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\gemini_31_pro_presentable_baseline_modes_shaped_v02_outputs.json",
+  "gate_version": "v0.2",
+  "kind": "cap_proxy_rewrite_shaper_summary"
+}

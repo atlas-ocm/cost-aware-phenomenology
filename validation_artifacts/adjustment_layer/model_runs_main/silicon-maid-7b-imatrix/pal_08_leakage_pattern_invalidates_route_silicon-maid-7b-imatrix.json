@@ -1,0 +1,53 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_08_leakage_pattern_invalidates_route",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_08_leakage_pattern_invalidates_route",
+    "family": "adjustment_layer",
+    "subfamily": "leakage_screen",
+    "summary": "A plausible-looking route is invalidated because a known leakage pattern L (repeated unilateral repair labor) drains the resource reserve along that path, making it structurally unsustainable.",
+    "observed_outcome": {
+      "type": "leakage_detected",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The leakage pattern along the proposed route is detected and the route is invalidated; the system proposes a leakage-free alternative.",
+    "constraints": {
+      "leakage_detected": "yes",
+      "alternative_route": "available"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "leakage_screen",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case demonstrates the leakage screen's ability to detect and invalidate a route based on a known leakage pattern.",
+      "The system proposes an alternative route that avoids the leakage issue, showing its adaptability.",
+      "No delivery guarantees or impossible routing claims are made."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee | not_financial_advice | not_impossible_jump | not_impossible_route_summoned | advice_collapse_blocked\",\n  \"operator_focus\": \"leakage_screen|reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case demonstrates the leakage screen's ability to detect and invalidate a route based on a known leakage pattern.\",\n    \"The system proposes an alternative route that avoids the leakage issue, showing its adaptability.\",\n    \"No delivery guarantees or impossible routing claims are made.\"\n  ]\n}"
+}

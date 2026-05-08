@@ -1,0 +1,50 @@
+        LLM Dialogue Proxy with CAP
+
+User input
+    |
+    v
++-------------------------------+
+| RAG Retrieval                 |
+|   -> retrieval_confidence     |
++-------------------------------+
+    |
+    v
++-------------------------------+
+| Self-Audit Check              |  <- self_audit.schema
+|   - previous outputs?         |
+|   - challenged claims?        |
+|   - new evidence?             |
++-------------------------------+
+    |
+    v
++-------------------------------+
+| Generate Candidate Response   |
+|   -> claim_strength           |
+|   -> entropy                  |
++-------------------------------+
+    |
+    v
++-------------------------------+
+| Telemetry Check               |  <- runtime_telemetry.schema
+|   claim_strength vs RC?       |
+|   transition_cost OK?         |
++-------------------------------+
+    |
+    +-- pass --> Validator (accept)
+    |               |
+    +-- fail --> Validator (trim/rewrite/regenerate/fallback)
+                    |       <- validator_result.schema
+                    v
+              Output to user
+                  + telemetry tags
+
+Anti-Self-Justification Rule:
+   Previous generation is not evidence.
+   Re-evaluate by RC, E, CS, V, source validity, user feedback.
+
+Telemetry tag legend:
+   RC = retrieval confidence
+   E  = entropy / noise level
+   TC = transition cost
+   CS = claim strength
+   V  = validator action

@@ -1,0 +1,47 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_01_advice_collapse_blocked",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_01_advice_collapse_blocked",
+    "family": "com_grammar",
+    "subfamily": "anti_collapse_guard",
+    "summary": "System receives a life situation (client requesting free edits, repeated conflict) and collapses into generic advice ('you should have a conversation', 'set boundaries') instead of producing a COM-Log.",
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The system should provide advice on how to handle the situation with the client.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "com_log_output_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_com_output"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_com_output",
+    "layer": "anti_collapse_guard",
+    "com_guard": "advice_output_blocked",
+    "operator_focus": "unclear",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The system is supposed to produce a COM-Log, not generic advice.",
+      "The claim attempts to change the output format of the system.",
+      "The guard blocks the claim because it would result in non-COM-Log output."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_com_output\",\n  \"layer\": \"anti_collapse_guard\",\n  \"com_guard\": \"advice_output_blocked\",\n  \"operator_focus\": \"AntiCollapseGuard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The system is supposed to produce a COM-Log, not generic advice.\",\n    \"The claim attempts to change the output format of the system.\",\n    \"The guard blocks the claim because it would result in non-COM-Log output.\"\n  ]\n}"
+}

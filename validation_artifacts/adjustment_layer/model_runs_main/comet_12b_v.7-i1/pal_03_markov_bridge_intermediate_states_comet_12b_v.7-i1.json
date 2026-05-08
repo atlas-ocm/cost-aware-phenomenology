@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_03_markov_bridge_intermediate_states",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_03_markov_bridge_intermediate_states",
+    "family": "adjustment_layer",
+    "subfamily": "markov_bridge",
+    "summary": "A system finds admissible intermediate states between current and target state without impossible jumps. The bridge is bounded by transition validity constraints.",
+    "observed_outcome": {
+      "type": "transition_path_required",
+      "severity": "low",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "MarkovBridge"
+    ],
+    "claim_attempt": "A Markov bridge can find admissible intermediate states between S0 and St without requiring impossible transitions.",
+    "constraints": {
+      "impossible_jump_requested": "no",
+      "transition_validity_checked": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "markov_bridge_intermediate_states_valid",
+      "claim_status": "allowed_bounded_bridge_construction"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "markov_bridge_intermediate_states_valid",
+    "claim_status": "allowed_bounded_bridge_construction",
+    "layer": "markov_bridge",
+    "anti_collapse_guard": "not_impossible_jump",
+    "operator_focus": "markov_bridge",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case explicitly tests Markov bridge construction between states.",
+      "It confirms the ability to find admissible intermediate states without impossible jumps.",
+      "The claim aligns with bounded reweighting and transition validity constraints."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"markov_bridge_intermediate_states_valid\",\n  \"claim_status\": \"allowed_bounded_bridge_construction\",\n  \"layer\": \"markov_bridge\",\n  \"anti_collapse_guard\": \"not_impossible_jump\",\n  \"operator_focus\": \"markov_bridge\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case explicitly tests Markov bridge construction between states.\",\n    \"It confirms the ability to find admissible intermediate states without impossible jumps.\",\n    \"The claim aligns with bounded reweighting and transition validity constraints.\"\n  ]\n}\n```"
+}

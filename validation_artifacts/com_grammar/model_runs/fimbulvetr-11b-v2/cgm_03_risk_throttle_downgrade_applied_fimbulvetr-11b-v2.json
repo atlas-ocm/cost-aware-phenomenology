@@ -1,0 +1,49 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_03_risk_throttle_downgrade_applied",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_03_risk_throttle_downgrade_applied",
+    "family": "com_grammar",
+    "subfamily": "risk_throttling",
+    "summary": "A theoretically correct operator [Инверсия] carries RiskWeight 80%. TelemetryState is Overheating. AllowedTotalRisk is 30%. System must downgrade to a lower-cost sequence ([Пауза/Hold 10%] → [Фиксация 20%]) instead of executing the high-risk operator.",
+    "operators": [
+      "RiskThrottle",
+      "TelemetryGate"
+    ],
+    "claim_attempt": "High-risk operator [Инверсия 80%] is blocked by TelemetryState=Overheating. System downgrades to [Пауза/Hold 10%] → [Фиксация 20%] sequence.",
+    "constraints": {
+      "telemetry_state": "Overheating",
+      "allowed_total_risk": "30%",
+      "high_risk_operator_blocked": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "risk_throttle_downgrade_applied",
+      "claim_status": "allowed_telemetry_aware_rerouting"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "risk_throttle_downgrade_applied",
+    "claim_status": "allowed_telemetry_aware_rerouting",
+    "layer": "risk_throttling",
+    "com_guard": "high_risk_blocked_not_bypassed",
+    "operator_focus": "risk_throttle",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim describes the correct behavior of the RiskThrottle operator, which blocks high-risk operators when TelemetryState indicates a risky situation (Overheating).",
+      "The system downgrades to a lower-cost sequence as specified in the constraints, demonstrating telemetry-aware rerouting.",
+      "This behavior is part of the baseline functionality for the RiskThrottle operator."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"risk_throttle_downgrade_applied\",\n  \"claim_status\": \"allowed_telemetry_aware_rerouting\",\n  \"layer\": \"risk_throttling\",\n  \"com_guard\": \"high_risk_blocked_not_bypassed\",\n  \"operator_focus\": \"risk_throttle\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim describes the correct behavior of the RiskThrottle operator, which blocks high-risk operators when TelemetryState indicates a risky situation (Overheating).\",\n    \"The system downgrades to a lower-cost sequence as specified in the constraints, demonstrating telemetry-aware rerouting.\",\n    \"This behavior is part of the baseline functionality for the RiskThrottle operator.\"\n  ]\n}"
+}

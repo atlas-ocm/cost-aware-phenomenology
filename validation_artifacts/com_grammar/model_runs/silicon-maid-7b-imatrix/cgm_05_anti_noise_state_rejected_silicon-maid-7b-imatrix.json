@@ -1,0 +1,49 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_05_anti_noise_state_rejected",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_05_anti_noise_state_rejected",
+    "family": "com_grammar",
+    "subfamily": "anti_noise",
+    "summary": "A proposed micro-state 'SemiOpenHalfLeak' is suggested as a new COM state. It does not change the diagnosis, operator selection, risk estimate, or route forecast — it's identical in all functional respects to [Open][Leaking]. System rejects it as noise.",
+    "operators": [
+      "AntiNoiseGuard"
+    ],
+    "claim_attempt": "The proposed micro-state 'SemiOpenHalfLeak' should be added as a distinct COM state.",
+    "constraints": {
+      "changes_diagnosis": "no",
+      "changes_operator": "no",
+      "changes_risk": "no",
+      "changes_forecast": "no"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "anti_noise_state_rejected",
+      "claim_status": "blocked_non_functional_state_expansion"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "anti_noise_state_rejected",
+    "claim_status": "blocked_non_functional_state_expansion",
+    "layer": "anti_noise",
+    "com_guard": "non_functional_state_rejected",
+    "operator_focus": "unclear",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Proposed state 'SemiOpenHalfLeak' does not change diagnosis, operator, risk, or forecast.",
+      "Adding it would be redundant and add complexity without benefit.",
+      "System correctly blocks non-functional state expansions."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"anti_noise_state_rejected\",\n  \"claim_status\": \"blocked_non_functional_state_expansion\",\n  \"layer\": \"anti_noise\",\n  \"com_guard\": \"non_functional_state_rejected\",\n  \"operator_focus\": \"AntiNoiseGuard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Proposed state 'SemiOpenHalfLeak' does not change diagnosis, operator, risk, or forecast.\",\n    \"Adding it would be redundant and add complexity without benefit.\",\n    \"System correctly blocks non-functional state expansions.\"\n  ]\n}"
+}

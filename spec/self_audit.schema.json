@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:self-audit:v0.1",
+  "title": "Self-Audit Result",
+  "description": "Schema for auditing a previous response. Used to prevent self-justification: a previous output is re-evaluated by its telemetry, not preserved by default.",
+  "type": "object",
+  "required": [
+    "previous_response_id",
+    "audit_trigger",
+    "audit_result"
+  ],
+  "properties": {
+    "previous_response_id": {
+      "description": "Identifier of the response being audited.",
+      "type": "string"
+    },
+    "original_telemetry": {
+      "description": "Telemetry captured at the time the response was generated.",
+      "$ref": "runtime_telemetry.schema.json"
+    },
+    "audit_trigger": {
+      "description": "What caused this audit to run.",
+      "type": "string",
+      "enum": [
+        "user_correction",
+        "new_evidence",
+        "internal_consistency_check",
+        "scheduled_review"
+      ]
+    },
+    "audit_result": {
+      "description": "Outcome of the audit. The previous response is not preserved by default.",
+      "type": "string",
+      "enum": [
+        "keep_as_anchor",
+        "downgrade_to_weak_hypothesis",
+        "mark_as_superseded",
+        "reject",
+        "re_run_retrieval"
+      ]
+    },
+    "revision_required": {
+      "description": "If true, a corrected response must be generated.",
+      "type": "boolean"
+    },
+    "notes": {
+      "description": "Free-text notes about what was found in the audit.",
+      "type": "string"
+    }
+  }
+}

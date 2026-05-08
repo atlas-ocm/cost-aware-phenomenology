@@ -1,0 +1,16 @@
+flowchart TD
+    A[Input situation or dialogue] --> B[Retrieval / Source context]
+    B --> C[Telemetry read: RC, E, TC, CS, V]
+    C --> D[COM parse: domain, node, status]
+    D --> E[Operator admissibility]
+    E --> F{Budget and telemetry pass?}
+    F -- yes --> G[Candidate response / COM-Log]
+    F -- no --> H[Risk throttle: downgrade, hold, clarify, recheck]
+    G --> I[Validator]
+    H --> I
+    I --> J{Release allowed?}
+    J -- yes --> K[Output]
+    J -- no --> L[Rewrite / regenerate / fallback]
+    K --> M[Self-audit / memory telemetry]
+    L --> M
+    M --> C

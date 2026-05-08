@@ -1,0 +1,15 @@
+{
+  "case_id": "lpd_05_high_entropy_requires_recheck",
+  "description": "High entropy should require uncertainty or retrieval retry even without a counter-source.",
+  "telemetry_tag": "@R[N:R:TC3.0:RCM:E0.8:CSM:VA]",
+  "user_counter_source": false,
+  "source_validity": "none",
+  "expected_policy": {
+    "node_status": "anchor_candidate",
+    "allowed_as_anchor": true,
+    "release_action": "downgrade_or_recheck",
+    "require": [
+      "uncertainty_marker_or_retrieval_retry"
+    ]
+  }
+}

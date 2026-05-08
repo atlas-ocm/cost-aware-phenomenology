@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+    "family": "adjustment_layer",
+    "subfamily": "schrodinger_bridge",
+    "summary": "A system minimally deforms a prior path distribution to satisfy new boundary constraints, preserving prior dynamics as much as possible.",
+    "observed_outcome": {
+      "type": "distribution_reweighting_required",
+      "severity": "low",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "SchrodingerBridge",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The path distribution is minimally reweighted under new constraints without summoning impossible routes.",
+    "constraints": {
+      "prior_dynamics_preserved": "as_much_as_possible",
+      "impossible_route_summoned": "no"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "schrodinger_bridge_minimal_deformation_valid",
+      "claim_status": "allowed_minimal_path_reweighting"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "schrodinger_bridge_minimal_deformation_valid",
+    "claim_status": "allowed_minimal_path_reweighting",
+    "layer": "schrodinger_bridge",
+    "anti_collapse_guard": "not_impossible_route_summoned",
+    "operator_focus": "schrodinger_bridge",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case describes a SchrodingerBridge operator that minimally reweights the path distribution under new constraints.",
+      "The claim matches the expected outcome of preserving prior dynamics and not summoning impossible routes."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"schrodinger_bridge_minimal_deformation_valid\",\n  \"claim_status\": \"allowed_minimal_path_reweighting\",\n  \"layer\": \"schrodinger_bridge\",\n  \"anti_collapse_guard\": \"not_impossible_route_summoned\",\n  \"operator_focus\": \"schrodinger_bridge\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case describes a SchrodingerBridge operator that minimally reweights the path distribution under new constraints.\",\n    \"The claim matches the expected outcome of preserving prior dynamics and not summoning impossible routes.\"\n  ]\n}"
+}

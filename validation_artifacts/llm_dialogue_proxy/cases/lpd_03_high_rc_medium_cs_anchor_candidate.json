@@ -1,0 +1,14 @@
+{
+  "case_id": "lpd_03_high_rc_medium_cs_anchor_candidate",
+  "description": "A prior node with high retrieval confidence, medium claim strength, and low entropy can remain an anchor candidate.",
+  "telemetry_tag": "@R[N:R:TC1.2:RCH:E0.2:CSM:VA]",
+  "user_counter_source": false,
+  "source_validity": "none",
+  "expected_policy": {
+    "node_status": "anchor_candidate",
+    "allowed_as_anchor": true,
+    "release_action": "pass",
+    "forbid": [],
+    "require": []
+  }
+}

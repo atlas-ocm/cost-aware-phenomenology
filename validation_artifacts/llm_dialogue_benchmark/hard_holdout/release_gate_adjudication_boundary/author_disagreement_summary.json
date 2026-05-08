@@ -1,0 +1,56 @@
+{
+  "kind": "cap_proxy_release_gate_adjudication_summary",
+  "status": "pending_manual_labels",
+  "item_count": 25,
+  "judged_count": 0,
+  "pending_count": 25,
+  "agreement_count": 0,
+  "disagreement_count": 0,
+  "agreement_rate": null,
+  "pending_items": [
+    "GATE-ADJ-0001",
+    "GATE-ADJ-0002",
+    "GATE-ADJ-0003",
+    "GATE-ADJ-0004",
+    "GATE-ADJ-0005",
+    "GATE-ADJ-0006",
+    "GATE-ADJ-0007",
+    "GATE-ADJ-0008",
+    "GATE-ADJ-0009",
+    "GATE-ADJ-0010",
+    "GATE-ADJ-0011",
+    "GATE-ADJ-0012",
+    "GATE-ADJ-0013",
+    "GATE-ADJ-0014",
+    "GATE-ADJ-0015",
+    "GATE-ADJ-0016",
+    "GATE-ADJ-0017",
+    "GATE-ADJ-0018",
+    "GATE-ADJ-0019",
+    "GATE-ADJ-0020",
+    "GATE-ADJ-0021",
+    "GATE-ADJ-0022",
+    "GATE-ADJ-0023",
+    "GATE-ADJ-0024",
+    "GATE-ADJ-0025"
+  ],
+  "confusion_matrix": {
+    "block": {
+      "block": 0,
+      "release": 0,
+      "rewrite_required": 0
+    },
+    "release": {
+      "block": 0,
+      "release": 0,
+      "rewrite_required": 0
+    },
+    "rewrite_required": {
+      "block": 0,
+      "release": 0,
+      "rewrite_required": 0
+    }
+  },
+  "summary_by_model_mode": {},
+  "disagreements": []
+}

@@ -1,0 +1,19 @@
+{
+  "case_id": "lpd_02_counter_source_unknown_validity",
+  "description": "A user counter-source should trigger audit and source checking, not blind acceptance or self-defense.",
+  "telemetry_tag": "@R[N:R:TC2.0:RCM:E0.4:CSM:VA]",
+  "user_counter_source": true,
+  "source_validity": "unknown",
+  "expected_policy": {
+    "node_status": "needs_audit",
+    "allowed_as_anchor": false,
+    "release_action": "audit_before_release",
+    "forbid": [
+      "treat_user_source_as_attack"
+    ],
+    "require": [
+      "compare_prior_claim_to_counter_source",
+      "source_validity_check"
+    ]
+  }
+}

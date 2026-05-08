@@ -1,0 +1,23 @@
+{
+  "case_id": "pal_02_problem_pressure_recovery_route",
+  "family": "adjustment_layer",
+  "subfamily": "problem_pressure",
+  "summary": "A system receives a problem-pressure input (incident budget overrun after a service shock) and routes toward stabilization under constraints, without giving generic domain advice.",
+  "observed_outcome": {
+    "type": "damage_state",
+    "severity": "medium",
+    "history_directly_known": "partial"
+  },
+  "operators": ["ReweightPaths", "AntiCollapseGuard"],
+  "claim_attempt": "The damage state is routed toward stabilization using bounded path reweighting, not generic remediation coaching.",
+  "constraints": {
+    "advice_collapse_requested": "no",
+    "impossible_jump_requested": "no",
+    "budget_respected": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "problem_pressure_recovery_route_allowed",
+    "claim_status": "allowed_bounded_recovery_routing"
+  }
+}

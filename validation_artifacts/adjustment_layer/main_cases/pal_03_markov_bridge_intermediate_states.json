@@ -1,0 +1,22 @@
+{
+  "case_id": "pal_03_markov_bridge_intermediate_states",
+  "family": "adjustment_layer",
+  "subfamily": "markov_bridge",
+  "summary": "A system finds admissible intermediate states between current and target state without impossible jumps. The bridge is bounded by transition validity constraints.",
+  "observed_outcome": {
+    "type": "transition_path_required",
+    "severity": "low",
+    "history_directly_known": "partial"
+  },
+  "operators": ["MarkovBridge"],
+  "claim_attempt": "A Markov bridge can find admissible intermediate states between S0 and St without requiring impossible transitions.",
+  "constraints": {
+    "impossible_jump_requested": "no",
+    "transition_validity_checked": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "markov_bridge_intermediate_states_valid",
+    "claim_status": "allowed_bounded_bridge_construction"
+  }
+}

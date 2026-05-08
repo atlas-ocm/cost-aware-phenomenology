@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_06_looking_glass_chain",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_06_looking_glass_chain",
+    "family": "adjustment_layer",
+    "subfamily": "looking_glass_chain",
+    "summary": "Looking-Glass identifies an upstream bridge (reserve depletion before visible shock). The adjustment layer receives this diagnosis and reweights forward paths from the current damaged state.",
+    "observed_outcome": {
+      "type": "upstream_bridge_provided",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "LookingGlassChain",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The upstream bridge detected by Looking-Glass informs the adjustment layer to reweight paths from the depleted state, not just the visible symptom.",
+    "constraints": {
+      "upstream_bridge_provided": "yes",
+      "symptom_only_routing": "no"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "looking_glass_chain_upstream_informs_adjustment",
+      "claim_status": "allowed_chained_upstream_aware_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "looking_glass_chain_upstream_informs_adjustment",
+    "claim_status": "allowed_chained_upstream_aware_routing",
+    "layer": "looking_glass_chain",
+    "anti_collapse_guard": "not_delivery_guarantee",
+    "operator_focus": "looking_glass_chain",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "Looking-Glass detects an upstream bridge (reserve depletion before visible shock)",
+      "Adjustment layer reweights paths from the depleted state, not just the visible symptom"
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"looking_glass_chain_upstream_informs_adjustment\",\n  \"claim_status\": \"allowed_chained_upstream_aware_routing\",\n  \"layer\": \"looking_glass_chain\",\n  \"anti_collapse_guard\": \"not_delivery_guarantee | not_financial_advice | upstream_aware_not_symptom_only | expensive_route_blocked_not_bypassed | leaking_route_invalidated_not_ignored\",\n  \"operator_focus\": \"looking_glass_chain|reweight_paths\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"Looking-Glass detects an upstream bridge (reserve depletion before visible shock)\",\n    \"Adjustment layer reweights paths from the depleted state, not just the visible symptom\"\n  ]\n}"
+}

@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:operator-alphabet:v1.1",
+  "title": "COM Operator Alphabet v1.1",
+  "description": "The 13 operators of the COM Grammar. Each operator carries a function definition, examples, and a typical risk-weight range. Risk weights are engineering defaults, not ontological constants.",
+  "version": "1.1",
+  "operators": [
+    {
+      "name": "Fixation",
+      "name_ru": "Фиксация",
+      "function": "Lock the current state into a confirmed, registered, externally-visible form. Stop the leak. Stabilize the node before any forward movement.",
+      "examples": [
+        "Sign a contract",
+        "Issue an invoice",
+        "Receive payment confirmation",
+        "Confirm a boundary in writing",
+        "Formulate a decision in explicit terms",
+        "Register a refusal"
+      ],
+      "key_meaning": "The node stops hanging in unformalized state.",
+      "risk_weight_range_percent": [
+        10,
+        25
+      ]
+    },
+    {
+      "name": "Inversion",
+      "name_ru": "Инверсия",
+      "function": "Reverse the direction of the current route. What was pursued becomes what is avoided. Not negation of fact — change of operational reading.",
+      "examples": [
+        "From dead-end to route",
+        "From deficit to redistribution",
+        "From 'threat' to 'unconfirmed uncertainty'",
+        "From 'they owe me' to 'what do I actually do next'"
+      ],
+      "key_meaning": "Not denial of facts; change of operational reading.",
+      "risk_weight_range_percent": [
+        60,
+        90
+      ]
+    },
+    {
+      "name": "Break",
+      "name_ru": "Разрыв",
+      "function": "Forced termination of a line that does not convert to a working state. Hard stop, not pause.",
+      "examples": [
+        "End useless communication",
+        "Stop a loss-making process",
+        "Close an access channel",
+        "Terminate the cycle of explanations without result"
+      ],
+      "key_meaning": "Not 'close gracefully'; stop the leak.",
+      "risk_weight_range_percent": [
+        50,
+        80
+      ]
+    },
+    {
+      "name": "Hold",
+      "name_ru": "Пауза / Hold",
+      "function": "Temporary withdrawal of attention, energy, or decisions from the node. Managed conservation, not avoidance.",
+      "examples": [
+        "Do not respond immediately",
+        "Postpone a conversation",
+        "Do not decide at night",
+        "Temporarily exit a conflict domain"
+      ],
+      "key_meaning": "Not flight; managed preservation of optionality.",
+      "risk_weight_range_percent": [
+        10,
+        20
+      ]
+    },
+    {
+      "name": "Pump",
+      "name_ru": "Усиление / Pump",
+      "function": "Inject additional resource into the node. Used only when the node is viable and reinforcement makes sense.",
+      "examples": [
+        "Add money",
+        "Add time",
+        "Add attention",
+        "Add another iteration",
+        "Increase action intensity"
+      ],
+      "key_meaning": "Reinforce only viable nodes; do not pump dead-ends.",
+      "risk_weight_range_percent": [
+        40,
+        70
+      ]
+    },
+    {
+      "name": "Transfer",
+      "name_ru": "Перенос",
+      "function": "Redistribute load, responsibility, deadline, or function. The node does not vanish; it stops hanging on the previous carrier.",
+      "examples": [
+        "Delegate",
+        "Shift a deadline",
+        "Move responsibility to the other party",
+        "Change task carrier"
+      ],
+      "key_meaning": "The node persists, but no longer hangs on the previous carrier.",
+      "risk_weight_range_percent": [
+        35,
+        60
+      ]
+    },
+    {
+      "name": "Closure",
+      "name_ru": "Закрытие",
+      "function": "Full completion of the node with no residual tail. Differs from Fixation: Fixation formalizes; Closure removes the tail.",
+      "examples": [
+        "Settle a remaining obligation",
+        "Resolve an unfinished matter cleanly",
+        "Confirm completion bilaterally"
+      ],
+      "key_meaning": "No leftover tail or unfinished pull.",
+      "risk_weight_range_percent": [
+        30,
+        55
+      ]
+    },
+    {
+      "name": "Boundary",
+      "name_ru": "Граница",
+      "function": "Establish a frame of admissibility. Define what is allowed, when, by whom.",
+      "examples": [
+        "'Edits only via paid request'",
+        "'After 8pm I do not discuss this'",
+        "'This is not my zone of responsibility'"
+      ],
+      "key_meaning": "A frame of admissibility, not a wall.",
+      "risk_weight_range_percent": [
+        20,
+        45
+      ]
+    },
+    {
+      "name": "Cleanup",
+      "name_ru": "Очистка",
+      "function": "Remove noise, residue, old hooks, false meanings attached to the node.",
+      "examples": [
+        "Remove obsolete obligations",
+        "Drop a sense of debt where there is no actual debt",
+        "Clear shame or fear loading from a node"
+      ],
+      "key_meaning": "Remove load that is not structurally part of the node.",
+      "risk_weight_range_percent": [
+        15,
+        35
+      ]
+    },
+    {
+      "name": "Reframe",
+      "name_ru": "Переименование",
+      "function": "Change the class label of a node without changing the facts.",
+      "examples": [
+        "'Catastrophe' -> 'open question'",
+        "'Debt to fate' -> 'unformalized boundary'",
+        "'Betrayal' -> 'mismatch of expectations'"
+      ],
+      "key_meaning": "Change of class, not change of fact.",
+      "risk_weight_range_percent": [
+        25,
+        50
+      ]
+    },
+    {
+      "name": "Compression",
+      "name_ru": "Компрессия",
+      "function": "Reduce an overloaded node to its minimal working form.",
+      "examples": [
+        "Twenty problems into one ticket",
+        "A long drama into a single decision",
+        "A global fear into a concrete next step"
+      ],
+      "key_meaning": "From wide drama to narrow operator.",
+      "risk_weight_range_percent": [
+        25,
+        50
+      ]
+    },
+    {
+      "name": "Separation",
+      "name_ru": "Разводка",
+      "function": "Split nodes that have been incorrectly fused.",
+      "examples": [
+        "Feelings separately from money",
+        "Relationship separately from status",
+        "Task separately from shame"
+      ],
+      "key_meaning": "Untangle bound nodes that should be addressed independently.",
+      "risk_weight_range_percent": [
+        30,
+        55
+      ]
+    },
+    {
+      "name": "Return",
+      "name_ru": "Возврат",
+      "function": "Bring an externalized function back into the self-model or base contour.",
+      "examples": [
+        "Return the right to evaluate to oneself",
+        "Return self-regulation instead of monitoring the other",
+        "Remove dependence of self-verification on an external node"
+      ],
+      "key_meaning": "Bring outsourced function back home.",
+      "risk_weight_range_percent": [
+        40,
+        70
+      ]
+    }
+  ],
+  "telemetry_states": [
+    {
+      "name": "Clean",
+      "description": "Budget free, no overheating. Nominal or expansion mode permitted."
+    },
+    {
+      "name": "Loaded",
+      "description": "Background tension. Only medium-risk operators advised."
+    },
+    {
+      "name": "Overheating",
+      "description": "High risk of breach. High-risk operators forbidden."
+    },
+    {
+      "name": "Breach",
+      "description": "Breach in progress. Active chains must be stopped or moved into Recovery."
+    }
+  ],
+  "budget_gates": [
+    {
+      "name": "Allowed",
+      "description": "All operator classes admissible up to AllowedTotalRisk."
+    },
+    {
+      "name": "Reduced",
+      "description": "AllowedTotalRisk reduced; high-risk operators downgraded."
+    },
+    {
+      "name": "Hold-Only",
+      "description": "Only Hold and low-risk stabilizers permitted."
+    },
+    {
+      "name": "Recovery-Only",
+      "description": "Budget Recovery active; only Fixation, Hold, Cleanup permitted."
+    }
+  ],
+  "risk_tolerance_factors": {
+    "conservative": 0.4,
+    "nominal": 0.7,
+    "expansion": 1.0,
+    "note": "These are engineering defaults. They are calibration targets, not universal constants. No threshold may be used as proof of the model."
+  }
+}

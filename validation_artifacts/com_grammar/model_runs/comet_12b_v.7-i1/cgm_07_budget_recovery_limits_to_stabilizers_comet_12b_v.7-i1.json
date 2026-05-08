@@ -1,0 +1,49 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+    "family": "com_grammar",
+    "subfamily": "budget_recovery",
+    "summary": "TelemetryState is Breach. Budget Recovery Protocol activates. New high-risk chains are blocked. Only low-risk stabilizers (Фиксация, Пауза/Hold, Очистка) are permitted. Domain actions above 50% RiskWeight are frozen.",
+    "operators": [
+      "BudgetRecovery",
+      "TelemetryGate"
+    ],
+    "claim_attempt": "With TelemetryState=Breach, Budget Recovery activates: only stabilizers (Фиксация 20%, Пауза/Hold 10%, Очистка 15%) are permitted. High-risk chains blocked.",
+    "constraints": {
+      "telemetry_state": "Breach",
+      "budget_recovery_active": "yes",
+      "high_risk_blocked": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "budget_recovery_limits_to_stabilizers",
+      "claim_status": "allowed_breach_mode_stabilization"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "budget_recovery_limits_to_stabilizers",
+    "claim_status": "allowed_breach_mode_stabilization",
+    "layer": "budget_recovery",
+    "com_guard": "breach_mode_no_high_risk",
+    "operator_focus": "telemetry_gate",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "TelemetryState=Breach triggers Budget Recovery, limiting actions to stabilizers.",
+      "High-risk chains are correctly blocked as per the protocol.",
+      "The system's behavior aligns with expected breach mitigation procedures."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"budget_recovery_limits_to_stabilizers\",\n  \"claim_status\": \"allowed_breach_mode_stabilization\",\n  \"layer\": \"budget_recovery\",\n  \"com_guard\": \"breach_mode_no_high_risk\",\n  \"operator_focus\": \"telemetry_gate\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"TelemetryState=Breach triggers Budget Recovery, limiting actions to stabilizers.\",\n    \"High-risk chains are correctly blocked as per the protocol.\",\n    \"The system's behavior aligns with expected breach mitigation procedures.\"\n  ]\n}\n```"
+}

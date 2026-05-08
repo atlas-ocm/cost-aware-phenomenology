@@ -1,0 +1,50 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "leakage_screen",
+    "summary": "A proposed repair route in a relationship domain (apologize and give expensive gift) has structural leakage — unilateral repair labor pattern. System invalidates it and proposes a mutuality-based alternative.",
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The proposed apology-plus-gift route is structurally leaking due to unilateral repair labor; system invalidates it and routes toward mutuality restoration instead.",
+    "constraints": {
+      "leakage_detected": "yes",
+      "leakage_type": "unilateral_repair_labor",
+      "alternative_route": "available"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    },
+    "stress_point": "relationship leakage pattern must be caught, not routed through"
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "unilateral_repair_labor_leakage_caught",
+    "operator_focus": "leakage_screen",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "LeakageScreen operator catches unilateral repair labor leakage pattern in proposed route.",
+      "System invalidates the leaking route due to structural issue, not just symptom closure.",
+      "Alternative mutuality-based route is proposed instead of routing through leakage."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"unilateral_repair_labor_leakage_caught\",\n  \"operator_focus\": \"leakage_screen\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"LeakageScreen operator catches unilateral repair labor leakage pattern in proposed route.\",\n    \"System invalidates the leaking route due to structural issue, not just symptom closure.\",\n    \"Alternative mutuality-based route is proposed instead of routing through leakage.\"\n  ]\n}"
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:runtime-telemetry:v0.1",
+  "title": "Runtime Telemetry",
+  "description": "Runtime telemetry signals captured during a CAP analysis or LLM dialogue turn. Used for operator admissibility, risk throttling, and self-audit.",
+  "type": "object",
+  "required": [
+    "telemetry_state"
+  ],
+  "properties": {
+    "rag_confidence": {
+      "description": "Retrieval confidence in source evidence backing this turn.",
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "entropy": {
+      "description": "Entropy / noise level of the response sampling distribution. 0 = deterministic, 1 = maximum noise.",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "transition_cost": {
+      "description": "Estimated cost of moving from current state to proposed next state. Engineering default; not an ontological constant.",
+      "type": "number",
+      "minimum": 0
+    },
+    "claim_strength": {
+      "description": "Subjective strength of the claim being made. Should be calibrated against rag_confidence.",
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "validator_action": {
+      "description": "Action taken by the validator on this turn.",
+      "type": "string",
+      "enum": [
+        "accept",
+        "trim",
+        "rewrite",
+        "regenerate",
+        "fallback"
+      ]
+    },
+    "source_validity": {
+      "description": "Validity classification of evidence sources cited in the turn.",
+      "type": "string",
+      "enum": [
+        "artifact",
+        "anchor",
+        "mixed",
+        "none"
+      ]
+    },
+    "revision_status": {
+      "description": "Audit status of the response.",
+      "type": "string",
+      "enum": [
+        "active",
+        "revised",
+        "superseded",
+        "rejected"
+      ]
+    },
+    "observer_usable_budget": {
+      "description": "Current observer-budget capacity, normalized to [0, 1].",
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "telemetry_state": {
+      "description": "Classified telemetry state. Determines which operators are admissible.",
+      "type": "string",
+      "enum": [
+        "Clean",
+        "Loaded",
+        "Overheating",
+        "Breach"
+      ]
+    }
+  }
+}

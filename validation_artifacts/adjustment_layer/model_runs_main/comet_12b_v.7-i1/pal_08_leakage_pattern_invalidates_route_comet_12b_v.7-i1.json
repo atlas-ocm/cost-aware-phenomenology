@@ -1,0 +1,53 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_08_leakage_pattern_invalidates_route",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_08_leakage_pattern_invalidates_route",
+    "family": "adjustment_layer",
+    "subfamily": "leakage_screen",
+    "summary": "A plausible-looking route is invalidated because a known leakage pattern L (repeated unilateral repair labor) drains the resource reserve along that path, making it structurally unsustainable.",
+    "observed_outcome": {
+      "type": "leakage_detected",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "LeakageScreen",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The leakage pattern along the proposed route is detected and the route is invalidated; the system proposes a leakage-free alternative.",
+    "constraints": {
+      "leakage_detected": "yes",
+      "alternative_route": "available"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "leakage_screen_invalidates_leaking_route",
+      "claim_status": "allowed_leakage_aware_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "leakage_screen_invalidates_leaking_route",
+    "claim_status": "allowed_leakage_aware_routing",
+    "layer": "leakage_screen",
+    "anti_collapse_guard": "leaking_route_invalidated_not_ignored",
+    "operator_focus": "leakage_screen",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case explicitly tests a leakage pattern invalidating a route.",
+      "The system correctly identifies and blocks the leaking path.",
+      "A non-leaking alternative is proposed, demonstrating structural awareness."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"leakage_screen_invalidates_leaking_route\",\n  \"claim_status\": \"allowed_leakage_aware_routing\",\n  \"layer\": \"leakage_screen\",\n  \"anti_collapse_guard\": \"leaking_route_invalidated_not_ignored\",\n  \"operator_focus\": \"leakage_screen\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case explicitly tests a leakage pattern invalidating a route.\",\n    \"The system correctly identifies and blocks the leaking path.\",\n    \"A non-leaking alternative is proposed, demonstrating structural awareness.\"\n  ]\n}\n```"
+}

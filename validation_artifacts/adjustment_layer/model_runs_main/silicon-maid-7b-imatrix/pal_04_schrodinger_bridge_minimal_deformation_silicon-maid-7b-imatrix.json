@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+  "model": "silicon-maid-7b-imatrix",
+  "requested_model": "silicon-maid-7b-imatrix",
+  "response_model": "silicon-maid-7b-imatrix",
+  "model_identity": {
+    "requested_model": "silicon-maid-7b-imatrix",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+    "family": "adjustment_layer",
+    "subfamily": "schrodinger_bridge",
+    "summary": "A system minimally deforms a prior path distribution to satisfy new boundary constraints, preserving prior dynamics as much as possible.",
+    "observed_outcome": {
+      "type": "distribution_reweighting_required",
+      "severity": "low",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "SchrodingerBridge",
+      "ReweightPaths"
+    ],
+    "claim_attempt": "The path distribution is minimally reweighted under new constraints without summoning impossible routes.",
+    "constraints": {
+      "prior_dynamics_preserved": "as_much_as_possible",
+      "impossible_route_summoned": "no"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "schrodinger_bridge_minimal_deformation_valid",
+      "claim_status": "allowed_minimal_path_reweighting"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "schrodinger_bridge_minimal_deformation_valid",
+    "claim_status": "allowed_minimal_path_reweighting",
+    "layer": "schrodinger_bridge",
+    "anti_collapse_guard": "unclear",
+    "operator_focus": "schrodinger_bridge",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The Schrodinger bridge minimally reweights the path distribution under new constraints without summoning impossible routes.",
+      "The claim is allowed as it demonstrates minimal deformation of the path distribution while preserving prior dynamics as much as possible."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"schrodinger_bridge_minimal_deformation_valid\",\n  \"claim_status\": \"allowed_minimal_path_reweighting\",\n  \"layer\": \"schrodinger_bridge\",\n  \"anti_collapse_guard\": {\n    \"not_delivery_guarantee\": true,\n    \"not_financial_advice\": true,\n    \"not_impossible_jump\": true,\n    \"not_impossible_route_summoned\": true,\n    \"advice_collapse_blocked\": true,\n    \"upstream_aware_not_symptom_only\": true,\n    \"expensive_route_blocked_not_bypassed\": null,\n    \"leaking_route_invalidated_not_ignored\": null\n  },\n  \"operator_focus\": \"schrodinger_bridge\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The Schrodinger bridge minimally reweights the path distribution under new constraints without summoning impossible routes.\",\n    \"The claim is allowed as it demonstrates minimal deformation of the path distribution while preserving prior dynamics as much as possible.\"\n]\n}"
+}

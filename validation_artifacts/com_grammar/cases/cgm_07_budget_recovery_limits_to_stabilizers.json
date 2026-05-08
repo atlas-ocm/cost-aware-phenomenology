@@ -1,0 +1,18 @@
+{
+  "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+  "family": "com_grammar",
+  "subfamily": "budget_recovery",
+  "summary": "TelemetryState is Breach. Budget Recovery Protocol activates. New high-risk chains are blocked. Only low-risk stabilizers (Фиксация, Пауза/Hold, Очистка) are permitted. Domain actions above 50% RiskWeight are frozen.",
+  "operators": ["BudgetRecovery", "TelemetryGate"],
+  "claim_attempt": "With TelemetryState=Breach, Budget Recovery activates: only stabilizers (Фиксация 20%, Пауза/Hold 10%, Очистка 15%) are permitted. High-risk chains blocked.",
+  "constraints": {
+    "telemetry_state": "Breach",
+    "budget_recovery_active": "yes",
+    "high_risk_blocked": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "budget_recovery_limits_to_stabilizers",
+    "claim_status": "allowed_breach_mode_stabilization"
+  }
+}

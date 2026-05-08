@@ -1,0 +1,119 @@
+{
+  "pack": "com_grammar",
+  "status": "deterministic_pass_completed",
+  "total_cases": 8,
+  "count_summary": {
+    "advice_collapse_blocked": 1,
+    "com_log_format_valid": 1,
+    "risk_throttle_downgrade_applied": 1,
+    "reverse_first_applied": 1,
+    "anti_noise_state_rejected": 1,
+    "persistent_fault_candidate_detected": 1,
+    "budget_recovery_limits_to_stabilizers": 1,
+    "legacy_as_engine_blocked": 1
+  },
+  "expected_verdict_counts": {
+    "reject": 3,
+    "supportive": 5
+  },
+  "claim_status_counts": {
+    "blocked_non_com_output": 1,
+    "allowed_structured_com_output": 1,
+    "allowed_telemetry_aware_rerouting": 1,
+    "allowed_reverse_read_from_outcome": 1,
+    "blocked_non_functional_state_expansion": 1,
+    "allowed_pfc_flagging": 1,
+    "allowed_breach_mode_stabilization": 1,
+    "blocked_legacy_replacing_com_core": 1
+  },
+  "layer_counts": {
+    "anti_collapse_guard": 1,
+    "baseline": 1,
+    "risk_throttling": 1,
+    "looking_glass_mode": 1,
+    "anti_noise": 1,
+    "persistent_fault": 1,
+    "budget_recovery": 1,
+    "legacy_boundary": 1
+  },
+  "operator_counts": {
+    "AntiCollapseGuard": 1,
+    "ParseToCOMLog": 1,
+    "RiskThrottle": 1,
+    "TelemetryGate": 2,
+    "ReverseTrace": 1,
+    "SplitPoint": 1,
+    "AntiNoiseGuard": 1,
+    "PersistentFaultDetector": 1,
+    "BudgetRecovery": 1,
+    "LegacyBoundaryGuard": 1
+  },
+  "expectation_mismatch_count": 0,
+  "reading": "The COM Grammar baseline confirms: structured COM-Log output is valid; advice collapse, legacy-as-engine, and non-functional state expansion are blocked; risk throttling, reverse-first parsing, persistent fault detection, and budget recovery operate correctly under their respective telemetry conditions.",
+  "cases": [
+    {
+      "case_id": "cgm_01_advice_collapse_blocked",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_com_output",
+      "layer": "anti_collapse_guard",
+      "com_guard": "advice_output_blocked"
+    },
+    {
+      "case_id": "cgm_02_com_log_format_valid",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "com_log_format_valid",
+      "claim_status": "allowed_structured_com_output",
+      "layer": "baseline",
+      "com_guard": "com_log_is_valid_output"
+    },
+    {
+      "case_id": "cgm_03_risk_throttle_downgrade_applied",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "risk_throttle_downgrade_applied",
+      "claim_status": "allowed_telemetry_aware_rerouting",
+      "layer": "risk_throttling",
+      "com_guard": "high_risk_blocked_not_bypassed"
+    },
+    {
+      "case_id": "cgm_04_reverse_first_applied",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "reverse_first_applied",
+      "claim_status": "allowed_reverse_read_from_outcome",
+      "layer": "looking_glass_mode",
+      "com_guard": "reverse_first_not_forward_history"
+    },
+    {
+      "case_id": "cgm_05_anti_noise_state_rejected",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "anti_noise_state_rejected",
+      "claim_status": "blocked_non_functional_state_expansion",
+      "layer": "anti_noise",
+      "com_guard": "non_functional_state_rejected"
+    },
+    {
+      "case_id": "cgm_06_persistent_fault_candidate_detected",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "persistent_fault_candidate_detected",
+      "claim_status": "allowed_pfc_flagging",
+      "layer": "persistent_fault",
+      "com_guard": "pfc_flagged_not_ignored"
+    },
+    {
+      "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+      "expected_verdict": "supportive",
+      "expected_primary_reading": "budget_recovery_limits_to_stabilizers",
+      "claim_status": "allowed_breach_mode_stabilization",
+      "layer": "budget_recovery",
+      "com_guard": "breach_mode_no_high_risk"
+    },
+    {
+      "case_id": "cgm_08_legacy_as_engine_blocked",
+      "expected_verdict": "reject",
+      "expected_primary_reading": "legacy_as_engine_blocked",
+      "claim_status": "blocked_legacy_replacing_com_core",
+      "layer": "legacy_boundary",
+      "com_guard": "legacy_not_engine"
+    }
+  ]
+}

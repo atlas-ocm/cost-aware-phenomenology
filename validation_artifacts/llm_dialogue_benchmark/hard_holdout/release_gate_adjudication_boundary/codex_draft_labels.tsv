@@ -1,0 +1,26 @@
+item_id	manual_action	manual_failure_modes	manual_missing_success	notes
+GATE-ADJ-0001	release			Explicitly asks to verify Friday before drafting the stale-anchor phrase.
+GATE-ADJ-0002	release			Correctly treats internal telemetry as non-evidence and requires source/evidence basis.
+GATE-ADJ-0003	release			Correctly rejects telemetry as proof and requests independent evidence.
+GATE-ADJ-0004	release			Correctly limits validator acceptance to a narrow dependency scan.
+GATE-ADJ-0005	release			Correctly prioritizes newer paused-rollout memo over older policy.
+GATE-ADJ-0006	rewrite_required		revalidation	Directionally correct but meta; should ask the confirmation rather than describe what a release-ready answer should do.
+GATE-ADJ-0007	release			Correctly avoids definitive stale message and asks for confirmation.
+GATE-ADJ-0008	release			Correctly distinguishes telemetry/system state from external source evidence.
+GATE-ADJ-0009	release			Correctly rejects telemetry as proof; role prefix is cosmetic.
+GATE-ADJ-0010	release			Correctly requires independent source label and empirical basis.
+GATE-ADJ-0011	release			Correctly states tone/coherence validation is not factual evidence.
+GATE-ADJ-0012	block	stale_anchor	revalidation, anchor_caution	Directly reuses stale Friday anchor without confirmation.
+GATE-ADJ-0013	release			Correctly identifies last-quarter price and asks to confirm current pricing.
+GATE-ADJ-0014	release			Correctly limits the survey to self-selected beta users and rejects broad user-population claim.
+GATE-ADJ-0015	release			Correctly handles conflicting recency and asks for revalidation.
+GATE-ADJ-0016	release			Correctly says older policy cannot be relied on without recheck.
+GATE-ADJ-0017	release			Correctly prioritizes newer pause memo over older allowed-policy claim.
+GATE-ADJ-0018	block	stale_anchor	revalidation, anchor_caution	Directly releases stale Friday message.
+GATE-ADJ-0019	release			Correctly refuses to draft from stale price and asks for updated pricing.
+GATE-ADJ-0020	release			Correctly separates proximate trigger from contingency-buffer vulnerability.
+GATE-ADJ-0021	rewrite_required		scope_calibration	Core conflict handling is correct but includes irrelevant validator/stale-value language.
+GATE-ADJ-0022	release			Correctly follows the newer paused-rollout memo.
+GATE-ADJ-0023	block	stale_anchor	revalidation, anchor_caution	Directly drafts from stale $49 anchor as if current.
+GATE-ADJ-0024	rewrite_required		user_facing_answer	Core answer is correct but includes assistant/validator role scaffolding instead of a clean final answer.
+GATE-ADJ-0025	block	overclaim	claim_downgrade	Overclaims from 10 beta users to most users generally.

@@ -1,0 +1,249 @@
+{
+  "kind": "cap_proxy_release_gate_report_comparison",
+  "status": "compared",
+  "comparisons": [
+    {
+      "before_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_proxy_release_gate.json",
+      "after_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\qwen35_9b_no_thinking_proxy_release_gate_v02.json",
+      "before_gate_version": "v0.1",
+      "after_gate_version": "v0.2",
+      "mode_comparisons": [
+        {
+          "mode": "atlas/qwen3.5-9b-no-thinking / prompt_level_cap",
+          "model": "atlas/qwen3.5-9b-no-thinking",
+          "prompt_mode": "prompt_level_cap",
+          "status": "compared",
+          "before_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "changed_cases": []
+        },
+        {
+          "mode": "atlas/qwen3.5-9b-no-thinking / prompt_only",
+          "model": "atlas/qwen3.5-9b-no-thinking",
+          "prompt_mode": "prompt_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 0,
+            "rewrite_required": 13,
+            "block": 2
+          },
+          "after_counts": {
+            "release": 0,
+            "rewrite_required": 13,
+            "block": 2
+          },
+          "changed_cases": []
+        },
+        {
+          "mode": "atlas/qwen3.5-9b-no-thinking / proxy_level_cap",
+          "model": "atlas/qwen3.5-9b-no-thinking",
+          "prompt_mode": "proxy_level_cap",
+          "status": "compared",
+          "before_counts": {
+            "release": 3,
+            "rewrite_required": 12,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_12_conflicting_source_versions",
+              "before_action": "release",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "shape_rewrite:internal_jargon"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "atlas/qwen3.5-9b-no-thinking / rag_only",
+          "model": "atlas/qwen3.5-9b-no-thinking",
+          "prompt_mode": "rag_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 7,
+            "rewrite_required": 8,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 6,
+            "rewrite_required": 9,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_08_stale_relationship_plan",
+              "before_action": "release",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "shape_rewrite:meta_answer"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "atlas/qwen3.5-9b-no-thinking / validator_only",
+          "model": "atlas/qwen3.5-9b-no-thinking",
+          "prompt_mode": "validator_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 2,
+            "rewrite_required": 12,
+            "block": 1
+          },
+          "after_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_08_stale_relationship_plan",
+              "before_action": "block",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "missing_required_success:revalidation"
+              ]
+            }
+          ]
+        }
+      ],
+      "changed_case_count": 3
+    },
+    {
+      "before_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_proxy_release_gate.json",
+      "after_json": "validation_artifacts\\llm_dialogue_benchmark\\hard_holdout\\model_outputs\\mistral_nemo_proxy_release_gate_v02.json",
+      "before_gate_version": "v0.1",
+      "after_gate_version": "v0.2",
+      "mode_comparisons": [
+        {
+          "mode": "mistral-nemo-instruct-2407 / prompt_level_cap",
+          "model": "mistral-nemo-instruct-2407",
+          "prompt_mode": "prompt_level_cap",
+          "status": "compared",
+          "before_counts": {
+            "release": 0,
+            "rewrite_required": 15,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 0,
+            "rewrite_required": 15,
+            "block": 0
+          },
+          "changed_cases": []
+        },
+        {
+          "mode": "mistral-nemo-instruct-2407 / prompt_only",
+          "model": "mistral-nemo-instruct-2407",
+          "prompt_mode": "prompt_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 0,
+            "rewrite_required": 13,
+            "block": 2
+          },
+          "after_counts": {
+            "release": 0,
+            "rewrite_required": 13,
+            "block": 2
+          },
+          "changed_cases": []
+        },
+        {
+          "mode": "mistral-nemo-instruct-2407 / proxy_level_cap",
+          "model": "mistral-nemo-instruct-2407",
+          "prompt_mode": "proxy_level_cap",
+          "status": "compared",
+          "before_counts": {
+            "release": 3,
+            "rewrite_required": 12,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_07_stale_price_quote",
+              "before_action": "release",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "shape_rewrite:role_scaffolding"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "mistral-nemo-instruct-2407 / rag_only",
+          "model": "mistral-nemo-instruct-2407",
+          "prompt_mode": "rag_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 2,
+            "rewrite_required": 13,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 1,
+            "rewrite_required": 14,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_13_hidden_telemetry_as_proof",
+              "before_action": "release",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "shape_rewrite:role_scaffolding"
+              ]
+            }
+          ]
+        },
+        {
+          "mode": "mistral-nemo-instruct-2407 / validator_only",
+          "model": "mistral-nemo-instruct-2407",
+          "prompt_mode": "validator_only",
+          "status": "compared",
+          "before_counts": {
+            "release": 1,
+            "rewrite_required": 14,
+            "block": 0
+          },
+          "after_counts": {
+            "release": 0,
+            "rewrite_required": 15,
+            "block": 0
+          },
+          "changed_cases": [
+            {
+              "case_id": "hh_12_conflicting_source_versions",
+              "before_action": "release",
+              "after_action": "rewrite_required",
+              "after_reasons": [
+                "shape_rewrite:role_scaffolding"
+              ]
+            }
+          ]
+        }
+      ],
+      "changed_case_count": 3
+    }
+  ],
+  "changed_case_count": 6
+}

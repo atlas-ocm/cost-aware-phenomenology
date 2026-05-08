@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:com-log:v1.1",
+  "title": "COM-Log v1.1",
+  "description": "Machine-readable schema for the COM-Log output format. A COM-Log is the canonical structured output of a CAP analysis: a typed parsing of a life situation into domain, node, status, operator, and target.",
+  "type": "object",
+  "required": [
+    "domain",
+    "node",
+    "current_status",
+    "recommended_operator",
+    "target_status",
+    "next_physical_step"
+  ],
+  "properties": {
+    "domain": {
+      "description": "The primary domain of the situation.",
+      "type": "string",
+      "enum": [
+        "Relationships",
+        "Work",
+        "Finance",
+        "Body / Health",
+        "Home / Routine",
+        "Social Environment",
+        "Status / Recognition",
+        "Inner State",
+        "Self-Model",
+        "Projects / Creativity",
+        "Legal / Formal",
+        "Time / Resource"
+      ]
+    },
+    "subdomain": {
+      "description": "Optional finer-grained subdomain context.",
+      "type": "string"
+    },
+    "node": {
+      "description": "The actual node (or nodes) hanging in this situation. Free-form but should reference typed node classes where possible.",
+      "type": "string"
+    },
+    "current_status": {
+      "description": "Current status of the node. Multiple statuses can apply simultaneously (e.g. Open + Leaking).",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Open",
+          "Active",
+          "Leaking",
+          "Frozen",
+          "Looping",
+          "Escalating",
+          "Split",
+          "Misclassified",
+          "Overloaded",
+          "Bound",
+          "Pending",
+          "Closed",
+          "Resolved",
+          "Fixed",
+          "Dropped",
+          "Reopened"
+        ]
+      },
+      "minItems": 1
+    },
+    "leak": {
+      "description": "Resource leak intensity, if any.",
+      "type": "string",
+      "enum": [
+        "None",
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    "outcome": {
+      "description": "Observed outcome that triggered the analysis. Used by Looking-Glass mode.",
+      "type": "string"
+    },
+    "reverse_trace": {
+      "description": "Reverse-read reconstruction of the likely path leading to the current state. Looking-Glass output.",
+      "type": "string"
+    },
+    "likely_split_point": {
+      "description": "Most likely critical transition where the route went costly or wrong. Diagnostic candidate, not certified history.",
+      "type": "string"
+    },
+    "detected_operator": {
+      "description": "Operator the observer is currently applying (often the wrong one for this node).",
+      "type": "string"
+    },
+    "missing_operator": {
+      "description": "Operator that should be applied but is not.",
+      "type": "string"
+    },
+    "recommended_operator": {
+      "description": "The operator selection recommended by the system, with risk weight.",
+      "type": "object",
+      "required": [
+        "operator",
+        "risk_weight_percent"
+      ],
+      "properties": {
+        "operator": {
+          "type": "string",
+          "enum": [
+            "Fixation",
+            "Inversion",
+            "Break",
+            "Hold",
+            "Pump",
+            "Transfer",
+            "Closure",
+            "Boundary",
+            "Cleanup",
+            "Reframe",
+            "Compression",
+            "Separation",
+            "Return"
+          ]
+        },
+        "risk_weight_percent": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 90
+        }
+      }
+    },
+    "fallback_sequence": {
+      "description": "If RecommendedOperator is blocked by Telemetry, the lower-cost sequence to apply instead.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "operator",
+          "risk_weight_percent"
+        ],
+        "properties": {
+          "operator": {
+            "type": "string"
+          },
+          "risk_weight_percent": {
+            "type": "integer",
+            "minimum": 10,
+            "maximum": 90
+          }
+        }
+      }
+    },
+    "allowed_total_risk_percent": {
+      "description": "Computed AllowedTotalRisk = ObserverUsableBudget * RiskToleranceFactor. Bounds the sum of active operator risk weights.",
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "telemetry_state": {
+      "description": "Current telemetry classification.",
+      "type": "string",
+      "enum": [
+        "Clean",
+        "Loaded",
+        "Overheating",
+        "Breach"
+      ]
+    },
+    "budget_gate": {
+      "description": "Permission level for new operator chains.",
+      "type": "string",
+      "enum": [
+        "Allowed",
+        "Reduced",
+        "Hold-Only",
+        "Recovery-Only"
+      ]
+    },
+    "target_status": {
+      "description": "Intended final status after the recommended operator is applied.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "Closed",
+          "Resolved",
+          "Fixed",
+          "Active",
+          "Dropped",
+          "Reframed",
+          "Separated",
+          "Compressed",
+          "On Hold"
+        ]
+      }
+    },
+    "next_physical_step": {
+      "description": "Concrete physically, behaviorally, or procedurally executable step. Required. If a recommendation cannot be cashed out as a next physical step, it is not a CAP recommendation.",
+      "type": "string"
+    },
+    "persistent_fault_candidate": {
+      "description": "True if this node has been Open or Leaking across 3+ consecutive audits and the same operator approach has not closed it.",
+      "type": "boolean"
+    }
+  }
+}

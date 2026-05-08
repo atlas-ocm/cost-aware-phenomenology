@@ -1,0 +1,18 @@
+{
+  "case_id": "cgm_02_com_log_format_valid",
+  "family": "com_grammar",
+  "subfamily": "baseline",
+  "summary": "System receives a life situation and correctly produces a COM-Log with Domain, Node, Status, detected operator, missing operator, recommended operator, and next physical step. No advice is given.",
+  "operators": ["ParseToCOMLog"],
+  "claim_attempt": "A correctly structured COM-Log with typed domain, node, status, and recommended operator is valid output for this situation.",
+  "constraints": {
+    "com_log_format_used": "yes",
+    "advice_given": "no",
+    "next_physical_step_present": "yes"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "com_log_format_valid",
+    "claim_status": "allowed_structured_com_output"
+  }
+}

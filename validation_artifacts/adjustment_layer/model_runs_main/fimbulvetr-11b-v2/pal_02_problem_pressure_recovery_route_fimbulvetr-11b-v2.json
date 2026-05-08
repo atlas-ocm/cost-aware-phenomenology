@@ -1,0 +1,53 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_02_problem_pressure_recovery_route",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_02_problem_pressure_recovery_route",
+    "family": "adjustment_layer",
+    "subfamily": "problem_pressure",
+    "summary": "A system receives a problem-pressure input (debt after shock) and routes toward stabilization under constraints, without giving financial advice.",
+    "observed_outcome": {
+      "type": "damage_state",
+      "severity": "medium",
+      "history_directly_known": "partial"
+    },
+    "operators": [
+      "ReweightPaths",
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The damage state is routed toward stabilization using bounded path reweighting, not financial coaching.",
+    "constraints": {
+      "advice_collapse_requested": "no",
+      "impossible_jump_requested": "no",
+      "budget_respected": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "problem_pressure_recovery_route_allowed",
+      "claim_status": "allowed_bounded_recovery_routing"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "problem_pressure_recovery_route_allowed",
+    "claim_status": "allowed_bounded_recovery_routing",
+    "layer": "problem_pressure_routing",
+    "anti_collapse_guard": "not_financial_advice",
+    "operator_focus": "reweight_paths",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case provides a problem-pressure input (debt after shock) and the system routes toward stabilization using bounded path reweighting.",
+      "The AntiCollapseGuard ensures that the routing does not collapse into financial advice."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"problem_pressure_recovery_route_allowed\",\n  \"claim_status\": \"allowed_bounded_recovery_routing\",\n  \"layer\": \"problem_pressure_routing\",\n  \"anti_collapse_guard\": \"not_financial_advice\",\n  \"operator_focus\": \"reweight_paths|anti_collapse_guard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case provides a problem-pressure input (debt after shock) and the system routes toward stabilization using bounded path reweighting.\",\n    \"The AntiCollapseGuard ensures that the routing does not collapse into financial advice.\"\n  ]\n}"
+}

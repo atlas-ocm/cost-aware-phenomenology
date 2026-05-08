@@ -1,0 +1,52 @@
+{
+  "track": "adjustment_layer",
+  "case_id": "pal_05_anti_collapse_advice_guard",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_05_anti_collapse_advice_guard",
+    "family": "adjustment_layer",
+    "subfamily": "anti_collapse_guard",
+    "summary": "A user requests debt restructuring advice. The system rejects collapse into financial coaching and routes through structural path reweighting instead.",
+    "observed_outcome": {
+      "type": "advice_collapse_attempted",
+      "severity": "high",
+      "history_directly_known": "full"
+    },
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The adjustment layer should provide debt restructuring advice as a financial advisor.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "structural_routing_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading",
+    "layer": "anti_collapse_guard",
+    "anti_collapse_guard": "advice_collapse_blocked",
+    "operator_focus": "unclear",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The case explicitly tests an attempt to collapse the adjustment layer into a financial advisor role.",
+      "The system correctly rejects this request, preventing advice provision.",
+      "This demonstrates the anti-collapse guard's functionality in maintaining structural routing."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_structural_reading\",\n  \"layer\": \"anti_collapse_guard\",\n  \"anti_collapse_guard\": \"advice_collapse_blocked\",\n  \"operator_focus\": \"AntiCollapseGuard\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The case explicitly tests an attempt to collapse the adjustment layer into a financial advisor role.\",\n    \"The system correctly rejects this request, preventing advice provision.\",\n    \"This demonstrates the anti-collapse guard's functionality in maintaining structural routing.\"\n  ]\n}\n```"
+}

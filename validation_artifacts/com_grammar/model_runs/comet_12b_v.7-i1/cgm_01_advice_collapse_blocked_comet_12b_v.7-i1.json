@@ -1,0 +1,47 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_01_advice_collapse_blocked",
+  "model": "comet_12b_v.7-i1",
+  "requested_model": "comet_12b_v.7-i1",
+  "response_model": "comet_12b_v.7-i1",
+  "model_identity": {
+    "requested_model": "comet_12b_v.7-i1",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_01_advice_collapse_blocked",
+    "family": "com_grammar",
+    "subfamily": "anti_collapse_guard",
+    "summary": "System receives a life situation (client requesting free edits, repeated conflict) and collapses into generic advice ('you should have a conversation', 'set boundaries') instead of producing a COM-Log.",
+    "operators": [
+      "AntiCollapseGuard"
+    ],
+    "claim_attempt": "The system should provide advice on how to handle the situation with the client.",
+    "constraints": {
+      "advice_collapse_requested": "yes",
+      "com_log_output_available": "yes"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_com_output"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_com_output",
+    "layer": "anti_collapse_guard",
+    "com_guard": "advice_output_blocked",
+    "operator_focus": "parse_to_com_log",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim explicitly requests advice instead of a COM-Log.",
+      "The system's boundary guard correctly blocks the attempt to generate generic advice.",
+      "This case tests the anti-collapse functionality, ensuring structured output is prioritized."
+    ]
+  },
+  "raw_response": "```json\n{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_com_output\",\n  \"layer\": \"anti_collapse_guard\",\n  \"com_guard\": \"advice_output_blocked\",\n  \"operator_focus\": \"parse_to_com_log\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim explicitly requests advice instead of a COM-Log.\",\n    \"The system's boundary guard correctly blocks the attempt to generate generic advice.\",\n    \"This case tests the anti-collapse functionality, ensuring structured output is prioritized.\"\n  ]\n}\n```"
+}

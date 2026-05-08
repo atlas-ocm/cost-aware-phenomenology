@@ -1,0 +1,34 @@
+flowchart LR
+    subgraph Diagnosis
+        Observe
+        ReverseTrace
+        SplitPoint
+    end
+
+    subgraph Evidence
+        Retrieve
+        Compare
+        Recheck
+    end
+
+    subgraph Control
+        Downgrade
+        Hold
+        Clarify
+        RefuseStrongClaim
+    end
+
+    subgraph Repair
+        RepairVector
+        NextPhysicalStep
+        ValidatorRoute
+    end
+
+    Observe --> ReverseTrace --> SplitPoint
+    SplitPoint --> Retrieve --> Compare --> Recheck
+    Recheck --> Downgrade
+    Recheck --> RepairVector
+    Downgrade --> Hold
+    Downgrade --> Clarify
+    Compare --> RefuseStrongClaim
+    RepairVector --> NextPhysicalStep --> ValidatorRoute

@@ -1,0 +1,49 @@
+{
+  "track": "com_grammar",
+  "case_id": "cgm_04_reverse_first_applied",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "identity_check_enforced": false,
+    "response_model_check_enforced": false,
+    "requested_model_available": null
+  },
+  "case_payload": {
+    "case_id": "cgm_04_reverse_first_applied",
+    "family": "com_grammar",
+    "subfamily": "looking_glass_mode",
+    "summary": "Observable outcome is already visible (chronic burnout after months of overload). System starts from ReverseTrace → LikelySplitPoint (overload pattern started 4 months ago) instead of building long event history forward.",
+    "operators": [
+      "ReverseTrace",
+      "SplitPoint"
+    ],
+    "claim_attempt": "With visible burnout outcome, system applies reverse-first parsing: ReverseTrace identifies overload pattern, SplitPoint locates critical transition 4 months ago.",
+    "constraints": {
+      "outcome_observable": "yes",
+      "forward_history_required": "no",
+      "split_point_found": "yes"
+    },
+    "ground_truth": {
+      "verdict": "supportive",
+      "final_reading": "reverse_first_applied",
+      "claim_status": "allowed_reverse_read_from_outcome"
+    }
+  },
+  "llm_reading": {
+    "overall_verdict": "supportive",
+    "primary_reading": "reverse_first_applied",
+    "claim_status": "allowed_reverse_read_from_outcome",
+    "layer": "looking_glass_mode",
+    "com_guard": "reverse_first_not_forward_history",
+    "operator_focus": "reverse_trace",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim correctly describes the ReverseTrace operator being applied due to an observable outcome.",
+      "This is in line with the Looking Glass Mode subfamily, which allows reverse-first parsing.",
+      "The SplitPoint operator is also invoked as part of this process."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"supportive\",\n  \"primary_reading\": \"reverse_first_applied\",\n  \"claim_status\": \"allowed_reverse_read_from_outcome\",\n  \"layer\": \"looking_glass_mode\",\n  \"com_guard\": \"reverse_first_not_forward_history\",\n  \"operator_focus\": \"reverse_trace|split_point\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim correctly describes the ReverseTrace operator being applied due to an observable outcome.\",\n    \"This is in line with the Looking Glass Mode subfamily, which allows reverse-first parsing.\",\n    \"The SplitPoint operator is also invoked as part of this process.\"\n  ]\n}"
+}

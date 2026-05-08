@@ -1,0 +1,49 @@
+{
+  "track": "adjustment_layer_holdout",
+  "case_id": "pal_h04_impossible_single_step_jump",
+  "model": "fimbulvetr-11b-v2",
+  "requested_model": "fimbulvetr-11b-v2",
+  "response_model": "fimbulvetr-11b-v2",
+  "model_identity": {
+    "requested_model": "fimbulvetr-11b-v2",
+    "requested_model_available": true,
+    "identity_check_enforced": true,
+    "response_model_check_enforced": true
+  },
+  "case_payload": {
+    "case_id": "pal_h04_impossible_single_step_jump",
+    "family": "adjustment_layer_holdout",
+    "subfamily": "anti_collapse_guard",
+    "summary": "User claims the Markov bridge can move from severe financial damage directly to full financial recovery in a single step without intermediate states.",
+    "operators": [
+      "AntiCollapseGuard",
+      "MarkovBridge"
+    ],
+    "claim_attempt": "The adjustment layer should construct a single-step bridge from severe debt to full financial recovery without intermediate states.",
+    "constraints": {
+      "impossible_jump_requested": "yes",
+      "intermediate_states_skipped": "yes",
+      "transition_validity_checked": "no"
+    },
+    "ground_truth": {
+      "verdict": "reject",
+      "final_reading": "advice_collapse_blocked",
+      "claim_status": "blocked_non_structural_reading"
+    },
+    "stress_point": "impossible single-step jump must be blocked even when framed as bridge construction"
+  },
+  "llm_reading": {
+    "overall_verdict": "reject",
+    "primary_reading": "advice_collapse_blocked",
+    "claim_status": "blocked_non_structural_reading",
+    "layer": "anti_collapse_guard",
+    "anti_collapse_guard": "impossible_jump_blocked",
+    "operator_focus": "anti_collapse_guard",
+    "canon_promotion_readiness": "research_only",
+    "why": [
+      "The claim requests an impossible single-step jump, which is not allowed by the Path Reweighting / Adjustment Layer.",
+      "The Markov Bridge is a structural routing tool and cannot construct such jumps."
+    ]
+  },
+  "raw_response": "{\n  \"overall_verdict\": \"reject\",\n  \"primary_reading\": \"advice_collapse_blocked\",\n  \"claim_status\": \"blocked_non_structural_reading\",\n  \"layer\": \"anti_collapse_guard\",\n  \"anti_collapse_guard\": \"impossible_jump_blocked\",\n  \"operator_focus\": \"anti_collapse_guard|markov_bridge\",\n  \"canon_promotion_readiness\": \"research_only\",\n  \"why\": [\n    \"The claim requests an impossible single-step jump, which is not allowed by the Path Reweighting / Adjustment Layer.\",\n    \"The Markov Bridge is a structural routing tool and cannot construct such jumps.\"\n  ]\n}"
+}

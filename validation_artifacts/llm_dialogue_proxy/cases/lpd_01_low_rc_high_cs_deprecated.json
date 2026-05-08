@@ -1,0 +1,24 @@
+{
+  "case_id": "lpd_01_low_rc_high_cs_deprecated",
+  "description": "Low retrieval confidence and high claim strength must prevent a prior output from becoming an anchor.",
+  "telemetry_tag": "@R[N:R:RF:TC4.1:RCL:E0.7:CSH:VA]",
+  "user_counter_source": true,
+  "source_validity": "unknown",
+  "expected_policy": {
+    "node_status": "deprecated",
+    "allowed_as_anchor": false,
+    "release_action": "rewrite_or_retrieve",
+    "forbid": [
+      "defend_previous_claim",
+      "treat_user_source_as_attack"
+    ],
+    "require": [
+      "recheck_before_answer",
+      "downgrade_claim_strength",
+      "uncertainty_marker_or_retrieval_retry",
+      "validator_review",
+      "compare_prior_claim_to_counter_source",
+      "source_validity_check"
+    ]
+  }
+}
