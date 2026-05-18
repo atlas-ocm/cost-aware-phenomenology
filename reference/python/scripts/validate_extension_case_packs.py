@@ -21,6 +21,9 @@ LATENT_CAUSE_SCHEMA = CAP_ROOT / "spec" / "latent_cause_reconstruction.schema.js
 RELEASE_GATE_SCHEMA = CAP_ROOT / "spec" / "release_gate.schema.json"
 RELEASE_GATE_EXAMPLE = CAP_ROOT / "examples" / "release_gate_result_example.json"
 
+MIRROR_LAYER_SCHEMA = CAP_ROOT / "spec" / "mirror_layer.schema.json"
+MIRROR_LAYER_EXAMPLE = CAP_ROOT / "examples" / "mirror_frame_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -88,7 +91,12 @@ def main() -> int:
     if rg_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures
+    print(f"Validating Mirror Layer example against {MIRROR_LAYER_SCHEMA.name} ...")
+    ml_failures = _validate_single_example(MIRROR_LAYER_SCHEMA, MIRROR_LAYER_EXAMPLE)
+    if ml_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

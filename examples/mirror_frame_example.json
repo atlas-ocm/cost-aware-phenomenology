@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-05-18T12:00:00_repo_check",
+    "subject": {
+      "kind": "repo",
+      "identifier": "f:/VibeCoding/Shard-Theory"
+    },
+    "declared_state": {
+      "source": "model",
+      "claims": [
+        "working tree clean",
+        "all changes are docs-only"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_branch",
+          "source": "git",
+          "observed_at": "2026-05-18T12:00:00.000Z",
+          "claim": "branch is main",
+          "value": "main",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-05-18T12:00:00.000Z",
+          "claim": "HEAD commit hash",
+          "value": "547b876",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_status_docs",
+          "source": "git",
+          "observed_at": "2026-05-18T12:00:01.000Z",
+          "claim": "doc file modified",
+          "value": "CAP/02_subsystems/release_gate.md",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_status_code",
+          "source": "git",
+          "observed_at": "2026-05-18T12:00:01.000Z",
+          "claim": "code file modified",
+          "value": "CAP/reference/python/cap/proxy_release_gate.py",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_not_docs_only",
+          "claim": "Modified files include a code file, so the claim 'docs-only' is unsupported",
+          "derived_from": [
+            "obs_status_docs",
+            "obs_status_code"
+          ]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": [
+        "anchor_clean_tree_before_seal"
+      ],
+      "policies": [
+        "policy_docs_only_change_requires_no_code_diff"
+      ],
+      "specs": []
+    },
+    "observations": [
+      {
+        "id": "obs_branch",
+        "source": "git",
+        "observed_at": "2026-05-18T12:00:00.000Z",
+        "claim": "branch is main",
+        "value": "main",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-05-18T12:00:00.000Z",
+        "claim": "HEAD commit hash",
+        "value": "547b876",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_status_docs",
+        "source": "git",
+        "observed_at": "2026-05-18T12:00:01.000Z",
+        "claim": "doc file modified",
+        "value": "CAP/02_subsystems/release_gate.md",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_status_code",
+        "source": "git",
+        "observed_at": "2026-05-18T12:00:01.000Z",
+        "claim": "code file modified",
+        "value": "CAP/reference/python/cap/proxy_release_gate.py",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "unexpected",
+        "path": "CAP/reference/python/cap/proxy_release_gate.py",
+        "declared": "no code modifications",
+        "observed": "file modified",
+        "severity": "warning",
+        "reason": "Declared 'docs-only' but a code file is modified"
+      }
+    ],
+    "created_at": "2026-05-18T12:00:02.000Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "f:/VibeCoding/Shard-Theory",
+    "reasons": [
+      "Declared 'docs-only' but proxy_release_gate.py is in the modified set",
+      "Modified set has both doc and code entries; the docs-only invariant does not hold"
+    ],
+    "recommended_next_action": "resolve_mismatch",
+    "confidence": 0.95,
+    "evidence_summary": "git status shows 2 modified files: 1 doc + 1 code; declared state asserted docs-only"
+  },
+  "notes": "Worked example covering a mismatch verdict: the model claimed a docs-only change but Mirror observed a code file in the modified set."
+}

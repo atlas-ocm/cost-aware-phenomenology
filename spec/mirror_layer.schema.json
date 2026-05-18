@@ -1,0 +1,713 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:mirror-layer:v0.1",
+  "title": "CAP Mirror Layer Frame",
+  "description": "Schema for a Mirror Layer evaluation. Encodes the doc-level invariants ML-01..ML-12: no mutation; declared and observed are separate slots; provenance required on every observation; unknowns and contradictions arrays required; verdict=aligned forbidden when stale observations, contradictions, unknowns, or boundary_signals are present; verdict=contradicted requires contradictions to be non-empty; verdict=boundary_hidden requires at least one boundary_signal; mutability locked to read_only.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "frame",
+    "policy",
+    "verdict"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "frame": {
+      "$ref": "#/$defs/mirror_frame"
+    },
+    "policy": {
+      "$ref": "#/$defs/mirror_policy"
+    },
+    "verdict": {
+      "$ref": "#/$defs/mirror_verdict_result"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "ML-04 + ML-05: verdict=aligned forbidden when unknowns, boundary_signals, contradictions, or stale observations are present.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "aligned"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "unknowns": {
+                "maxItems": 0
+              },
+              "contradictions": {
+                "maxItems": 0
+              },
+              "boundary_signals": {
+                "maxItems": 0
+              },
+              "observations": {
+                "items": {
+                  "properties": {
+                    "freshness": {
+                      "not": {
+                        "const": "stale"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "ML-06: any boundary_signals non-empty forces verdict NOT aligned.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "boundary_signals": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "boundary_signals"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "not": {
+                  "const": "aligned"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "ML-12: verdict=contradicted requires contradictions non-empty.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "contradicted"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "contradictions": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "contradictions"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=boundary_hidden requires at least one boundary_signal.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "boundary_hidden"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "boundary_signals": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "boundary_signals"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=stale requires at least one observation with freshness=stale.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "stale"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "observations": {
+                "contains": {
+                  "properties": {
+                    "freshness": {
+                      "const": "stale"
+                    }
+                  },
+                  "required": [
+                    "freshness"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "mirror_source": {
+      "type": "string",
+      "enum": [
+        "git",
+        "filesystem",
+        "runtime_log",
+        "config",
+        "memory_store",
+        "browser_dom",
+        "tool_result",
+        "cap_comlog",
+        "user_message",
+        "external_source"
+      ]
+    },
+    "freshness": {
+      "type": "string",
+      "enum": [
+        "fresh",
+        "stale",
+        "unknown"
+      ]
+    },
+    "subject_kind": {
+      "type": "string",
+      "enum": [
+        "repo",
+        "task",
+        "memory_store",
+        "browser_page",
+        "session",
+        "system",
+        "config",
+        "runtime"
+      ]
+    },
+    "diff_kind": {
+      "type": "string",
+      "enum": [
+        "match",
+        "missing",
+        "unexpected",
+        "contradiction",
+        "stale",
+        "unobservable",
+        "boundary_violation",
+        "semantic_drift"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "blocking"
+      ]
+    },
+    "verdict_kind": {
+      "type": "string",
+      "enum": [
+        "aligned",
+        "mismatch",
+        "partial",
+        "unknown",
+        "stale",
+        "contradicted",
+        "boundary_hidden"
+      ]
+    },
+    "recommended_next_action": {
+      "type": "string",
+      "enum": [
+        "proceed_to_adjustment",
+        "resolve_mismatch",
+        "collect_evidence",
+        "refresh_observation",
+        "log_contradiction",
+        "probe_boundary",
+        "block"
+      ]
+    },
+    "declared_state": {
+      "type": "object",
+      "required": [
+        "source",
+        "claims"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "user",
+            "model",
+            "agent",
+            "system"
+          ]
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "mirror_observation": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "observed_at",
+        "claim",
+        "value",
+        "confidence",
+        "freshness",
+        "mutability"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/mirror_source"
+        },
+        "observed_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "$comment": "Free-form: the raw value at the time of observation. May be string, number, boolean, array, object, or null."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "freshness": {
+          "$ref": "#/$defs/freshness"
+        },
+        "mutability": {
+          "const": "read_only",
+          "$comment": "ML-01: Mirror never mutates."
+        },
+        "evidence_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "derived_fact": {
+      "type": "object",
+      "required": [
+        "id",
+        "claim",
+        "derived_from"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "derived_from": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "observed_state": {
+      "type": "object",
+      "required": [
+        "facts",
+        "derived_facts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mirror_observation"
+          }
+        },
+        "derived_facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/derived_fact"
+          }
+        }
+      }
+    },
+    "expected_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "specs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "unknown_slot": {
+      "type": "object",
+      "required": [
+        "path",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "contradiction": {
+      "type": "object",
+      "required": [
+        "left_observation_id",
+        "right_observation_id",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "left_observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "right_observation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "boundary_signal": {
+      "type": "object",
+      "required": [
+        "boundary",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "boundary": {
+          "type": "string",
+          "enum": [
+            "viewport",
+            "sandbox",
+            "permission",
+            "auth",
+            "repo_identity",
+            "session_identity",
+            "url_identity",
+            "rate_limit",
+            "external"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mirror_diff": {
+      "type": "object",
+      "required": [
+        "kind",
+        "path",
+        "severity",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/diff_kind"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "declared": {},
+        "observed": {},
+        "expected": {},
+        "severity": {
+          "$ref": "#/$defs/severity"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mirror_frame": {
+      "type": "object",
+      "required": [
+        "id",
+        "subject",
+        "observed_state",
+        "observations",
+        "unknowns",
+        "contradictions",
+        "boundary_signals",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject": {
+          "type": "object",
+          "required": [
+            "kind",
+            "identifier"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "$ref": "#/$defs/subject_kind"
+            },
+            "identifier": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "declared_state": {
+          "$ref": "#/$defs/declared_state"
+        },
+        "observed_state": {
+          "$ref": "#/$defs/observed_state"
+        },
+        "expected_state": {
+          "$ref": "#/$defs/expected_state"
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mirror_observation"
+          }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/unknown_slot"
+          }
+        },
+        "contradictions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contradiction"
+          }
+        },
+        "boundary_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundary_signal"
+          }
+        },
+        "diffs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mirror_diff"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "mirror_policy": {
+      "type": "object",
+      "required": [
+        "allow_mutation",
+        "require_source_for_every_observation",
+        "allow_declared_as_observed",
+        "require_repo_identity_for_code",
+        "require_session_identity_for_memory",
+        "require_url_identity_for_browser"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "allow_mutation": {
+          "const": false,
+          "$comment": "ML-01"
+        },
+        "require_source_for_every_observation": {
+          "const": true,
+          "$comment": "ML-07"
+        },
+        "allow_declared_as_observed": {
+          "const": false,
+          "$comment": "ML-03"
+        },
+        "mark_stale_after_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "require_repo_identity_for_code": {
+          "type": "boolean"
+        },
+        "require_session_identity_for_memory": {
+          "type": "boolean"
+        },
+        "require_url_identity_for_browser": {
+          "type": "boolean"
+        }
+      }
+    },
+    "mirror_verdict_result": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "subject",
+        "reasons",
+        "recommended_next_action",
+        "confidence",
+        "evidence_summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "$ref": "#/$defs/verdict_kind"
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "recommended_next_action": {
+          "$ref": "#/$defs/recommended_next_action"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_summary": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
