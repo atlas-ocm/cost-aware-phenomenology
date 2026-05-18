@@ -1,0 +1,119 @@
+{
+  "schema_version": "0.1",
+  "trace": {
+    "id": "lg_trace_2026-05-18T12_15_00_dirty_footer",
+    "input_mirror_frame_id": "mirror_frame_2026-05-18T12_14_30_settings_footer",
+    "observed_outcome": {
+      "id": "outcome_dirty_footer_after_save",
+      "summary": "Settings footer remains dirty after a successful save",
+      "kind": "ui_state_mismatch",
+      "evidence_refs": [
+        "ui_log:2026-05-18T12_14_29.012Z",
+        "mirror_frame:2026-05-18T12_14_30_settings_footer"
+      ],
+      "severity": "warning"
+    },
+    "plausible_prior_paths": [
+      {
+        "id": "path_rehydrate_redirties",
+        "hypothesis": "Save succeeded; configUpdated rehydrated server config; routing-role select re-dirtied local draft because equality check did not compare the rehydrated value with the just-saved value",
+        "path": "state_drift",
+        "supporting_evidence": [
+          "ui_log:configUpdated_after_save",
+          "diff:settings_routing_role_select.tsx"
+        ],
+        "contradicting_evidence": [],
+        "probability": "high",
+        "confidence": 0.82
+      },
+      {
+        "id": "path_server_partial_save",
+        "hypothesis": "Server returned 200 but only persisted a subset; the unsaved field stays dirty",
+        "path": "external_dependency",
+        "supporting_evidence": [
+          "server_log:partial_persist_warning"
+        ],
+        "contradicting_evidence": [
+          "server_response:saved_full_payload"
+        ],
+        "probability": "low",
+        "confidence": 0.18
+      }
+    ],
+    "likely_split_point": {
+      "id": "split_post_save_rehydration",
+      "description": "Post-save config rehydration path does not deduplicate the just-saved value before triggering controlled-input re-dirty",
+      "location": "code_path",
+      "before_state": "local draft equals saved config",
+      "after_state": "local draft differs by referential identity from saved config; controlled select fires onChange",
+      "evidence_refs": [
+        "diff:settings_routing_role_select.tsx",
+        "ui_log:configUpdated_after_save"
+      ],
+      "confidence": 0.82
+    },
+    "damaged_invariants": [
+      {
+        "id": "inv_save_clears_dirty",
+        "invariant": "A successful save should result in local draft state equal to saved state, with dirty flag cleared",
+        "class": "semantic",
+        "damage": "violated",
+        "severity": "medium"
+      }
+    ],
+    "recommended_repair_mode": "restore",
+    "minimal_repair_path": {
+      "summary": "Add an equality guard before re-dirtying the routing-role select when configUpdated rehydrates an identical value",
+      "steps": [
+        {
+          "order": 1,
+          "action": "Read current routing-role select implementation",
+          "mutability": "read_only",
+          "reason": "Confirm where the controlled select onChange fires after rehydration"
+        },
+        {
+          "order": 2,
+          "action": "Add equality guard: skip onChange when incoming rehydrated value === current draft value",
+          "mutability": "candidate_patch",
+          "reason": "Prevent re-dirty when rehydrated value is identical to the just-saved one"
+        },
+        {
+          "order": 3,
+          "action": "Verify dirty flag clears after save and that legitimate user edits still mark dirty",
+          "mutability": "read_only",
+          "reason": "Confirm the guard does not over-block real edits"
+        }
+      ],
+      "estimated_cost": {
+        "token_cost": "low",
+        "risk_cost": "low",
+        "rollback_cost": "low"
+      },
+      "requires_release_gate": true,
+      "requires_human_authorization": false
+    },
+    "uncertainty": [
+      {
+        "topic": "Whether other settings controls have the same re-dirty pattern",
+        "reason": "Only the routing-role select was inspected in this trace"
+      }
+    ],
+    "blocked_assumptions": [
+      "Did not assume the server returned a stale payload without evidence",
+      "Did not assume the partial-persist warning applies to the routing-role field without confirming"
+    ],
+    "verdict": "restore_path_found",
+    "created_at": "2026-05-18T12:15:00.000Z"
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "allow_mutation": false,
+    "allow_single_cause_without_evidence": false,
+    "preserve_competing_paths": true,
+    "require_split_point_evidence_for_high_confidence": true,
+    "prefer_minimal_repair": true,
+    "require_release_gate_for_repair_candidate": true,
+    "require_human_authorization_for_rollback": true
+  },
+  "notes": "Worked example: dirty footer after save. Verdict restore_path_found with a low-cost candidate_patch step gated by Release Gate. Two competing prior paths preserved; high-confidence split point references concrete evidence; uncertainty about other controls explicitly recorded."
+}

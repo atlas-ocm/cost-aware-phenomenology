@@ -1,0 +1,850 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:looking-glass-trace:v0.1",
+  "title": "CAP Looking-Glass Runtime Trace",
+  "description": "Schema for the output of a Looking-Glass run: a retro-diagnostic trace that maps an observed outcome back to plausible prior paths, a likely split point, damaged invariants, and a minimal repair path. Encodes the doc-level invariants LG-01..LG-12 from 04_extensions/looking_glass.md: every trace starts from a Mirror Frame; trace never mutates; cause hypotheses are not evidence; multiple plausible paths must remain multiple; high-confidence split points require evidence refs; minimal repair must be bounded; tolerated scar must be local and non-cascading; trace feeds Adjustment, not Release directly; uncertainty must be preserved; history must not be rewritten.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "trace",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "trace": {
+      "$ref": "#/$defs/looking_glass_trace"
+    },
+    "policy": {
+      "$ref": "#/$defs/looking_glass_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "LG verdict -> recommended_repair_mode consistency",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "restore_path_found"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "restore"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "compensate_required"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "compensate"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "reconcile_required"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "reconcile"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "rollback_recommended"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "rollback"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "LG-09: verdict=tolerate_scar requires a tolerated_scar_note explaining locality and non-cascade.",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "tolerate_scar"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "tolerate_scar"
+              },
+              "tolerated_scar_note": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "tolerated_scar_note"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=insufficient_trace requires repair_mode in {hold, escalate_to_human}.",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "insufficient_trace"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "enum": [
+                  "hold",
+                  "escalate_to_human"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=multiple_competing_paths requires repair_mode=hold AND at least 2 plausible paths.",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "multiple_competing_paths"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "hold"
+              },
+              "plausible_prior_paths": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=boundary_obscured requires repair_mode=hold AND at least one blocked_assumption.",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "verdict": {
+                "const": "boundary_obscured"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "recommended_repair_mode": {
+                "const": "hold"
+              },
+              "blocked_assumptions": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "LG-05: split point with high confidence (>0.7) requires evidence_refs minItems:1.",
+      "if": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "likely_split_point": {
+                "properties": {
+                  "confidence": {
+                    "type": "number",
+                    "exclusiveMinimum": 0.7
+                  }
+                },
+                "required": [
+                  "confidence"
+                ]
+              }
+            },
+            "required": [
+              "likely_split_point"
+            ]
+          }
+        },
+        "required": [
+          "trace"
+        ]
+      },
+      "then": {
+        "properties": {
+          "trace": {
+            "properties": {
+              "likely_split_point": {
+                "properties": {
+                  "evidence_refs": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "evidence_refs"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "outcome_kind": {
+      "type": "string",
+      "enum": [
+        "test_failure",
+        "runtime_crash",
+        "ui_state_mismatch",
+        "memory_conflict",
+        "config_drift",
+        "context_contamination",
+        "route_failure",
+        "agent_loop",
+        "release_block",
+        "semantic_mismatch"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "blocking",
+        "critical"
+      ]
+    },
+    "prior_path_kind": {
+      "type": "string",
+      "enum": [
+        "direct_cause",
+        "state_drift",
+        "stale_context",
+        "wrong_boundary",
+        "misrouted_operator",
+        "anchor_conflict",
+        "role_permission_mismatch",
+        "budget_exhaustion",
+        "external_dependency",
+        "unknown"
+      ]
+    },
+    "probability": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "split_location": {
+      "type": "string",
+      "enum": [
+        "code_path",
+        "config_overlay",
+        "memory_merge",
+        "prompt_boundary",
+        "tool_result",
+        "agent_role_switch",
+        "runtime_state",
+        "browser_state",
+        "git_state",
+        "semantic_anchor"
+      ]
+    },
+    "invariant_class": {
+      "type": "string",
+      "enum": [
+        "identity",
+        "boundary",
+        "causal",
+        "temporal",
+        "permission",
+        "config",
+        "memory",
+        "release",
+        "budget",
+        "semantic"
+      ]
+    },
+    "damage_kind": {
+      "type": "string",
+      "enum": [
+        "violated",
+        "weakened",
+        "stale",
+        "contradicted",
+        "unproven",
+        "unknown"
+      ]
+    },
+    "invariant_severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "blocking"
+      ]
+    },
+    "repair_mode": {
+      "type": "string",
+      "enum": [
+        "restore",
+        "compensate",
+        "reconcile",
+        "retcon",
+        "rollback",
+        "tolerate_scar",
+        "hold",
+        "escalate_to_human"
+      ]
+    },
+    "lg_verdict": {
+      "type": "string",
+      "enum": [
+        "split_point_detected",
+        "restore_path_found",
+        "compensate_required",
+        "reconcile_required",
+        "rollback_recommended",
+        "tolerate_scar",
+        "insufficient_trace",
+        "multiple_competing_paths",
+        "boundary_obscured"
+      ]
+    },
+    "step_mutability": {
+      "type": "string",
+      "enum": [
+        "read_only",
+        "candidate_patch",
+        "requires_authorization"
+      ]
+    },
+    "cost_band": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "observed_outcome": {
+      "type": "object",
+      "required": [
+        "id",
+        "summary",
+        "kind",
+        "evidence_refs",
+        "severity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "$ref": "#/$defs/outcome_kind"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "$comment": "LG-01: observed outcome must come from evidence, not from imagination."
+        },
+        "severity": {
+          "$ref": "#/$defs/severity"
+        }
+      }
+    },
+    "plausible_prior_path": {
+      "type": "object",
+      "required": [
+        "id",
+        "hypothesis",
+        "path",
+        "supporting_evidence",
+        "contradicting_evidence",
+        "probability",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "$ref": "#/$defs/prior_path_kind"
+        },
+        "supporting_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contradicting_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "probability": {
+          "$ref": "#/$defs/probability"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "split_point": {
+      "type": "object",
+      "required": [
+        "id",
+        "description",
+        "location",
+        "evidence_refs",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "location": {
+          "$ref": "#/$defs/split_location"
+        },
+        "before_state": {
+          "type": "string"
+        },
+        "after_state": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "damaged_invariant": {
+      "type": "object",
+      "required": [
+        "id",
+        "invariant",
+        "class",
+        "damage",
+        "severity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invariant": {
+          "type": "string",
+          "minLength": 1
+        },
+        "class": {
+          "$ref": "#/$defs/invariant_class"
+        },
+        "damage": {
+          "$ref": "#/$defs/damage_kind"
+        },
+        "severity": {
+          "$ref": "#/$defs/invariant_severity"
+        }
+      }
+    },
+    "repair_step": {
+      "type": "object",
+      "required": [
+        "order",
+        "action",
+        "mutability",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mutability": {
+          "$ref": "#/$defs/step_mutability"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "minimal_repair_path": {
+      "type": "object",
+      "required": [
+        "summary",
+        "steps",
+        "estimated_cost",
+        "requires_release_gate",
+        "requires_human_authorization"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/repair_step"
+          },
+          "minItems": 1,
+          "$comment": "LG-06: minimal repair must be bounded; at least one concrete step required."
+        },
+        "estimated_cost": {
+          "type": "object",
+          "required": [
+            "token_cost",
+            "risk_cost",
+            "rollback_cost"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "token_cost": {
+              "$ref": "#/$defs/cost_band"
+            },
+            "risk_cost": {
+              "$ref": "#/$defs/cost_band"
+            },
+            "rollback_cost": {
+              "$ref": "#/$defs/cost_band"
+            }
+          }
+        },
+        "requires_release_gate": {
+          "type": "boolean"
+        },
+        "requires_human_authorization": {
+          "type": "boolean"
+        }
+      }
+    },
+    "uncertainty_item": {
+      "type": "object",
+      "required": [
+        "topic",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "topic": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "looking_glass_trace": {
+      "type": "object",
+      "required": [
+        "id",
+        "input_mirror_frame_id",
+        "observed_outcome",
+        "plausible_prior_paths",
+        "damaged_invariants",
+        "recommended_repair_mode",
+        "uncertainty",
+        "blocked_assumptions",
+        "verdict",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_mirror_frame_id": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "LG-01: every trace starts from a Mirror Frame, not from imagined cause."
+        },
+        "observed_outcome": {
+          "$ref": "#/$defs/observed_outcome"
+        },
+        "plausible_prior_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/plausible_prior_path"
+          },
+          "minItems": 1,
+          "$comment": "LG-03 + LG-04: hypotheses preserved; trace must enumerate at least one (even if the single one is 'insufficient_trace')."
+        },
+        "likely_split_point": {
+          "$ref": "#/$defs/split_point"
+        },
+        "damaged_invariants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/damaged_invariant"
+          }
+        },
+        "recommended_repair_mode": {
+          "$ref": "#/$defs/repair_mode"
+        },
+        "minimal_repair_path": {
+          "$ref": "#/$defs/minimal_repair_path"
+        },
+        "tolerated_scar_note": {
+          "type": "string",
+          "$comment": "LG-09: required when verdict=tolerate_scar."
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/uncertainty_item"
+          },
+          "$comment": "LG-11: uncertainty must be preserved (array required; may be empty if genuinely none)."
+        },
+        "blocked_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "$comment": "Assumptions the trace explicitly refused to make."
+        },
+        "verdict": {
+          "$ref": "#/$defs/lg_verdict"
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "looking_glass_policy": {
+      "type": "object",
+      "required": [
+        "require_mirror_frame",
+        "allow_mutation",
+        "allow_single_cause_without_evidence",
+        "preserve_competing_paths",
+        "require_split_point_evidence_for_high_confidence",
+        "prefer_minimal_repair",
+        "require_release_gate_for_repair_candidate",
+        "require_human_authorization_for_rollback"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "require_mirror_frame": {
+          "const": true,
+          "$comment": "LG-01"
+        },
+        "allow_mutation": {
+          "const": false,
+          "$comment": "LG-02"
+        },
+        "allow_single_cause_without_evidence": {
+          "const": false,
+          "$comment": "LG-03"
+        },
+        "preserve_competing_paths": {
+          "const": true,
+          "$comment": "LG-04"
+        },
+        "require_split_point_evidence_for_high_confidence": {
+          "type": "boolean"
+        },
+        "prefer_minimal_repair": {
+          "type": "boolean"
+        },
+        "require_release_gate_for_repair_candidate": {
+          "type": "boolean",
+          "$comment": "LG-10"
+        },
+        "require_human_authorization_for_rollback": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -150,6 +150,106 @@ The two layers are sequential and must not be collapsed. They handle different k
 
 ---
 
+## Position in OCM
+
+Looking-Glass sits between Mirror Layer and Adjustment Layer:
+
+```text
+Mirror Layer
+  -> Observed State B
+  -> Looking-Glass
+  -> retro-diagnostic trace
+       (plausible prior paths, split point, damaged invariants,
+        repair mode, minimal repair path)
+  -> Adjustment Layer
+  -> admissible next routes to C
+  -> Verifier
+  -> Release Gate
+```
+
+The layer divides the Adjustment formula `B -> infer A -> plan C` at the
+arrow: Looking-Glass produces the left half (`B -> infer A` with a split
+point and damaged invariants), Adjustment produces the right half
+(`A + B -> admissible C`). Without Looking-Glass, Adjustment can start
+from a fabricated cause and arrive at a confidently wrong route.
+
+Looking-Glass is read-only. It does not mutate, does not release, does
+not canonicalize.
+
+## Runtime Trace Contract
+
+The runtime output of a Looking-Glass analysis is a `LookingGlassTrace`.
+The contract lives at
+[`../spec/looking_glass_trace.schema.json`](../spec/looking_glass_trace.schema.json),
+exercised by
+[`../reference/python/tests/test_looking_glass_trace_schema.py`](../reference/python/tests/test_looking_glass_trace_schema.py).
+
+The trace carries:
+
+- `input_mirror_frame_id` — reference to the Mirror Frame that fixed `B`;
+- `observed_outcome` with a typed `kind` (test_failure, runtime_crash,
+  ui_state_mismatch, memory_conflict, config_drift,
+  context_contamination, route_failure, agent_loop, release_block,
+  semantic_mismatch);
+- `plausible_prior_paths[]` — each with a `path` kind (direct_cause,
+  state_drift, stale_context, wrong_boundary, misrouted_operator,
+  anchor_conflict, role_permission_mismatch, budget_exhaustion,
+  external_dependency, unknown), probability band, and confidence;
+- `likely_split_point` — described by a `location` enum (code_path,
+  config_overlay, memory_merge, prompt_boundary, tool_result,
+  agent_role_switch, runtime_state, browser_state, git_state,
+  semantic_anchor);
+- `damaged_invariants[]` — each typed by class (identity, boundary,
+  causal, temporal, permission, config, memory, release, budget,
+  semantic) and damage kind (violated, weakened, stale, contradicted,
+  unproven, unknown);
+- `recommended_repair_mode` from a closed enum: restore, compensate,
+  reconcile, retcon, rollback, tolerate_scar, hold,
+  escalate_to_human;
+- `minimal_repair_path` — bounded sequence of steps, each labelled
+  read_only / candidate_patch / requires_authorization, with a cost
+  estimate;
+- `uncertainty[]` and `blocked_assumptions[]` — explicitly preserved;
+- `verdict` from a closed enum: split_point_detected, restore_path_found,
+  compensate_required, reconcile_required, rollback_recommended,
+  tolerate_scar, insufficient_trace, multiple_competing_paths,
+  boundary_obscured.
+
+Hard invariants enforced by the schema:
+
+- LG-01: `input_mirror_frame_id` is required;
+  `observed_outcome.evidence_refs` minItems:1;
+  `policy.require_mirror_frame` is locked to `const true`.
+- LG-02: `policy.allow_mutation` is locked to `const false`. The trace
+  carries no `applied_diff` field.
+- LG-03: `policy.allow_single_cause_without_evidence` is locked to
+  `const false`.
+- LG-04: `policy.preserve_competing_paths` is locked to `const true`.
+  `verdict: multiple_competing_paths` requires
+  `plausible_prior_paths` minItems:2.
+- LG-05: a `likely_split_point` with `confidence > 0.7` requires
+  `evidence_refs` minItems:1.
+- LG-06: `minimal_repair_path.steps` minItems:1 (no unbounded rewrites).
+- LG-09: `verdict: tolerate_scar` requires a `tolerated_scar_note`
+  string explaining locality and non-cascade.
+- LG-10: trace does not carry a release decision; downstream Release
+  Gate handles release.
+- LG-11: `uncertainty` and `blocked_assumptions` arrays are required
+  (may be empty).
+- Verdict / repair_mode consistency: `restore_path_found` requires
+  `restore`; `compensate_required` requires `compensate`;
+  `reconcile_required` requires `reconcile`; `rollback_recommended`
+  requires `rollback`; `insufficient_trace` requires
+  `hold | escalate_to_human`; `multiple_competing_paths` requires
+  `hold`; `boundary_obscured` requires `hold` and
+  `blocked_assumptions` minItems:1.
+
+The companion case schema at
+[`../spec/looking_glass.schema.json`](../spec/looking_glass.schema.json)
+validates the test-input cases (`alg_*.json`) used to exercise the
+layer. The trace schema validates the layer's runtime output. Both are
+machine-checked in the check_repo smoke.
+
 ## Machine-Readable Contract
 
 The corresponding case schema is
