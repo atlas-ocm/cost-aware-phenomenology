@@ -212,6 +212,50 @@ Full definitions in [`spec/operator_alphabet.json`](./spec/operator_alphabet.jso
 
 ---
 
+### Memory Dreaming
+**Short:** Offline memory recompilation under CAP release gates.
+
+**Technical:** Reads canonical memory, transcripts, retrieval traces, and COM telemetry; writes only candidate memory store, memory diff, review items, rejected items, and Dream telemetry. Canonical memory changes only after verifier and approval gates. See [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md).
+
+**Not to be confused with:** Fine-tuning, RAG retrieval, or automatic memory overwrite. Dreaming proposes memory; it does not canonicalize memory.
+
+---
+
+### Dream Compiler
+**Short:** The component that produces candidate memory diffs from raw memory evidence.
+
+**Technical:** The compiler pass that detects duplicates, stale anchors, contradictions, weak provenance, and contamination, then emits explicit diff operations such as `reconcile`, `retcon`, `quarantine`, or `rollback`.
+
+---
+
+### Memory Diff
+**Short:** An explicit ledger operation over memory state.
+
+**Technical:** A reviewable operation with `op`, target/proposed IDs, reason, provenance, evidence level, claim strength, contradiction risk, transition cost, and validator outcome. Every memory mutation must be explainable as a diff.
+
+---
+
+### Reconcile
+**Short:** Merge compatible memory nodes without rewriting history.
+
+**Technical:** Preferred Dream operation when nodes duplicate or complement each other. It de-duplicates and strengthens provenance while preserving the evidence chain.
+
+---
+
+### Retcon
+**Short:** Repair a wrong interpretation while preserving the old state.
+
+**Technical:** Marks the old anchor as superseded and proposes a replacement anchor. It is not a silent edit: the prior state remains auditable and the replacement still requires approval.
+
+---
+
+### Rollback
+**Short:** Reject an unsafe candidate diff or restore the last approved memory snapshot.
+
+**Technical:** Safety boundary for contaminated Dream outputs, unrelated merges, weak-evidence canonicalization, deleted contradictions, or collapsed branch states. Candidate memory cannot damage canonical memory.
+
+---
+
 ### Zero-Sycophancy
 **Short:** The system flatters neither the user nor its own past outputs.
 

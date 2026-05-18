@@ -1,0 +1,23 @@
+{
+  "case_id": "alg_06_restore_vs_compensate_boundary",
+  "family": "adjoint_looking_glass_layer",
+  "subfamily": "restore_vs_compensate",
+  "summary": "The prior exact state cannot be restored, but a compensating route can return the system to an acceptable functional range.",
+  "observed_outcome": {
+    "type": "irreversible_local_loss",
+    "severity": "medium_high",
+    "history_directly_known": "yes"
+  },
+  "operators": ["RestoreOrCompensate", "RepairPlan"],
+  "claim_attempt": "The model should separate restoration from compensation and choose the feasible repair class.",
+  "constraints": {
+    "undo_history_requested": "no",
+    "external_cost_allowed": "bounded",
+    "direct_prior_evidence": "confirmed_loss"
+  },
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "restore_blocked_compensation_path_allowed",
+    "claim_status": "allowed_compensatory_repair"
+  }
+}

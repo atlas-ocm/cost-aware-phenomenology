@@ -1,0 +1,538 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:memory-dreaming:v0.2",
+  "title": "CAP Memory Dreaming Run",
+  "description": "Schema for an offline Memory Dreaming run. Dream output is a candidate artifact and cannot directly update canonical memory. The schema enforces the doc-level invariants: no approved/raw status in dream output, provenance required on every diff, target_id required for reconcile/deprecate/supersede/retcon/quarantine, proposed_id required for supersede/retcon, and consistency between approval.status and approved_diff_indexes.",
+  "type": "object",
+  "required": [
+    "run_id",
+    "input",
+    "output",
+    "approval"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "$ref": "#/$defs/dream_input"
+    },
+    "output": {
+      "$ref": "#/$defs/dream_output"
+    },
+    "approval": {
+      "$ref": "#/$defs/approval_state"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "source_ref": {
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "session",
+            "message",
+            "memory",
+            "artifact",
+            "com_log",
+            "retrieval"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "span": {
+          "type": "string"
+        }
+      }
+    },
+    "memory_node": {
+      "type": "object",
+      "required": [
+        "id",
+        "content",
+        "claim_type",
+        "status",
+        "confidence",
+        "provenance",
+        "evidence_count",
+        "review_required"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_type": {
+          "type": "string",
+          "enum": [
+            "fact",
+            "preference",
+            "project_state",
+            "decision",
+            "boundary",
+            "hypothesis"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "raw",
+            "proposed",
+            "approved",
+            "deprecated",
+            "superseded",
+            "quarantined",
+            "rejected"
+          ]
+        },
+        "confidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          },
+          "minItems": 1
+        },
+        "evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "contradicts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "valid_from": {
+          "type": "string"
+        },
+        "valid_until": {
+          "type": "string"
+        },
+        "review_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dream_output_node": {
+      "description": "A memory_node as it appears in dream output stores. Dream cannot self-canonicalize and cannot emit raw traces; status approved/raw is reserved for canonical pipeline.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/memory_node"
+        },
+        {
+          "properties": {
+            "status": {
+              "not": {
+                "enum": [
+                  "approved",
+                  "raw"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "dream_input": {
+      "type": "object",
+      "required": [
+        "canonical_store_refs",
+        "session_transcript_refs",
+        "com_telemetry_refs",
+        "policy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "canonical_store_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "proposed_store_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "quarantined_store_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "deprecated_ledger_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "session_transcript_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "com_telemetry_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "policy": {
+          "$ref": "#/$defs/dream_policy"
+        }
+      }
+    },
+    "dream_policy": {
+      "type": "object",
+      "required": [
+        "allow_direct_canonical_write",
+        "require_provenance",
+        "require_approval"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "allow_direct_canonical_write": {
+          "const": false
+        },
+        "require_provenance": {
+          "const": true
+        },
+        "require_approval": {
+          "const": true
+        },
+        "max_contradiction_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "memory_diff": {
+      "type": "object",
+      "required": [
+        "op",
+        "reason",
+        "provenance",
+        "cap"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "keep",
+            "reconcile",
+            "deprecate",
+            "supersede",
+            "retcon",
+            "quarantine",
+            "rollback"
+          ]
+        },
+        "target_id": {
+          "type": "string"
+        },
+        "proposed_id": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          },
+          "minItems": 1
+        },
+        "cap": {
+          "$ref": "#/$defs/cap_gate"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "enum": [
+                  "keep",
+                  "reconcile",
+                  "deprecate",
+                  "supersede",
+                  "retcon",
+                  "quarantine"
+                ]
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "required": [
+              "target_id"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "enum": [
+                  "supersede",
+                  "retcon"
+                ]
+              }
+            },
+            "required": [
+              "op"
+            ]
+          },
+          "then": {
+            "required": [
+              "proposed_id"
+            ]
+          }
+        }
+      ]
+    },
+    "cap_gate": {
+      "type": "object",
+      "required": [
+        "evidence",
+        "claim_strength",
+        "contradiction_risk",
+        "transition_cost",
+        "validator"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "evidence": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "claim_strength": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "contradiction_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "transition_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "validator": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "needs_review",
+            "block"
+          ]
+        }
+      }
+    },
+    "review_item": {
+      "type": "object",
+      "required": [
+        "id",
+        "diff_index",
+        "reason",
+        "required_action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "diff_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_action": {
+          "type": "string",
+          "enum": [
+            "approve",
+            "reject",
+            "inspect_provenance",
+            "run_retrieval",
+            "human_review"
+          ]
+        }
+      }
+    },
+    "dream_output": {
+      "type": "object",
+      "required": [
+        "candidate_store",
+        "diff",
+        "review_items",
+        "rejected_items",
+        "telemetry"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "candidate_store": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dream_output_node"
+          }
+        },
+        "diff": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/memory_diff"
+          }
+        },
+        "review_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/review_item"
+          }
+        },
+        "rejected_items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dream_output_node"
+          }
+        },
+        "telemetry": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "approval_state": {
+      "type": "object",
+      "required": [
+        "status",
+        "approved_diff_indexes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "not_reviewed",
+            "partially_approved",
+            "approved",
+            "rejected",
+            "rolled_back"
+          ]
+        },
+        "approved_diff_indexes": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "approver": {
+          "type": "string"
+        },
+        "approval_note": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "not_reviewed",
+                  "rejected",
+                  "rolled_back"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approved_diff_indexes": {
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "approved",
+                  "partially_approved"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approved_diff_indexes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

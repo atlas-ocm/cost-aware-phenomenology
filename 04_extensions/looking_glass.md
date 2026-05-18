@@ -150,6 +150,29 @@ The two layers are sequential and must not be collapsed. They handle different k
 
 ---
 
+## Machine-Readable Contract
+
+The corresponding case schema is
+[`../spec/looking_glass.schema.json`](../spec/looking_glass.schema.json).
+It locks the operator alphabet (`Retrodict`, `TraceSplit`, `UnwindCost`,
+`RepairPlan`, `RestoreOrCompensate`, `AntiMagicGuard`, `UpstreamBridge`),
+the case `ground_truth` enums (`verdict`, `final_reading`, `claim_status`),
+and enforces the cross-field invariants from this document:
+
+- `verdict: reject` requires a `*_rejected` `final_reading` and a `blocked_*`
+  `claim_status`;
+- `claim_status: blocked_*` requires `verdict: reject`;
+- `verdict: supportive` requires a `allowed_*` `claim_status`;
+- a `*_rejected` `final_reading` requires `AntiMagicGuard` in `operators`.
+
+A worked example lives at
+[`../examples/looking_glass_case_example.json`](../examples/looking_glass_case_example.json)
+and is exercised by
+[`../reference/python/tests/test_looking_glass_schema.py`](../reference/python/tests/test_looking_glass_schema.py),
+which also validates every case in
+`Patch/adjoint_looking_glass_layer_cases/` and
+`Patch/adjoint_looking_glass_layer_holdout_cases/` against the schema.
+
 ## Validation Status
 
 ```text

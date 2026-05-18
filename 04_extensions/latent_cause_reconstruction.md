@@ -206,6 +206,31 @@ The domain changes what counts as budget, debt, reserve, repair, boundary. The s
 
 ---
 
+## Machine-Readable Contract
+
+The corresponding case schema is
+[`../spec/latent_cause_reconstruction.schema.json`](../spec/latent_cause_reconstruction.schema.json).
+It locks the operator alphabet, the case `ground_truth` enums (`verdict`,
+`final_reading`, `cause_status`, `trigger_status`, `repair_order`, `layer`,
+`anti_banality_guard`, `operator_focus`), and enforces the cross-field
+invariants from this document:
+
+- `verdict: reject` requires one of the three `*_rejected` final readings
+  (`trigger_as_cause_collapse_rejected`, `moralizing_fantasy_cause_rejected`,
+  `emotional_trigger_overweight_rejected`);
+- `trigger_status: trigger_collapsed_into_cause` requires `verdict: reject`;
+- `cause_status: invalid_cause_requires_fantasy` or
+  `cause_status: trigger_misclassified_as_cause` requires `verdict: reject`;
+- `repair_order: invalid_moralizing_repair` or
+  `repair_order: invalid_symptom_first_repair` requires `verdict: reject`.
+
+A worked example lives at
+[`../examples/latent_cause_reconstruction_case_example.json`](../examples/latent_cause_reconstruction_case_example.json)
+and is exercised by
+[`../reference/python/tests/test_latent_cause_reconstruction_schema.py`](../reference/python/tests/test_latent_cause_reconstruction_schema.py),
+which also validates every case in
+`Patch/latent_cause_reconstruction_cases/` against the schema.
+
 ## Validation Status
 
 ```text

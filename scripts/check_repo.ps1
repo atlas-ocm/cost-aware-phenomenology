@@ -50,6 +50,14 @@ try {
     python reference\python\scripts\validate_artifacts.py
 
     Write-Host ""
+    Write-Host "Validating Memory Dreaming example against schema..."
+    python reference\python\scripts\validate_memory_dreaming_example.py
+
+    Write-Host ""
+    Write-Host "Validating Looking-Glass and Latent Cause case packs..."
+    python reference\python\scripts\validate_extension_case_packs.py
+
+    Write-Host ""
     Write-Host "Running LLM proxy policy pack..."
     python reference\python\scripts\run_proxy_policy_pack.py --print-md
 

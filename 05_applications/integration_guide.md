@@ -222,5 +222,6 @@ telemetry parsing and validator gating.
 
 - [LLM Dialogue Proxy](./llm_dialogue_proxy.md)
 - [Comparative Positioning](../04_extensions/comparative_positioning.md)
+- [Memory Dreaming](../04_extensions/memory_dreaming.md)
 - [Anti-Self-Justification Example](../examples/anti_self_justification_loop.md)
 - [CAP Lite Reference](../reference/python/cap_lite.py)

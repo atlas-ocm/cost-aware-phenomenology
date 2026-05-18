@@ -191,6 +191,40 @@ enforcement.
 
 ---
 
+## Memory Dreaming Fit
+
+Memory Dreaming is the offline memory-governance extension of the same
+release-policy idea. It is not another retrieval mode and not model training:
+
+```text
+transcripts + old memory + COM telemetry
+  -> Dream Compiler
+  -> candidate memory diff
+  -> verifier / approval gate
+  -> canonical memory update, if approved
+```
+
+Its role is to decide which accumulated traces may become anchors, which must
+remain proposed, which should be superseded, and which should be quarantined.
+The Dream run may propose `reconcile`, `retcon`, `deprecate`, `supersede`,
+`quarantine`, or `rollback`, but every mutation remains a reviewable ledger
+operation.
+
+This keeps the boundary consistent with the rest of CAP:
+
+```text
+Dreams propose.
+Reconcile merges.
+Retcon repairs interpretation.
+Rollback protects canon.
+Release Gate decides.
+```
+
+See [`memory_dreaming.md`](./memory_dreaming.md) and
+[`../spec/memory_dreaming.schema.json`](../spec/memory_dreaming.schema.json).
+
+---
+
 ## Current Deployable Architecture Demo
 
 The current hard-holdout architecture result is documented separately in

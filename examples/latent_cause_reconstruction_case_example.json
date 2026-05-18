@@ -1,0 +1,41 @@
+{
+  "case_id": "lcr_01_money_cat_charity_leakage_cause_first",
+  "family": "latent_cause_reconstruction",
+  "subfamily": "money_material_cause_first",
+  "domain": "money_material",
+  "summary": "A cat illness creates a 30000 UAH bill and debt. Prior traces show low reserve, repeated outside help, guilt language, and help from the base budget rather than from surplus.",
+  "observed_rupture": {
+    "B": "cat treated, 30000 UAH debt, reserve depleted",
+    "trigger_T": "cat illness",
+    "damage_vector": ["debt", "depleted_reserve", "dependent_anchor_pressure"]
+  },
+  "trace_surfaces": {
+    "timeline": ["regular help requests before the illness", "reserve did not grow despite enough income"],
+    "resource_traces": ["external outflow high", "reserve low", "debt appears after first large shock"],
+    "behavioral_traces": ["help given under guilt pressure", "no clean-margin limit"],
+    "language_markers": ["could not refuse", "they needed help", "I thought I had to"]
+  },
+  "candidate_causes": [
+    "resource_leakage_through_over_margin_help",
+    "reserve_failure",
+    "dependent_risk_underfunding"
+  ],
+  "claim_attempt": "The layer should infer prior resource leakage and stop over-margin help before treating debt closure as stable repair.",
+  "expected_repair_sequence": [
+    "stop over-margin help from base floor",
+    "contain debt consequence",
+    "rebuild reserve",
+    "restore clean-margin giving rule"
+  ],
+  "operators": ["TraceExtraction", "CandidateGeneration", "ForwardReplay", "CounterfactualRemoval", "CauseFirstRepair"],
+  "ground_truth": {
+    "verdict": "supportive",
+    "final_reading": "latent_resource_leakage_detected",
+    "cause_status": "cause_reconstructed_from_traces",
+    "trigger_status": "trigger_not_cause",
+    "repair_order": "cause_first_repair",
+    "layer": "resource_leakage_reconstruction",
+    "anti_banality_guard": "not_financial_advice",
+    "operator_focus": "latent_cause_reconstruction"
+  }
+}

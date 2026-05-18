@@ -8,6 +8,7 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
 - **COM Grammar can structure certain transition problems** into a typed operator-status graph.
 - **Telemetry gating can prevent over-budget recommendations** that would fail under current observer state.
 - **Previous model generations are not evidence**, and self-audit by telemetry is more reliable than defending past outputs.
+- **Offline memory recompilation must remain release-gated**: Dream runs may propose memory diffs, but cannot canonicalize memory directly.
 - **Boundaries between operators, states, and domains are machine-checkable** with current schemas.
 
 ## CAP does not claim
@@ -19,6 +20,7 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
 - That LLM behavior validates CAP ontology (LLM is scaffold, not evidence).
 - That numeric thresholds (RiskWeight values, telemetry signals) are anything but provisional engineering defaults.
 - That qualitative comparisons against prompting, RAG, validators, or fine-tuning are benchmark results.
+- That Memory Dreaming outputs are canonical memory without verifier and approval gates.
 
 ## Current validation supports
 
@@ -57,6 +59,9 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
   final gate. Because 67/75 candidates were rewritten from case contracts, this
   supports external architecture feasibility rather than a frozen benchmark or
   raw model-performance claim.
+- **Memory Dreaming architecture contract**: the ontology, diff operations,
+  and JSON Schema exist as a research-only extension. This supports a
+  machine-checkable design surface, not validated runtime performance.
 
 ## Current validation does not yet prove
 
@@ -79,5 +84,7 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
 - That the Qwen gate/rewrite pipeline result means Qwen solved 75/75 cases.
 - That the Gemini presentable five-mode comparison establishes full
   external-provider benchmark performance.
+- That Memory Dreaming has been validated as a benchmark track or production
+  memory subsystem.
 
 See [`03_validation/falsifiability.md`](./03_validation/falsifiability.md) for what would count against each claim.

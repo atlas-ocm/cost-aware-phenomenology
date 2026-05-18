@@ -1,0 +1,395 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:latent-cause-reconstruction:v0.1",
+  "title": "CAP Latent Cause Reconstruction Case",
+  "description": "Schema for a Latent Cause Reconstruction (A-Reconstruction) case. Encodes the doc-level invariants: trigger is not cause; symptom-only repair is rejected; moralizing and fantasy candidates are penalized; repair C is computed from A + B, not B alone; reject-verdict cases must have one of three known reject readings and the corresponding cause_status / trigger_status / repair_order.",
+  "type": "object",
+  "required": [
+    "case_id",
+    "family",
+    "summary",
+    "observed_rupture",
+    "trace_surfaces",
+    "candidate_causes",
+    "claim_attempt",
+    "operators",
+    "ground_truth"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "const": "latent_cause_reconstruction"
+    },
+    "subfamily": {
+      "type": "string"
+    },
+    "domain": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_rupture": {
+      "$ref": "#/$defs/observed_rupture"
+    },
+    "trace_surfaces": {
+      "$ref": "#/$defs/trace_surfaces"
+    },
+    "candidate_causes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "claim_attempt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_repair_sequence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operator"
+      },
+      "minItems": 1
+    },
+    "ground_truth": {
+      "$ref": "#/$defs/ground_truth"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "final_reading": {
+                "enum": [
+                  "trigger_as_cause_collapse_rejected",
+                  "moralizing_fantasy_cause_rejected",
+                  "emotional_trigger_overweight_rejected"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "trigger_status": {
+                "const": "trigger_collapsed_into_cause"
+              }
+            },
+            "required": [
+              "trigger_status"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "cause_status": {
+                "enum": [
+                  "invalid_cause_requires_fantasy",
+                  "trigger_misclassified_as_cause"
+                ]
+              }
+            },
+            "required": [
+              "cause_status"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "repair_order": {
+                "enum": [
+                  "invalid_moralizing_repair",
+                  "invalid_symptom_first_repair"
+                ]
+              }
+            },
+            "required": [
+              "repair_order"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "operator": {
+      "type": "string",
+      "enum": [
+        "TraceExtraction",
+        "CandidateGeneration",
+        "ForwardReplay",
+        "CounterfactualRemoval",
+        "MoralizingPenalty",
+        "FantasyPenalty",
+        "CauseFirstRepair",
+        "AntiBanalityGuard",
+        "AntiMagicGuard",
+        "TriggerCauseGuard",
+        "UnderdeterminationGuard",
+        "RestoreOrCompensate"
+      ]
+    },
+    "observed_rupture": {
+      "type": "object",
+      "required": [
+        "B",
+        "damage_vector"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "B": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trigger_T": {
+          "type": "string"
+        },
+        "damage_vector": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "trace_surfaces": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resource_traces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "behavioral_traces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "language_markers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "final_reading",
+        "cause_status",
+        "trigger_status",
+        "repair_order",
+        "layer",
+        "anti_banality_guard",
+        "operator_focus"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "supportive",
+            "mixed",
+            "weak",
+            "reject"
+          ]
+        },
+        "final_reading": {
+          "type": "string",
+          "enum": [
+            "emotional_trigger_overweight_rejected",
+            "exact_latent_cause_underdetermined",
+            "latent_false_repair_detected",
+            "latent_financial_help_credit_pressure_detected",
+            "latent_gift_credit_pressure_detected",
+            "latent_invisible_labor_debt_detected",
+            "latent_old_vector_monitoring_detected",
+            "latent_recovery_margin_collapse_detected",
+            "latent_resource_leakage_detected",
+            "latent_scope_creep_detected",
+            "latent_self_verification_pressure_detected",
+            "latent_silent_debt_detected",
+            "latent_work_body_margin_collision_detected",
+            "moralizing_fantasy_cause_rejected",
+            "trigger_as_cause_collapse_rejected"
+          ]
+        },
+        "cause_status": {
+          "type": "string",
+          "enum": [
+            "candidate_distribution_required",
+            "cause_reconstructed_from_traces",
+            "invalid_cause_requires_fantasy",
+            "trigger_misclassified_as_cause"
+          ]
+        },
+        "trigger_status": {
+          "type": "string",
+          "enum": [
+            "trigger_cause_relation_unresolved",
+            "trigger_collapsed_into_cause",
+            "trigger_not_cause"
+          ]
+        },
+        "repair_order": {
+          "type": "string",
+          "enum": [
+            "cause_first_repair",
+            "invalid_moralizing_repair",
+            "invalid_symptom_first_repair",
+            "no_single_repair_without_A_selection"
+          ]
+        },
+        "layer": {
+          "type": "string",
+          "enum": [
+            "body_margin_reconstruction",
+            "cross_domain_money_relationship_reconstruction",
+            "emotional_trigger_overweight_guard",
+            "fantasy_penalty_guard",
+            "household_load_reconstruction",
+            "relational_false_repair_reconstruction",
+            "relational_gift_credit_reconstruction",
+            "relational_old_vector_reconstruction",
+            "relational_silent_debt_reconstruction",
+            "resource_leakage_reconstruction",
+            "self_model_reconstruction",
+            "trigger_cause_guard",
+            "underdetermined_a_distribution",
+            "work_body_margin_collision_reconstruction",
+            "work_scope_reconstruction"
+          ]
+        },
+        "anti_banality_guard": {
+          "type": "string",
+          "enum": [
+            "exact_past_proof_blocked",
+            "moralizing_fantasy_penalty",
+            "not_affirmation_magic",
+            "not_better_apology_advice",
+            "not_cleaning_advice",
+            "not_communication_advice",
+            "not_financial_advice",
+            "not_gift_advice",
+            "not_medical_diagnosis",
+            "not_mind_reading",
+            "not_money_or_relationship_advice",
+            "not_productivity_advice",
+            "not_time_management_advice",
+            "trigger_not_cause_guard"
+          ]
+        },
+        "operator_focus": {
+          "type": "string",
+          "enum": [
+            "anti_banality_guard",
+            "latent_cause_reconstruction",
+            "mixed"
+          ]
+        }
+      }
+    }
+  }
+}

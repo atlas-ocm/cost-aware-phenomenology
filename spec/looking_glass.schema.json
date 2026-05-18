@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:looking-glass:v0.1",
+  "title": "CAP Looking-Glass Case",
+  "description": "Schema for a Looking-Glass / Adjoint Layer case. Encodes the doc-level invariants: AntiMagicGuard must reject undo-history / free-entropy / L5-bypass claims; verdict, final_reading, and claim_status must be cross-consistent (blocked_* iff reject iff *_rejected); operator usage must be from the closed set; restore_or_compensate routing is honest about which is still possible.",
+  "type": "object",
+  "required": [
+    "case_id",
+    "family",
+    "summary",
+    "operators",
+    "claim_attempt",
+    "ground_truth"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "family": {
+      "type": "string",
+      "enum": [
+        "adjoint_looking_glass_layer",
+        "adjoint_looking_glass_layer_holdout"
+      ]
+    },
+    "subfamily": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_outcome": {
+      "$ref": "#/$defs/observed_outcome"
+    },
+    "operators": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operator"
+      },
+      "minItems": 1
+    },
+    "claim_attempt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "upstream_bridge": {
+      "type": [
+        "string",
+        "object"
+      ]
+    },
+    "ground_truth": {
+      "$ref": "#/$defs/ground_truth"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "final_reading": {
+                "enum": [
+                  "literal_undo_history_rejected",
+                  "free_entropy_reversal_rejected"
+                ]
+              },
+              "claim_status": {
+                "enum": [
+                  "blocked_l5_breach_fantasy",
+                  "blocked_no_cost_macro_reverse"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "claim_status": {
+                "enum": [
+                  "blocked_l5_breach_fantasy",
+                  "blocked_no_cost_macro_reverse"
+                ]
+              }
+            },
+            "required": [
+              "claim_status"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "reject"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "verdict": {
+                "const": "supportive"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "claim_status": {
+                "enum": [
+                  "allowed_as_hypothesis_not_proof",
+                  "allowed_bounded_diagnostic",
+                  "allowed_bounded_future_constraint",
+                  "allowed_bounded_repair",
+                  "allowed_compensatory_repair",
+                  "allowed_cost_accounting",
+                  "allowed_upstream_causal_diagnostic"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "ground_truth": {
+            "properties": {
+              "final_reading": {
+                "enum": [
+                  "literal_undo_history_rejected",
+                  "free_entropy_reversal_rejected"
+                ]
+              }
+            },
+            "required": [
+              "final_reading"
+            ]
+          }
+        },
+        "required": [
+          "ground_truth"
+        ]
+      },
+      "then": {
+        "properties": {
+          "operators": {
+            "contains": {
+              "const": "AntiMagicGuard"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "operator": {
+      "type": "string",
+      "enum": [
+        "Retrodict",
+        "TraceSplit",
+        "UnwindCost",
+        "RepairPlan",
+        "RestoreOrCompensate",
+        "AntiMagicGuard",
+        "UpstreamBridge"
+      ]
+    },
+    "observed_outcome": {
+      "type": "object",
+      "required": [
+        "type",
+        "severity",
+        "history_directly_known"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "history_directly_known": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "undo_history_requested": {
+          "type": "string",
+          "enum": [
+            "yes",
+            "no",
+            "partial"
+          ]
+        },
+        "external_cost_allowed": {
+          "type": "string",
+          "enum": [
+            "none",
+            "bounded",
+            "unbounded",
+            "not_applicable"
+          ]
+        },
+        "direct_prior_evidence": {
+          "type": "string"
+        }
+      }
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "final_reading",
+        "claim_status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "supportive",
+            "mixed",
+            "weak",
+            "reject"
+          ]
+        },
+        "final_reading": {
+          "type": "string",
+          "enum": [
+            "bounded_retrodiction_and_repair_path_allowed",
+            "free_entropy_reversal_rejected",
+            "future_anchor_compatibility_check_allowed",
+            "literal_undo_history_rejected",
+            "moving_baseline_requires_maintenance_cost",
+            "multiple_prior_paths_keep_retrodiction_bounded",
+            "restore_blocked_compensation_path_allowed",
+            "split_point_candidate_detected",
+            "upstream_margin_depletion_detected"
+          ]
+        },
+        "claim_status": {
+          "type": "string",
+          "enum": [
+            "allowed_as_hypothesis_not_proof",
+            "allowed_bounded_diagnostic",
+            "allowed_bounded_future_constraint",
+            "allowed_bounded_repair",
+            "allowed_compensatory_repair",
+            "allowed_cost_accounting",
+            "allowed_upstream_causal_diagnostic",
+            "blocked_l5_breach_fantasy",
+            "blocked_no_cost_macro_reverse"
+          ]
+        }
+      }
+    }
+  }
+}

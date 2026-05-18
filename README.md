@@ -18,6 +18,7 @@ A state is not defined only by how it appears, but also by what it costs to leav
 - A **telemetry-gated discipline** that refuses to recommend operators the observer cannot execute right now
 - A **risk-throttling system** that downgrades unsafe operator selections automatically
 - A **machine-checkable** framework: outputs are structured, validated, reproducible across models
+- A **memory-governance extension** where offline Dream runs can propose memory diffs but cannot canonicalize them directly
 - A **research-only** working surface — a working tool, not certified canon
 
 ## What CAP IS NOT
@@ -112,6 +113,7 @@ CAP/
 ├── 04_extensions/                 <- diagnostic add-ons and positioning
 │   ├── looking_glass.md
 │   ├── latent_cause_reconstruction.md
+│   ├── memory_dreaming.md
 │   └── comparative_positioning.md
 ├── 05_applications/               <- applied use cases
 │   └── llm_dialogue_proxy.md
@@ -170,17 +172,18 @@ For a deeper dive, navigate by folder:
 9. Read the full-stack Gold Case: [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md)
 10. Compare CAP against prompt-only, RAG-only, validators, fine-tuning, and hybrid stacks: [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md)
 11. Inspect the current deployable architecture demo: [`04_extensions/deployable_architecture_comparison.md`](./04_extensions/deployable_architecture_comparison.md)
-12. Inspect the LLM dialogue proxy coverage report: [`validation_artifacts/llm_dialogue_proxy/benchmark_report.md`](./validation_artifacts/llm_dialogue_proxy/benchmark_report.md)
-13. Inspect the LLM dialogue benchmark scaffold: [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md)
-14. Inspect the first live LLM dialogue benchmark run: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md)
-15. Inspect the third-model transfer probe: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/third_model_transfer_note.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/third_model_transfer_note.md)
-16. Inspect the Qwen reasoning-budget run: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md)
-17. Inspect the hard-holdout status map, stress track, and release-gate boundary pack: [`validation_artifacts/llm_dialogue_benchmark/hard_holdout/evaluation_status.md`](./validation_artifacts/llm_dialogue_benchmark/hard_holdout/evaluation_status.md)
-18. See how to embed CAP Lite in an OpenAI-compatible or RAG pipeline: [`05_applications/integration_guide.md`](./05_applications/integration_guide.md)
-19. Inspect the copyable CAP Lite middleware: [`reference/python/cap_lite.py`](./reference/python/cap_lite.py)
-20. Read compact failure traces: [`trace_library/`](./trace_library/)
-21. Review likely objections and current limits: [`CRITIQUES_AND_RESPONSES.md`](./CRITIQUES_AND_RESPONSES.md)
-22. View text and Mermaid diagrams: [`assets/`](./assets/)
+12. Review the Memory Dreaming ontology and framework: [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md)
+13. Inspect the LLM dialogue proxy coverage report: [`validation_artifacts/llm_dialogue_proxy/benchmark_report.md`](./validation_artifacts/llm_dialogue_proxy/benchmark_report.md)
+14. Inspect the LLM dialogue benchmark scaffold: [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md)
+15. Inspect the first live LLM dialogue benchmark run: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md)
+16. Inspect the third-model transfer probe: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/third_model_transfer_note.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/third_model_transfer_note.md)
+17. Inspect the Qwen reasoning-budget run: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/qwen35_9b_run_note.md)
+18. Inspect the hard-holdout status map, stress track, and release-gate boundary pack: [`validation_artifacts/llm_dialogue_benchmark/hard_holdout/evaluation_status.md`](./validation_artifacts/llm_dialogue_benchmark/hard_holdout/evaluation_status.md)
+19. See how to embed CAP Lite in an OpenAI-compatible or RAG pipeline: [`05_applications/integration_guide.md`](./05_applications/integration_guide.md)
+20. Inspect the copyable CAP Lite middleware: [`reference/python/cap_lite.py`](./reference/python/cap_lite.py)
+21. Read compact failure traces: [`trace_library/`](./trace_library/)
+22. Review likely objections and current limits: [`CRITIQUES_AND_RESPONSES.md`](./CRITIQUES_AND_RESPONSES.md)
+23. View text and Mermaid diagrams: [`assets/`](./assets/)
 
 ## Deployment ladder
 
@@ -190,8 +193,8 @@ CAP can be implemented at multiple levels:
    the model.
 2. **Proxy-level CAP** - telemetry is parsed by an external policy layer.
 3. **Full runtime CAP** - RAG confidence, transition cost, validator
-   enforcement, source hierarchy, and self-audit memory are integrated into the
-   system.
+   enforcement, source hierarchy, self-audit memory, and release-gated memory
+   recompilation are integrated into the system.
 
 See [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md).
 
@@ -212,13 +215,13 @@ and [`reference/python/cap_lite.py`](./reference/python/cap_lite.py).
 Start with [`01_foundations/thesis.md`](./01_foundations/thesis.md) and [`01_foundations/positioning.md`](./01_foundations/positioning.md). These show what CAP claims and how it relates to Goodman, Varela, Clark, Friston, and Lieder & Griffiths.
 
 **If you are an AI safety or LLM engineer:**
-Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), and [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md). These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, benchmark scaffolding, integration, failure traces, and comparative deployment trade-offs.
+Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md), and [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md). These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, release-gated memory recompilation, benchmark scaffolding, integration, failure traces, and comparative deployment trade-offs.
 
 **If you are a reviewer or grant evaluator:**
 Start with [`PITCH_ONE_PAGER.md`](./PITCH_ONE_PAGER.md), [`03_validation/methodology.md`](./03_validation/methodology.md), [`03_validation/falsifiability.md`](./03_validation/falsifiability.md), [`validation_artifacts/`](./validation_artifacts/), and [`validation_artifacts/case_design_policy.md`](./validation_artifacts/case_design_policy.md). These document what CAP has and has not shown empirically, and how public-facing benchmark cases are kept review-safe.
 
 **If you want machine-readable specs:**
-Start with [`spec/`](./spec/) and the [`reference/python/`](./reference/python/) validator. The COM-Log schema, operator alphabet, runtime telemetry, response policy, validator result, and self-audit schemas are all machine-checkable.
+Start with [`spec/`](./spec/) and the [`reference/python/`](./reference/python/) validator. The COM-Log schema, operator alphabet, runtime telemetry, response policy, validator result, self-audit, and memory-dreaming schemas are all machine-checkable.
 
 **If you need term definitions:**
 See [`GLOSSARY.md`](./GLOSSARY.md) for all CAP terminology.

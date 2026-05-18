@@ -89,6 +89,13 @@ The operational language. 13 operators (Fixation, Inversion, Break, Hold, Pump, 
 ### 4.6 Adjustment Dynamics
 The forward-routing engine. Takes a current pressured or damaged state and reweights the admissible path field under anchors, costs, leakage patterns, and (optionally) upstream-bridge diagnosis from the Looking-Glass Layer. Two input modes: Desire Pressure (prospective routing without delivery guarantee) and Problem Pressure (recovery routing under damage).
 
+### 4.7 Memory Dreaming Extension
+The offline memory-governance extension. Takes canonical memory, transcripts,
+retrieval traces, and COM telemetry, then proposes candidate memory diffs for
+review. It can recommend reconcile, retcon, quarantine, deprecate, supersede,
+or rollback, but it cannot write directly to canonical memory. Dream output is
+a candidate artifact until a verifier and approval gate promote it.
+
 ---
 
 ## 5. COM Grammar — Worked Example
