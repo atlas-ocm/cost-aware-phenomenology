@@ -33,6 +33,9 @@ CONTEXT_HYGIENE_EXAMPLE = CAP_ROOT / "examples" / "context_hygiene_result_exampl
 DSSD_SCHEMA = CAP_ROOT / "spec" / "dynamic_subject_state_detection.schema.json"
 DSSD_EXAMPLE = CAP_ROOT / "examples" / "subject_state_frame_example.json"
 
+ADJUSTMENT_LAYER_SCHEMA = CAP_ROOT / "spec" / "adjustment_layer.schema.json"
+ADJUSTMENT_LAYER_EXAMPLE = CAP_ROOT / "examples" / "adjustment_candidate_transition_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -120,7 +123,12 @@ def main() -> int:
     if dssd_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures
+    print(f"Validating Adjustment Layer example against {ADJUSTMENT_LAYER_SCHEMA.name} ...")
+    adj_failures = _validate_single_example(ADJUSTMENT_LAYER_SCHEMA, ADJUSTMENT_LAYER_EXAMPLE)
+    if adj_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

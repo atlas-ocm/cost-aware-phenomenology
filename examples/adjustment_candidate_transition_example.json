@@ -1,0 +1,167 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-05-18T12_14_30_settings_footer",
+    "observed_state": {
+      "id": "obs_dirty_footer_after_save",
+      "summary": "Settings footer remains dirty after a successful save",
+      "evidence_refs": [
+        "ui_log:2026-05-18T12_14_29.012Z",
+        "mirror_frame:2026-05-18T12_14_30_settings_footer"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_post_save_rehydration",
+      "hypothesis": "post-save config rehydration re-dirties the routing-role select because equality check does not compare rehydrated value with just-saved value",
+      "source": "looking_glass",
+      "confidence": 0.82,
+      "evidence_refs": [
+        "diff:settings_routing_role_select.tsx",
+        "ui_log:configUpdated_after_save"
+      ],
+      "uncertainty": [
+        "whether other settings controls share the same re-dirty pattern"
+      ],
+      "status": "likely"
+    },
+    "desired_state": {
+      "id": "target_clean_footer_after_save",
+      "goal": "After successful save, draft equals saved config and the dirty flag clears",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "save persists config",
+        "draft state equals saved state after rehydration",
+        "footer dirty flag clears",
+        "manual user edits still mark the footer dirty"
+      ],
+      "forbidden_outcomes": [
+        "rewrite the entire settings store",
+        "break routing-role select",
+        "change runtime CAP layers"
+      ]
+    },
+    "constraints": [
+      "no changes outside settings/routing module",
+      "tests must remain green",
+      "minimal diff"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_save_clears_dirty",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_no_release_in_adjustment",
+        "kind": "destructive_action"
+      },
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "looking_glass_trace_id": "lg_trace_2026-05-18T12_15_00_dirty_footer",
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-05-18T12_18_00_dirty_footer_repair",
+    "from_state": "settings footer remains dirty after save",
+    "inferred_cause": "cause_post_save_rehydration",
+    "to_state": "draft equals saved config after successful save; footer dirty flag cleared",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Read current routing-role select implementation",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "Confirm where the controlled select onChange fires after rehydration"
+      },
+      {
+        "order": 2,
+        "action": "Add equality guard: skip onChange when incoming rehydrated value === current draft value",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Prevent re-dirty when rehydrated value is identical to the just-saved one"
+      },
+      {
+        "order": 3,
+        "action": "Add regression test that covers save + rehydrate cycle",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Lock the equality guard against future regression"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_save_clears_dirty",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.3,
+      "loop_risk": 0.1,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "low",
+      "implementation_cost": "low",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "low"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the equality guard commit",
+        "drop the regression test if it becomes flaky",
+        "rerun unit tests to confirm pre-change behaviour"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "draft equals saved state after save and rehydration",
+        "kind": "test_result"
+      },
+      {
+        "claim": "footer dirty flag becomes false on the dirty-footer regression scenario",
+        "kind": "runtime_observation"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-05-18T12:18:00.000Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-05-18T12_18_00_dirty_footer_repair",
+    "reasons": [
+      "Inferred cause is likely with low-cost minimal repair",
+      "No anchor conflicts; affected anchor remains compatible",
+      "Rollback plan covers reversible single-module change",
+      "Verifier + Release Gate required as next steps"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Worked example: a route_found candidate that repairs the dirty-footer invariant via an equality guard in the routing-role select. Three-step reversible route with a rollback plan; verifier + release gate required; no irreversible components, so no human authorization required."
+}

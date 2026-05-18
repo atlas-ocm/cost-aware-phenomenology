@@ -1,0 +1,957 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:adjustment-layer:v0.1",
+  "title": "CAP Adjustment Layer Candidate Transition",
+  "description": "Schema for the runtime output of an Adjustment Layer run: a CandidateTransition that proposes how to move from observed state B to desired state C, optionally informed by an inferred cause A. Encodes the doc-level invariants ADJ-01..ADJ-10 from 02_subsystems/adjustment_dynamics.md: adjustment must start from observed B; inferred A remains hypothesis; desired C must be explicit with success criteria; minimal sufficient route preferred; routes must respect boundaries; anchor conflict requires reconcile/retcon/rollback path; irreversible transitions require human authorization; looping routes require new evidence; sphere-probe output cannot mutate directly; adjustment output must go through Verifier and Release Gate.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "input",
+    "candidate",
+    "verdict",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "input": {
+      "$ref": "#/$defs/adjustment_input"
+    },
+    "candidate": {
+      "$ref": "#/$defs/candidate_transition"
+    },
+    "verdict": {
+      "$ref": "#/$defs/adjustment_verdict_result"
+    },
+    "policy": {
+      "$ref": "#/$defs/adjustment_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "ADJ-06: mode=repair with anchor conflicts forbidden; must use reconcile / retcon / rollback / quarantine instead.",
+      "if": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "mode": {
+                "const": "repair"
+              },
+              "affected_anchors": {
+                "type": "array",
+                "contains": {
+                  "properties": {
+                    "status": {
+                      "const": "conflicting"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "mode",
+              "affected_anchors"
+            ]
+          }
+        },
+        "required": [
+          "candidate"
+        ]
+      },
+      "then": false
+    },
+    {
+      "$comment": "ADJ-07: requires_human_authorization required when route has at least one irreversible step.",
+      "if": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "route": {
+                "type": "array",
+                "contains": {
+                  "properties": {
+                    "reversibility": {
+                      "const": "irreversible"
+                    }
+                  },
+                  "required": [
+                    "reversibility"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "route"
+            ]
+          }
+        },
+        "required": [
+          "candidate"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "requires_human_authorization": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "ADJ-08: loop-retry requires new evidence; verdict=route_requires_evidence forces new_evidence_refs minItems:1.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "route_requires_evidence"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "new_evidence_refs": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "new_evidence_refs"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "ADJ-06: verdict=route_requires_reconcile must use mode in {reconcile, retcon, rollback, quarantine}.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "route_requires_reconcile"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "mode": {
+                "enum": [
+                  "reconcile",
+                  "retcon",
+                  "rollback",
+                  "quarantine"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=rollback_recommended forces mode=rollback.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "rollback_recommended"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "mode": {
+                "const": "rollback"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=hold_insufficient_state forces mode=hold.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "hold_insufficient_state"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "mode": {
+                "const": "hold"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=human_decision_required forces requires_human_authorization=true.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "verdict": {
+                "const": "human_decision_required"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "requires_human_authorization": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "adjustment_mode": {
+      "type": "string",
+      "enum": [
+        "restore",
+        "repair",
+        "compensate",
+        "reconcile",
+        "retcon",
+        "rollback",
+        "quarantine",
+        "reframe",
+        "route_switch",
+        "hold"
+      ]
+    },
+    "desired_state_kind": {
+      "type": "string",
+      "enum": [
+        "restore_expected_state",
+        "repair_damaged_invariant",
+        "compensate_unrecoverable_state",
+        "reconcile_conflict",
+        "retcon_bad_anchor",
+        "rollback_to_safe_state",
+        "reduce_loop_risk",
+        "improve_context_hygiene",
+        "prepare_release_candidate",
+        "stabilize_runtime"
+      ]
+    },
+    "cause_source": {
+      "type": "string",
+      "enum": [
+        "looking_glass",
+        "mirror_diff",
+        "test_failure",
+        "runtime_log",
+        "context_hygiene",
+        "human_report",
+        "manual_analysis"
+      ]
+    },
+    "cause_status": {
+      "type": "string",
+      "enum": [
+        "plausible",
+        "likely",
+        "confirmed",
+        "contested",
+        "unknown"
+      ]
+    },
+    "anchor_level": {
+      "type": "string",
+      "enum": [
+        "L0",
+        "L1-A",
+        "L1-I",
+        "L1-P",
+        "L1-C",
+        "L1-Q",
+        "L1-D",
+        "L1-R",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "anchor_status": {
+      "type": "string",
+      "enum": [
+        "compatible",
+        "conflicting",
+        "unknown"
+      ]
+    },
+    "reversibility": {
+      "type": "string",
+      "enum": [
+        "reversible",
+        "irreversible",
+        "bounded_reversible"
+      ]
+    },
+    "step_mutability": {
+      "type": "string",
+      "enum": [
+        "read_only",
+        "candidate_patch",
+        "requires_authorization"
+      ]
+    },
+    "cost_band": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "timing": {
+      "type": "string",
+      "enum": [
+        "normal_flow",
+        "minor_drift",
+        "interval_detected",
+        "phase_transition_required",
+        "collapse_risk"
+      ]
+    },
+    "verdict_kind": {
+      "type": "string",
+      "enum": [
+        "route_found",
+        "multiple_routes_found",
+        "route_requires_evidence",
+        "route_requires_reconcile",
+        "route_requires_retcon",
+        "rollback_recommended",
+        "hold_insufficient_state",
+        "replan_required",
+        "human_decision_required"
+      ]
+    },
+    "anchor_ref": {
+      "type": "object",
+      "required": [
+        "id",
+        "level",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "$ref": "#/$defs/anchor_level"
+        },
+        "status": {
+          "$ref": "#/$defs/anchor_status"
+        }
+      }
+    },
+    "boundary_ref": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "repo_identity",
+            "permission",
+            "sandbox",
+            "domain",
+            "rate_limit",
+            "budget",
+            "role_authority",
+            "destructive_action",
+            "external_publication"
+          ]
+        }
+      }
+    },
+    "evidence_requirement": {
+      "type": "object",
+      "required": [
+        "claim",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "test_result",
+            "log",
+            "diff",
+            "file_reference",
+            "external_source",
+            "human_statement",
+            "runtime_observation",
+            "prior_anchor"
+          ]
+        }
+      }
+    },
+    "observed_state": {
+      "type": "object",
+      "required": [
+        "id",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "inferred_cause": {
+      "type": "object",
+      "required": [
+        "id",
+        "hypothesis",
+        "source",
+        "confidence",
+        "evidence_refs",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/cause_source"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "$ref": "#/$defs/cause_status"
+        }
+      }
+    },
+    "desired_state": {
+      "type": "object",
+      "required": [
+        "id",
+        "goal",
+        "kind",
+        "success_criteria",
+        "forbidden_outcomes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "$ref": "#/$defs/desired_state_kind"
+        },
+        "success_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "$comment": "ADJ-03: desired C must be explicit with at least one success criterion."
+        },
+        "forbidden_outcomes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "adjustment_input": {
+      "type": "object",
+      "required": [
+        "mirror_frame_id",
+        "observed_state",
+        "desired_state",
+        "constraints",
+        "anchors",
+        "boundaries"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mirror_frame_id": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "ADJ-01: adjustment must start from a Mirror Frame."
+        },
+        "observed_state": {
+          "$ref": "#/$defs/observed_state"
+        },
+        "inferred_cause": {
+          "$ref": "#/$defs/inferred_cause"
+        },
+        "desired_state": {
+          "$ref": "#/$defs/desired_state"
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor_ref"
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundary_ref"
+          }
+        },
+        "subject_state_frame_id": {
+          "type": "string"
+        },
+        "context_hygiene_result_id": {
+          "type": "string"
+        },
+        "looking_glass_trace_id": {
+          "type": "string"
+        },
+        "timing": {
+          "$ref": "#/$defs/timing"
+        }
+      }
+    },
+    "adjustment_step": {
+      "type": "object",
+      "required": [
+        "order",
+        "action",
+        "mutability",
+        "reversibility",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mutability": {
+          "$ref": "#/$defs/step_mutability"
+        },
+        "reversibility": {
+          "$ref": "#/$defs/reversibility"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "risk_estimate": {
+      "type": "object",
+      "required": [
+        "boundary_risk",
+        "anchor_conflict_risk",
+        "regression_risk",
+        "loop_risk",
+        "contamination_risk",
+        "irreversible_risk"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "boundary_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "anchor_conflict_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "regression_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "loop_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "contamination_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "irreversible_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "transition_cost": {
+      "type": "object",
+      "required": [
+        "token_cost",
+        "implementation_cost",
+        "verification_cost",
+        "rollback_cost",
+        "semantic_cost"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "token_cost": {
+          "$ref": "#/$defs/cost_band"
+        },
+        "implementation_cost": {
+          "$ref": "#/$defs/cost_band"
+        },
+        "verification_cost": {
+          "$ref": "#/$defs/cost_band"
+        },
+        "rollback_cost": {
+          "$ref": "#/$defs/cost_band"
+        },
+        "semantic_cost": {
+          "$ref": "#/$defs/cost_band"
+        }
+      }
+    },
+    "rollback_plan": {
+      "type": "object",
+      "required": [
+        "steps",
+        "estimated_cost"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "estimated_cost": {
+          "$ref": "#/$defs/cost_band"
+        },
+        "irreversible_components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "candidate_transition": {
+      "type": "object",
+      "required": [
+        "id",
+        "from_state",
+        "to_state",
+        "mode",
+        "route",
+        "affected_anchors",
+        "affected_boundaries",
+        "risk",
+        "cost",
+        "expected_evidence_after_apply",
+        "requires_verifier",
+        "requires_release_gate",
+        "requires_human_authorization",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "from_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inferred_cause": {
+          "type": "string"
+        },
+        "to_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "$ref": "#/$defs/adjustment_mode"
+        },
+        "route": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/adjustment_step"
+          },
+          "minItems": 1,
+          "$comment": "ADJ-04: minimal sufficient route required (at least one step)."
+        },
+        "affected_anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor_ref"
+          }
+        },
+        "affected_boundaries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundary_ref"
+          }
+        },
+        "risk": {
+          "$ref": "#/$defs/risk_estimate"
+        },
+        "cost": {
+          "$ref": "#/$defs/transition_cost"
+        },
+        "rollback_plan": {
+          "$ref": "#/$defs/rollback_plan"
+        },
+        "expected_evidence_after_apply": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence_requirement"
+          }
+        },
+        "requires_verifier": {
+          "type": "boolean"
+        },
+        "requires_release_gate": {
+          "type": "boolean"
+        },
+        "requires_human_authorization": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "adjustment_verdict_result": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "candidate_id",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "$ref": "#/$defs/verdict_kind"
+        },
+        "candidate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "new_evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "adjustment_policy": {
+      "type": "object",
+      "required": [
+        "require_mirror_frame",
+        "require_explicit_desired_state",
+        "allow_unverified_cause_as_fact",
+        "prefer_minimal_route",
+        "allow_boundary_violation",
+        "require_rollback_for_mutating_route",
+        "require_verifier_for_code_or_memory_change",
+        "require_release_gate_for_canonical_change",
+        "require_human_for_irreversible",
+        "forbid_loop_retry_without_new_evidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "require_mirror_frame": {
+          "const": true,
+          "$comment": "ADJ-01"
+        },
+        "require_explicit_desired_state": {
+          "const": true,
+          "$comment": "ADJ-03"
+        },
+        "allow_unverified_cause_as_fact": {
+          "const": false,
+          "$comment": "ADJ-02"
+        },
+        "prefer_minimal_route": {
+          "const": true,
+          "$comment": "ADJ-04"
+        },
+        "allow_boundary_violation": {
+          "const": false,
+          "$comment": "ADJ-05"
+        },
+        "require_rollback_for_mutating_route": {
+          "const": true
+        },
+        "require_verifier_for_code_or_memory_change": {
+          "const": true,
+          "$comment": "ADJ-10"
+        },
+        "require_release_gate_for_canonical_change": {
+          "const": true,
+          "$comment": "ADJ-10"
+        },
+        "require_human_for_irreversible": {
+          "const": true,
+          "$comment": "ADJ-07"
+        },
+        "forbid_loop_retry_without_new_evidence": {
+          "const": true,
+          "$comment": "ADJ-08"
+        }
+      }
+    }
+  }
+}

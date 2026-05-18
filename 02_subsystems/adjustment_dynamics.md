@@ -233,6 +233,84 @@ It is admissible because it is reachable within constraints.
 
 ---
 
+## Runtime Trace Contract
+
+The runtime output of an Adjustment Layer run is a CandidateTransition.
+The contract lives at
+[`../spec/adjustment_layer.schema.json`](../spec/adjustment_layer.schema.json),
+exercised by
+[`../reference/python/tests/test_adjustment_layer_schema.py`](../reference/python/tests/test_adjustment_layer_schema.py).
+A worked example lives at
+[`../examples/adjustment_candidate_transition_example.json`](../examples/adjustment_candidate_transition_example.json).
+
+The trace carries:
+
+- `input.mirror_frame_id` — reference to the Mirror Frame that fixed
+  `B`; required;
+- `input.observed_state` — `B`;
+- `input.inferred_cause` — optional `A` (from Looking-Glass or
+  alternative source); status enum is `plausible | likely | confirmed
+  | contested | unknown` (no `fact`);
+- `input.desired_state` — `C` with required `success_criteria`
+  minItems:1 and `forbidden_outcomes` to bound the target;
+- `candidate.mode` from a closed enum: `restore`, `repair`,
+  `compensate`, `reconcile`, `retcon`, `rollback`, `quarantine`,
+  `reframe`, `route_switch`, `hold`;
+- `candidate.route` — bounded sequence of steps, each labelled
+  `read_only` / `candidate_patch` / `requires_authorization` with a
+  reversibility tag;
+- `candidate.risk` (6 axes) and `candidate.cost` (5 axes);
+- `candidate.rollback_plan` for mutating routes;
+- `candidate.expected_evidence_after_apply` — what evidence the
+  Verifier should look for;
+- `candidate.requires_verifier`, `requires_release_gate`,
+  `requires_human_authorization` — required boolean fields;
+- `verdict` from a closed enum: `route_found`,
+  `multiple_routes_found`, `route_requires_evidence`,
+  `route_requires_reconcile`, `route_requires_retcon`,
+  `rollback_recommended`, `hold_insufficient_state`,
+  `replan_required`, `human_decision_required`.
+
+Hard invariants enforced by the schema:
+
+- ADJ-01: `input.mirror_frame_id` is required;
+  `policy.require_mirror_frame` is locked to `const true`.
+- ADJ-02: `cause_status` enum excludes `fact`;
+  `policy.allow_unverified_cause_as_fact` is locked to `const false`.
+- ADJ-03: `desired_state` is required;
+  `desired_state.success_criteria` minItems:1;
+  `policy.require_explicit_desired_state` is locked to `const true`.
+- ADJ-04: `candidate.route` minItems:1;
+  `policy.prefer_minimal_route` is locked to `const true`.
+- ADJ-05: `policy.allow_boundary_violation` is locked to `const false`.
+- ADJ-06: `mode: repair` with a conflicting affected anchor is
+  rejected (must use `reconcile | retcon | rollback | quarantine`);
+  `verdict: route_requires_reconcile` forces `mode` in the same set.
+- ADJ-07: any route step with `reversibility: irreversible` forces
+  `requires_human_authorization: true`;
+  `policy.require_human_for_irreversible` is locked to `const true`.
+- ADJ-08: `verdict: route_requires_evidence` requires
+  `new_evidence_refs` minItems:1;
+  `policy.forbid_loop_retry_without_new_evidence` is locked to
+  `const true`.
+- ADJ-09: schema has no `applied_diff` / `executor_action` field;
+  `additionalProperties: false` rejects any attempt to add one.
+- ADJ-10: `requires_verifier` and `requires_release_gate` are required
+  boolean fields on the candidate;
+  `policy.require_verifier_for_code_or_memory_change` and
+  `policy.require_release_gate_for_canonical_change` are locked to
+  `const true`.
+
+Verdict / mode consistency:
+
+- `rollback_recommended` forces `mode: rollback`;
+- `hold_insufficient_state` forces `mode: hold`;
+- `human_decision_required` forces
+  `requires_human_authorization: true`;
+- `route_requires_evidence` requires `new_evidence_refs` minItems:1;
+- `route_requires_reconcile` forces `mode` in
+  `{reconcile, retcon, rollback, quarantine}`.
+
 ## Where to Read Next
 
 - [`../04_extensions/looking_glass.md`](../04_extensions/looking_glass.md) — the upstream-diagnosis half of the chain
