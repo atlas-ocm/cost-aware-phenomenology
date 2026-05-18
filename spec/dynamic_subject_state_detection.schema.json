@@ -1,0 +1,700 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:dynamic-subject-state-detection:v0.1",
+  "title": "CAP Dynamic Subject-State Detection Frame",
+  "description": "Schema for a Subject-State Detection evaluation. Per-frame agency classification: object, system, looping_system, pseudo_subject, bounded_subject, delegated_subject, sphere_probe, release_authority_required, human_subject_required. Encodes the doc-level invariants DSSD-01..DSSD-10: subject-state is per-frame not per-actor; confidence is not authority; tool actor cannot be release authority; bounded subject cannot self-promote; irreversible attempt forces human authorization escalation; pseudo-subject forces guardrail escalation; looping-system forces Anti-loop; sphere_probe forbids release-class actions; high-risk states require audit_log_ref.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "input",
+    "frame",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "input": {
+      "$ref": "#/$defs/subject_state_input"
+    },
+    "frame": {
+      "$ref": "#/$defs/subject_state_frame"
+    },
+    "policy": {
+      "$ref": "#/$defs/subject_state_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "DSSD-03: actor_kind=tool cannot pair with release_authority_required.",
+      "if": {
+        "properties": {
+          "input": {
+            "properties": {
+              "actor_kind": {
+                "const": "tool"
+              }
+            },
+            "required": [
+              "actor_kind"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "detected_state": {
+                "not": {
+                  "const": "release_authority_required"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-06: irreversible_action_attempt in risk_signals forces required_escalation=human_authorization.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "risk_signals": {
+                "type": "array",
+                "contains": {
+                  "const": "irreversible_action_attempt"
+                }
+              }
+            },
+            "required": [
+              "risk_signals"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "required_escalation": {
+                "const": "human_authorization"
+              }
+            },
+            "required": [
+              "required_escalation"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-07: pseudo_subject_state requires required_escalation in {verifier, release_gate, human_authorization}.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "detected_state": {
+                "const": "pseudo_subject_state"
+              }
+            },
+            "required": [
+              "detected_state"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "required_escalation": {
+                "enum": [
+                  "verifier",
+                  "release_gate",
+                  "human_authorization"
+                ]
+              }
+            },
+            "required": [
+              "required_escalation"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-08: looping_system_state requires required_escalation=context_hygiene.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "detected_state": {
+                "const": "looping_system_state"
+              }
+            },
+            "required": [
+              "detected_state"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "required_escalation": {
+                "const": "context_hygiene"
+              }
+            },
+            "required": [
+              "required_escalation"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-09: sphere_probe_state must forbid release-class actions.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "detected_state": {
+                "const": "sphere_probe_state"
+              }
+            },
+            "required": [
+              "detected_state"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "forbidden_next_actions": {
+                "type": "array",
+                "anyOf": [
+                  {
+                    "contains": {
+                      "const": "release"
+                    }
+                  },
+                  {
+                    "contains": {
+                      "const": "canonicalize_memory"
+                    }
+                  },
+                  {
+                    "contains": {
+                      "const": "git_seal"
+                    }
+                  },
+                  {
+                    "contains": {
+                      "const": "external_publication"
+                    }
+                  }
+                ]
+              }
+            },
+            "required": [
+              "forbidden_next_actions"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-10: high-risk detected states require audit_log_ref.",
+      "if": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "detected_state": {
+                "enum": [
+                  "release_authority_required",
+                  "human_subject_required",
+                  "pseudo_subject_state"
+                ]
+              }
+            },
+            "required": [
+              "detected_state"
+            ]
+          }
+        },
+        "required": [
+          "frame"
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "required": [
+              "audit_log_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "DSSD-05: bounded_subject_state attempting canonicalization must escalate to at least release_gate.",
+      "if": {
+        "allOf": [
+          {
+            "properties": {
+              "frame": {
+                "properties": {
+                  "detected_state": {
+                    "const": "bounded_subject_state"
+                  },
+                  "risk_signals": {
+                    "type": "array",
+                    "contains": {
+                      "const": "canonicalization_attempt"
+                    }
+                  }
+                },
+                "required": [
+                  "detected_state",
+                  "risk_signals"
+                ]
+              }
+            },
+            "required": [
+              "frame"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "frame": {
+            "properties": {
+              "required_escalation": {
+                "enum": [
+                  "release_gate",
+                  "human_authorization"
+                ]
+              }
+            },
+            "required": [
+              "required_escalation"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "actor_kind": {
+      "type": "string",
+      "enum": [
+        "human",
+        "llm_agent",
+        "tool",
+        "runtime",
+        "organization",
+        "memory_process",
+        "browser_actor"
+      ]
+    },
+    "agent_role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "planner",
+        "coder",
+        "verifier",
+        "scout",
+        "reviewer",
+        "release_gate",
+        "executor",
+        "human_operator"
+      ]
+    },
+    "subject_state": {
+      "type": "string",
+      "enum": [
+        "object_state",
+        "system_state",
+        "looping_system_state",
+        "pseudo_subject_state",
+        "bounded_subject_state",
+        "delegated_subject_state",
+        "sphere_probe_state",
+        "release_authority_required",
+        "human_subject_required"
+      ]
+    },
+    "required_escalation": {
+      "type": "string",
+      "enum": [
+        "mirror_refresh",
+        "looking_glass",
+        "context_hygiene",
+        "verifier",
+        "release_gate",
+        "human_authorization"
+      ]
+    },
+    "behavior_kind": {
+      "type": "string",
+      "enum": [
+        "sets_goal",
+        "executes_instruction",
+        "repeats_route",
+        "changes_hypothesis",
+        "ignores_boundary",
+        "requests_evidence",
+        "claims_authority",
+        "asks_for_authorization",
+        "separates_claim_from_evidence",
+        "self_approves",
+        "detects_uncertainty",
+        "handles_contradiction",
+        "attempts_release",
+        "refuses_unsafe_action"
+      ]
+    },
+    "risk_signal": {
+      "type": "string",
+      "enum": [
+        "self_approval",
+        "authority_overreach",
+        "goal_drift",
+        "boundary_blindness",
+        "evidence_substitution",
+        "looping_behavior",
+        "role_confusion",
+        "context_contamination",
+        "irreversible_action_attempt",
+        "canonicalization_attempt",
+        "false_certainty",
+        "user_intent_ambiguity"
+      ]
+    },
+    "capability_signal": {
+      "type": "string",
+      "enum": [
+        "goal_clarity",
+        "boundary_awareness",
+        "evidence_separation",
+        "uncertainty_preserved",
+        "route_changed_after_failure",
+        "rollback_considered",
+        "human_authorization_requested",
+        "release_gate_respected",
+        "contradiction_preserved",
+        "minimal_action_preferred"
+      ]
+    },
+    "release_target": {
+      "type": "string",
+      "enum": [
+        "memory_anchor",
+        "code_change",
+        "config_change",
+        "doc_claim",
+        "strategy_decision",
+        "agent_output",
+        "tool_action",
+        "git_seal",
+        "external_publication"
+      ]
+    },
+    "observed_behavior": {
+      "type": "object",
+      "required": [
+        "kind",
+        "evidence_ref",
+        "weight"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/behavior_kind"
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "axis_scores": {
+      "type": "object",
+      "required": [
+        "goal_ownership",
+        "boundary_awareness",
+        "evidence_discipline",
+        "self_correction",
+        "authority_awareness",
+        "novelty_handling",
+        "reversibility_awareness",
+        "context_hygiene"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "goal_ownership": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "boundary_awareness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence_discipline": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "self_correction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "authority_awareness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "novelty_handling": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reversibility_awareness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "context_hygiene": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "subject_state_input": {
+      "type": "object",
+      "required": [
+        "actor_id",
+        "actor_kind",
+        "current_action",
+        "current_task",
+        "observed_behavior",
+        "permissions",
+        "boundaries"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "actor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_kind": {
+          "$ref": "#/$defs/actor_kind"
+        },
+        "current_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_task": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mirror_frame_id": {
+          "type": "string"
+        },
+        "context_hygiene_result_id": {
+          "type": "string"
+        },
+        "looking_glass_trace_id": {
+          "type": "string"
+        },
+        "declared_intent": {
+          "type": "string"
+        },
+        "observed_behavior": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/observed_behavior"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "active_role": {
+          "$ref": "#/$defs/agent_role"
+        },
+        "release_target": {
+          "$ref": "#/$defs/release_target"
+        }
+      }
+    },
+    "subject_state_frame": {
+      "type": "object",
+      "required": [
+        "id",
+        "actor_id",
+        "actor_kind",
+        "detected_state",
+        "confidence",
+        "axis_scores",
+        "evidence",
+        "risk_signals",
+        "capability_signals",
+        "allowed_next_actions",
+        "forbidden_next_actions",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "actor_kind": {
+          "$ref": "#/$defs/actor_kind"
+        },
+        "detected_state": {
+          "$ref": "#/$defs/subject_state"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "axis_scores": {
+          "$ref": "#/$defs/axis_scores"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "risk_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/risk_signal"
+          }
+        },
+        "capability_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capability_signal"
+          }
+        },
+        "allowed_next_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_next_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_escalation": {
+          "$ref": "#/$defs/required_escalation"
+        },
+        "audit_log_ref": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "subject_state_policy": {
+      "type": "object",
+      "required": [
+        "allow_model_as_release_authority",
+        "allow_self_approval",
+        "require_human_for_irreversible",
+        "require_release_gate_for_canonicalization",
+        "require_independent_verifier_for_code_seal",
+        "require_anti_loop_on_looping_system",
+        "require_mirror_for_state_claims"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "allow_model_as_release_authority": {
+          "const": false,
+          "$comment": "DSSD-02"
+        },
+        "allow_self_approval": {
+          "const": false,
+          "$comment": "DSSD-07"
+        },
+        "require_human_for_irreversible": {
+          "const": true,
+          "$comment": "DSSD-06"
+        },
+        "require_release_gate_for_canonicalization": {
+          "const": true,
+          "$comment": "DSSD-05"
+        },
+        "require_independent_verifier_for_code_seal": {
+          "const": true,
+          "$comment": "DSSD-04"
+        },
+        "require_anti_loop_on_looping_system": {
+          "const": true,
+          "$comment": "DSSD-08"
+        },
+        "require_mirror_for_state_claims": {
+          "const": true,
+          "$comment": "DSSD-01"
+        }
+      }
+    }
+  }
+}

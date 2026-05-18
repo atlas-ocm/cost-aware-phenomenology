@@ -30,6 +30,9 @@ LOOKING_GLASS_TRACE_EXAMPLE = CAP_ROOT / "examples" / "looking_glass_trace_examp
 CONTEXT_HYGIENE_SCHEMA = CAP_ROOT / "spec" / "context_hygiene.schema.json"
 CONTEXT_HYGIENE_EXAMPLE = CAP_ROOT / "examples" / "context_hygiene_result_example.json"
 
+DSSD_SCHEMA = CAP_ROOT / "spec" / "dynamic_subject_state_detection.schema.json"
+DSSD_EXAMPLE = CAP_ROOT / "examples" / "subject_state_frame_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -112,7 +115,12 @@ def main() -> int:
     if ch_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures
+    print(f"Validating Dynamic Subject-State Detection example against {DSSD_SCHEMA.name} ...")
+    dssd_failures = _validate_single_example(DSSD_SCHEMA, DSSD_EXAMPLE)
+    if dssd_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1
