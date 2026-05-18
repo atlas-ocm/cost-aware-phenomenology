@@ -1,0 +1,117 @@
+{
+  "schema_version": "0.1",
+  "candidate": {
+    "id": "cap-layer-042",
+    "target": "code_change",
+    "current_state": "Looking-Glass extension treated as release-blocking by the CI gate",
+    "inferred_cause": "Misread of the v0.1 doc where research-only status was implicit",
+    "proposed_state": "Looking-Glass extension reclassified as research-only; CI gate no longer requires its pass",
+    "claims": [
+      {
+        "id": "c1",
+        "text": "Looking-Glass extension status is research-only per 04_extensions/looking_glass.md",
+        "kind": "factual",
+        "confidence": 0.95,
+        "source_refs": [
+          "04_extensions/looking_glass.md:6"
+        ]
+      },
+      {
+        "id": "c2",
+        "text": "The current CI gate condition is a misclassification, not an explicit policy",
+        "kind": "interpretive",
+        "confidence": 0.7,
+        "source_refs": [
+          "scripts/check_repo.ps1"
+        ]
+      }
+    ],
+    "evidence": [
+      {
+        "id": "e1",
+        "kind": "file_reference",
+        "strength": "strong",
+        "supports_claims": [
+          "c1"
+        ]
+      },
+      {
+        "id": "e2",
+        "kind": "test_result",
+        "strength": "medium",
+        "supports_claims": [
+          "c1",
+          "c2"
+        ]
+      },
+      {
+        "id": "e3",
+        "kind": "diff",
+        "strength": "medium",
+        "supports_claims": [
+          "c2"
+        ]
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_release_gate_policy_v01",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "risks": [
+      "Downstream proxy gate scripts may already assume Looking-Glass is required"
+    ],
+    "rollback_plan": {
+      "steps": [
+        "git revert the gate condition change",
+        "Restore previous check_repo.ps1 line",
+        "Rerun check_repo.ps1 to confirm pre-change behaviour"
+      ],
+      "estimated_cost": "low: one commit revert + one CI run",
+      "irreversible_components": []
+    },
+    "author_role": "author",
+    "verifier_verdict": {
+      "role": "verifier",
+      "verdict": "pass",
+      "reasons": [
+        "Tests still green after change",
+        "No new anchor conflicts",
+        "Rollback plan covers the single modified line"
+      ]
+    },
+    "created_at": "2026-05-18T12:00:00.000Z"
+  },
+  "policy": {
+    "require_evidence": true,
+    "min_evidence_strength": "medium",
+    "require_verifier": true,
+    "require_rollback_plan": true,
+    "allow_anchor_conflict": false,
+    "allow_model_self_approval": false,
+    "require_human_authorization_for_irreversible": true
+  },
+  "result": {
+    "verdict": "pass",
+    "candidate_id": "cap-layer-042",
+    "target": "code_change",
+    "reasons": [
+      "Three evidence entries above min_evidence_strength=medium",
+      "Verifier reports pass with covering reasons",
+      "No anchor conflicts; affected anchor marked compatible",
+      "Rollback plan covers reversible single-line change"
+    ],
+    "missing_evidence": [],
+    "anchor_conflicts": [],
+    "boundary_violations": [],
+    "required_fixes": [],
+    "required_authorizations": [],
+    "confidence": 0.85,
+    "reversible": true,
+    "recommended_next_action": "release",
+    "audit_log_ref": "com_log/2026-05-18/release_gate/cap-layer-042"
+  },
+  "notes": "Worked example covering a pass verdict on a reversible code change with three evidence kinds, a verifier pass, no anchor conflicts, and an audit_log_ref."
+}

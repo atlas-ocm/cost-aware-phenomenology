@@ -1,0 +1,738 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:release-gate:v0.1",
+  "title": "CAP Release Gate Result",
+  "description": "Schema for a Release Gate evaluation result. Encodes the doc-level invariants from 02_subsystems/release_gate.md: candidate cannot release itself; missing evidence cannot produce pass; anchor conflict + pass requires a reconcile path; irreversible + pass requires authorization; pass requires audit_log_ref; boundary violation dominates quality; verifier and gate roles are separate; allow_model_self_approval is locked to false.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "candidate",
+    "policy",
+    "result"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "candidate": {
+      "$ref": "#/$defs/release_candidate"
+    },
+    "policy": {
+      "$ref": "#/$defs/release_policy"
+    },
+    "result": {
+      "$ref": "#/$defs/release_gate_result"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "RG-04: verdict pass requires non-empty evidence on the candidate",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "pass"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "evidence"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RG-08: verdict pass requires audit_log_ref in the result",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "pass"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "required": [
+              "audit_log_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RG-01: verdict pass requires verifier_verdict to be present on candidate",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "pass"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "candidate": {
+            "required": [
+              "verifier_verdict"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RG-10: any boundary_violation forces verdict blocked",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "boundary_violations": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "boundary_violations"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "blocked"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RG-05: anchor conflict + verdict pass requires recommended_next_action == reconcile_anchors",
+      "if": {
+        "allOf": [
+          {
+            "properties": {
+              "result": {
+                "properties": {
+                  "verdict": {
+                    "const": "pass"
+                  },
+                  "anchor_conflicts": {
+                    "type": "array",
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "verdict",
+                  "anchor_conflicts"
+                ]
+              }
+            },
+            "required": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "recommended_next_action": {
+                "const": "reconcile_anchors"
+              }
+            },
+            "required": [
+              "recommended_next_action"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RG-06: reversible=false + verdict pass requires non-empty required_authorizations",
+      "if": {
+        "allOf": [
+          {
+            "properties": {
+              "result": {
+                "properties": {
+                  "verdict": {
+                    "const": "pass"
+                  },
+                  "reversible": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "verdict",
+                  "reversible"
+                ]
+              }
+            },
+            "required": [
+              "result"
+            ]
+          }
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "required_authorizations": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "required_authorizations"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "release_target": {
+      "type": "string",
+      "enum": [
+        "memory_anchor",
+        "code_change",
+        "config_change",
+        "doc_claim",
+        "strategy_decision",
+        "agent_output",
+        "tool_action",
+        "git_seal",
+        "external_publication"
+      ]
+    },
+    "agent_role": {
+      "type": "string",
+      "enum": [
+        "author",
+        "verifier",
+        "release_gate",
+        "executor",
+        "human_operator",
+        "external_witness"
+      ]
+    },
+    "claim_kind": {
+      "type": "string",
+      "enum": [
+        "factual",
+        "causal",
+        "interpretive",
+        "strategic",
+        "implementation",
+        "safety"
+      ]
+    },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "test_result",
+        "log",
+        "diff",
+        "file_reference",
+        "external_source",
+        "human_statement",
+        "runtime_observation",
+        "prior_anchor"
+      ]
+    },
+    "evidence_strength": {
+      "type": "string",
+      "enum": [
+        "weak",
+        "medium",
+        "strong"
+      ]
+    },
+    "anchor_level": {
+      "type": "string",
+      "enum": [
+        "L0",
+        "L1-A",
+        "L1-I",
+        "L1-P",
+        "L1-C",
+        "L1-Q",
+        "L1-D",
+        "L1-R",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ]
+    },
+    "anchor_status": {
+      "type": "string",
+      "enum": [
+        "compatible",
+        "conflicting",
+        "unknown"
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "needs_fix",
+        "blocked"
+      ]
+    },
+    "recommended_next_action": {
+      "type": "string",
+      "enum": [
+        "release",
+        "revise",
+        "collect_evidence",
+        "run_verifier",
+        "reconcile_anchors",
+        "rollback",
+        "request_human_authorization",
+        "block"
+      ]
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "id",
+        "text",
+        "kind",
+        "confidence",
+        "source_refs"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "$ref": "#/$defs/claim_kind"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "strength",
+        "supports_claims"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "$ref": "#/$defs/evidence_kind"
+        },
+        "strength": {
+          "$ref": "#/$defs/evidence_strength"
+        },
+        "supports_claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "anchor_ref": {
+      "type": "object",
+      "required": [
+        "id",
+        "level",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "$ref": "#/$defs/anchor_level"
+        },
+        "status": {
+          "$ref": "#/$defs/anchor_status"
+        }
+      }
+    },
+    "anchor_conflict": {
+      "type": "object",
+      "required": [
+        "anchor_id",
+        "anchor_level",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "anchor_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anchor_level": {
+          "$ref": "#/$defs/anchor_level"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reconcile_path_available": {
+          "type": "boolean"
+        }
+      }
+    },
+    "boundary_violation": {
+      "type": "object",
+      "required": [
+        "boundary",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "boundary": {
+          "type": "string",
+          "enum": [
+            "repo_identity",
+            "permission",
+            "sandbox",
+            "domain",
+            "rate_limit",
+            "budget",
+            "role_authority",
+            "destructive_action",
+            "external_publication"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "rollback_plan": {
+      "type": "object",
+      "required": [
+        "steps",
+        "estimated_cost"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "estimated_cost": {
+          "type": "string"
+        },
+        "irreversible_components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verifier_verdict": {
+      "type": "object",
+      "required": [
+        "role",
+        "verdict",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/agent_role",
+          "$comment": "RG-09: verifier role must not be author"
+        },
+        "verdict": {
+          "$ref": "#/$defs/verdict"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "not": {
+        "properties": {
+          "role": {
+            "const": "author"
+          }
+        }
+      }
+    },
+    "release_candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "target",
+        "current_state",
+        "proposed_state",
+        "claims",
+        "evidence",
+        "affected_anchors",
+        "risks",
+        "author_role",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "$ref": "#/$defs/release_target"
+        },
+        "current_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inferred_cause": {
+          "type": "string"
+        },
+        "proposed_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/claim"
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence_ref"
+          }
+        },
+        "affected_anchors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor_ref"
+          }
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rollback_plan": {
+          "$ref": "#/$defs/rollback_plan"
+        },
+        "author_role": {
+          "$ref": "#/$defs/agent_role",
+          "$comment": "RG-09: author_role must not equal release_gate (gate cannot author its own candidate)"
+        },
+        "verifier_verdict": {
+          "$ref": "#/$defs/verifier_verdict"
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "not": {
+        "properties": {
+          "author_role": {
+            "const": "release_gate"
+          }
+        }
+      }
+    },
+    "release_policy": {
+      "type": "object",
+      "required": [
+        "require_evidence",
+        "min_evidence_strength",
+        "require_verifier",
+        "require_rollback_plan",
+        "allow_anchor_conflict",
+        "allow_model_self_approval",
+        "require_human_authorization_for_irreversible"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "require_evidence": {
+          "type": "boolean"
+        },
+        "min_evidence_strength": {
+          "$ref": "#/$defs/evidence_strength"
+        },
+        "require_verifier": {
+          "type": "boolean"
+        },
+        "require_rollback_plan": {
+          "type": "boolean"
+        },
+        "allow_anchor_conflict": {
+          "type": "boolean"
+        },
+        "allow_model_self_approval": {
+          "const": false,
+          "$comment": "RG-01 reified as a policy constant: a candidate cannot self-approve"
+        },
+        "require_human_authorization_for_irreversible": {
+          "type": "boolean"
+        }
+      }
+    },
+    "release_gate_result": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "candidate_id",
+        "target",
+        "reasons",
+        "confidence",
+        "reversible",
+        "recommended_next_action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "$ref": "#/$defs/verdict"
+        },
+        "candidate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "$ref": "#/$defs/release_target"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "missing_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "anchor_conflicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/anchor_conflict"
+          }
+        },
+        "boundary_violations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundary_violation"
+          }
+        },
+        "required_fixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_authorizations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "reversible": {
+          "type": "boolean"
+        },
+        "recommended_next_action": {
+          "$ref": "#/$defs/recommended_next_action"
+        },
+        "audit_log_ref": {
+          "type": "string",
+          "$comment": "Required when verdict == pass (RG-08); enforced by top-level allOf"
+        }
+      }
+    }
+  }
+}

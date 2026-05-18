@@ -18,6 +18,8 @@ REPO_ROOT = CAP_ROOT.parent
 
 LOOKING_GLASS_SCHEMA = CAP_ROOT / "spec" / "looking_glass.schema.json"
 LATENT_CAUSE_SCHEMA = CAP_ROOT / "spec" / "latent_cause_reconstruction.schema.json"
+RELEASE_GATE_SCHEMA = CAP_ROOT / "spec" / "release_gate.schema.json"
+RELEASE_GATE_EXAMPLE = CAP_ROOT / "examples" / "release_gate_result_example.json"
 
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
@@ -55,6 +57,23 @@ def _validate_pack(schema_path: Path, packs: list[Path], glob_pattern: str) -> i
     return total, failures
 
 
+def _validate_single_example(schema_path: Path, example_path: Path) -> int:
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator.check_schema(schema)
+    instance = json.loads(example_path.read_text(encoding="utf-8-sig"))
+    errors = sorted(
+        jsonschema.Draft202012Validator(schema).iter_errors(instance),
+        key=lambda e: list(e.path),
+    )
+    if errors:
+        print(f"  FAIL {example_path.relative_to(REPO_ROOT)}")
+        for err in errors:
+            location = "/".join(str(p) for p in err.path) or "<root>"
+            print(f"    - {location}: {err.message}")
+        return 1
+    return 0
+
+
 def main() -> int:
     print(f"Validating Looking-Glass case pack against {LOOKING_GLASS_SCHEMA.name} ...")
     lg_total, lg_failures = _validate_pack(LOOKING_GLASS_SCHEMA, LOOKING_GLASS_PACKS, "alg_*.json")
@@ -64,7 +83,12 @@ def main() -> int:
     lc_total, lc_failures = _validate_pack(LATENT_CAUSE_SCHEMA, LATENT_CAUSE_PACKS, "lcr_*.json")
     print(f"  {lc_total - lc_failures}/{lc_total} passed")
 
-    total_failures = lg_failures + lc_failures
+    print(f"Validating Release Gate example against {RELEASE_GATE_SCHEMA.name} ...")
+    rg_failures = _validate_single_example(RELEASE_GATE_SCHEMA, RELEASE_GATE_EXAMPLE)
+    if rg_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1
