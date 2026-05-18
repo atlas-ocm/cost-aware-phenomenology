@@ -36,6 +36,9 @@ DSSD_EXAMPLE = CAP_ROOT / "examples" / "subject_state_frame_example.json"
 ADJUSTMENT_LAYER_SCHEMA = CAP_ROOT / "spec" / "adjustment_layer.schema.json"
 ADJUSTMENT_LAYER_EXAMPLE = CAP_ROOT / "examples" / "adjustment_candidate_transition_example.json"
 
+ROLE_ORCHESTRATION_SCHEMA = CAP_ROOT / "spec" / "role_orchestration.schema.json"
+ROLE_ORCHESTRATION_EXAMPLE = CAP_ROOT / "examples" / "role_orchestration_decision_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -128,7 +131,12 @@ def main() -> int:
     if adj_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures
+    print(f"Validating Role Orchestration example against {ROLE_ORCHESTRATION_SCHEMA.name} ...")
+    ro_failures = _validate_single_example(ROLE_ORCHESTRATION_SCHEMA, ROLE_ORCHESTRATION_EXAMPLE)
+    if ro_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

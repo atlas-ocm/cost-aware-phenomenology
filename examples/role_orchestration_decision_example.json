@@ -1,0 +1,157 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "task_id": "task_2026-05-18_dirty_footer_repair",
+    "user_intent": "Fix the dirty-footer issue in the settings UI without touching CAP runtime",
+    "active_role": "coder",
+    "available_roles": [
+      {
+        "role": "coder",
+        "purpose": "Implement a candidate patch within scope",
+        "allowed_actions": ["read", "edit", "test"],
+        "forbidden_actions": ["verify", "release_review", "authorize", "execute"],
+        "allowed_scopes": ["files", "repo", "branch"],
+        "forbidden_scopes": ["runtime", "governance", "release_policy"],
+        "input_requirements": ["adjustment_id"],
+        "output_contract": ["candidate_patch", "diff_summary"],
+        "may_mutate": true,
+        "may_verify": false,
+        "may_release": false,
+        "may_authorize": false,
+        "max_autonomy": "candidate_mutation"
+      },
+      {
+        "role": "verifier",
+        "purpose": "Independent check of a candidate patch",
+        "allowed_actions": ["read", "test", "verify"],
+        "forbidden_actions": ["edit", "release_review", "authorize", "execute"],
+        "allowed_scopes": ["files", "repo", "branch"],
+        "forbidden_scopes": ["runtime", "governance"],
+        "input_requirements": ["candidate_patch"],
+        "output_contract": ["verifier_verdict"],
+        "may_mutate": false,
+        "may_verify": true,
+        "may_release": false,
+        "may_authorize": false,
+        "max_autonomy": "read_only"
+      },
+      {
+        "role": "uiux",
+        "purpose": "UI / presentation polish inside the UI scope only",
+        "allowed_actions": ["read", "edit", "test"],
+        "forbidden_actions": ["verify", "release_review", "authorize", "execute"],
+        "allowed_scopes": ["ui", "files"],
+        "forbidden_scopes": ["runtime", "governance", "cap_runtime", "release_policy"],
+        "input_requirements": ["adjustment_id"],
+        "output_contract": ["ui_patch"],
+        "may_mutate": true,
+        "may_verify": false,
+        "may_release": false,
+        "may_authorize": false,
+        "max_autonomy": "candidate_mutation"
+      },
+      {
+        "role": "release_governor",
+        "purpose": "Apply Release Gate policy to a candidate",
+        "allowed_actions": ["read", "release_review"],
+        "forbidden_actions": ["edit", "test", "authorize", "execute"],
+        "allowed_scopes": ["governance", "release_policy"],
+        "forbidden_scopes": ["runtime"],
+        "input_requirements": ["verifier_verdict_id"],
+        "output_contract": ["release_gate_result"],
+        "may_mutate": false,
+        "may_verify": false,
+        "may_release": true,
+        "may_authorize": false,
+        "max_autonomy": "release_review"
+      }
+    ],
+    "mirror_frame_id": "mirror_frame_2026-05-18T12_14_30_settings_footer",
+    "subject_state_frame_id": "dssd_frame_2026-05-18T12_16_00_coder_self_approve",
+    "context_hygiene_result_id": "hygiene_result_2026-05-18T12_15_00",
+    "looking_glass_trace_id": "lg_trace_2026-05-18T12_15_00_dirty_footer",
+    "adjustment_id": "adj_candidate_2026-05-18T12_18_00_dirty_footer_repair",
+    "boundaries": [
+      "no_self_release",
+      "no_git_seal_without_human_authorization",
+      "no_canonical_memory_writes"
+    ],
+    "permissions": [
+      "read_repo",
+      "propose_patch",
+      "request_verifier"
+    ],
+    "loop_signal_count": 0
+  },
+  "decision": {
+    "selected_role": "verifier",
+    "reason": "Coder attempted to approve own patch; DSSD reports pseudo_subject_state; route handoff to independent verifier to enforce RO-02 (author != final verifier).",
+    "mode": "switch_role",
+    "handoff": {
+      "from_role": "coder",
+      "to_role": "verifier",
+      "task_intent": "Independently verify the routing-role equality guard candidate patch",
+      "input_state_refs": {
+        "mirror_frame_id": "mirror_frame_2026-05-18T12_14_30_settings_footer",
+        "looking_glass_trace_id": "lg_trace_2026-05-18T12_15_00_dirty_footer",
+        "context_hygiene_result_id": "hygiene_result_2026-05-18T12_15_00",
+        "adjustment_id": "adj_candidate_2026-05-18T12_18_00_dirty_footer_repair"
+      },
+      "summary": "Coder produced a 3-step candidate patch with equality guard + regression test. Verifier must inspect the diff, run the regression test, and emit verifier_verdict independently.",
+      "evidence_refs": [
+        "diff:settings_routing_role_select.tsx",
+        "test_request:dirty_footer_regression",
+        "mirror_frame:2026-05-18T12_14_30_settings_footer"
+      ],
+      "open_questions": [
+        "Do other settings controls share the same re-dirty pattern?",
+        "Does the regression test cover both initial save and rehydration?"
+      ],
+      "rejected_hypotheses": [
+        "Server returned a stale payload (contradicted by server response)",
+        "Partial persist warning applied to routing-role field (no evidence)"
+      ],
+      "allowed_next_actions": [
+        "read",
+        "test",
+        "verify"
+      ],
+      "forbidden_next_actions": [
+        "edit",
+        "release_review",
+        "authorize",
+        "execute"
+      ],
+      "scope": {
+        "files": [
+          "settings/routing_role_select.tsx",
+          "settings/__tests__/routing_role_select.test.tsx"
+        ],
+        "repo": "f:/VibeCoding/Shard-Theory",
+        "branch": "main"
+      }
+    },
+    "required_before_next_step": [
+      "verifier_verdict in {pass, needs_fix, blocked}"
+    ],
+    "forbidden_until_satisfied": [
+      "release_review",
+      "git_seal",
+      "canonicalize_memory"
+    ],
+    "confidence": 0.92
+  },
+  "policy": {
+    "mode": "suggest",
+    "allow_auto_read_only_switch": true,
+    "allow_auto_mutating_switch": false,
+    "allow_self_approval": false,
+    "require_independent_verifier": true,
+    "require_release_gate_for_canonical": true,
+    "require_human_for_irreversible": true,
+    "enforce_role_scope": true,
+    "preserve_handoff_evidence": true,
+    "interrupt_loops": true
+  },
+  "notes": "Worked example: a coder LLM attempted self-approval on its own patch. Role Orchestration switches the active role to verifier (RO-02). The handoff packet preserves evidence and rejected hypotheses, locks scope to the two relevant files, and forbids release-class actions until the verifier produces a verdict. Policy in suggest mode with mutating auto-switch disabled."
+}

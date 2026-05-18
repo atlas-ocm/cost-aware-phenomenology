@@ -1,0 +1,717 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:role-orchestration:v0.1",
+  "title": "CAP Role Orchestration Decision",
+  "description": "Schema for a Role Orchestration step: select the next role, build a typed handoff, set policy. Encodes the doc-level invariants RO-01..RO-12 from 02_subsystems/role_orchestration.md: roles cannot self-promote; author and final verifier must be separated; verifier is read-only; release governor does not authorize physical seal; irreversible transitions require human authority; handoffs preserve evidence and rejected hypotheses; scope leakage is rejected; loop continuation is forbidden when loop_signal_count > 0; role outputs are typed.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "input",
+    "decision",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "input": {
+      "$ref": "#/$defs/role_orchestration_input"
+    },
+    "decision": {
+      "$ref": "#/$defs/role_orchestration_decision"
+    },
+    "policy": {
+      "$ref": "#/$defs/role_orchestration_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "RO-02: handoff to verifier or release_governor with same from_role and to_role is rejected (author != final verifier).",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "handoff": {
+                "type": "object",
+                "properties": {
+                  "to_role": {
+                    "enum": [
+                      "verifier",
+                      "release_governor"
+                    ]
+                  }
+                },
+                "required": [
+                  "to_role"
+                ]
+              }
+            },
+            "required": [
+              "handoff"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "handoff": {
+                "not": {
+                  "properties": {
+                    "from_role": {
+                      "enum": [
+                        "verifier",
+                        "release_governor"
+                      ]
+                    },
+                    "to_role": {
+                      "enum": [
+                        "verifier",
+                        "release_governor"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "from_role",
+                    "to_role"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RO-11: continue_current_role is forbidden when loop_signal_count > 0.",
+      "if": {
+        "properties": {
+          "input": {
+            "properties": {
+              "loop_signal_count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "loop_signal_count"
+            ]
+          }
+        },
+        "required": [
+          "input"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "mode": {
+                "not": {
+                  "const": "continue_current_role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "RO-05: execute action requires to_role=executor AND requires_return_to_role=human_authority.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "handoff": {
+                "type": "object",
+                "properties": {
+                  "allowed_next_actions": {
+                    "type": "array",
+                    "contains": {
+                      "const": "execute"
+                    }
+                  }
+                },
+                "required": [
+                  "allowed_next_actions"
+                ]
+              }
+            },
+            "required": [
+              "handoff"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "handoff": {
+                "properties": {
+                  "to_role": {
+                    "const": "executor"
+                  },
+                  "requires_return_to_role": {
+                    "const": "human_authority"
+                  }
+                },
+                "required": [
+                  "to_role",
+                  "requires_return_to_role"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ocm_role": {
+      "type": "string",
+      "enum": [
+        "observer",
+        "scout",
+        "diagnostician",
+        "context_hygienist",
+        "planner",
+        "architect",
+        "coder",
+        "uiux",
+        "verifier",
+        "cap_checker",
+        "release_governor",
+        "executor",
+        "human_authority",
+        "fallback"
+      ]
+    },
+    "role_action": {
+      "type": "string",
+      "enum": [
+        "read",
+        "search",
+        "mirror",
+        "diagnose",
+        "clean_context",
+        "plan",
+        "edit",
+        "test",
+        "verify",
+        "release_review",
+        "authorize",
+        "execute",
+        "rollback"
+      ]
+    },
+    "orchestration_mode": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "suggest",
+        "guarded_auto",
+        "auto"
+      ]
+    },
+    "decision_mode": {
+      "type": "string",
+      "enum": [
+        "continue_current_role",
+        "switch_role",
+        "parallel_review",
+        "escalate",
+        "hold"
+      ]
+    },
+    "max_autonomy": {
+      "type": "string",
+      "enum": [
+        "read_only",
+        "suggest",
+        "candidate_mutation",
+        "verified_mutation",
+        "release_review",
+        "human_only"
+      ]
+    },
+    "scope_rule": {
+      "type": "string",
+      "enum": [
+        "files",
+        "repo",
+        "branch",
+        "memory_store",
+        "browser_url",
+        "ui",
+        "runtime",
+        "governance",
+        "cap_runtime",
+        "release_policy",
+        "external_publication"
+      ]
+    },
+    "role_profile": {
+      "type": "object",
+      "required": [
+        "role",
+        "purpose",
+        "allowed_actions",
+        "forbidden_actions",
+        "allowed_scopes",
+        "forbidden_scopes",
+        "input_requirements",
+        "output_contract",
+        "may_mutate",
+        "may_verify",
+        "may_release",
+        "may_authorize",
+        "max_autonomy"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/role_action"
+          }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/role_action"
+          }
+        },
+        "allowed_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scope_rule"
+          }
+        },
+        "forbidden_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/scope_rule"
+          }
+        },
+        "input_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_contract": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "$comment": "RO-12: every role declares the typed artifact it produces."
+        },
+        "may_mutate": {
+          "type": "boolean"
+        },
+        "may_verify": {
+          "type": "boolean"
+        },
+        "may_release": {
+          "type": "boolean"
+        },
+        "may_authorize": {
+          "type": "boolean"
+        },
+        "max_autonomy": {
+          "$ref": "#/$defs/max_autonomy"
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "RO-03: verifier is read-only.",
+          "if": {
+            "properties": {
+              "role": {
+                "const": "verifier"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "may_mutate": {
+                "const": false
+              },
+              "may_release": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "$comment": "RO-04: release governor does not authorize physical action.",
+          "if": {
+            "properties": {
+              "role": {
+                "const": "release_governor"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "may_authorize": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "$comment": "RO-09: uiux must forbid runtime / governance / cap_runtime / release_policy scopes.",
+          "if": {
+            "properties": {
+              "role": {
+                "const": "uiux"
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "properties": {
+              "forbidden_scopes": {
+                "type": "array",
+                "allOf": [
+                  {
+                    "contains": {
+                      "const": "runtime"
+                    }
+                  },
+                  {
+                    "contains": {
+                      "const": "governance"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "input_state_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mirror_frame_id": {
+          "type": "string"
+        },
+        "looking_glass_trace_id": {
+          "type": "string"
+        },
+        "context_hygiene_result_id": {
+          "type": "string"
+        },
+        "adjustment_id": {
+          "type": "string"
+        },
+        "verifier_verdict_id": {
+          "type": "string"
+        }
+      },
+      "minProperties": 1,
+      "$comment": "RO-07: every handoff must reference at least one upstream state so context is not laundered."
+    },
+    "handoff_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "repo": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "browser_url": {
+          "type": "string"
+        },
+        "memory_store": {
+          "type": "string"
+        }
+      }
+    },
+    "role_handoff_packet": {
+      "type": "object",
+      "required": [
+        "from_role",
+        "to_role",
+        "task_intent",
+        "input_state_refs",
+        "summary",
+        "evidence_refs",
+        "open_questions",
+        "rejected_hypotheses",
+        "allowed_next_actions",
+        "forbidden_next_actions",
+        "scope"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "from_role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "to_role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "task_intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input_state_refs": {
+          "$ref": "#/$defs/input_state_refs"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "$comment": "RO-06: evidence is preserved across handoff."
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rejected_hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "$comment": "RO-06: rejected hypotheses survive the handoff so the next role does not re-derive them."
+        },
+        "allowed_next_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/role_action"
+          }
+        },
+        "forbidden_next_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/role_action"
+          }
+        },
+        "scope": {
+          "$ref": "#/$defs/handoff_scope"
+        },
+        "budget_remaining": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "requires_return_to_role": {
+          "$ref": "#/$defs/ocm_role"
+        }
+      }
+    },
+    "role_orchestration_input": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "user_intent",
+        "available_roles",
+        "boundaries",
+        "permissions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "user_intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "active_role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "available_roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/role_profile"
+          },
+          "minItems": 1
+        },
+        "mirror_frame_id": {
+          "type": "string"
+        },
+        "subject_state_frame_id": {
+          "type": "string"
+        },
+        "context_hygiene_result_id": {
+          "type": "string"
+        },
+        "looking_glass_trace_id": {
+          "type": "string"
+        },
+        "adjustment_id": {
+          "type": "string"
+        },
+        "verifier_verdict_id": {
+          "type": "string"
+        },
+        "release_gate_result_id": {
+          "type": "string"
+        },
+        "boundaries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "loop_signal_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "role_orchestration_decision": {
+      "type": "object",
+      "required": [
+        "selected_role",
+        "reason",
+        "mode",
+        "required_before_next_step",
+        "forbidden_until_satisfied",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "selected_role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mode": {
+          "$ref": "#/$defs/decision_mode"
+        },
+        "handoff": {
+          "$ref": "#/$defs/role_handoff_packet"
+        },
+        "required_before_next_step": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_until_satisfied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "role_orchestration_policy": {
+      "type": "object",
+      "required": [
+        "mode",
+        "allow_auto_read_only_switch",
+        "allow_auto_mutating_switch",
+        "allow_self_approval",
+        "require_independent_verifier",
+        "require_release_gate_for_canonical",
+        "require_human_for_irreversible",
+        "enforce_role_scope",
+        "preserve_handoff_evidence",
+        "interrupt_loops"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/orchestration_mode"
+        },
+        "allow_auto_read_only_switch": {
+          "type": "boolean"
+        },
+        "allow_auto_mutating_switch": {
+          "type": "boolean"
+        },
+        "allow_self_approval": {
+          "const": false,
+          "$comment": "RO-01"
+        },
+        "require_independent_verifier": {
+          "const": true,
+          "$comment": "RO-02"
+        },
+        "require_release_gate_for_canonical": {
+          "const": true
+        },
+        "require_human_for_irreversible": {
+          "const": true,
+          "$comment": "RO-05"
+        },
+        "enforce_role_scope": {
+          "const": true,
+          "$comment": "RO-09"
+        },
+        "preserve_handoff_evidence": {
+          "const": true,
+          "$comment": "RO-06"
+        },
+        "interrupt_loops": {
+          "const": true,
+          "$comment": "RO-11"
+        }
+      }
+    }
+  }
+}
