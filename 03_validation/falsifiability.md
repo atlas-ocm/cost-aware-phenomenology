@@ -99,6 +99,45 @@ CAP makes specific, checkable claims. This document lists what evidence would we
 
 ---
 
+## Machine-Readable Status
+
+Each of the seven claims is declared in
+[`../spec/falsifiability_status.json`](../spec/falsifiability_status.json)
+as either `gate: executable` or `gate: deferred`. Executable gates are
+implemented in
+[`../reference/python/cap/falsifiability_gates.py`](../reference/python/cap/falsifiability_gates.py)
+and exercised by
+[`../reference/python/tests/test_falsifiability_gates.py`](../reference/python/tests/test_falsifiability_gates.py).
+
+Currently executable:
+
+- **Claim 1** — three-model agreement on the COM Grammar pack
+  (`comet_12b_v.7-i1`, `silicon-maid-7b-imatrix`, `fimbulvetr-11b-v2`).
+  The gate reads `validation_artifacts/com_grammar/model_runs/` and the
+  deterministic baseline; any disagreement on `overall_verdict` or
+  `primary_reading`, or any missing run, falsifies the claim.
+- **Claim 7** — the full CAP validator (JSON Schema plus CAP-specific
+  consistency checks) accepts a fixed set of known-good COM-Log instances
+  and rejects a fixed set of known-bad ones. The structural discrimination
+  itself is the evidence.
+
+Currently deferred (with explicit blocker recorded in the manifest):
+
+- **Claim 2** — Transition cost predicts perceived burden (needs human
+  cost-burden survey).
+- **Claim 3** — Budget-gated recommendations reduce failure rate (needs
+  longitudinal usage data).
+- **Claim 4** — Telemetry signals correlate with operator failure rate
+  (needs controlled study).
+- **Claim 5** — Adjustment Layer outperforms symptom-only repair (needs
+  comparative study with stability metric).
+- **Claim 6** — Anti-self-justification reduces dialogue drift (needs
+  benchmarked LLM dialogue runs with human-labelled ground truth).
+
+The metadata test enforces that a deferred claim must declare both
+`evidence_required` and `blocker`, so a claim cannot be silently downgraded
+from executable to deferred without honesty.
+
 ## Summary
 
 Of CAP's seven main claims, two have machine-checked consistency evidence (Claims 1 and 7). Five have no current empirical evidence and are open for falsification. CAP is research-only because of this.

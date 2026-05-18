@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:manifest:falsifiability-status:v0.1",
+  "title": "CAP Falsifiability Status Manifest",
+  "description": "Machine-readable status of the seven CAP claims from 03_validation/falsifiability.md. Each claim is either executable (a gate function is provided in cap.falsifiability_gates) or deferred (it requires evidence CAP cannot produce alone, e.g. human study or longitudinal usage data). The manifest is the source of truth: test_falsifiability_gates.py reads it and runs every executable gate; any failure or any silent removal of a gated claim falsifies the corresponding claim.",
+  "version": "0.1",
+  "doc": "03_validation/falsifiability.md",
+  "claims": [
+    {
+      "id": 1,
+      "title": "Operators are consistently assignable",
+      "gate": "executable",
+      "gate_function": "claim_1_operator_consistency",
+      "evidence": {
+        "kind": "three_model_agreement_on_com_grammar_pack",
+        "model_runs_dir": "validation_artifacts/com_grammar/model_runs",
+        "baseline_path": "validation_artifacts/com_grammar/deterministic_baseline.json",
+        "expected_models": [
+          "comet_12b_v.7-i1",
+          "silicon-maid-7b-imatrix",
+          "fimbulvetr-11b-v2"
+        ],
+        "fields_checked": [
+          "overall_verdict",
+          "primary_reading"
+        ],
+        "threshold_description": "100% agreement among all three models on both fields for every case in the COM Grammar pack, matching the deterministic baseline."
+      },
+      "falsified_when": "Any case shows disagreement among the three models on overall_verdict or primary_reading, or any model run is missing for any case."
+    },
+    {
+      "id": 2,
+      "title": "Transition cost predicts perceived burden",
+      "gate": "deferred",
+      "evidence_required": "Human cost-burden survey instrument applied to sample of analysts.",
+      "blocker": "No subject pool, no instrument, no longitudinal data."
+    },
+    {
+      "id": 3,
+      "title": "Budget-gated recommendations reduce failure rate",
+      "gate": "deferred",
+      "evidence_required": "Longitudinal usage data with rollback / completion outcomes.",
+      "blocker": "No deployed user base, no follow-up tracking."
+    },
+    {
+      "id": 4,
+      "title": "Telemetry signals correlate with operator failure rate",
+      "gate": "deferred",
+      "evidence_required": "Controlled study comparing operator success across telemetry states.",
+      "blocker": "Telemetry state classification of natural data is itself unvalidated."
+    },
+    {
+      "id": 5,
+      "title": "Adjustment Layer outperforms symptom-only repair",
+      "gate": "deferred",
+      "evidence_required": "Comparative study of routes from Adjustment Layer vs symptom-only baselines, with a long-term stability metric.",
+      "blocker": "Stability metric not yet operationalized across target domains."
+    },
+    {
+      "id": 6,
+      "title": "Anti-self-justification reduces dialogue drift",
+      "gate": "deferred",
+      "evidence_required": "Benchmarked LLM dialogue runs with self-audit on vs off, measured by hallucination rate, user friction, and trust.",
+      "blocker": "Benchmark suite (proxy_release_gate, model_graded_auditor) exists as scaffold but lacks human-labelled ground truth at scale."
+    },
+    {
+      "id": 7,
+      "title": "COM-Log format produces more useful output than free-form advice",
+      "gate": "executable",
+      "gate_function": "claim_7_com_log_validator_accepts_golden_cases",
+      "evidence": {
+        "kind": "com_log_validator_discriminates_good_from_bad",
+        "golden_cases_module": "cap.falsifiability_gates",
+        "fields_checked": [
+          "domain",
+          "node",
+          "current_status",
+          "recommended_operator",
+          "target_status",
+          "next_physical_step"
+        ],
+        "threshold_description": "The full CAP validator (JSON Schema + CAP-specific consistency checks) accepts every known-good COM-Log instance and rejects every known-bad COM-Log instance defined in the gate module."
+      },
+      "falsified_when": "validator accepts a known-bad COM-Log, or rejects a known-good COM-Log, or the validator stops differentiating structured output from free-form prose."
+    }
+  ]
+}
