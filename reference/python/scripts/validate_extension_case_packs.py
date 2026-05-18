@@ -27,6 +27,9 @@ MIRROR_LAYER_EXAMPLE = CAP_ROOT / "examples" / "mirror_frame_example.json"
 LOOKING_GLASS_TRACE_SCHEMA = CAP_ROOT / "spec" / "looking_glass_trace.schema.json"
 LOOKING_GLASS_TRACE_EXAMPLE = CAP_ROOT / "examples" / "looking_glass_trace_example.json"
 
+CONTEXT_HYGIENE_SCHEMA = CAP_ROOT / "spec" / "context_hygiene.schema.json"
+CONTEXT_HYGIENE_EXAMPLE = CAP_ROOT / "examples" / "context_hygiene_result_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -104,7 +107,12 @@ def main() -> int:
     if lgt_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures
+    print(f"Validating Context Hygiene example against {CONTEXT_HYGIENE_SCHEMA.name} ...")
+    ch_failures = _validate_single_example(CONTEXT_HYGIENE_SCHEMA, CONTEXT_HYGIENE_EXAMPLE)
+    if ch_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

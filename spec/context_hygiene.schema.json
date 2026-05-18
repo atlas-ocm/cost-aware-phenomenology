@@ -1,0 +1,667 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:context-hygiene:v0.1",
+  "title": "CAP Anti-loop / Context Hygiene Result",
+  "description": "Schema for a Context Hygiene evaluation: classify each ContextUnit in the working window, decide per-unit action, detect loop and contamination signals, and emit a verdict + recommended next action. Encodes the doc-level invariants CH-01..CH-12: context is not truth; model output cannot self-promote to evidence; failed-route residue is not an instruction; stale must be refreshed or demoted; candidate memory cannot be canonical; loop signals required for loop verdicts; loop-break actions required to leave a loop; token accounting must not increase under the minimal-sufficient policy; futility escalation must request stop_and_replan or ask_verifier.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "task_intent",
+    "context_units",
+    "result",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "task_intent": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context_units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/context_unit"
+      }
+    },
+    "result": {
+      "$ref": "#/$defs/context_hygiene_result"
+    },
+    "policy": {
+      "$ref": "#/$defs/context_hygiene_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "CH-06: loop verdicts require at least one loop signal.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "enum": [
+                  "loop_risk",
+                  "loop_detected"
+                ]
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "loop_signals": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "loop_signals"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CH-11: loop_detected and futility_escalated must propose at least one axis change.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "enum": [
+                  "loop_detected",
+                  "futility_escalated"
+                ]
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "loop_break_actions": {
+                "minItems": 1
+              }
+            },
+            "required": [
+              "loop_break_actions"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CH-12: futility_escalated must request stop_and_replan or ask_verifier.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "futility_escalated"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "recommended_next_action": {
+                "enum": [
+                  "stop_and_replan",
+                  "ask_verifier"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=context_contamination requires at least one contamination signal.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "context_contamination"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "contamination_signals": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=quarantine_required requires at least one quarantined id.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "quarantine_required"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "quarantined": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "verdict=stale_context requires at least one refresh_required id.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "verdict": {
+                "const": "stale_context"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "refresh_required": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CH-10: token accounting must not increase under minimal-sufficient policy.",
+      "if": {
+        "properties": {
+          "result": {
+            "properties": {
+              "token_accounting": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "token_accounting"
+            ]
+          }
+        },
+        "required": [
+          "result"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "token_accounting": {
+                "$comment": "input_tokens_after must be <= input_tokens_before. Enforced by the test suite (cross-field constraints over numeric values are not first-class in Draft 2020-12)."
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "source_kind": {
+      "type": "string",
+      "enum": [
+        "user_message",
+        "assistant_output",
+        "tool_result",
+        "file",
+        "git",
+        "test_output",
+        "runtime_log",
+        "memory",
+        "summary",
+        "comlog",
+        "browser_snapshot",
+        "external_source"
+      ]
+    },
+    "freshness": {
+      "type": "string",
+      "enum": [
+        "fresh",
+        "stale",
+        "unknown"
+      ]
+    },
+    "evidence_role": {
+      "type": "string",
+      "enum": [
+        "evidence",
+        "claim",
+        "trace",
+        "noise",
+        "instruction"
+      ]
+    },
+    "canonicality": {
+      "type": "string",
+      "enum": [
+        "canonical",
+        "candidate",
+        "quarantined",
+        "rejected",
+        "unknown"
+      ]
+    },
+    "hygiene_decision": {
+      "type": "string",
+      "enum": [
+        "keep",
+        "compress",
+        "summarize",
+        "drop",
+        "quarantine",
+        "refresh",
+        "revalidate",
+        "route_switch",
+        "role_switch",
+        "escalate_to_verifier",
+        "stop_futile_loop"
+      ]
+    },
+    "hygiene_verdict": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "prune_recommended",
+        "stale_context",
+        "loop_risk",
+        "loop_detected",
+        "context_contamination",
+        "quarantine_required",
+        "futility_escalated",
+        "replan_required"
+      ]
+    },
+    "loop_signal": {
+      "type": "string",
+      "enum": [
+        "same_tool_same_args_repeated",
+        "same_error_family_repeated",
+        "same_plan_rephrased",
+        "same_hypothesis_without_new_evidence",
+        "test_fix_cycle_without_diff_progress",
+        "route_retry_after_boundary_block",
+        "model_self_confirmation",
+        "summary_reinjects_rejected_claim",
+        "context_window_dominated_by_failed_trace",
+        "expanding_scope_without_resolution"
+      ]
+    },
+    "contamination_signal": {
+      "type": "string",
+      "enum": [
+        "wrong_repo",
+        "wrong_branch",
+        "wrong_session",
+        "wrong_role",
+        "wrong_shell",
+        "wrong_time",
+        "wrong_user_intent",
+        "unverified_claim_as_fact",
+        "candidate_memory_as_canonical",
+        "failed_route_as_instruction",
+        "old_summary_overrides_recent_evidence",
+        "tool_error_exposed_as_context_anchor"
+      ]
+    },
+    "loop_break_action": {
+      "type": "string",
+      "enum": [
+        "refresh_mirror",
+        "run_looking_glass",
+        "switch_to_verifier",
+        "switch_to_scout",
+        "reduce_context",
+        "drop_failed_trace",
+        "quarantine_claim",
+        "change_tool_strategy",
+        "change_model",
+        "ask_for_human_authorization",
+        "stop_current_route"
+      ]
+    },
+    "next_action": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "refresh_mirror",
+        "run_looking_glass",
+        "switch_role",
+        "switch_route",
+        "ask_verifier",
+        "stop_and_replan"
+      ]
+    },
+    "agent_role": {
+      "type": "string",
+      "enum": [
+        "user",
+        "planner",
+        "coder",
+        "verifier",
+        "scout",
+        "reviewer",
+        "release_gate",
+        "executor",
+        "human_operator"
+      ]
+    },
+    "context_unit_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/agent_role"
+        },
+        "file_path": {
+          "type": "string"
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "shell": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "context_unit": {
+      "type": "object",
+      "required": [
+        "id",
+        "source",
+        "scope",
+        "content_hash",
+        "created_at",
+        "freshness",
+        "evidence_role",
+        "canonicality",
+        "relevance",
+        "risk",
+        "token_cost",
+        "reuse_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "$ref": "#/$defs/source_kind"
+        },
+        "scope": {
+          "$ref": "#/$defs/context_unit_scope"
+        },
+        "content_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_verified_at": {
+          "type": "string"
+        },
+        "freshness": {
+          "$ref": "#/$defs/freshness"
+        },
+        "evidence_role": {
+          "$ref": "#/$defs/evidence_role"
+        },
+        "canonicality": {
+          "$ref": "#/$defs/canonicality"
+        },
+        "relevance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "token_cost": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reuse_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "token_accounting": {
+      "type": "object",
+      "required": [
+        "input_tokens_before",
+        "input_tokens_after",
+        "prunable_tokens"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens_before": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_tokens_after": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "prunable_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cumulative_prunable_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "$comment": "Estimated; not a billing guarantee."
+        }
+      }
+    },
+    "context_hygiene_result": {
+      "type": "object",
+      "required": [
+        "verdict",
+        "kept",
+        "compressed",
+        "dropped",
+        "quarantined",
+        "refresh_required",
+        "loop_signals",
+        "contamination_signals",
+        "loop_break_actions",
+        "token_accounting",
+        "recommended_next_action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "$ref": "#/$defs/hygiene_verdict"
+        },
+        "kept": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compressed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dropped": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quarantined": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "refresh_required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "loop_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/loop_signal"
+          }
+        },
+        "contamination_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contamination_signal"
+          }
+        },
+        "loop_break_actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/loop_break_action"
+          }
+        },
+        "token_accounting": {
+          "$ref": "#/$defs/token_accounting"
+        },
+        "recommended_next_action": {
+          "$ref": "#/$defs/next_action"
+        }
+      }
+    },
+    "context_hygiene_policy": {
+      "type": "object",
+      "required": [
+        "prefer_minimal_sufficient_context",
+        "allow_model_self_evidence",
+        "allow_failed_route_as_instruction",
+        "allow_candidate_memory_as_canonical",
+        "summaries_must_preserve_provenance"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "prefer_minimal_sufficient_context": {
+          "const": true,
+          "$comment": "CH-10"
+        },
+        "allow_model_self_evidence": {
+          "const": false,
+          "$comment": "CH-02"
+        },
+        "allow_failed_route_as_instruction": {
+          "const": false,
+          "$comment": "CH-03"
+        },
+        "allow_candidate_memory_as_canonical": {
+          "const": false,
+          "$comment": "CH-05"
+        },
+        "summaries_must_preserve_provenance": {
+          "const": true,
+          "$comment": "CH-09"
+        },
+        "max_repeat_without_new_evidence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "futility_escalation_token_threshold": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
