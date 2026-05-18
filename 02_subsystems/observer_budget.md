@@ -148,6 +148,29 @@ A high-stakes, morally weighty, deeply desired outcome with insufficient budget 
 
 ---
 
+## Numeric Contract
+
+The budget bands, the AllowedTotalRisk formula, the three operating modes,
+and the anti-drama discipline are encoded as a numeric contract in
+[`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py),
+exercised by
+[`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py).
+The contract enforces:
+
+- `classify_budget_state(b)` maps `<30` -> Critical, `30-50` -> Depleted,
+  `60-80` -> Partial, `100` -> Full; off-band gaps attach conservatively
+  to the lower named state (51-59 -> Depleted, 81-99 -> Partial) so that
+  permitted zones are over-restricted rather than under-restricted.
+- `allowed_total_risk(b, rtf) = b * rtf` is monotone non-decreasing in
+  both arguments and bounded by `b` when `rtf <= 1`.
+- `permitted_risk_zones_for_budget` returns a set that strictly widens
+  as the budget recovers (Critical -> Depleted -> Partial -> Full).
+- `cycle_decision` admits when within budget, pauses when Critical, defers
+  the highest-risk operator otherwise, downgrades when the candidate is
+  not the top.
+- `importance_does_not_change_budget(importance, b) == b` is checked over a
+  random sweep: anti-drama is a property of the function, not a guideline.
+
 ## Where to Read Next
 
 - [`transition_cost.md`](./transition_cost.md) — what the budget is checked against

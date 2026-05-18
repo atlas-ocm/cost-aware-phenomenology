@@ -117,6 +117,23 @@ For the budget side of this pairing, see [`observer_budget.md`](./observer_budge
 
 ---
 
+## Numeric Contract
+
+The risk-weight bands and the TotalRisk formula are encoded as a numeric
+contract in [`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py),
+exercised by
+[`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py).
+The contract enforces:
+
+- `classify_risk_zone(rw)` maps `10-30` -> Conservation, `40-60` -> Nominal,
+  `70-90` -> Expansion, `>90` -> Not Recommended; off-band gaps (31-39,
+  61-69) classify as Not Recommended rather than producing a silent fifth
+  zone.
+- `total_risk` is non-negative, additive over a partition of operators, and
+  monotone non-decreasing when an operator is added.
+- The risk bands are pairwise disjoint and well-ordered; this is checked as
+  a property over the full integer sweep `[0, 100]`.
+
 ## The Compression
 
 ```text
