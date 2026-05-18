@@ -1,0 +1,347 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:witness-independence:v0.1",
+  "title": "CAP Witness Independence Record",
+  "description": "Schema for a witness-pair record. Encodes WI-01..WI-06: independent witness required for canonical / irreversible / public transitions; two witnesses are not independent if all five axes match; self-witness never independent; model's own output cannot serve as witness; verdicts are typed; blocked verdict vetoes release.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "transition_class",
+    "producer",
+    "witnesses",
+    "independence_required"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "transition_class": {
+      "$ref": "#/$defs/transition_class"
+    },
+    "producer": {
+      "$ref": "#/$defs/witness_actor"
+    },
+    "witnesses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/witness_entry"
+      }
+    },
+    "independence_required": {
+      "type": "boolean"
+    },
+    "release_verdict": {
+      "$ref": "#/$defs/witness_verdict"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "WI-01: canonical / irreversible / public transitions require independence and at least one witness.",
+      "if": {
+        "properties": {
+          "transition_class": {
+            "enum": [
+              "code_change",
+              "config_change",
+              "git_seal",
+              "external_publication",
+              "memory_canonicalization",
+              "retcon",
+              "destructive_rollback"
+            ]
+          }
+        },
+        "required": [
+          "transition_class"
+        ]
+      },
+      "then": {
+        "properties": {
+          "independence_required": {
+            "const": true
+          },
+          "witnesses": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "transition_class": {
+      "type": "string",
+      "enum": [
+        "code_change",
+        "config_change",
+        "git_seal",
+        "external_publication",
+        "memory_canonicalization",
+        "retcon",
+        "destructive_rollback",
+        "mirror_snapshot",
+        "internal_reasoning_step"
+      ]
+    },
+    "agent_kind": {
+      "type": "string",
+      "enum": [
+        "human",
+        "llm_agent",
+        "tool",
+        "runtime"
+      ]
+    },
+    "ocm_role": {
+      "type": "string",
+      "enum": [
+        "observer",
+        "scout",
+        "diagnostician",
+        "context_hygienist",
+        "planner",
+        "architect",
+        "coder",
+        "uiux",
+        "verifier",
+        "cap_checker",
+        "release_governor",
+        "executor",
+        "human_authority"
+      ]
+    },
+    "evidence_source": {
+      "type": "string",
+      "enum": [
+        "self_generated",
+        "shared_with_producer",
+        "independent_tool",
+        "independent_human",
+        "independent_log",
+        "external_source"
+      ]
+    },
+    "witness_verdict": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "needs_fix",
+        "blocked",
+        "abstain"
+      ]
+    },
+    "witness_actor": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "role",
+        "model"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "$ref": "#/$defs/agent_kind"
+        },
+        "role": {
+          "$ref": "#/$defs/ocm_role"
+        },
+        "model": {
+          "type": "string"
+        }
+      }
+    },
+    "independence_axes": {
+      "type": "object",
+      "required": [
+        "actor_identity",
+        "role",
+        "model",
+        "evidence_source",
+        "time_window"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "actor_identity": {
+          "type": "string",
+          "enum": [
+            "same",
+            "differs"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "same",
+            "differs"
+          ]
+        },
+        "model": {
+          "type": "string",
+          "enum": [
+            "same",
+            "differs"
+          ]
+        },
+        "evidence_source": {
+          "type": "string",
+          "enum": [
+            "same",
+            "differs"
+          ]
+        },
+        "time_window": {
+          "type": "string",
+          "enum": [
+            "same",
+            "differs"
+          ]
+        }
+      }
+    },
+    "witness_entry": {
+      "type": "object",
+      "required": [
+        "witness",
+        "verdict",
+        "evidence_source",
+        "independence_axes",
+        "same_actor",
+        "independent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "witness": {
+          "$ref": "#/$defs/witness_actor"
+        },
+        "verdict": {
+          "$ref": "#/$defs/witness_verdict"
+        },
+        "evidence_source": {
+          "$ref": "#/$defs/evidence_source"
+        },
+        "independence_axes": {
+          "$ref": "#/$defs/independence_axes"
+        },
+        "same_actor": {
+          "type": "boolean"
+        },
+        "independent": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "WI-02: independent=true requires at least one axis to differ.",
+          "if": {
+            "properties": {
+              "independent": {
+                "const": true
+              }
+            },
+            "required": [
+              "independent"
+            ]
+          },
+          "then": {
+            "properties": {
+              "independence_axes": {
+                "anyOf": [
+                  {
+                    "properties": {
+                      "actor_identity": {
+                        "const": "differs"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "role": {
+                        "const": "differs"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "model": {
+                        "const": "differs"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "evidence_source": {
+                        "const": "differs"
+                      }
+                    }
+                  },
+                  {
+                    "properties": {
+                      "time_window": {
+                        "const": "differs"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "$comment": "WI-03: same_actor=true forbids independent=true.",
+          "if": {
+            "properties": {
+              "same_actor": {
+                "const": true
+              }
+            },
+            "required": [
+              "same_actor"
+            ]
+          },
+          "then": {
+            "properties": {
+              "independent": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "$comment": "WI-04: self_generated evidence_source cannot pair with independent=true.",
+          "if": {
+            "properties": {
+              "evidence_source": {
+                "const": "self_generated"
+              }
+            },
+            "required": [
+              "evidence_source"
+            ]
+          },
+          "then": {
+            "properties": {
+              "independent": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

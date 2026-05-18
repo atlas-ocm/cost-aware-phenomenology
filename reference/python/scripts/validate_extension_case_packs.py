@@ -39,6 +39,15 @@ ADJUSTMENT_LAYER_EXAMPLE = CAP_ROOT / "examples" / "adjustment_candidate_transit
 ROLE_ORCHESTRATION_SCHEMA = CAP_ROOT / "spec" / "role_orchestration.schema.json"
 ROLE_ORCHESTRATION_EXAMPLE = CAP_ROOT / "examples" / "role_orchestration_decision_example.json"
 
+CYCLE_STATE_MACHINE_SCHEMA = CAP_ROOT / "spec" / "cycle_state_machine.schema.json"
+CYCLE_STATE_MACHINE_EXAMPLE = CAP_ROOT / "examples" / "cycle_node_example.json"
+
+ANCHOR_DECAY_SCHEMA = CAP_ROOT / "spec" / "anchor_decay.schema.json"
+ANCHOR_DECAY_EXAMPLE = CAP_ROOT / "examples" / "anchor_decay_example.json"
+
+WITNESS_INDEPENDENCE_SCHEMA = CAP_ROOT / "spec" / "witness_independence.schema.json"
+WITNESS_INDEPENDENCE_EXAMPLE = CAP_ROOT / "examples" / "witness_pair_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -136,7 +145,22 @@ def main() -> int:
     if ro_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures
+    print(f"Validating Cycle State Machine example against {CYCLE_STATE_MACHINE_SCHEMA.name} ...")
+    csm_failures = _validate_single_example(CYCLE_STATE_MACHINE_SCHEMA, CYCLE_STATE_MACHINE_EXAMPLE)
+    if csm_failures == 0:
+        print(f"  1/1 passed")
+
+    print(f"Validating Anchor Decay example against {ANCHOR_DECAY_SCHEMA.name} ...")
+    ad_failures = _validate_single_example(ANCHOR_DECAY_SCHEMA, ANCHOR_DECAY_EXAMPLE)
+    if ad_failures == 0:
+        print(f"  1/1 passed")
+
+    print(f"Validating Witness Independence example against {WITNESS_INDEPENDENCE_SCHEMA.name} ...")
+    wi_failures = _validate_single_example(WITNESS_INDEPENDENCE_SCHEMA, WITNESS_INDEPENDENCE_EXAMPLE)
+    if wi_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures + csm_failures + ad_failures + wi_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

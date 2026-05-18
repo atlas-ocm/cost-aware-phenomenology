@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1",
+  "node": {
+    "id": "node_dirty_footer_repair_2026-05-18",
+    "kind": "release_candidate",
+    "current_state": "on_hold",
+    "cycle_index": 14,
+    "created_at": "2026-05-18T12:14:30.000Z",
+    "last_transition_at": "2026-05-18T12:18:30.000Z"
+  },
+  "transition": {
+    "kind": "hold",
+    "from_state": "active",
+    "to_state": "on_hold",
+    "at": "2026-05-18T12:18:30.000Z",
+    "hold_reason": "Awaiting independent verifier verdict per RO-02; coder cannot self-approve",
+    "reason": "Subject-State Detection flagged pseudo_subject_state on coder self-approval"
+  },
+  "notes": "Worked example: a release_candidate node moved from active to on_hold pending an independent verifier verdict."
+}

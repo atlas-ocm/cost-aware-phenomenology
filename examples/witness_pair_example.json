@@ -1,0 +1,38 @@
+{
+  "schema_version": "0.1",
+  "transition_class": "code_change",
+  "producer": {
+    "id": "coder_role:llm_agent:2026-05-18:sess_pm",
+    "kind": "llm_agent",
+    "role": "coder",
+    "model": "comet_12b_v.7-i1"
+  },
+  "witnesses": [
+    {
+      "witness": {
+        "id": "verifier_role:llm_agent:2026-05-18:sess_pm",
+        "kind": "llm_agent",
+        "role": "verifier",
+        "model": "silicon-maid-7b-imatrix"
+      },
+      "verdict": "pass",
+      "evidence_source": "independent_tool",
+      "independence_axes": {
+        "actor_identity": "differs",
+        "role": "differs",
+        "model": "differs",
+        "evidence_source": "differs",
+        "time_window": "same"
+      },
+      "same_actor": false,
+      "independent": true,
+      "reasons": [
+        "Different actor / role / model",
+        "Evidence drawn from independent test runs, not from producer's claim"
+      ]
+    }
+  ],
+  "independence_required": true,
+  "release_verdict": "pass",
+  "notes": "Worked example: a code_change candidate has one independent witness (different actor, role, model, and evidence source). All five axes were checked; four differ, which satisfies WI-02 (at least one axis differs). The release verdict is pass."
+}

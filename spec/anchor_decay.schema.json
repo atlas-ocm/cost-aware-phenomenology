@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:anchor-decay:v0.1",
+  "title": "CAP Anchor Decay Record",
+  "description": "Schema for the decay state of a canonical anchor. Encodes AD-01..AD-06: fresh requires last_verified_at; expired requires valid_until; deprecated requires superseded_by OR deprecation_reason; stale routes downstream consumers to refresh; decay never promotes authority; domain_volatility is required.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "anchor_id",
+    "stage",
+    "domain_volatility",
+    "decay_drivers",
+    "current_authority"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "anchor_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "$ref": "#/$defs/decay_stage"
+    },
+    "domain_volatility": {
+      "$ref": "#/$defs/domain_volatility"
+    },
+    "decay_drivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/decay_driver"
+      }
+    },
+    "current_authority": {
+      "$ref": "#/$defs/authority_level"
+    },
+    "last_verified_at": {
+      "type": "string"
+    },
+    "valid_until": {
+      "type": "string"
+    },
+    "superseded_by": {
+      "type": "string"
+    },
+    "deprecation_reason": {
+      "type": "string"
+    },
+    "aging_after_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stale_after_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "AD-01: fresh requires last_verified_at.",
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "fresh"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "required": [
+          "last_verified_at"
+        ]
+      }
+    },
+    {
+      "$comment": "AD-02: expired requires valid_until.",
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "expired"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "required": [
+          "valid_until"
+        ]
+      }
+    },
+    {
+      "$comment": "AD-03: deprecated requires superseded_by OR deprecation_reason.",
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "deprecated"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "anyOf": [
+          {
+            "required": [
+              "superseded_by"
+            ]
+          },
+          {
+            "required": [
+              "deprecation_reason"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "$comment": "AD-05: stage <-> current_authority consistency.",
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "fresh"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "current_authority": {
+            "const": "full"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "stale"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "current_authority": {
+            "enum": [
+              "reduced",
+              "watch"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "deprecated"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "current_authority": {
+            "const": "audit_only"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "stage": {
+            "const": "expired"
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "current_authority": {
+            "const": "none"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "decay_stage": {
+      "type": "string",
+      "enum": [
+        "fresh",
+        "aging",
+        "stale",
+        "deprecated",
+        "expired"
+      ]
+    },
+    "domain_volatility": {
+      "type": "string",
+      "enum": [
+        "stable",
+        "low",
+        "medium",
+        "high",
+        "volatile"
+      ]
+    },
+    "decay_driver": {
+      "type": "string",
+      "enum": [
+        "chronological_age",
+        "domain_volatility",
+        "contradiction_signal",
+        "duplicate_anchor",
+        "upstream_invalidation",
+        "schema_version_drift",
+        "explicit_supersede"
+      ]
+    },
+    "authority_level": {
+      "type": "string",
+      "enum": [
+        "full",
+        "watch",
+        "reduced",
+        "audit_only",
+        "none"
+      ]
+    }
+  }
+}

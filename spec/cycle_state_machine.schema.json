@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:cycle-state-machine:v0.1",
+  "title": "CAP Cycle State Machine Node",
+  "description": "Schema for a node tracked across CAP cycles. Encodes the doc-level invariants CSM-01..CSM-06: exactly one current state; closed cannot become active directly (must reopen); quarantined cannot return without reopen; hold requires a reason; reopen requires audit_log_ref; dropped cannot become closed without reopen.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "node",
+    "transition"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "node": {
+      "$ref": "#/$defs/cycle_node"
+    },
+    "transition": {
+      "$ref": "#/$defs/cycle_transition"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "CSM-04: hold transitions require non-empty hold_reason.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "hold"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "hold_reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "hold_reason"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CSM-05: reopen requires audit_log_ref.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "reopen"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "required": [
+              "audit_log_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CSM-02: close transitions only from active.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "close"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "from_state": {
+                "const": "active"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CSM-02: schedule only from pending.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "schedule"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "from_state": {
+                "const": "pending"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CSM-03: quarantined returns only via reopen (resume forbidden).",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "resume"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "from_state": {
+                "not": {
+                  "const": "quarantined"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "resolve only from closed.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "resolve"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "from_state": {
+                "const": "closed"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CSM-06: drop only from pending or on_hold.",
+      "if": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "kind": {
+                "const": "drop"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        },
+        "required": [
+          "transition"
+        ]
+      },
+      "then": {
+        "properties": {
+          "transition": {
+            "properties": {
+              "from_state": {
+                "enum": [
+                  "pending",
+                  "on_hold"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "cycle_state": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "on_hold",
+        "closed",
+        "resolved",
+        "dropped",
+        "reopened",
+        "quarantined"
+      ]
+    },
+    "transition_kind": {
+      "type": "string",
+      "enum": [
+        "declare",
+        "schedule",
+        "hold",
+        "resume",
+        "close",
+        "resolve",
+        "drop",
+        "reopen",
+        "quarantine"
+      ]
+    },
+    "cycle_node": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "current_state",
+        "cycle_index",
+        "created_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "request",
+            "anchor",
+            "operator_instance",
+            "memory_candidate",
+            "release_candidate",
+            "adjustment_candidate"
+          ]
+        },
+        "current_state": {
+          "$ref": "#/$defs/cycle_state"
+        },
+        "cycle_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_transition_at": {
+          "type": "string"
+        }
+      }
+    },
+    "cycle_transition": {
+      "type": "object",
+      "required": [
+        "kind",
+        "from_state",
+        "to_state",
+        "at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/transition_kind"
+        },
+        "from_state": {
+          "$ref": "#/$defs/cycle_state"
+        },
+        "to_state": {
+          "$ref": "#/$defs/cycle_state"
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hold_reason": {
+          "type": "string"
+        },
+        "audit_log_ref": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

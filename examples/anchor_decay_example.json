@@ -1,0 +1,15 @@
+{
+  "schema_version": "0.1",
+  "anchor_id": "anchor_release_gate_policy_v01",
+  "stage": "stale",
+  "domain_volatility": "medium",
+  "decay_drivers": [
+    "chronological_age",
+    "schema_version_drift"
+  ],
+  "current_authority": "reduced",
+  "last_verified_at": "2026-02-10T00:00:00.000Z",
+  "aging_after_days": 30,
+  "stale_after_days": 90,
+  "notes": "Anchor describes the v0.1 release gate policy; schema has since moved to v0.2. Authority reduced; downstream consumers must refresh before relying on it."
+}
