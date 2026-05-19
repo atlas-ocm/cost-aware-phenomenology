@@ -48,6 +48,15 @@ ANCHOR_DECAY_EXAMPLE = CAP_ROOT / "examples" / "anchor_decay_example.json"
 WITNESS_INDEPENDENCE_SCHEMA = CAP_ROOT / "spec" / "witness_independence.schema.json"
 WITNESS_INDEPENDENCE_EXAMPLE = CAP_ROOT / "examples" / "witness_pair_example.json"
 
+CROSS_DOMAIN_DRAIN_SCHEMA = CAP_ROOT / "spec" / "cross_domain_drain.schema.json"
+CROSS_DOMAIN_DRAIN_EXAMPLE = CAP_ROOT / "examples" / "cross_domain_drain_event_example.json"
+
+OBSERVABILITY_SCHEMA = CAP_ROOT / "spec" / "observability_protocol.schema.json"
+OBSERVABILITY_EXAMPLE = CAP_ROOT / "examples" / "observability_event_example.json"
+
+ANTI_DRAMA_SCHEMA = CAP_ROOT / "spec" / "anti_drama_detection.schema.json"
+ANTI_DRAMA_EXAMPLE = CAP_ROOT / "examples" / "anti_drama_event_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -160,7 +169,22 @@ def main() -> int:
     if wi_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures + csm_failures + ad_failures + wi_failures
+    print(f"Validating Cross-Domain Drain example against {CROSS_DOMAIN_DRAIN_SCHEMA.name} ...")
+    cdd_failures = _validate_single_example(CROSS_DOMAIN_DRAIN_SCHEMA, CROSS_DOMAIN_DRAIN_EXAMPLE)
+    if cdd_failures == 0:
+        print(f"  1/1 passed")
+
+    print(f"Validating Observability Protocol example against {OBSERVABILITY_SCHEMA.name} ...")
+    obs_failures = _validate_single_example(OBSERVABILITY_SCHEMA, OBSERVABILITY_EXAMPLE)
+    if obs_failures == 0:
+        print(f"  1/1 passed")
+
+    print(f"Validating Anti-drama Detection example against {ANTI_DRAMA_SCHEMA.name} ...")
+    anti_drama_failures = _validate_single_example(ANTI_DRAMA_SCHEMA, ANTI_DRAMA_EXAMPLE)
+    if anti_drama_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures + csm_failures + ad_failures + wi_failures + cdd_failures + obs_failures + anti_drama_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1

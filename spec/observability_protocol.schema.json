@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:observability-event:v0.1",
+  "title": "CAP Observability Event",
+  "description": "Schema for a single CAP observability event. Encodes OBS-01..OBS-07: every event has provenance; canonical-affecting events require audit_log_ref; silent export forbidden for canonical-affecting events; emitter identity required; scope properties closed; event_kind from closed enum; no free-text conclusion.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_kind",
+    "emitted_at",
+    "emitter",
+    "scope",
+    "payload",
+    "provenance",
+    "export_level"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_kind": {
+      "$ref": "#/$defs/event_kind"
+    },
+    "emitted_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "emitter": {
+      "$ref": "#/$defs/emitter"
+    },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
+    "payload": {
+      "$ref": "#/$defs/payload"
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "$comment": "OBS-01: every event must carry provenance."
+    },
+    "export_level": {
+      "$ref": "#/$defs/export_level"
+    },
+    "audit_log_ref": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "OBS-02 + OBS-03: canonical-affecting events require audit_log_ref and forbid silent export.",
+      "if": {
+        "properties": {
+          "event_kind": {
+            "enum": [
+              "release_gate_decision",
+              "anchor_decay_transition",
+              "authorization_event"
+            ]
+          }
+        },
+        "required": [
+          "event_kind"
+        ]
+      },
+      "then": {
+        "required": [
+          "audit_log_ref"
+        ],
+        "properties": {
+          "export_level": {
+            "not": {
+              "const": "silent"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "event_kind": {
+      "type": "string",
+      "enum": [
+        "mirror_observation",
+        "looking_glass_step",
+        "context_hygiene_decision",
+        "cross_domain_drain",
+        "subject_state_change",
+        "role_handoff",
+        "adjustment_step",
+        "verifier_verdict",
+        "release_gate_decision",
+        "anchor_decay_transition",
+        "cycle_transition",
+        "memory_dream_step",
+        "witness_record",
+        "authorization_event",
+        "boundary_violation",
+        "budget_event"
+      ]
+    },
+    "export_level": {
+      "type": "string",
+      "enum": [
+        "silent",
+        "local",
+        "comlog",
+        "external"
+      ]
+    },
+    "emitter_kind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "tool",
+        "runtime",
+        "human"
+      ]
+    },
+    "emitter": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/emitter_kind"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repo": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "shell": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "task_id": {
+          "type": "string"
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "$comment": "Per-event-kind typed payload. additionalProperties allowed because the typed shape lives in the per-kind schemas (mirror_layer, release_gate, etc.).",
+      "additionalProperties": true,
+      "not": {
+        "required": [
+          "conclusion"
+        ],
+        "$comment": "OBS-07: free-text conclusion is forbidden; conclusions live in the per-kind verdict fields."
+      }
+    }
+  }
+}

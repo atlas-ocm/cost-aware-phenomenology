@@ -1,0 +1,559 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:cross-domain-drain:v0.1",
+  "title": "CAP Cross-Domain Drain Event",
+  "description": "Schema for a cross-domain drain detection event. Encodes CDD-01..CDD-10: spend != progress; cross_domain_leak requires origin != drained; zero new evidence + non-zero spend forbids no_drain; context_contamination cannot be cured by upgrading the model; authority_confusion routes to human; browser_visibility_gap routes to mirror refresh; memory_pollution routes to quarantine; emotional_overweight routes to explicit_goal or hold; social_noise_capture routes to scope freeze or role switch; critical_budget_collapse routes to hold / rollback / human.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "event": {
+      "$ref": "#/$defs/drain_event"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "CDD-02: cross_domain_leak requires origin_domain != drained_domain.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "state": {
+                "const": "cross_domain_leak"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "not": {
+              "properties": {
+                "origin_domain": {
+                  "$ref": "#/$defs/ocm_domain"
+                },
+                "drained_domain": {
+                  "$ref": "#/$defs/ocm_domain"
+                }
+              },
+              "required": [
+                "origin_domain",
+                "drained_domain"
+              ],
+              "allOf": [
+                {
+                  "properties": {
+                    "origin_domain": {
+                      "const": "semantic"
+                    },
+                    "drained_domain": {
+                      "const": "semantic"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-04: context_contamination + switch_model_up_for_verification alone is rejected.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "context_contamination"
+              },
+              "recommended_action": {
+                "const": "switch_model_up_for_verification"
+              }
+            },
+            "required": [
+              "mechanism",
+              "recommended_action"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": false
+    },
+    {
+      "$comment": "CDD-05: authority_confusion requires human decision or block_release.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "authority_confusion"
+              }
+            },
+            "required": [
+              "mechanism"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "require_human_decision",
+                  "block_release"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-06: browser_visibility_gap requires mirror refresh or scope freeze.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "browser_visibility_gap"
+              }
+            },
+            "required": [
+              "mechanism"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "refresh_mirror",
+                  "freeze_scope"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-07: memory_pollution requires quarantine or block.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "memory_pollution"
+              }
+            },
+            "required": [
+              "mechanism"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "quarantine_context",
+                  "block_release"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-08: emotional_overweight routes to require_explicit_goal or hold.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "emotional_overweight"
+              }
+            },
+            "required": [
+              "mechanism"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "require_explicit_goal",
+                  "hold"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-09: social_noise_capture routes to freeze_scope or switch_role.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "mechanism": {
+                "const": "social_noise_capture"
+              }
+            },
+            "required": [
+              "mechanism"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "freeze_scope",
+                  "switch_role"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-10: critical_budget_collapse routes to hold, rollback, or human.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "state": {
+                "const": "critical_budget_collapse"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "recommended_action": {
+                "enum": [
+                  "hold",
+                  "rollback",
+                  "require_human_decision"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CDD-03: zero new evidence + non-zero spend forbids no_drain.",
+      "if": {
+        "properties": {
+          "event": {
+            "properties": {
+              "state": {
+                "const": "no_drain"
+              }
+            },
+            "required": [
+              "state"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ]
+      },
+      "then": {
+        "properties": {
+          "event": {
+            "properties": {
+              "verified_progress": {
+                "properties": {
+                  "new_evidence_count": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "new_evidence_count"
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "ocm_domain": {
+      "type": "string",
+      "enum": [
+        "semantic",
+        "context",
+        "attention",
+        "token",
+        "compute",
+        "money",
+        "time",
+        "trust",
+        "memory",
+        "governance",
+        "runtime",
+        "repo",
+        "browser",
+        "social",
+        "emotional"
+      ]
+    },
+    "drain_mechanism": {
+      "type": "string",
+      "enum": [
+        "semantic_ambiguity",
+        "context_contamination",
+        "loop_repetition",
+        "stale_evidence",
+        "wrong_boundary",
+        "wrong_role",
+        "wrong_model",
+        "over_verification",
+        "under_specification",
+        "authority_confusion",
+        "memory_pollution",
+        "social_noise_capture",
+        "emotional_overweight",
+        "provider_cost_leak",
+        "runtime_retry_storm",
+        "browser_visibility_gap",
+        "release_gate_bypass_attempt"
+      ]
+    },
+    "drain_state": {
+      "type": "string",
+      "enum": [
+        "no_drain",
+        "local_drain",
+        "cross_domain_leak",
+        "parasitic_drain",
+        "cascade_drain",
+        "contained",
+        "critical_budget_collapse"
+      ]
+    },
+    "containment_action": {
+      "type": "string",
+      "enum": [
+        "refresh_mirror",
+        "run_looking_glass",
+        "clean_context",
+        "quarantine_context",
+        "switch_role",
+        "switch_model_down",
+        "switch_model_up_for_verification",
+        "cap_budget",
+        "freeze_scope",
+        "split_domain",
+        "require_explicit_goal",
+        "require_human_decision",
+        "block_release",
+        "rollback",
+        "hold"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "blocking",
+        "critical"
+      ]
+    },
+    "estimated_cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tokens",
+        "time"
+      ],
+      "properties": {
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "money_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "time": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "retries": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "verified_progress": {
+      "type": "object",
+      "required": [
+        "new_evidence_count",
+        "uncertainty_reduction"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "new_evidence_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "uncertainty_reduction": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "tests_changed_status": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "boundary_confirmed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "drain_event": {
+      "type": "object",
+      "required": [
+        "id",
+        "origin_domain",
+        "drained_domain",
+        "mechanism",
+        "state",
+        "severity",
+        "observed_symptoms",
+        "evidence_refs",
+        "estimated_cost",
+        "verified_progress",
+        "recommended_action",
+        "drain_ratio"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin_domain": {
+          "$ref": "#/$defs/ocm_domain"
+        },
+        "drained_domain": {
+          "$ref": "#/$defs/ocm_domain"
+        },
+        "sink_domain": {
+          "$ref": "#/$defs/ocm_domain"
+        },
+        "mechanism": {
+          "$ref": "#/$defs/drain_mechanism"
+        },
+        "state": {
+          "$ref": "#/$defs/drain_state"
+        },
+        "severity": {
+          "$ref": "#/$defs/severity"
+        },
+        "observed_symptoms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "estimated_cost": {
+          "$ref": "#/$defs/estimated_cost"
+        },
+        "verified_progress": {
+          "$ref": "#/$defs/verified_progress"
+        },
+        "drain_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "recommended_action": {
+          "$ref": "#/$defs/containment_action"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "0.1",
+  "event": {
+    "id": "cdd_event_2026-05-18T13_00_00_semantic_to_token",
+    "origin_domain": "semantic",
+    "drained_domain": "token",
+    "sink_domain": "context",
+    "mechanism": "under_specification",
+    "state": "cross_domain_leak",
+    "severity": "warning",
+    "observed_symptoms": [
+      "same plan rephrased three times across consecutive turns",
+      "no new evidence references introduced",
+      "context window grew by ~18000 tokens with no uncertainty drop"
+    ],
+    "evidence_refs": [
+      "telemetry:context_growth_2026-05-18T12_30_00",
+      "context_hygiene_result_id:hygiene_result_2026-05-18T12_50_00"
+    ],
+    "estimated_cost": {
+      "tokens": 18000,
+      "money_usd": 0.42,
+      "time": "medium",
+      "retries": 2
+    },
+    "verified_progress": {
+      "new_evidence_count": 0,
+      "uncertainty_reduction": "none",
+      "tests_changed_status": 0,
+      "boundary_confirmed": false
+    },
+    "drain_ratio": 9.0,
+    "recommended_action": "require_explicit_goal"
+  },
+  "notes": "Worked example: under-specified goal in the semantic domain drains the token budget. Three planning rounds with no new evidence; ~18k tokens spent. Containment requires an explicit DesiredState with success criteria before any further model call."
+}

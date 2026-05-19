@@ -1,0 +1,35 @@
+{
+  "schema_version": "0.1",
+  "event_id": "obs_evt_2026-05-18T13_30_00_release_gate_pass",
+  "event_kind": "release_gate_decision",
+  "emitted_at": "2026-05-18T13:30:00.000Z",
+  "emitter": {
+    "kind": "runtime",
+    "id": "cap_runtime_v0.2"
+  },
+  "scope": {
+    "repo": "f:/VibeCoding/Shard-Theory",
+    "branch": "main",
+    "session_id": "sess_2026-05-18_pm",
+    "task_id": "task_2026-05-18_dirty_footer_repair"
+  },
+  "payload": {
+    "candidate_id": "adj_candidate_2026-05-18T12_18_00_dirty_footer_repair",
+    "verdict": "pass",
+    "reasons": [
+      "evidence present",
+      "rollback covered",
+      "no anchor conflicts"
+    ],
+    "reversible": true,
+    "required_authorizations": []
+  },
+  "provenance": [
+    "mirror_frame:2026-05-18T12_14_30_settings_footer",
+    "verifier_verdict:vfr_2026-05-18T13_25_00",
+    "adjustment_candidate:adj_candidate_2026-05-18T12_18_00_dirty_footer_repair"
+  ],
+  "export_level": "comlog",
+  "audit_log_ref": "com_log/2026-05-18/release_gate/adj_candidate_2026-05-18T12_18_00",
+  "notes": "Worked example: a release_gate_decision event with verdict=pass, full provenance chain, and an audit_log_ref. Export level comlog (silent forbidden for canonical-affecting kinds)."
+}

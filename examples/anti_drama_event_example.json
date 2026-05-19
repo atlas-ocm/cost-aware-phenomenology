@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "event_id": "ad_evt_2026-05-18T13_45_00_budget_pressure",
+  "verdict": "drama_demands_budget_increase",
+  "drama_signals": [
+    "emphasis_inflation",
+    "sunk_cost_invocation",
+    "existential_collapse"
+  ],
+  "evidence_refs": [
+    "session:sess_2026-05-18_pm:turn_42",
+    "mirror_frame:2026-05-18T12_14_30_settings_footer"
+  ],
+  "emitter": {
+    "kind": "runtime",
+    "id": "anti_drama_detector_v0.1"
+  },
+  "recommended_action": "freeze_budget",
+  "created_at": "2026-05-18T13:45:00.000Z",
+  "notes": "Worked example: the coder agent insists that 'we have already spent too much to stop now' and requests more compute budget to keep retrying. No new evidence was supplied. Verdict drama_demands_budget_increase routes to freeze_budget (AD-01). Anti-drama does not invalidate the coder's prior work; it freezes the budget until evidence appears."
+}
