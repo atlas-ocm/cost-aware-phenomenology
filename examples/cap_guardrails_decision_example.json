@@ -1,0 +1,54 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "task_id": "task_2026-05-18_typo_fix_in_docs",
+    "anchor_support": "strong",
+    "conflict_density": 0.02,
+    "stale_critical_triggers": 0,
+    "boundary_risk": 0.05,
+    "intent_ambiguity": 0.05,
+    "irreversible_risk": 0,
+    "soft_budget_claims": [],
+    "frozen_items": [],
+    "audit_cost_so_far": {
+      "tokens": 1200,
+      "minutes": 0.5
+    }
+  },
+  "decision": {
+    "detected_risks": [
+      "analytical_paralysis"
+    ],
+    "action": "enter_fast_mode",
+    "fast_mode_verdict": "FAST_ALLOWED",
+    "forbidding_signals": [],
+    "fast_mode_caps": {
+      "social_top_k": 1,
+      "repair_depth": 1,
+      "retcon_depth": 1,
+      "caw_iterations": 0,
+      "semantic_passes": 0,
+      "max_verifier_depth": "targeted",
+      "max_context_expansion": "minimal",
+      "allow_architecture_review": false,
+      "allow_canonicalization": false,
+      "allow_irreversible_action": false
+    },
+    "stop_condition": "Single doc-only typo applied and target line verified; no further passes.",
+    "reasons": [
+      "Strong anchor support; conflict density 0.02; no stale-critical triggers",
+      "Boundary, intent, and irreversible risk all under threshold",
+      "Audit cost grew with no progress; classic analytical_paralysis signature",
+      "Fast Mode caps enforced; no canonicalization and no irreversible action"
+    ],
+    "audit_log_ref": "com_log/2026-05-18/guardrails/typo_fix_fast_mode"
+  },
+  "policy": {
+    "fast_mode_is_careless": false,
+    "free_budget_extends_analysis": false,
+    "allow_fast_mode_for_canonical": false,
+    "allow_fast_mode_for_irreversible": false,
+    "require_reality_floor_for_soft_claims": true
+  },
+  "notes": "Worked example: a docs-only typo fix with strong anchors and zero risk signals. CAP-Guardrails detects analytical_paralysis (cost grew without progress) and routes to enter_fast_mode with FAST_ALLOWED verdict. Fast Mode caps prevent canonicalization or irreversible action. The stop_condition is explicit so Fast Mode does not silently extend."
+}

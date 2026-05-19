@@ -1,0 +1,682 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:cap-guardrails:v0.1",
+  "title": "CAP-Guardrails Decision",
+  "description": "Schema for a CAP-Guardrails decision. Encodes CG-01..CG-07 and FM-01..FM-07: analytical_paralysis routes to stop_audit / enter_fast_mode / take_minimal_action; budget_underestimation routes to require_reality_floor; frozen_container routes to schedule_patrol_gap; fast_mode_abuse and escalation_avoidance route to force_escalation; Fast Mode requires stable anchors, zero irreversible risk, and an audit trace; free budget does not extend analysis; soft budget claims pass through RealityFloor before acceptance.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "input",
+    "decision",
+    "policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "input": {
+      "$ref": "#/$defs/guardrail_input"
+    },
+    "decision": {
+      "$ref": "#/$defs/guardrail_decision"
+    },
+    "policy": {
+      "$ref": "#/$defs/guardrail_policy"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "CG-01: analytical_paralysis routes to stop_audit / enter_fast_mode / take_minimal_action.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "detected_risks": {
+                "type": "array",
+                "contains": {
+                  "const": "analytical_paralysis"
+                }
+              }
+            },
+            "required": [
+              "detected_risks"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "stop_audit",
+                  "enter_fast_mode",
+                  "take_minimal_action"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-02: budget_underestimation routes to require_reality_floor.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "detected_risks": {
+                "type": "array",
+                "contains": {
+                  "const": "budget_underestimation"
+                }
+              }
+            },
+            "required": [
+              "detected_risks"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "const": "require_reality_floor"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-03: frozen_container routes to schedule_patrol_gap.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "detected_risks": {
+                "type": "array",
+                "contains": {
+                  "const": "frozen_container"
+                }
+              }
+            },
+            "required": [
+              "detected_risks"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "const": "schedule_patrol_gap"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-04: fast_mode_abuse routes to force_escalation.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "detected_risks": {
+                "type": "array",
+                "contains": {
+                  "const": "fast_mode_abuse"
+                }
+              }
+            },
+            "required": [
+              "detected_risks"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "const": "force_escalation"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-05: escalation_avoidance routes to force_escalation or hold_for_human.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "detected_risks": {
+                "type": "array",
+                "contains": {
+                  "const": "escalation_avoidance"
+                }
+              }
+            },
+            "required": [
+              "detected_risks"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "force_escalation",
+                  "hold_for_human"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-06 + FM-02 + FM-03: FAST_ALLOWED requires no forbidding signals, stable anchors, and zero irreversible risk.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "fast_mode_verdict": {
+                "const": "FAST_ALLOWED"
+              }
+            },
+            "required": [
+              "fast_mode_verdict"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "forbidding_signals": {
+                "maxItems": 0
+              }
+            },
+            "required": [
+              "forbidding_signals"
+            ]
+          },
+          "input": {
+            "properties": {
+              "anchor_support": {
+                "enum": [
+                  "medium",
+                  "strong"
+                ]
+              },
+              "irreversible_risk": {
+                "const": 0
+              },
+              "stale_critical_triggers": {
+                "const": 0
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "FM-07: FAST_ALLOWED requires audit_log_ref.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "fast_mode_verdict": {
+                "const": "FAST_ALLOWED"
+              }
+            },
+            "required": [
+              "fast_mode_verdict"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "required": [
+              "audit_log_ref"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "FM-04: when fast_mode_caps present, stop_condition required.",
+      "if": {
+        "properties": {
+          "decision": {
+            "required": [
+              "fast_mode_caps"
+            ]
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "required": [
+              "stop_condition"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "$comment": "CG-07: action=enter_fast_mode with non-empty soft_budget_claims requires reality_floor_passed=true.",
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "action": {
+                "const": "enter_fast_mode"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "input": {
+            "properties": {
+              "soft_budget_claims": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "soft_budget_claims"
+            ]
+          }
+        },
+        "required": [
+          "decision",
+          "input"
+        ]
+      },
+      "then": {
+        "properties": {
+          "decision": {
+            "properties": {
+              "reality_floor_passed": {
+                "const": true
+              }
+            },
+            "required": [
+              "reality_floor_passed"
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "guardrail_risk": {
+      "type": "string",
+      "enum": [
+        "analytical_paralysis",
+        "budget_underestimation",
+        "frozen_container",
+        "fast_mode_abuse",
+        "escalation_avoidance"
+      ]
+    },
+    "guardrail_action": {
+      "type": "string",
+      "enum": [
+        "enter_fast_mode",
+        "require_reality_floor",
+        "schedule_patrol_gap",
+        "force_escalation",
+        "stop_audit",
+        "take_minimal_action",
+        "hold_for_human",
+        "no_action"
+      ]
+    },
+    "fast_mode_verdict": {
+      "type": "string",
+      "enum": [
+        "FAST_ALLOWED",
+        "FAST_DENIED",
+        "ESCALATE_REQUIRED"
+      ]
+    },
+    "anchor_support": {
+      "type": "string",
+      "enum": [
+        "weak",
+        "medium",
+        "strong"
+      ]
+    },
+    "forbidding_signal": {
+      "type": "string",
+      "enum": [
+        "git_seal",
+        "memory_canonicalization",
+        "security_boundary",
+        "repo_identity_mismatch",
+        "live_browser_write",
+        "financial_decision",
+        "legal_decision",
+        "medical_decision",
+        "destructive_operation",
+        "new_architectural_frame",
+        "anchor_conflict",
+        "high_uncertainty"
+      ]
+    },
+    "soft_budget_claim_kind": {
+      "type": "string",
+      "enum": [
+        "no_time",
+        "no_energy",
+        "too_risky",
+        "let_us_defer",
+        "too_expensive",
+        "not_ready",
+        "context_overflow"
+      ]
+    },
+    "patrol_freeze_reason": {
+      "type": "string",
+      "enum": [
+        "contamination",
+        "overheat",
+        "weak_provenance",
+        "anchor_conflict",
+        "awaiting_evidence",
+        "intentional_park"
+      ]
+    },
+    "fast_mode_caps": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "social_top_k": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repair_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "retcon_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "caw_iterations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 0
+        },
+        "semantic_passes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_verifier_depth": {
+          "type": "string",
+          "enum": [
+            "targeted",
+            "smoke"
+          ]
+        },
+        "max_context_expansion": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "small"
+          ]
+        },
+        "allow_architecture_review": {
+          "const": false
+        },
+        "allow_canonicalization": {
+          "const": false
+        },
+        "allow_irreversible_action": {
+          "const": false
+        }
+      }
+    },
+    "patrol_gap": {
+      "type": "object",
+      "required": [
+        "frozen_at",
+        "reason_frozen",
+        "next_patrol_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "frozen_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason_frozen": {
+          "$ref": "#/$defs/patrol_freeze_reason"
+        },
+        "next_patrol_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recompile_path": {
+          "type": "string"
+        },
+        "read_only_extraction": {
+          "type": "string"
+        }
+      }
+    },
+    "guardrail_input": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "anchor_support",
+        "conflict_density",
+        "stale_critical_triggers",
+        "boundary_risk",
+        "intent_ambiguity",
+        "irreversible_risk",
+        "soft_budget_claims",
+        "frozen_items"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anchor_support": {
+          "$ref": "#/$defs/anchor_support"
+        },
+        "conflict_density": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stale_critical_triggers": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "boundary_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "intent_ambiguity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "irreversible_risk": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "soft_budget_claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/soft_budget_claim_kind"
+          }
+        },
+        "frozen_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "audit_cost_so_far": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minutes": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "guardrail_decision": {
+      "type": "object",
+      "required": [
+        "detected_risks",
+        "action",
+        "fast_mode_verdict",
+        "forbidding_signals",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "detected_risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/guardrail_risk"
+          }
+        },
+        "action": {
+          "$ref": "#/$defs/guardrail_action"
+        },
+        "fast_mode_verdict": {
+          "$ref": "#/$defs/fast_mode_verdict"
+        },
+        "forbidding_signals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/forbidding_signal"
+          }
+        },
+        "fast_mode_caps": {
+          "$ref": "#/$defs/fast_mode_caps"
+        },
+        "patrol_gap": {
+          "$ref": "#/$defs/patrol_gap"
+        },
+        "reality_floor_passed": {
+          "type": "boolean"
+        },
+        "stop_condition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "escalation_reason": {
+          "type": "string"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "audit_log_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "guardrail_policy": {
+      "type": "object",
+      "required": [
+        "fast_mode_is_careless",
+        "free_budget_extends_analysis",
+        "allow_fast_mode_for_canonical",
+        "allow_fast_mode_for_irreversible",
+        "require_reality_floor_for_soft_claims"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "fast_mode_is_careless": {
+          "const": false,
+          "$comment": "FM-01"
+        },
+        "free_budget_extends_analysis": {
+          "const": false,
+          "$comment": "FM-06"
+        },
+        "allow_fast_mode_for_canonical": {
+          "const": false
+        },
+        "allow_fast_mode_for_irreversible": {
+          "const": false,
+          "$comment": "FM-03"
+        },
+        "require_reality_floor_for_soft_claims": {
+          "const": true,
+          "$comment": "CG-07"
+        }
+      }
+    }
+  }
+}

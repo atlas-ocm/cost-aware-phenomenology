@@ -57,6 +57,9 @@ OBSERVABILITY_EXAMPLE = CAP_ROOT / "examples" / "observability_event_example.jso
 ANTI_DRAMA_SCHEMA = CAP_ROOT / "spec" / "anti_drama_detection.schema.json"
 ANTI_DRAMA_EXAMPLE = CAP_ROOT / "examples" / "anti_drama_event_example.json"
 
+CAP_GUARDRAILS_SCHEMA = CAP_ROOT / "spec" / "cap_guardrails.schema.json"
+CAP_GUARDRAILS_EXAMPLE = CAP_ROOT / "examples" / "cap_guardrails_decision_example.json"
+
 LOOKING_GLASS_PACKS = [
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases",
     REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases",
@@ -184,7 +187,12 @@ def main() -> int:
     if anti_drama_failures == 0:
         print(f"  1/1 passed")
 
-    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures + csm_failures + ad_failures + wi_failures + cdd_failures + obs_failures + anti_drama_failures
+    print(f"Validating CAP-Guardrails example against {CAP_GUARDRAILS_SCHEMA.name} ...")
+    cgr_failures = _validate_single_example(CAP_GUARDRAILS_SCHEMA, CAP_GUARDRAILS_EXAMPLE)
+    if cgr_failures == 0:
+        print(f"  1/1 passed")
+
+    total_failures = lg_failures + lc_failures + rg_failures + ml_failures + lgt_failures + ch_failures + dssd_failures + adj_failures + ro_failures + csm_failures + ad_failures + wi_failures + cdd_failures + obs_failures + anti_drama_failures + cgr_failures
     if total_failures:
         print(f"Extension case-pack validation FAILED ({total_failures} cases).")
         return 1
