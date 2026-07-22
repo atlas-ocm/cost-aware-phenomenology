@@ -1,0 +1,36 @@
+{
+  "code": "AICE-604",
+  "title": "Hash Exists, Reality Not Found",
+  "spec_version": "0.1.0",
+  "claim": "Agent reported that artefact.json was written and included a SHA-256 digest for it.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "UNOBSERVED",
+  "artifact": {
+    "name": "artefact.json",
+    "path": null,
+    "digest": {
+      "algorithm": "sha256",
+      "declared": true,
+      "verified_against_bytes": false
+    }
+  },
+  "observed_evidence": [
+    {
+      "type": "narrative_statement",
+      "detail": "Report text asserting the file was written and stating a SHA-256 value."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "path", "detail": "No confirmed filesystem path for the artifact." },
+    { "type": "write_event", "detail": "No recorded write/persist receipt." },
+    { "type": "stat_readback", "detail": "No stat/readback of the file succeeded." },
+    { "type": "recomputed_digest", "detail": "No digest could be recomputed from observed bytes; a second agent searched the repository and found no independently readable bytes." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "materialize_the_bytes",
+  "retryability": "requires_state_materialization",
+  "notes": "Sanitized, generalized incident pattern. The declared SHA-256 value is intentionally not reproduced: digest.value is absent and verified_against_bytes is false, so the envelope records the digest as declared-but-unverified rather than fabricating a 64-character string."
+}

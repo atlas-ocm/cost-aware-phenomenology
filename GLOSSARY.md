@@ -301,3 +301,69 @@ Full definitions in [`spec/operator_alphabet.json`](./spec/operator_alphabet.jso
 **Short:** The framework is a working surface for analysis, not certified canon.
 
 **Technical:** Validation supports machine-checkability of boundaries and consistency across inference surfaces. It does not constitute empirical truth claims about lived experience or guarantee real-world outcomes. See [`03_validation/falsifiability.md`](./03_validation/falsifiability.md).
+
+---
+
+### AICE (AI Chaos Engineering)
+**Short:** A draft, unofficial incident taxonomy for agentic workflows where the narrative claims completion but the physical evidence is absent.
+
+**Technical:** The AICE 6xx codes (`AICE-604`…`AICE-609`) classify evidence-boundary failures — declared-but-unmaterialized artifacts, releases without implementation deltas, PASS without a test run, deployment without observed production state, verification without independence, consensus without evidence. An unresolved AICE incident holds workflow state (`STATE_UNCHANGED`). AICE is a CAP application, not a core phenomenological claim. See [`AICE.md`](./AICE.md) and [`spec/aice/README.md`](./spec/aice/README.md).
+
+**Not to be confused with:** HTTP status codes or an IETF standard — the `HTTP 6xx` labels are humorous human-readable aliases only, and AICE claims no standards-body recognition or external adoption.
+
+**Example:** An agent reports `artefact.json` was written and quotes a SHA-256, but no path, write event, or readable bytes can be found. That is `AICE-604`.
+
+---
+
+### Observable Event
+**Short:** A change in the world that leaves independently checkable evidence.
+
+**Technical:** In AICE, an event that can be confirmed through a write/persist receipt, a tool/process exit record, a readback, an externally observed state change, or an equivalent trustworthy signal — as opposed to a mere assertion that it happened.
+
+**Not to be confused with:** A narrative statement — text saying an event occurred is not itself an event.
+
+**Example:** A recorded file-write with a subsequent `stat`/readback is an observable event; a report sentence claiming the file exists is not.
+
+---
+
+### Postcondition
+**Short:** The state that must actually hold after an action for it to count as done.
+
+**Technical:** In AICE, the required physical state a claim depends on (bytes on disk, a target revision live, an exit status of a real run). Workflow state may advance only when the postcondition is verified; otherwise an AICE incident holds the transition.
+
+**Not to be confused with:** A precondition (what must hold before) or a claimed outcome (what a narrative says resulted).
+
+**Example:** For "deployment succeeded", the postcondition is the target environment observably at the expected revision — not the deploy command returning without a printed error.
+
+---
+
+### Narrative State
+**Short:** What an agent, verifier, orchestrator, report, or model *claims* occurred.
+
+**Technical:** In AICE, the asserted status of a unit of work — `COMPLETE`, `PARTIAL`, or `ABSENT`. Narrative state is an input to be checked against physical state, never a substitute for it, and model prose in narrative state must not directly mutate workflow state.
+
+**Not to be confused with:** Physical state — the two are compared precisely because they can diverge.
+
+**Example:** "All tests pass" is a narrative state of `COMPLETE`; without an execution receipt its physical state is `UNOBSERVED` (`AICE-606`).
+
+---
+
+### Physical State
+**Short:** What observation of the required postcondition actually supports.
+
+**Technical:** In AICE, one of `OBSERVED`, `UNOBSERVED`, `CONTRADICTED`, or `NOT_APPLICABLE`, established from events, readable artifacts, receipts, or state inspection. When physical state does not corroborate a `COMPLETE` narrative, an AICE incident is emitted and workflow state is held.
+
+**Not to be confused with:** Narrative state — physical state is what evidence shows, not what was claimed.
+
+**Example:** After a push is reported, `git ls-remote` showing the remote ref still at the old commit makes the publication's physical state `CONTRADICTED`/`UNOBSERVED` (`AICE-607`).
+
+---
+
+### Metaphysical Artifact
+**Short:** A declared artifact that has a name and even a hash, but no materialized bytes.
+
+**Technical:** The `AICE-604` pattern (symbolic code `ARTEFACT_METAPHYSICAL`): an artifact is asserted, optionally with filename, path, size, or digest, yet no confirmed path, write event, readback, or digest recomputed from observed bytes exists. The digest is a claim about reality, not reality; acceptance is blocked until the bytes are materialized.
+
+**Not to be confused with:** A legitimately produced artifact whose write event merely wasn't logged but which can still be independently located and read — that is not an AICE-604.
+
+**Example:** A report lists `artefact.json` with a 64-character SHA-256, but a repository search finds no such file. The "artifact" is metaphysical.

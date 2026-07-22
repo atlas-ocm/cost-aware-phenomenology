@@ -73,6 +73,7 @@
 - Run Gemini Pro or another strong external-model control only after provider
   access is working and scoring criteria are frozen
 - CI configuration for schema, artifact integrity, policy pack, and benchmark scaffold checks
+- AICE v0.1 draft taxonomy and machine-readable incident envelope
 - LessWrong-style writeup for external feedback
 - Additional worked examples across multiple domains
 - Expand Trace Library from 3 traces to 5-7 compact traces

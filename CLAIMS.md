@@ -21,6 +21,7 @@ This file makes explicit what CAP claims, what it does not claim, and what curre
 - That numeric thresholds (RiskWeight values, telemetry signals) are anything but provisional engineering defaults.
 - That qualitative comparisons against prompting, RAG, validators, or fine-tuning are benchmark results.
 - That Memory Dreaming outputs are canonical memory without verifier and approval gates.
+- That AICE (the draft 6xx incident taxonomy) is a standard: it is a proposed, unofficial draft; the repository claims no industry adoption or standards-body recognition, and its memorable `HTTP 6xx` labels are not empirical validation.
 
 ## Current validation supports
 

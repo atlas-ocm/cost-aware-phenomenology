@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:aice-incident:v0.1",
+  "title": "AICE 6xx Incident Envelope",
+  "description": "Unofficial draft schema (AICE v0.1) for a single AI Chaos Engineering incident. An AICE incident records a discrepancy between narrative_state (what an agent, verifier, orchestrator, or report claims occurred) and physical_state (what is supported by observable events, independently readable artifacts, process receipts, state inspection, or verified postconditions). Canonical codes are AICE-604 through AICE-609. Unknown codes are rejected. The default workflow effect of an unresolved incident is STATE_UNCHANGED, which every incident MUST carry.",
+  "type": "object",
+  "required": [
+    "code",
+    "title",
+    "spec_version",
+    "claim",
+    "narrative_state",
+    "physical_state",
+    "observed_evidence",
+    "missing_evidence",
+    "workflow_effect",
+    "required_action",
+    "retryability"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "code": {
+      "description": "Canonical AICE identifier. The v0.1 code set is closed to AICE-604..AICE-609; any other value is rejected.",
+      "enum": [
+        "AICE-604",
+        "AICE-605",
+        "AICE-606",
+        "AICE-607",
+        "AICE-608",
+        "AICE-609"
+      ]
+    },
+    "title": {
+      "description": "Human-readable title of the incident code. Cross-consistency with the registry title is checked by check_aice.py, not by this schema.",
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_version": {
+      "description": "AICE specification version this envelope conforms to.",
+      "const": "0.1.0"
+    },
+    "timestamp": {
+      "description": "Optional ISO 8601 date-time at which the incident was emitted. Omit rather than fabricate.",
+      "type": "string",
+      "format": "date-time"
+    },
+    "claim": {
+      "description": "The narrative claim under scrutiny (what was reported as done).",
+      "type": "string",
+      "minLength": 1
+    },
+    "narrative_state": {
+      "description": "What the producing narrative asserts about completion.",
+      "enum": [
+        "COMPLETE",
+        "PARTIAL",
+        "ABSENT"
+      ]
+    },
+    "physical_state": {
+      "description": "What observation of the required postcondition actually supports.",
+      "enum": [
+        "OBSERVED",
+        "UNOBSERVED",
+        "CONTRADICTED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "observed_evidence": {
+      "description": "Evidence that was actually observed. May be empty.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_item"
+      }
+    },
+    "missing_evidence": {
+      "description": "Required evidence that is absent or contradictory. For an emitted incident this is normally non-empty.",
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence_item"
+      }
+    },
+    "workflow_effect": {
+      "description": "Effects an unresolved incident has on workflow state. MUST contain STATE_UNCHANGED; higher-level blocking effects are additive.",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "STATE_UNCHANGED",
+          "BLOCK_ACCEPTANCE",
+          "BLOCK_PROMOTION",
+          "BLOCK_RELEASE",
+          "BLOCK_DEPLOYMENT",
+          "REQUEST_EVIDENCE"
+        ]
+      },
+      "contains": {
+        "const": "STATE_UNCHANGED"
+      }
+    },
+    "required_action": {
+      "description": "The remediation required to resolve the incident. Additional model agreement alone is never a valid required_action.",
+      "type": "string",
+      "minLength": 1
+    },
+    "retryability": {
+      "description": "Whether and how the underlying action could be resolved. Repetition of the same narrative without new evidence is never sufficient.",
+      "enum": [
+        "requires_new_evidence",
+        "requires_state_materialization",
+        "not_applicable"
+      ]
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact_declaration"
+    },
+    "producer": {
+      "$ref": "#/$defs/actor_identity"
+    },
+    "verifier": {
+      "$ref": "#/$defs/actor_identity"
+    },
+    "independence": {
+      "$ref": "#/$defs/independence_assessment"
+    },
+    "code_details": {
+      "description": "Optional escape hatch for code-specific fields not modeled by the base envelope. Deliberately permissive so codes can carry extra structure without base-schema churn.",
+      "type": "object"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "evidence_item": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "Kind of evidence, e.g. write_event, path, stat_readback, recomputed_digest, exit_status, ci_receipt, implementation_diff, deployment_receipt, independent_evidence_path.",
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "description": "Optional locator for the evidence (path, URL, run id). Never a fabricated value.",
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      }
+    },
+    "artifact_declaration": {
+      "description": "A declared artifact whose materialization is in question (AICE-604). The digest is represented as a declaration, not a value, so an unmaterialized artifact is never forced to carry a fabricated hash.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "description": "Confirmed path, when one exists. Null or omitted when no path was confirmed.",
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "declared_size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "digest": {
+          "type": "object",
+          "required": [
+            "algorithm",
+            "declared"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": {
+              "type": "string",
+              "minLength": 1
+            },
+            "declared": {
+              "description": "True when a digest was asserted by the narrative.",
+              "type": "boolean"
+            },
+            "value": {
+              "description": "The digest value, only when it was actually recomputed from observed bytes. Absent for an unmaterialized artifact.",
+              "type": "string",
+              "minLength": 1
+            },
+            "verified_against_bytes": {
+              "description": "True only when the value was recomputed from independently read bytes.",
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "actor_identity": {
+      "description": "Identity of a producing or verifying actor, when known.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "independence_assessment": {
+      "description": "Independence of a verifier from the producer, evidence path, and narrative source (AICE-608).",
+      "type": "object",
+      "required": [
+        "independent"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "independent": {
+          "type": "boolean"
+        },
+        "shared_model_family": {
+          "type": "boolean"
+        },
+        "shared_context_or_transcript": {
+          "type": "boolean"
+        },
+        "shared_evidence_path": {
+          "type": "boolean"
+        },
+        "has_independent_evidence_path": {
+          "type": "boolean"
+        },
+        "can_inspect_postcondition_independently": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "code": "AICE-605",
+  "title": "Release Exists, Implementation Not Found",
+  "spec_version": "0.1.0",
+  "claim": "Release notes for a Rust package state a behavioral/implementation change; the manifest version was advanced.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "UNOBSERVED",
+  "observed_evidence": [
+    {
+      "type": "version_bump",
+      "ref": "Cargo.toml",
+      "detail": "Package version advanced in the manifest."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "implementation_diff", "detail": "No source change corresponding to the claimed behavior was observed." },
+    { "type": "behavior_delta", "detail": "No observable behavior change was found for the claimed release." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_RELEASE"
+  ],
+  "required_action": "Provide an implementation diff that supports the release claim, or revise the release notes (for example, as an explicit metadata-only release).",
+  "retryability": "requires_state_materialization",
+  "notes": "Synthetic, generalized example. No third-party project is named. A documented metadata-only or provenance-repair release would not trigger AICE-605; the incident applies only because the release narrative implies a functional delta that cannot be observed."
+}

@@ -90,6 +90,7 @@ For the current hard-holdout claim status, read the compact status map:
 CAP/
 ├── README.md                      <- you are here
 ├── PAPER.md                       <- single-document academic paper
+├── AICE.md                        <- AICE 6xx incident taxonomy (draft v0.1)
 ├── LICENSE                        <- Apache License 2.0
 ├── ROADMAP.md                     <- versioned roadmap
 ├── CITATION.cff                   <- citation metadata
@@ -123,10 +124,12 @@ CAP/
 │   └── anti_self_justification_loop_gold.md
 ├── examples/                      <- worked cases
 │   ├── worked_case_client_free_edits.md
-│   └── anti_self_justification_loop.md
+│   ├── anti_self_justification_loop.md
+│   └── aice/                      <- AICE incident envelope examples
 ├── spec/                          <- machine-readable schemas
 │   ├── com_log_schema.json
-│   └── operator_alphabet.json
+│   ├── operator_alphabet.json
+│   └── aice/                      <- AICE incident schema, registry, per-code specs
 └── validation_artifacts/          <- raw validation evidence
     ├── README.md
     ├── com_grammar/
@@ -186,6 +189,19 @@ For a deeper dive, navigate by folder:
 22. Review likely objections and current limits: [`CRITIQUES_AND_RESPONSES.md`](./CRITIQUES_AND_RESPONSES.md)
 23. View text and Mermaid diagrams: [`assets/`](./assets/)
 24. Inspect the CAP-Guardrails / Anti-Freeze meta-layer that keeps CAP from freezing on its own audit: [`02_subsystems/cap_guardrails.md`](./02_subsystems/cap_guardrails.md)
+25. Read the AICE 6xx incident taxonomy for narrative-vs-physical-state failures in agentic workflows: [`AICE.md`](./AICE.md) and [`spec/aice/README.md`](./spec/aice/README.md)
+
+## AICE 6xx incident taxonomy (draft)
+
+[`AICE.md`](./AICE.md) is a draft, unofficial CAP application: an incident taxonomy for
+agentic workflows where the **narrative state** claims work is complete but the required
+**physical state** — an observable event, evidence chain, or postcondition — is absent.
+It is machine-checkable (codes `AICE-604`…`AICE-609`) and is *not* an HTTP/IETF standard.
+
+- Normative spec: [`spec/aice/README.md`](./spec/aice/README.md)
+- Registry: [`spec/aice/registry.json`](./spec/aice/registry.json)
+- Incident schema: [`spec/aice/incident.schema.json`](./spec/aice/incident.schema.json)
+- Examples: [`examples/aice/`](./examples/aice/)
 
 ## Deployment ladder
 
@@ -217,7 +233,7 @@ and [`reference/python/cap_lite.py`](./reference/python/cap_lite.py).
 Start with [`01_foundations/thesis.md`](./01_foundations/thesis.md) and [`01_foundations/positioning.md`](./01_foundations/positioning.md). These show what CAP claims and how it relates to Goodman, Varela, Clark, Friston, and Lieder & Griffiths.
 
 **If you are an AI safety or LLM engineer:**
-Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), [`04_extensions/memory_dreaming/framework.md`](./04_extensions/memory_dreaming/framework.md), and [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md). These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, release-gated memory recompilation, benchmark scaffolding, integration, failure traces, and comparative deployment trade-offs.
+Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), [`04_extensions/memory_dreaming/framework.md`](./04_extensions/memory_dreaming/framework.md), [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md), and the [`AICE.md`](./AICE.md) incident taxonomy. These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, release-gated memory recompilation, benchmark scaffolding, integration, failure traces, comparative deployment trade-offs, and evidence-boundary incidents in agentic workflows.
 
 **If you are a reviewer or grant evaluator:**
 Start with [`PITCH_ONE_PAGER.md`](./PITCH_ONE_PAGER.md), [`03_validation/methodology.md`](./03_validation/methodology.md), [`03_validation/falsifiability.md`](./03_validation/falsifiability.md), [`validation_artifacts/`](./validation_artifacts/), and [`validation_artifacts/case_design_policy.md`](./validation_artifacts/case_design_policy.md). These document what CAP has and has not shown empirically, and how public-facing benchmark cases are kept review-safe.

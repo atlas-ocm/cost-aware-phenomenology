@@ -54,6 +54,10 @@ try {
     python reference\python\scripts\memory_dreaming\validate_example.py
 
     Write-Host ""
+    Write-Host "Validating AICE 6xx taxonomy integrity..."
+    python reference\python\scripts\aice\check_aice.py
+
+    Write-Host ""
     Write-Host "Validating Looking-Glass and Latent Cause case packs..."
     python reference\python\scripts\validate_extension_case_packs.py
 

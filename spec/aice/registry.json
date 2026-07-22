@@ -1,0 +1,92 @@
+{
+  "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
+  "spec_version": "0.1.0",
+  "status": "draft",
+  "unofficial": true,
+  "not_an_http_or_ietf_standard": true,
+  "canonical_code_range": [
+    "AICE-604",
+    "AICE-609"
+  ],
+  "codes": [
+    {
+      "code": "AICE-604",
+      "title": "Hash Exists, Reality Not Found",
+      "human_alias": "HTTP 604 — Hash Exists, Reality Not Found",
+      "symbolic_code": "ARTEFACT_METAPHYSICAL",
+      "short_description": "A declared artifact (optionally with filename, path, size, or digest) whose required materialization evidence is absent or contradictory.",
+      "trigger_summary": "Artifact declared; no confirmed path, write/persist receipt, readback, or digest recomputed from observed bytes — or the declared digest does not match the computed one.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_state_materialization",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-605",
+      "title": "Release Exists, Implementation Not Found",
+      "human_alias": "HTTP 605 — Release Exists, Implementation Not Found",
+      "short_description": "A release, version, or implementation change is claimed, but the claimed implementation or behavior delta cannot be observed.",
+      "trigger_summary": "Version metadata advances and the release narrative implies a functional delta, but implementation files and observable behavior are unchanged.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_RELEASE"
+      ],
+      "default_retryability": "requires_state_materialization",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-606",
+      "title": "PASS Exists, Test Run Not Found",
+      "human_alias": "HTTP 606 — PASS Exists, Test Run Not Found",
+      "short_description": "A PASS, success verdict, benchmark result, or validation claim without a verified execution receipt.",
+      "trigger_summary": "Success verdict asserted without command identity, timestamps, exit status, captured output, or an equivalent trustworthy receipt that the test actually ran.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-607",
+      "title": "Deployment Exists, Production Not Found",
+      "human_alias": "HTTP 607 — Deployment Exists, Production Not Found",
+      "short_description": "A deployment is reported successful, but the target environment's expected post-deployment state is unobserved, unchanged, or contradictory.",
+      "trigger_summary": "Deployment reported done without deployment receipt, target revision, production digest, health result, or externally observed change consistent with the deployment claim.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_DEPLOYMENT"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-608",
+      "title": "Verification Exists, Independence Not Found",
+      "human_alias": "HTTP 608 — Verification Exists, Independence Not Found",
+      "short_description": "A result is described as independently verified, but the verifier lacks sufficient independence from the producer, evidence path, or narrative source.",
+      "trigger_summary": "Verifier shares model/context/evidence path or control authority with the producer, or cannot inspect the physical postcondition independently.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_PROMOTION"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-609",
+      "title": "Consensus Exists, Evidence Not Found",
+      "human_alias": "HTTP 609 — Consensus Exists, Evidence Not Found",
+      "short_description": "Multiple agents or models agree on a claim, but none has observed the required event or postcondition.",
+      "trigger_summary": "Agreement is offered in place of evidence; no participating actor inspected the required event or postcondition.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "REQUEST_EVIDENCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    }
+  ]
+}
