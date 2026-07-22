@@ -1,5 +1,6 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2.1",
+  "guardrail_version": "cap_guardrails_v0.2_1_no_map_no_work_v4.2_schema_enforced",
   "input": {
     "task_id": "task_2026-05-18_typo_fix_in_docs",
     "anchor_support": "strong",

@@ -185,6 +185,7 @@ For a deeper dive, navigate by folder:
 21. Read compact failure traces: [`trace_library/`](./trace_library/)
 22. Review likely objections and current limits: [`CRITIQUES_AND_RESPONSES.md`](./CRITIQUES_AND_RESPONSES.md)
 23. View text and Mermaid diagrams: [`assets/`](./assets/)
+24. Inspect the CAP-Guardrails / Anti-Freeze meta-layer that keeps CAP from freezing on its own audit: [`02_subsystems/cap_guardrails.md`](./02_subsystems/cap_guardrails.md)
 
 ## Deployment ladder
 

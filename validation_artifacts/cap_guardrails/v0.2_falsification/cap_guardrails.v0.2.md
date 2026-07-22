@@ -263,83 +263,6 @@ PROTECTED_SURFACE_UNDECLARED
 GENERAL_LEVEL_DRIFT
 ```
 
-### NO_MAP_NO_WORK Level Validation Phase (closed enum)
-
-```text
-PROPOSED_PRE_WORK
-VALIDATED_PRE_WORK
-VALIDATED_POST_DIFF
-VALIDATED_AT_SEAL
-```
-
-### NO_MAP_NO_WORK Registry Update Status (closed enum)
-
-```text
-NOT_REQUIRED
-UPDATED
-BLOCKED_REGISTRY_DRIFT
-PENDING_DRIVER_ROOT_OF_TRUST
-```
-
-### NO_MAP_NO_WORK Spot-Check Selector (closed enum)
-
-```text
-DRIVER
-INDEPENDENT_VERIFIER
-DETERMINISTIC_RNG_OUTSIDE_PRODUCER
-```
-
-### NO_MAP_NO_WORK Spot-Check Result (closed enum)
-
-```text
-PASS
-FAIL
-WAIVED
-```
-
-### NO_MAP_NO_WORK Snapshot Source Kind (closed enum)
-
-```text
-REGISTRY_ENTRY
-GUARDRAIL_FILE
-SOURCE_FILE
-DOC_FILE
-TEST_FILE
-SEARCH_ARTIFACT
-EXTERNAL_CONTEXT_NOTE
-```
-
-### NO_MAP_NO_WORK Signature Algorithm (closed enum)
-
-```text
-ed25519
-rsa-pss-sha256
-ecdsa-p256-sha256
-```
-
-### NO_MAP_NO_WORK Telemetry Metric Name (closed enum)
-
-```text
-override_rate
-waiver_rate
-inconclusive_rate
-level_drift_rate
-registry_drift_rate
-self_report_evidence_rate
-stale_map_rate
-protected_surface_change_rate
-verification_failure_rate
-gate_block_rate
-signature_failure_rate
-guardrail_version_mismatch_rate
-```
-
-### NO_MAP_NO_WORK Telemetry Update Source (closed enum)
-
-```text
-SEAL_PACKET_AGGREGATION
-```
-
 ---
 
 ## Fast Mode Specification
@@ -449,13 +372,13 @@ Release only through the gate.
 | FM-05 | Fast Mode escalates on conflict. | If `stale_critical_triggers > 0` OR `anchor_support = weak`, verdict cannot be `FAST_ALLOWED`. |
 | FM-06 | Free budget does not justify deeper analysis. | `policy.free_budget_extends_analysis = const false`. |
 | FM-07 | Fast Mode must leave a trace. | `audit_log_ref` required when verdict = `FAST_ALLOWED`. |
-| NMW-01 | Producing agents cannot validate their own Scout Level. | SCHEMA: authorizing Scout verdicts require `scout_status=VALIDATED`, `level_validation_source != UNVALIDATED`, and non-proposed validation phase. |
-| NMW-02 | Protected surface is detected by registry/path/diff/Driver review, not agent claim. | SCHEMA: `protected_surface=NO` requires `protected_detection_source != UNVALIDATED`; `UNKNOWN` cannot authorize work; `YES` requires Level 2 and verified evidence. RUNTIME/DRIVER: actual path/diff/semantic detection. |
-| NMW-03 | `BUILD` cannot rely on missing registry or self-reported/hash-only evidence. | SCHEMA: `need_verdict=BUILD` requires registry present and `evidence_artifacts` minItems 1 with authentic evidence. |
-| NMW-04 | Driver bypasses require signed Waiver Records. | SCHEMA: Waiver schema requires `driver_signature`; protected PASS requires `driver_attestation`. RUNTIME: cryptographic signature verification. |
-| NMW-05 | Scout Maps are snapshots and expire. | SCHEMA: snapshot hashes + `ttl_expiration` fields; RUNTIME: hash recalculation and TTL comparison; signed waiver path is schema-visible. |
-| NMW-06 | Level drift is quarantined, not retroactively legitimized. | SCHEMA: `BLOCKED_LEVEL_DRIFT` requires quarantine record; RUNTIME: branch/directory quarantine and worktree reset. |
-| NMW-07 | Guardrail version mismatch blocks seal. | SCHEMA: mismatch incident is representable with current `guardrail_version` plus `scout_map_guardrail_version`; RUNTIME compares versions. |
+| NMW-01 | Producing agents cannot validate their own Scout Level. | `level_validation_source` must not be `UNVALIDATED` for any authorizing Scout Map. |
+| NMW-02 | Protected surface is detected by registry/path/diff/Driver review, not agent claim. | Protected edits require Level 2 and verified evidence. |
+| NMW-03 | `BUILD` cannot rely on missing registry or self-reported/hash-only evidence. | Schema if/then on `need_verdict = BUILD`. |
+| NMW-04 | Driver bypasses require signed Waiver Records. | Waiver schema requires `driver_signature`. |
+| NMW-05 | Scout Maps are snapshots and expire. | Snapshot hashes + `ttl_expiration`; stale/expired maps block seal. |
+| NMW-06 | Level drift is quarantined, not retroactively legitimized. | `BLOCKED_LEVEL_DRIFT` requires quarantine record. |
+| NMW-07 | Guardrail version mismatch blocks seal. | Current schema admits only the current `guardrail_version`; mismatches use `BLOCKED_GUARDRAIL_VERSION_MISMATCH`. |
 
 ---
 
@@ -595,7 +518,6 @@ spot_check_records
 waiver_records
 snapshot_hashes
 ttl_expiration
-driver_attestation
 existing_mechanics
 pipeline_fit
 duplicate_check
@@ -622,14 +544,6 @@ Driver spot-checked, or CI-generated. Producing agents cannot choose their own
 "random" spot-check target. In Day-1 solo mode, the Driver selects spot-check terms
 after artifacts are fixed.
 
-The scalar `evidence_authenticity` is the weakest authenticity level of the evidence
-set used to authorize the verdict. Mixed evidence is therefore conservative: one
-self-reported or hash-only artifact taints the scalar unless that artifact is excluded
-from the authorizing evidence set or separately waived with a signed record.
-`DRIVER_SPOT_CHECKED` requires at least one Driver-selected spot-check record and at
-least one evidence artifact. `VERIFIER_RERUN` requires an independent-verifier rerun
-record.
-
 ### Waivers and Driver signatures
 
 Any Driver bypass is represented as a unified Waiver Record: override, spot-check
@@ -654,7 +568,7 @@ driver_signature
 ```
 
 A waiver without a valid Driver signature is invalid and blocks seal as
-`BLOCKED_INVALID_DRIVER_SIGNATURE`. Protected-surface PASS also requires signed `driver_attestation`; otherwise the packet is blocked as `BLOCKED_MISSING_DRIVER_SIGNOFF`.
+`BLOCKED_INVALID_DRIVER_SIGNATURE`.
 
 ### Scout Map staleness and TTL
 
@@ -687,24 +601,20 @@ freezes the producing agent/session until reset.
 
 ### Guardrail versioning
 
-Every Scout Map and seal packet carries `guardrail_version`. A seal packet always
-uses the current runtime `guardrail_version`; if the Scout Map was produced under a
-different version, the packet records that stale value as `scout_map_guardrail_version`
-and blocks as `BLOCKED_GUARDRAIL_VERSION_MISMATCH`. Equality/inequality is a runtime
-comparison; representability and required fields are schema-enforced. Recovery
-requires rerunning the Scout Map under the current guardrail version or a signed
-Driver waiver.
+Every Scout Map and seal packet carries `guardrail_version`. If the Scout Map
+version differs from the current seal-gate runtime version, the seal is blocked as
+`BLOCKED_GUARDRAIL_VERSION_MISMATCH`. Recovery requires rerunning the Scout Map
+under the current guardrail version or a signed Driver waiver.
 
 ### Day-1 deployment profile
 
 Day-1 solo mode is explicitly degraded: runtime classifier, CI artifact capture,
 and independent verifier may be unavailable. The trust floor is Driver good faith,
-which is accepted residual risk, not solved risk. Day-1 is dual-use by binding, not
-by fork: it still fills the full Scout Map schema. Degradation is expressed through
-values such as `level_validation_source=DRIVER`, `protected_detection_source=DRIVER_SEMANTIC_REVIEW`,
-Driver-selected spot-check records, signed waivers, and snapshot hashes over the
-sources that actually exist. A reduced "minimum field subset" is not a valid Scout
-Map.
+which is accepted residual risk, not solved risk. Even in Day-1 mode, the minimum
+required fields are guardrail version, requested change, proposed and
+Driver-validated level, protected surface, registry status, evidence summary,
+Driver-selected spot-check or signed waiver, Need Verdict, snapshot hashes when
+available, and seal-packet reference.
 
 ### Telemetry
 

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:cap:schema:cap-guardrails:v0.2.1",
-  "title": "CAP-Guardrails Decision + NO_MAP_NO_WORK Scout/Seal Surface v0.2.1",
-  "description": "Schema for a CAP-Guardrails decision. Encodes CG-01..CG-07 and FM-01..FM-07: analytical_paralysis routes to stop_audit / enter_fast_mode / take_minimal_action; budget_underestimation routes to require_reality_floor; frozen_container routes to schedule_patrol_gap; fast_mode_abuse and escalation_avoidance route to force_escalation; Fast Mode requires stable anchors, zero irreversible risk, and an audit trace; free budget does not extend analysis; soft budget claims pass through RealityFloor before acceptance. Extends v0.1 with NO_MAP_NO_WORK v4.2: Scout Map, Seal Packet, protected-surface detection, registry status, Driver-signed waivers, evidence authenticity, staleness/TTL, quarantine aftermath, guardrail version gating, and telemetry. v0.2.1 tightens schema enforcement for NMW-01/NMW-02, version mismatch representability, evidence chains, PASS coherence, protected Driver attestation, and Day-1 full-field discipline.",
+  "$id": "urn:cap:schema:cap-guardrails:v0.2",
+  "title": "CAP-Guardrails Decision + NO_MAP_NO_WORK Scout/Seal Surface",
+  "description": "Schema for a CAP-Guardrails decision. Encodes CG-01..CG-07 and FM-01..FM-07: analytical_paralysis routes to stop_audit / enter_fast_mode / take_minimal_action; budget_underestimation routes to require_reality_floor; frozen_container routes to schedule_patrol_gap; fast_mode_abuse and escalation_avoidance route to force_escalation; Fast Mode requires stable anchors, zero irreversible risk, and an audit trace; free budget does not extend analysis; soft budget claims pass through RealityFloor before acceptance. Extends v0.1 with NO_MAP_NO_WORK v4.2: Scout Map, Seal Packet, protected-surface detection, registry status, Driver-signed waivers, evidence authenticity, staleness/TTL, quarantine aftermath, guardrail version gating, and telemetry.",
   "type": "object",
   "required": [
     "schema_version",
@@ -14,7 +14,7 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "0.2.1"
+      "const": "0.2"
     },
     "input": {
       "$ref": "#/$defs/guardrail_input"
@@ -369,7 +369,7 @@
       }
     },
     {
-      "$comment": "NMW-07: scout_map.guardrail_version must be current; mismatch is represented through seal_packet.scout_map_guardrail_version.",
+      "$comment": "NMW-01: if scout_map is present, its guardrail_version must be current v0.2/v4.2.",
       "if": {
         "required": [
           "scout_map"
@@ -388,7 +388,7 @@
       }
     },
     {
-      "$comment": "NMW-07: seal_packet.guardrail_version is current runtime guardrail version; stale scout version uses scout_map_guardrail_version.",
+      "$comment": "NMW-02: if seal_packet is present, its guardrail_version must be current; version mismatch is represented as BLOCKED_GUARDRAIL_VERSION_MISMATCH, but schema only admits current-version packets.",
       "if": {
         "required": [
           "seal_packet"
@@ -405,12 +405,6 @@
           }
         }
       }
-    },
-    {
-      "$comment": "NMW-01/NMW-02: nested Scout Map schema enforces authorizing verdict validation and protected-surface detection; root delegates to scout_map_report."
-    },
-    {
-      "$comment": "NMW-07: nested Seal Packet schema represents guardrail version mismatch with scout_map_guardrail_version; equality/inequality is a runtime comparison."
     }
   ],
   "$defs": {
@@ -737,7 +731,7 @@
     },
     "guardrail_version": {
       "type": "string",
-      "const": "cap_guardrails_v0.2_1_no_map_no_work_v4.2_schema_enforced"
+      "const": "cap_guardrails_v0.2_no_map_no_work_v4.2"
     },
     "scout_level": {
       "type": "string",
@@ -762,9 +756,9 @@
       "type": "string",
       "enum": [
         "PROPOSED_PRE_WORK",
-        "VALIDATED_PRE_WORK",
         "VALIDATED_POST_DIFF",
-        "VALIDATED_AT_SEAL"
+        "VALIDATED_AT_SEAL",
+        "DRIVER_VALIDATED"
       ]
     },
     "need_verdict": {
@@ -867,6 +861,12 @@
         "LEVEL_1_TO_LEVEL_2_DRIFT",
         "PROTECTED_SURFACE_UNDECLARED",
         "GENERAL_LEVEL_DRIFT"
+      ]
+    },
+    "hash_algorithm": {
+      "type": "string",
+      "enum": [
+        "sha256"
       ]
     },
     "signature_algorithm": {
@@ -999,27 +999,7 @@
         "waiver_ref": {
           "type": "string"
         }
-      },
-      "allOf": [
-        {
-          "$comment": "WAIVED spot-check result must point to a signed waiver record.",
-          "if": {
-            "properties": {
-              "result": {
-                "const": "WAIVED"
-              }
-            },
-            "required": [
-              "result"
-            ]
-          },
-          "then": {
-            "required": [
-              "waiver_ref"
-            ]
-          }
-        }
-      ]
+      }
     },
     "waiver_record": {
       "type": "object",
@@ -1220,9 +1200,7 @@
         "max_scout_iterations",
         "scout_iteration_count",
         "termination_reason",
-        "next_action",
-        "spot_check_records",
-        "waiver_records"
+        "next_action"
       ],
       "additionalProperties": false,
       "properties": {
@@ -1292,15 +1270,13 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/spot_check_record"
-          },
-          "minItems": 0
+          }
         },
         "waiver_records": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/waiver_record"
-          },
-          "minItems": 0
+          }
         },
         "snapshot_hashes": {
           "type": "array",
@@ -1365,14 +1341,11 @@
         "next_action": {
           "type": "string",
           "minLength": 1
-        },
-        "driver_attestation": {
-          "$ref": "#/$defs/driver_attestation"
         }
       },
       "allOf": [
         {
-          "$comment": "NMW-02: Protected surfaces always require Level 2, external validation, authentic evidence, and non-self protected detection.",
+          "$comment": "Protected surfaces always require Level 2, external validation, and authentic evidence.",
           "if": {
             "properties": {
               "protected_surface": {
@@ -1396,14 +1369,6 @@
                   "CI_CHECK"
                 ]
               },
-              "protected_detection_source": {
-                "enum": [
-                  "REGISTRY_PATH_MATCH",
-                  "DIFF_CLASSIFIER",
-                  "DRIVER_SEMANTIC_REVIEW",
-                  "INDEPENDENT_VERIFIER"
-                ]
-              },
               "evidence_authenticity": {
                 "enum": [
                   "RUNTIME_CAPTURED",
@@ -1416,73 +1381,7 @@
           }
         },
         {
-          "$comment": "NMW-01: Authorizing Scout verdicts require validated level, validated scout status, known protected surface, non-self protected detection, and authentic evidence.",
-          "if": {
-            "properties": {
-              "need_verdict": {
-                "enum": [
-                  "BUILD",
-                  "MODIFY_EXISTING",
-                  "CONFIG_ONLY",
-                  "TEST_ONLY"
-                ]
-              }
-            },
-            "required": [
-              "need_verdict"
-            ]
-          },
-          "then": {
-            "properties": {
-              "scout_status": {
-                "const": "VALIDATED"
-              },
-              "level_validation_source": {
-                "enum": [
-                  "DRIVER",
-                  "INDEPENDENT_VERIFIER",
-                  "RUNTIME_DIFF_CLASSIFIER",
-                  "CI_CHECK",
-                  "DETERMINISTIC_RULE"
-                ]
-              },
-              "level_validation_phase": {
-                "enum": [
-                  "VALIDATED_PRE_WORK",
-                  "VALIDATED_POST_DIFF",
-                  "VALIDATED_AT_SEAL"
-                ]
-              },
-              "protected_surface": {
-                "enum": [
-                  "YES",
-                  "NO"
-                ]
-              },
-              "protected_detection_source": {
-                "enum": [
-                  "REGISTRY_PATH_MATCH",
-                  "DIFF_CLASSIFIER",
-                  "DRIVER_SEMANTIC_REVIEW",
-                  "INDEPENDENT_VERIFIER"
-                ]
-              },
-              "evidence_authenticity": {
-                "enum": [
-                  "RUNTIME_CAPTURED",
-                  "VERIFIER_RERUN",
-                  "DRIVER_SPOT_CHECKED",
-                  "CI_GENERATED"
-                ]
-              }
-            },
-            "required": [
-              "evidence_artifacts"
-            ]
-          }
-        },
-        {
-          "$comment": "NMW-03: BUILD cannot rely on missing registry and must have at least one evidence artifact.",
+          "$comment": "BUILD cannot rely on missing registry or self-reported/hash-only evidence.",
           "if": {
             "properties": {
               "need_verdict": {
@@ -1505,66 +1404,25 @@
                   "REGISTRY_PRESENT_UNKNOWN_COVERAGE"
                 ]
               },
-              "evidence_artifacts": {
-                "minItems": 1
-              }
-            }
-          }
-        },
-        {
-          "$comment": "NMW-02: protected_surface=NO still requires non-self protected detection; otherwise use UNKNOWN.",
-          "if": {
-            "properties": {
               "protected_surface": {
-                "const": "NO"
-              }
-            },
-            "required": [
-              "protected_surface"
-            ]
-          },
-          "then": {
-            "properties": {
-              "protected_detection_source": {
                 "enum": [
-                  "REGISTRY_PATH_MATCH",
-                  "DIFF_CLASSIFIER",
-                  "DRIVER_SEMANTIC_REVIEW",
-                  "INDEPENDENT_VERIFIER"
+                  "YES",
+                  "NO"
+                ]
+              },
+              "evidence_authenticity": {
+                "enum": [
+                  "RUNTIME_CAPTURED",
+                  "VERIFIER_RERUN",
+                  "DRIVER_SPOT_CHECKED",
+                  "CI_GENERATED"
                 ]
               }
             }
           }
         },
         {
-          "$comment": "NMW-02: UNKNOWN protected surface cannot authorize work.",
-          "if": {
-            "properties": {
-              "protected_surface": {
-                "const": "UNKNOWN"
-              }
-            },
-            "required": [
-              "protected_surface"
-            ]
-          },
-          "then": {
-            "properties": {
-              "need_verdict": {
-                "not": {
-                  "enum": [
-                    "BUILD",
-                    "MODIFY_EXISTING",
-                    "CONFIG_ONLY",
-                    "TEST_ONLY"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        {
-          "$comment": "Level 0 is provisional until validated after diff/seal or by Driver before work only as explicit external validation.",
+          "$comment": "Level 0 is provisional until validated after diff/seal or by Driver.",
           "if": {
             "properties": {
               "validated_level": {
@@ -1581,156 +1439,32 @@
                 "enum": [
                   "VALIDATED_POST_DIFF",
                   "VALIDATED_AT_SEAL",
-                  "VALIDATED_PRE_WORK"
+                  "DRIVER_VALIDATED"
                 ]
               }
             }
           }
         },
         {
-          "$comment": "VALIDATED scout_status cannot use PROPOSED_PRE_WORK phase.",
-          "if": {
-            "properties": {
-              "scout_status": {
-                "const": "VALIDATED"
-              }
-            },
-            "required": [
-              "scout_status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "level_validation_phase": {
-                "not": {
-                  "const": "PROPOSED_PRE_WORK"
-                }
-              }
-            }
-          }
-        },
-        {
-          "$comment": "DRIVER_SPOT_CHECKED requires a Driver-selected spot-check record and at least one evidence artifact.",
-          "if": {
-            "properties": {
-              "evidence_authenticity": {
-                "const": "DRIVER_SPOT_CHECKED"
-              }
-            },
-            "required": [
-              "evidence_authenticity"
-            ]
-          },
-          "then": {
-            "properties": {
-              "spot_check_records": {
-                "minItems": 1,
-                "contains": {
-                  "properties": {
-                    "selector": {
-                      "const": "DRIVER"
-                    }
-                  },
-                  "required": [
-                    "selector"
-                  ]
-                }
-              },
-              "evidence_artifacts": {
-                "minItems": 1
-              }
-            },
-            "required": [
-              "spot_check_records",
-              "evidence_artifacts"
-            ]
-          }
-        },
-        {
-          "$comment": "VERIFIER_RERUN requires an independent-verifier spot-check/rerun record and at least one evidence artifact.",
-          "if": {
-            "properties": {
-              "evidence_authenticity": {
-                "const": "VERIFIER_RERUN"
-              }
-            },
-            "required": [
-              "evidence_authenticity"
-            ]
-          },
-          "then": {
-            "properties": {
-              "spot_check_records": {
-                "minItems": 1,
-                "contains": {
-                  "properties": {
-                    "selector": {
-                      "const": "INDEPENDENT_VERIFIER"
-                    }
-                  },
-                  "required": [
-                    "selector"
-                  ]
-                }
-              },
-              "evidence_artifacts": {
-                "minItems": 1
-              }
-            },
-            "required": [
-              "spot_check_records",
-              "evidence_artifacts"
-            ]
-          }
-        },
-        {
-          "$comment": "Protected surfaces with any Driver source require signed driver_attestation in the Scout Map.",
+          "$comment": "Unknown protected surface cannot authorize BUILD.",
           "if": {
             "properties": {
               "protected_surface": {
-                "const": "YES"
+                "const": "UNKNOWN"
               }
             },
             "required": [
               "protected_surface"
-            ],
-            "anyOf": [
-              {
-                "properties": {
-                  "level_validation_source": {
-                    "const": "DRIVER"
-                  }
-                },
-                "required": [
-                  "level_validation_source"
-                ]
-              },
-              {
-                "properties": {
-                  "protected_detection_source": {
-                    "const": "DRIVER_SEMANTIC_REVIEW"
-                  }
-                },
-                "required": [
-                  "protected_detection_source"
-                ]
-              },
-              {
-                "properties": {
-                  "evidence_authenticity": {
-                    "const": "DRIVER_SPOT_CHECKED"
-                  }
-                },
-                "required": [
-                  "evidence_authenticity"
-                ]
-              }
             ]
           },
           "then": {
-            "required": [
-              "driver_attestation"
-            ]
+            "properties": {
+              "need_verdict": {
+                "not": {
+                  "const": "BUILD"
+                }
+              }
+            }
           }
         }
       ]
@@ -1810,18 +1544,14 @@
           "$ref": "#/$defs/registry_update_status"
         },
         "telemetry_update_source": {
-          "$ref": "#/$defs/telemetry_update_source"
+          "type": "string",
+          "enum": [
+            "SEAL_PACKET_AGGREGATION"
+          ]
         },
         "ttl_checked_at": {
           "type": "string",
           "format": "date-time"
-        },
-        "scout_map_guardrail_version": {
-          "type": "string",
-          "minLength": 1
-        },
-        "driver_attestation": {
-          "$ref": "#/$defs/driver_attestation"
         }
       },
       "allOf": [
@@ -1852,70 +1582,6 @@
                   "YES",
                   "NO"
                 ]
-              },
-              "protected_detection_source": {
-                "enum": [
-                  "REGISTRY_PATH_MATCH",
-                  "DIFF_CLASSIFIER",
-                  "DRIVER_SEMANTIC_REVIEW",
-                  "INDEPENDENT_VERIFIER"
-                ]
-              }
-            }
-          }
-        },
-        {
-          "$comment": "PASS requires coherent registry status: UPDATED or NOT_REQUIRED only.",
-          "if": {
-            "properties": {
-              "seal_status": {
-                "const": "PASS"
-              }
-            },
-            "required": [
-              "seal_status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "registry_update_status": {
-                "enum": [
-                  "UPDATED",
-                  "NOT_REQUIRED"
-                ]
-              },
-              "need_verdict": {
-                "enum": [
-                  "BUILD",
-                  "MODIFY_EXISTING",
-                  "CONFIG_ONLY",
-                  "DOC_ONLY",
-                  "TEST_ONLY"
-                ]
-              }
-            }
-          }
-        },
-        {
-          "$comment": "BUILD with PASS must have UPDATED registry entry.",
-          "if": {
-            "properties": {
-              "seal_status": {
-                "const": "PASS"
-              },
-              "need_verdict": {
-                "const": "BUILD"
-              }
-            },
-            "required": [
-              "seal_status",
-              "need_verdict"
-            ]
-          },
-          "then": {
-            "properties": {
-              "registry_update_status": {
-                "const": "UPDATED"
               }
             }
           }
@@ -1940,7 +1606,7 @@
           }
         },
         {
-          "$comment": "Protected surface with PASS requires Level 2, non-self detection, and signed Driver attestation.",
+          "$comment": "Protected surface with PASS requires Level 2.",
           "if": {
             "properties": {
               "seal_status": {
@@ -1959,78 +1625,11 @@
             "properties": {
               "validated_level": {
                 "const": "LEVEL_2"
-              },
-              "protected_detection_source": {
-                "enum": [
-                  "REGISTRY_PATH_MATCH",
-                  "DIFF_CLASSIFIER",
-                  "DRIVER_SEMANTIC_REVIEW",
-                  "INDEPENDENT_VERIFIER"
-                ]
-              }
-            },
-            "required": [
-              "driver_attestation"
-            ]
-          }
-        },
-        {
-          "$comment": "NMW-07: version mismatch incident is representable; current runtime version stays in guardrail_version, stale scout version goes in scout_map_guardrail_version.",
-          "if": {
-            "properties": {
-              "seal_status": {
-                "const": "BLOCKED_GUARDRAIL_VERSION_MISMATCH"
-              }
-            },
-            "required": [
-              "seal_status"
-            ]
-          },
-          "then": {
-            "required": [
-              "scout_map_guardrail_version"
-            ],
-            "properties": {
-              "registry_update_status": {
-                "enum": [
-                  "NOT_REQUIRED",
-                  "BLOCKED_REGISTRY_DRIFT",
-                  "PENDING_DRIVER_ROOT_OF_TRUST"
-                ]
-              }
-            }
-          }
-        },
-        {
-          "$comment": "BLOCKED_MISSING_DRIVER_SIGNOFF is used when required Driver attestation is absent.",
-          "if": {
-            "properties": {
-              "seal_status": {
-                "const": "BLOCKED_MISSING_DRIVER_SIGNOFF"
-              }
-            },
-            "required": [
-              "seal_status"
-            ]
-          },
-          "then": {
-            "properties": {
-              "protected_surface": {
-                "const": "YES"
               }
             }
           }
         }
       ]
-    },
-    "telemetry_update_source": {
-      "type": "string",
-      "enum": [
-        "SEAL_PACKET_AGGREGATION"
-      ]
-    },
-    "driver_attestation": {
-      "$ref": "#/$defs/driver_signature"
     }
   }
 }

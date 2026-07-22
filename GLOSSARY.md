@@ -272,6 +272,15 @@ Full definitions in [`spec/operator_alphabet.json`](./spec/operator_alphabet.jso
 
 ---
 
+### CAP-Guardrails / Anti-Freeze Layer
+**Short:** Cross-cutting meta-layer that stops CAP from freezing on its own audit.
+
+**Technical:** Detects five inaction risks (`analytical_paralysis`, `budget_underestimation`, `frozen_container`, `fast_mode_abuse`, `escalation_avoidance`) and issues routing directives exclusively — it never alters anchors, commits, or releases. Governs Fast Mode entry, the RealityFloor check on soft budget claims, and the NO_MAP_NO_WORK scout/seal surface. See [`02_subsystems/cap_guardrails.md`](./02_subsystems/cap_guardrails.md) and [`spec/cap_guardrails.schema.json`](./spec/cap_guardrails.schema.json).
+
+**Not to be confused with:** Budget Recovery Protocol, which reacts to a telemetry breach — Guardrails defends against foolish *inaction*, not foolish action.
+
+---
+
 ### Anchor (in CAP sense)
 **Short:** A claim, output, or commitment that is preserved as a stable reference point.
 
