@@ -38,7 +38,7 @@ def test_ad_01_fresh_requires_last_verified_at():
     case["current_authority"] = "full"
     case.pop("last_verified_at", None)
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-01: fresh requires last_verified_at"
+    assert errors, "ADEC-01: fresh requires last_verified_at"
 
 
 def test_ad_02_expired_requires_valid_until():
@@ -47,7 +47,7 @@ def test_ad_02_expired_requires_valid_until():
     case["current_authority"] = "none"
     case.pop("valid_until", None)
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-02: expired requires valid_until"
+    assert errors, "ADEC-02: expired requires valid_until"
 
 
 def test_ad_02_expired_with_valid_until_is_valid():
@@ -66,7 +66,7 @@ def test_ad_03_deprecated_requires_superseded_by_or_reason():
     case.pop("superseded_by", None)
     case.pop("deprecation_reason", None)
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-03: deprecated requires superseded_by or deprecation_reason"
+    assert errors, "ADEC-03: deprecated requires superseded_by or deprecation_reason"
 
 
 def test_ad_03_deprecated_with_superseded_by_is_valid():
@@ -83,7 +83,7 @@ def test_ad_05_fresh_must_have_authority_full():
     case["stage"] = "fresh"
     case["current_authority"] = "reduced"
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-05: fresh stage must have current_authority=full"
+    assert errors, "ADEC-05: fresh stage must have current_authority=full"
 
 
 def test_ad_05_stale_must_have_reduced_or_watch_authority():
@@ -91,7 +91,7 @@ def test_ad_05_stale_must_have_reduced_or_watch_authority():
     case["stage"] = "stale"
     case["current_authority"] = "full"
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-05: stale must have reduced or watch authority"
+    assert errors, "ADEC-05: stale must have reduced or watch authority"
 
 
 def test_ad_05_deprecated_must_have_audit_only_authority():

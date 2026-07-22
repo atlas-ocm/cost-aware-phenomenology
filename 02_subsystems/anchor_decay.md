@@ -51,12 +51,12 @@ routes consumers to refresh / supersede / quarantine when needed.
 
 | Id | Statement | Enforcement |
 |---|---|---|
-| AD-01 | An anchor cannot be `fresh` without a `last_verified_at`. | Schema requires `last_verified_at` when `stage: fresh`. |
-| AD-02 | `expired` requires `valid_until` in the past. | Schema requires `valid_until` for `expired`. |
-| AD-03 | `deprecated` requires `superseded_by` OR `deprecation_reason`. | Schema requires at least one of the two. |
-| AD-04 | A `stale` anchor cannot be referenced by a `release_candidate` without explicit refresh. | Doc invariant; downstream Release Gate check. |
-| AD-05 | Decay cannot promote authority. | Stage transitions are one-way along `fresh -> aging -> stale -> deprecated -> expired`; reverse only via `explicit_refresh` operator. |
-| AD-06 | Domain volatility must be declared. | Schema requires `domain_volatility` enum on every anchor decay record. |
+| ADEC-01 | An anchor cannot be `fresh` without a `last_verified_at`. | Schema requires `last_verified_at` when `stage: fresh`. |
+| ADEC-02 | `expired` requires `valid_until` in the past. | Schema requires `valid_until` for `expired`. |
+| ADEC-03 | `deprecated` requires `superseded_by` OR `deprecation_reason`. | Schema requires at least one of the two. |
+| ADEC-04 | A `stale` anchor cannot be referenced by a `release_candidate` without explicit refresh. | Doc invariant; downstream Release Gate check. |
+| ADEC-05 | Decay cannot promote authority. | Stage transitions are one-way along `fresh -> aging -> stale -> deprecated -> expired`; reverse only via `explicit_refresh` operator. |
+| ADEC-06 | Domain volatility must be declared. | Schema requires `domain_volatility` enum on every anchor decay record. |
 
 ---
 

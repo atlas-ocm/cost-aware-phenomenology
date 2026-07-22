@@ -72,11 +72,11 @@ discipline of cost.
 
 | Id | Statement | Enforcement |
 |---|---|---|
-| AD-01 | Importance does not increase observer budget. | `verdict: drama_demands_budget_increase` requires action in `{freeze_budget, hold, escalate_to_human}`. |
-| AD-02 | A drama signal alone does not invalidate a claim. | A claim is only downgraded when the verdict is `drama_overrides_evidence` AND a contradicting evidence ref is attached. |
-| AD-03 | Drama detection records evidence refs, not emotional judgements. | `evidence_refs` array required (may be empty for `no_drama`); a `narrative_pressure_detected` or stronger verdict requires `minItems:1`. |
-| AD-04 | Drama detection cannot itself release or canonicalize anything. | Schema has no release/canonicalize field. |
-| AD-05 | The same actor cannot self-clear a drama verdict. | `cleared_by` (when present) must not equal `emitter.id`. |
+| DRAMA-01 | Importance does not increase observer budget. | `verdict: drama_demands_budget_increase` requires action in `{freeze_budget, hold, escalate_to_human}`. |
+| DRAMA-02 | A drama signal alone does not invalidate a claim. | A claim is only downgraded when the verdict is `drama_overrides_evidence` AND a contradicting evidence ref is attached. |
+| DRAMA-03 | Drama detection records evidence refs, not emotional judgements. | `evidence_refs` array required (may be empty for `no_drama`); a `narrative_pressure_detected` or stronger verdict requires `minItems:1`. |
+| DRAMA-04 | Drama detection cannot itself release or canonicalize anything. | Schema has no release/canonicalize field. |
+| DRAMA-05 | The same actor cannot self-clear a drama verdict. | `cleared_by` (when present) must not equal `emitter.id`. |
 
 ---
 

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:cap:schema:anti-drama-detection:v0.1",
   "title": "CAP Anti-drama Detection Event",
-  "description": "Schema for a drama-detection event. Encodes AD-01..AD-05: importance does not raise budget; drama signal alone does not invalidate a claim; evidence refs required for non-no_drama verdicts; layer has no release/canonicalize field; same actor cannot self-clear.",
+  "description": "Schema for a drama-detection event. Encodes DRAMA-01..DRAMA-05: importance does not raise budget; drama signal alone does not invalidate a claim; evidence refs required for non-no_drama verdicts; layer has no release/canonicalize field; same actor cannot self-clear.",
   "type": "object",
   "required": [
     "schema_version",
@@ -63,7 +63,7 @@
   },
   "allOf": [
     {
-      "$comment": "AD-01: drama_demands_budget_increase routes to freeze_budget / hold / escalate_to_human.",
+      "$comment": "DRAMA-01: drama_demands_budget_increase routes to freeze_budget / hold / escalate_to_human.",
       "if": {
         "properties": {
           "verdict": {
@@ -87,7 +87,7 @@
       }
     },
     {
-      "$comment": "AD-02: drama_overrides_evidence requires contradicting_evidence_refs minItems:1.",
+      "$comment": "DRAMA-02: drama_overrides_evidence requires contradicting_evidence_refs minItems:1.",
       "if": {
         "properties": {
           "verdict": {
@@ -111,7 +111,7 @@
       }
     },
     {
-      "$comment": "AD-03: non-no_drama verdicts require non-empty evidence_refs (so the detection itself is grounded).",
+      "$comment": "DRAMA-03: non-no_drama verdicts require non-empty evidence_refs (so the detection itself is grounded).",
       "if": {
         "properties": {
           "verdict": {

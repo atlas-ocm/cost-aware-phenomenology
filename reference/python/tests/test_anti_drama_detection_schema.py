@@ -36,7 +36,7 @@ def test_ad_01_drama_demands_budget_routes_to_freeze_or_hold_or_human():
     case = _load_example()
     case["recommended_action"] = "proceed"
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-01: drama_demands_budget_increase must route to freeze_budget / hold / escalate_to_human"
+    assert errors, "DRAMA-01: drama_demands_budget_increase must route to freeze_budget / hold / escalate_to_human"
 
 
 def test_ad_01_freeze_budget_action_is_valid():
@@ -52,7 +52,7 @@ def test_ad_02_drama_overrides_evidence_requires_contradicting_refs():
     case["recommended_action"] = "require_evidence_for_claim"
     case.pop("contradicting_evidence_refs", None)
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-02: drama_overrides_evidence requires contradicting_evidence_refs minItems:1"
+    assert errors, "DRAMA-02: drama_overrides_evidence requires contradicting_evidence_refs minItems:1"
 
 
 def test_ad_02_drama_overrides_with_contradicting_refs_is_valid():
@@ -70,7 +70,7 @@ def test_ad_03_non_no_drama_requires_evidence_refs():
     case["recommended_action"] = "downweight_emotional_signal"
     case["evidence_refs"] = []
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-03: non-no_drama verdicts require evidence_refs minItems:1"
+    assert errors, "DRAMA-03: non-no_drama verdicts require evidence_refs minItems:1"
 
 
 def test_ad_03_non_no_drama_requires_drama_signals():
@@ -79,7 +79,7 @@ def test_ad_03_non_no_drama_requires_drama_signals():
     case["recommended_action"] = "downweight_emotional_signal"
     case["drama_signals"] = []
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-03: non-no_drama verdicts require at least one drama signal"
+    assert errors, "DRAMA-03: non-no_drama verdicts require at least one drama signal"
 
 
 def test_no_drama_with_empty_signals_is_valid():
@@ -96,7 +96,7 @@ def test_ad_04_no_release_or_canonicalize_field():
     case = _load_example()
     case["release_decision"] = "pass"
     errors = list(_validator().iter_errors(case))
-    assert errors, "AD-04: anti-drama event must not carry a release decision"
+    assert errors, "DRAMA-04: anti-drama event must not carry a release decision"
 
 
 def test_unknown_drama_signal_rejected():
