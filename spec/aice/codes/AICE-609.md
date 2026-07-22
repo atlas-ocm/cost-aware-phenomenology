@@ -19,6 +19,13 @@ Canonical principle:
 
 > Consensus is not evidence.
 
+## Field maxim (non-normative)
+
+> Consensus without evidence is distributed autocomplete.
+
+Memorable rationale only — it changes no normative behavior. Agreement among actors that
+have not observed the postcondition does not create evidence.
+
 ## Trigger condition
 
 Multiple agents or models agree on a claim, and none has observed the required event or

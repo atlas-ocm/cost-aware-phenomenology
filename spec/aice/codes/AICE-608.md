@@ -15,6 +15,20 @@
 Catch the case where a result is described as independently verified, but the verifier
 lacks sufficient independence from the producer, evidence path, or narrative source.
 
+## Field maxim (non-normative)
+
+> Audit without isolation is just autocomplete wearing a verifier badge.
+
+Memorable rationale only — it changes no normative behavior. A role change from author
+to verifier does not, by itself, create independence. The normative contract is
+unchanged:
+
+```
+VERIFIER_INDEPENDENCE_UNPROVEN
+  -> AICE-608
+  -> WORKFLOW_EFFECT = STATE_UNCHANGED
+```
+
 ## Trigger condition
 
 A result is described as independently verified, and the verifier lacks sufficient

@@ -100,6 +100,13 @@ When an AICE incident is emitted:
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
 
+On verifier independence (`AICE-608`) — field maxim, non-normative:
+
+> Audit without isolation is just autocomplete wearing a verifier badge.
+
+A role change from author to verifier does not, by itself, create independence; this
+maxim is a memorable rationale and changes no normative behavior.
+
 ## 7. Relationship to CAP
 
 CAP (Cost-Aware Phenomenology) constrains recommendations and transitions through
