@@ -1,6 +1,6 @@
 # AICE-608 — Verification Exists, Independence Not Found
 
-**Unofficial draft (AICE v0.4.0).**
+**Unofficial draft (AICE v0.5.0).**
 
 ## Canonical identifier
 

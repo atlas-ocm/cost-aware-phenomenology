@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.4).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.5).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
@@ -7,7 +7,7 @@ Runnable standalone and wired into check_repo.ps1.
 
 Checks:
 - all AICE JSON files parse;
-- the registry code set is exactly AICE-604..AICE-612 with unique codes;
+- the registry code set is exactly AICE-604..AICE-613 with unique codes;
 - the registry spec_version and canonical_code_range match the expected values;
 - the schema $id and spec_version const match the expected values;
 - every registry code has a corresponding codes/AICE-XXX.md document;
@@ -36,10 +36,10 @@ SCHEMA_PATH = AICE_SPEC / "incident.schema.json"
 CODES_DIR = AICE_SPEC / "codes"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 
-EXPECTED_CODES = [f"AICE-{n}" for n in range(604, 613)]
-EXPECTED_VERSION = "0.4.0"
+EXPECTED_CODES = [f"AICE-{n}" for n in range(604, 614)]
+EXPECTED_VERSION = "0.5.0"
 EXPECTED_CODE_RANGE = [EXPECTED_CODES[0], EXPECTED_CODES[-1]]
-EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.4"
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.5"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",

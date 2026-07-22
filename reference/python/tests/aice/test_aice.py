@@ -1,12 +1,13 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.4).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.5).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed code set, mandatory STATE_UNCHANGED), version,
 code-range, and schema-$id parity, and the deterministic integrity check
-(registry <-> codes <-> examples <-> links). Includes AICE-610, AICE-611, and
-AICE-612 coverage (with focused AICE-612 cross-actor-inference invariants) plus
-adversarial scratch-copy tests that prove the validator detects registry, doc,
-link, code-range, version, and schema-$id tampering.
+(registry <-> codes <-> examples <-> links). Includes AICE-610, AICE-611,
+AICE-612, and AICE-613 coverage (with focused AICE-612 cross-actor-inference and
+AICE-613 self-hosting-mutation-deadlock invariants) plus adversarial scratch-copy
+tests that prove the validator detects registry, doc, link, code-range, version,
+and schema-$id tampering.
 """
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ CHECK_AICE = ROOT / "reference" / "python" / "scripts" / "aice" / "check_aice.py
 EXAMPLE_610 = EXAMPLES_DIR / "aice-610-control-without-enforcement.json"
 EXAMPLE_611 = EXAMPLES_DIR / "aice-611-operational-reachability-substitution.json"
 EXAMPLE_612 = EXAMPLES_DIR / "aice-612-actor-path-substitution.json"
+EXAMPLE_613 = EXAMPLES_DIR / "aice-613-self-hosting-mutation-shape-deadlock.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
 sys.path.insert(0, str(CHECK_AICE.parent))
@@ -61,7 +63,7 @@ def test_schema_rejects_unknown_code():
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
     example["code"] = "AICE-699"
     errors = list(_validator().iter_errors(example))
-    assert errors, "Schema must reject codes outside AICE-604..AICE-612"
+    assert errors, "Schema must reject codes outside AICE-604..AICE-613"
 
 
 def test_schema_requires_state_unchanged_in_workflow_effect():
@@ -122,21 +124,22 @@ def test_aice_610_example_is_valid():
     assert not errors, [e.message for e in errors]
 
 
-def test_expected_codes_are_closed_at_604_612():
-    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(604, 613)]
-    assert "AICE-611" in check_aice.EXPECTED_CODES
+def test_expected_codes_are_closed_at_604_613():
+    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(604, 614)]
     assert "AICE-612" in check_aice.EXPECTED_CODES
-    assert "AICE-613" not in check_aice.EXPECTED_CODES
-    assert len(check_aice.EXPECTED_CODES) == 9
+    assert "AICE-613" in check_aice.EXPECTED_CODES
+    assert "AICE-614" not in check_aice.EXPECTED_CODES
+    assert len(check_aice.EXPECTED_CODES) == 10
 
 
-def test_schema_accepts_610_611_612_but_rejects_613():
+def test_schema_accepts_610_through_613_but_rejects_614():
     assert not list(_validator().iter_errors(_load_610())), "AICE-610 example must validate"
     assert not list(_validator().iter_errors(_load_611())), "AICE-611 example must validate"
     assert not list(_validator().iter_errors(_load_612())), "AICE-612 example must validate"
-    incident = _load_612()
-    incident["code"] = "AICE-613"
-    assert list(_validator().iter_errors(incident)), "AICE-613 must be rejected (closed set)"
+    assert not list(_validator().iter_errors(_load_613())), "AICE-613 example must validate"
+    incident = _load_613()
+    incident["code"] = "AICE-614"
+    assert list(_validator().iter_errors(incident)), "AICE-614 must be rejected (closed set)"
 
 
 def test_registry_and_doc_metadata_agree_for_610():
@@ -156,12 +159,14 @@ def test_610_example_requires_state_unchanged():
     assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
 
 
-def test_existing_examples_remain_valid_under_v0_4():
+def test_existing_examples_remain_valid_under_v0_5():
     for name in (
         "aice-604-metaphysical-artifact.json",
         "aice-605-release-without-implementation.json",
         "aice-610-control-without-enforcement.json",
         "aice-611-operational-reachability-substitution.json",
+        "aice-612-actor-path-substitution.json",
+        "aice-613-self-hosting-mutation-shape-deadlock.json",
     ):
         incident = json.loads((EXAMPLES_DIR / name).read_text(encoding="utf-8"))
         errors = list(_validator().iter_errors(incident))
@@ -338,38 +343,184 @@ def test_612_correctly_scoped_proposer_only_conclusion_is_not_an_incident():
     assert not _aice_612_invariants_ok(incident)
 
 
+# --- AICE-613: Self-Hosting Mutation-Shape Deadlock ----------------------------
+
+AICE_613_TITLE = "Self-Hosting Mutation-Shape Deadlock"
+
+
+def _load_613():
+    return json.loads(EXAMPLE_613.read_text(encoding="utf-8"))
+
+
+def _aice_613_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-613 (self-hosting deadlock).
+
+    Not imposed on arbitrary envelopes — only used to guard the canonical
+    repository example and to prove that specific mutations invalidate it. The
+    predicate requires BOTH the immediate full-object capacity defect AND the
+    recursive self-hosting bootstrap dependency; generic output truncation alone
+    (no recursive upgrade dependency) must not satisfy it.
+    """
+    if incident.get("code") != "AICE-613":
+        return True
+    cd = incident.get("code_details", {})
+    req = cd.get("requested_change", {})
+    tgt = cd.get("target", {})
+    proto = cd.get("mutation_protocol", {})
+    cap = cd.get("capacity", {})
+    boot = cd.get("bootstrap", {})
+    res = cd.get("result", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            req.get("delta_bounded") is True,
+            req.get("delta_materially_smaller_than_target") is True,
+            tgt.get("existing") is True,
+            proto.get("authorized_form") == "full_object_replacement",
+            proto.get("payload_cost_scales_with_target_size") is True,
+            proto.get("delta_capable_path_reachable") is False,
+            cap.get("observed") is True,
+            cap.get("full_object_payload_exceeds_capacity") is True,
+            boot.get("patch_support_required") is True,
+            boot.get("patch_support_upgrade_requires_same_full_object_form") is True,
+            boot.get("separately_authorized_bootstrap_available") is False,
+            res.get("mutation_materialized") is False,
+            res.get("target_state_changed") is False,
+            res.get("self_hosting_path_reachable") is False,
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_613_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_613()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_613():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-613")
+    assert entry["title"] == AICE_613_TITLE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-613.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-613 — {AICE_613_TITLE}")
+    assert _load_613()["title"] == entry["title"]
+
+
+def test_613_example_requires_state_unchanged():
+    incident = _load_613()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_613_example_blocks_acceptance():
+    incident = _load_613()
+    assert "BLOCK_ACCEPTANCE" in incident["workflow_effect"]
+    # Dropping BLOCK_ACCEPTANCE must break the focused invariant (default effect).
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "BLOCK_ACCEPTANCE"]
+    assert not _aice_613_invariants_ok(incident)
+
+
+def test_613_example_is_representative_not_historical():
+    incident = _load_613()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+def test_613_canonical_example_satisfies_invariants():
+    assert _aice_613_invariants_ok(_load_613())
+
+
+def test_613_target_present_is_required():
+    # The failure is not artifact absence (that is AICE-604). If the target is
+    # marked absent, the AICE-613 predicate must no longer hold.
+    incident = _load_613()
+    incident["code_details"]["target"]["existing"] = False
+    assert not _aice_613_invariants_ok(incident)
+
+
+def test_613_delta_must_be_bounded_and_smaller_than_target():
+    incident = _load_613()
+    incident["code_details"]["requested_change"]["delta_materially_smaller_than_target"] = False
+    assert not _aice_613_invariants_ok(incident)
+
+
+def test_613_full_object_must_be_only_authorized_form():
+    incident = _load_613()
+    incident["code_details"]["mutation_protocol"]["authorized_form"] = "unified_diff"
+    assert not _aice_613_invariants_ok(incident)
+
+
+def test_613_generic_output_truncation_alone_is_not_613():
+    # Remove the recursive self-hosting dependency: a large-file/truncation
+    # capacity failure without the bootstrap deadlock must NOT satisfy AICE-613.
+    incident = _load_613()
+    incident["code_details"]["bootstrap"]["patch_support_upgrade_requires_same_full_object_form"] = False
+    assert not _aice_613_invariants_ok(incident)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["mutation_protocol"].__setitem__("delta_capable_path_reachable", True),
+        lambda cd: cd["capacity"].__setitem__("full_object_payload_exceeds_capacity", False),
+        lambda cd: cd["bootstrap"].__setitem__("separately_authorized_bootstrap_available", True),
+        lambda cd: cd["bootstrap"].__setitem__("patch_support_upgrade_requires_same_full_object_form", False),
+        lambda cd: cd["result"].__setitem__("mutation_materialized", True),
+        lambda cd: cd["result"].__setitem__("target_state_changed", True),
+        lambda cd: cd["capacity"].__setitem__("observed", False),
+    ],
+    ids=[
+        "delta_path_reachable",
+        "full_object_fits_capacity",
+        "separate_bootstrap_available",
+        "recursive_dependency_removed",
+        "mutation_materialized",
+        "target_state_changed",
+        "capacity_observation_removed",
+    ],
+)
+def test_613_mutations_invalidate_deadlock_predicate(mutate):
+    incident = _load_613()
+    mutate(incident["code_details"])
+    assert not _aice_613_invariants_ok(incident)
+
+
 # --- Version / range / $id parity ---------------------------------------------
 
-def test_spec_version_is_consistently_0_4_0():
+def test_spec_version_is_consistently_0_5_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.4.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.4.0"
-    assert check_aice.EXPECTED_VERSION == "0.4.0"
+    assert registry["spec_version"] == "0.5.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.5.0"
+    assert check_aice.EXPECTED_VERSION == "0.5.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.4.0", ex.name
+        assert data["spec_version"] == "0.5.0", ex.name
 
 
-def test_schema_id_is_v0_4_and_unique():
+def test_schema_id_is_v0_5_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.4"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.5"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.4" in text:
+        if "urn:cap:schema:aice-incident:v0.5" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
 
-def test_registry_canonical_range_is_604_612():
+def test_registry_canonical_range_is_604_613():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
-    assert registry["canonical_code_range"] == ["AICE-604", "AICE-612"]
+    assert registry["canonical_code_range"] == ["AICE-604", "AICE-613"]
 
 
-# --- Adversarial: validator must catch AICE-612 / range / version / $id tampering
+# --- Adversarial: validator must catch AICE-613 / range / version / $id tampering
 
 def _build_scratch(tmp_path: Path) -> Path:
     """Mirror the minimal tree check_aice.py expects (its ROOT = parents[4])."""
@@ -390,30 +541,30 @@ def _registry_path(tmp: Path) -> Path:
     return tmp / "spec" / "aice" / "registry.json"
 
 
-def _tamper_remove_612(tmp: Path) -> None:
+def _tamper_remove_613(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["codes"] = [c for c in data["codes"] if c.get("code") != "AICE-612"]
+    data["codes"] = [c for c in data["codes"] if c.get("code") != "AICE-613"]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _tamper_rename_613(tmp: Path) -> None:
+def _tamper_rename_614(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     for c in data["codes"]:
-        if c.get("code") == "AICE-612":
-            c["code"] = "AICE-613"
+        if c.get("code") == "AICE-613":
+            c["code"] = "AICE-614"
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_delete_doc(tmp: Path) -> None:
-    (tmp / "spec" / "aice" / "codes" / "AICE-612.md").unlink()
+    (tmp / "spec" / "aice" / "codes" / "AICE-613.md").unlink()
 
 
 def _tamper_break_link(tmp: Path) -> None:
-    doc = tmp / "spec" / "aice" / "codes" / "AICE-612.md"
+    doc = tmp / "spec" / "aice" / "codes" / "AICE-613.md"
     doc.write_text(
-        doc.read_text(encoding="utf-8") + "\n[broken](./NONEXISTENT-612.md)\n",
+        doc.read_text(encoding="utf-8") + "\n[broken](./NONEXISTENT-613.md)\n",
         encoding="utf-8",
     )
 
@@ -421,29 +572,29 @@ def _tamper_break_link(tmp: Path) -> None:
 def _tamper_stale_range(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["canonical_code_range"] = ["AICE-604", "AICE-611"]
+    data["canonical_code_range"] = ["AICE-604", "AICE-612"]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_stale_version(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["spec_version"] = "0.3.0"
+    data["spec_version"] = "0.4.0"
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_stale_schema_id(tmp: Path) -> None:
     schema = tmp / "spec" / "aice" / "incident.schema.json"
     data = json.loads(schema.read_text(encoding="utf-8"))
-    data["$id"] = "urn:cap:schema:aice-incident:v0.3"
+    data["$id"] = "urn:cap:schema:aice-incident:v0.4"
     schema.write_text(json.dumps(data), encoding="utf-8")
 
 
 @pytest.mark.parametrize(
     "tamper",
     [
-        _tamper_remove_612,
-        _tamper_rename_613,
+        _tamper_remove_613,
+        _tamper_rename_614,
         _tamper_delete_doc,
         _tamper_break_link,
         _tamper_stale_range,
@@ -452,7 +603,7 @@ def _tamper_stale_schema_id(tmp: Path) -> None:
     ],
     ids=[
         "remove_from_registry",
-        "rename_to_613",
+        "rename_to_614",
         "delete_doc",
         "break_link",
         "stale_code_range",

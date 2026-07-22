@@ -1,0 +1,66 @@
+{
+  "code": "AICE-613",
+  "title": "Self-Hosting Mutation-Shape Deadlock",
+  "spec_version": "0.5.0",
+  "claim": "An autonomous self-repair agent reports that it can apply a small, well-understood fix to an existing artifact, and that its self-maintenance capability is operational.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "UNOBSERVED",
+  "observed_evidence": [
+    {
+      "type": "mutation_tool_contract",
+      "detail": "The only authorized write operation reproduces the complete target artifact (full-object replacement); no reachable delta-capable route (apply_patch, range replacement, AST edit, or transactionally assembled chunks) is registered."
+    },
+    {
+      "type": "capacity_preflight",
+      "detail": "A deterministic preflight compared the required full-object payload against the observed output/tool capacity and found the payload exceeds it; the mutation was blocked before any bytes were written, so the target remained intact."
+    },
+    {
+      "type": "bootstrap_dependency",
+      "detail": "Installing a delta-capable primitive requires modifying the oversized writer subsystem itself, which can currently be changed only through the same full-object replacement that also exceeds capacity."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "delta_capable_mutation_path", "detail": "No authorized bounded mutation path is reachable that could materialize the intended delta without reproducing the complete artifact." },
+    { "type": "separately_authorized_bootstrap", "detail": "No separately authorized bounded bootstrap seam exists to introduce delta support without the insufficient full-object form." },
+    { "type": "postimage_readback", "detail": "The requested transition was never materialized; there is no independent readback of a changed target region because the target state is unchanged." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Introduce a bounded, delta-capable mutation primitive through a trusted bootstrap seam whose payload scales with the intended delta rather than the absolute artifact size; bind the real executor to it; apply one real small mutation to a previously blocking target; independently read back the exact changed region; run validators against the post-mutation artifact; and preserve a receipt binding target identity, preimage, delta, mechanism, result, and postimage. Do not merely raise the output limit and retry the same full rewrite, and do not claim success because the patch was described in prose.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "claim": {
+      "autonomous_self_repair_available": true
+    },
+    "requested_change": {
+      "delta_bounded": true,
+      "delta_materially_smaller_than_target": true
+    },
+    "target": {
+      "existing": true,
+      "large_relative_to_authorized_capacity": true
+    },
+    "mutation_protocol": {
+      "authorized_form": "full_object_replacement",
+      "payload_cost_scales_with_target_size": true,
+      "delta_capable_path_reachable": false
+    },
+    "capacity": {
+      "observed": true,
+      "full_object_payload_exceeds_capacity": true
+    },
+    "bootstrap": {
+      "patch_support_required": true,
+      "patch_support_upgrade_requires_same_full_object_form": true,
+      "separately_authorized_bootstrap_available": false
+    },
+    "result": {
+      "mutation_materialized": false,
+      "target_state_changed": false,
+      "self_hosting_path_reachable": false
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. No commit id, path, timestamp, digest, artifact size, token/line count, tool contract, execution trace, or production receipt is asserted as fact. The defect is not a merely-large file, a generic output truncation, or a transient capacity failure: it is the recursive self-hosting deadlock in which installing a delta-capable mutation primitive itself requires the same insufficient full-object mutation form. A fail-closed preflight that leaves the target unchanged is the preferred safety behavior even though the requested mutation remains unmaterialized."
+}

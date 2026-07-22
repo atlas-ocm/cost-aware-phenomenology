@@ -1,12 +1,12 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.4.0",
+  "spec_version": "0.5.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
   "canonical_code_range": [
     "AICE-604",
-    "AICE-612"
+    "AICE-613"
   ],
   "codes": [
     {
@@ -122,6 +122,19 @@
       "trigger_summary": "A conclusion about one actor's path is asserted from a probe of a different actor whose authority, entrypoint, or route materially differs; the claimed actor's path was not exercised and no actor-path equivalence was established, yet the transferred result drives an audit or workflow decision.",
       "default_workflow_effect": [
         "STATE_UNCHANGED"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-613",
+      "title": "Self-Hosting Mutation-Shape Deadlock",
+      "human_alias": "HTTP 613 — Self-Hosting Mutation-Shape Deadlock",
+      "short_description": "A bounded state delta is known, but the only authorized mutation representation requires reproducing the complete target artifact; the full-object payload exceeds an observed hard capacity, no delta-capable path is reachable, and installing one requires modifying — through the same insufficient full-object form — the mutation mechanism itself or another over-capacity artifact.",
+      "trigger_summary": "The intended delta is materially smaller than the target, but full-object replacement is the only authorized mutation form and its payload exceeds an observed capacity; a delta-capable mechanism is absent or unreachable, and upgrading the mutation mechanism recursively requires the same insufficient full-object form with no separately authorized bounded bootstrap, so the required state transition remains unmaterialized.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
       ],
       "default_retryability": "requires_new_evidence",
       "spec_status": "draft"

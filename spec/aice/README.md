@@ -1,15 +1,15 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.4.0. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.5.0. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
-AICE-604 through AICE-612 code set and the machine-readable incident envelope
+AICE-604 through AICE-613 code set and the machine-readable incident envelope
 ([`incident.schema.json`](./incident.schema.json)).
 
 This is **not** an HTTP status-code extension, **not** an IETF standard, and **not**
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
-aliases only. The canonical identifiers are `AICE-604` … `AICE-612`.
+aliases only. The canonical identifiers are `AICE-604` … `AICE-613`.
 
 AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
 Protocols** series — deterministic control protocols for probabilistic software. That
@@ -57,9 +57,9 @@ machine-readable shape.
 
 | Field | Requirement | Meaning |
 |---|---|---|
-| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-612`. Unknown codes MUST be rejected. |
+| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-613`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.4.0`). |
+| `spec_version` | MUST | AICE spec version (`0.5.0`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |
@@ -146,8 +146,9 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
   - [`AICE-610`](./codes/AICE-610.md) — Control Exists, Enforcement Not Found
   - [`AICE-611`](./codes/AICE-611.md) — Operational Reachability Substitution
   - [`AICE-612`](./codes/AICE-612.md) — Actor Path Substitution
+  - [`AICE-613`](./codes/AICE-613.md) — Self-Hosting Mutation-Shape Deadlock
 
-For v0.4 the code set is exactly `AICE-604` … `AICE-612`.
+For v0.5 the code set is exactly `AICE-604` … `AICE-613`.
 
 ## 7. Relationship to CAP
 

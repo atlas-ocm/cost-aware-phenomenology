@@ -1,7 +1,7 @@
 {
   "code": "AICE-611",
   "title": "Operational Reachability Substitution",
-  "spec_version": "0.4.0",
+  "spec_version": "0.5.0",
   "claim": "A self-maintenance workflow is reported operational because its validators, guards, scorer, coder path, verifier path, component tests, and receipts all exist and pass when invoked directly.",
   "narrative_state": "COMPLETE",
   "physical_state": "UNOBSERVED",
