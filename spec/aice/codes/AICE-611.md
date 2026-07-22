@@ -1,6 +1,6 @@
 # AICE-611 — Operational Reachability Substitution
 
-**Unofficial draft (AICE v0.3.0).**
+**Unofficial draft (AICE v0.4.0).**
 
 ## Canonical identifier
 
@@ -306,3 +306,4 @@ conclusion is asserted.
 - [`AICE-606`](./AICE-606.md) — PASS without a verified run.
 - [`AICE-607`](./AICE-607.md) — deployment without an observed production state.
 - [`AICE-610`](./AICE-610.md) — a control the executor is not bound to (a possible cause).
+- [`AICE-612`](./AICE-612.md) — actor path substitution: an operator-path conclusion (including a `NOT_ESTABLISHED` verdict here) MUST NOT be inferred from a different actor's path result.

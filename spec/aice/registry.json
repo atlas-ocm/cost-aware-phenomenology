@@ -1,12 +1,12 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.3.0",
+  "spec_version": "0.4.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
   "canonical_code_range": [
     "AICE-604",
-    "AICE-611"
+    "AICE-612"
   ],
   "codes": [
     {
@@ -110,6 +110,18 @@
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-612",
+      "title": "Actor Path Substitution",
+      "human_alias": "HTTP 612 — Actor Path Substitution",
+      "short_description": "An audit, verifier, test, or diagnostic observes one actor class's reachability, blocking, authorization, or behavior and applies that result to a different actor class without independently testing the second actor's authorized entrypoint, authority boundary, route, or postcondition.",
+      "trigger_summary": "A conclusion about one actor's path is asserted from a probe of a different actor whose authority, entrypoint, or route materially differs; the claimed actor's path was not exercised and no actor-path equivalence was established, yet the transferred result drives an audit or workflow decision.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED"
       ],
       "default_retryability": "requires_new_evidence",
       "spec_status": "draft"

@@ -1,12 +1,12 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
-## Draft Specification v0.3
+## Draft Specification v0.4
 
-> **Status: Draft / Research-only — Version: 0.3.0**
+> **Status: Draft / Research-only — Version: 0.4.0**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
-> the canonical identifiers are `AICE-604` … `AICE-611`.
+> the canonical identifiers are `AICE-604` … `AICE-612`.
 
 **Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
 
@@ -112,6 +112,7 @@ When an AICE incident is emitted:
 | `AICE-609` | HTTP 609 | Consensus Exists, Evidence Not Found | `STATE_UNCHANGED`, `REQUEST_EVIDENCE` |
 | `AICE-610` | HTTP 610 | Control Exists, Enforcement Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-611` | HTTP 611 | Operational Reachability Substitution | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
+| `AICE-612` | HTTP 612 | Actor Path Substitution | `STATE_UNCHANGED` |
 
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
@@ -135,7 +136,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.3.0
+Version: 0.4.0
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

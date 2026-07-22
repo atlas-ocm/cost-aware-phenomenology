@@ -1,0 +1,58 @@
+{
+  "code": "AICE-612",
+  "title": "Actor Path Substitution",
+  "spec_version": "0.4.0",
+  "claim": "An audit exercised only the model/proposer surface, observed that direct execution is denied, and concluded that the authorized operator execution path does not exist.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "UNOBSERVED",
+  "observed_evidence": [
+    {
+      "type": "actor_path_probe",
+      "detail": "The model/proposer surface was probed against the protected executor and correctly returned DENY (BLOCKED_LIVE_AUTHORITY_REQUIRED)."
+    },
+    {
+      "type": "authority_policy",
+      "detail": "Policy assigns propose-only authority to the proposer and execute-after-approval authority to a distinct authorized operator via a separate entrypoint."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "claimed_actor_path_probe", "detail": "The authorized operator's actual route was never exercised; the operator-path result is not established." },
+    { "type": "actor_path_equivalence", "detail": "No evidence establishes that the proposer path and the operator path are equivalent for the conclusion being made." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED"
+  ],
+  "required_action": "Exercise the claimed actor's authorized path independently (operator authorization and, where execution is claimed, operator execution to an independently read-back postcondition), or independently establish actor-path equivalence. Scope every audit conclusion to the actor paths actually observed. Do not grant the proposer operator authority.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "claim": {
+      "operator_path_missing": true
+    },
+    "tested_path": {
+      "actor": "model_proposer",
+      "entrypoint": "proposer_or_model_mcp_surface",
+      "authority": "propose_only",
+      "expected_result": "denied",
+      "observed_result": "denied",
+      "tested": true
+    },
+    "claimed_path": {
+      "actor": "authorized_operator",
+      "entrypoint": "operator_authorized_route",
+      "authority": "execute_after_approval",
+      "tested": false,
+      "result": "not_established"
+    },
+    "relationship": {
+      "actors_distinct": true,
+      "authority_boundaries_distinct": true,
+      "path_equivalence_established": false,
+      "cross_actor_inference_applied": true
+    },
+    "audit_result": {
+      "conclusion_valid": false,
+      "claimed_actor_path_status": "NOT_ESTABLISHED"
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. No commit id, path, timestamp, digest, actor role, or production receipt is asserted. The proposer denial is expected and may demonstrate correct authority separation; the defect is the unsupported transfer of the proposer result to the untested operator path. The operator path is NOT_ESTABLISHED — neither proven missing nor proven reachable."
+}
