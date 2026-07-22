@@ -1,15 +1,15 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.5.0. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.6.0. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
-AICE-604 through AICE-613 code set and the machine-readable incident envelope
+AICE-604 through AICE-614 code set and the machine-readable incident envelope
 ([`incident.schema.json`](./incident.schema.json)).
 
 This is **not** an HTTP status-code extension, **not** an IETF standard, and **not**
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
-aliases only. The canonical identifiers are `AICE-604` … `AICE-613`.
+aliases only. The canonical identifiers are `AICE-604` … `AICE-614`.
 
 AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
 Protocols** series — deterministic control protocols for probabilistic software. That
@@ -57,9 +57,9 @@ machine-readable shape.
 
 | Field | Requirement | Meaning |
 |---|---|---|
-| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-613`. Unknown codes MUST be rejected. |
+| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-614`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.5.0`). |
+| `spec_version` | MUST | AICE spec version (`0.6.0`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |
@@ -147,8 +147,9 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
   - [`AICE-611`](./codes/AICE-611.md) — Operational Reachability Substitution
   - [`AICE-612`](./codes/AICE-612.md) — Actor Path Substitution
   - [`AICE-613`](./codes/AICE-613.md) — Self-Hosting Mutation-Shape Deadlock
+  - [`AICE-614`](./codes/AICE-614.md) — Infrastructure Failure as Semantic Verdict
 
-For v0.5 the code set is exactly `AICE-604` … `AICE-613`.
+For v0.6 the code set is exactly `AICE-604` … `AICE-614`.
 
 ## 7. Relationship to CAP
 

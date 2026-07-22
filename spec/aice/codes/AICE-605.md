@@ -1,6 +1,6 @@
 # AICE-605 — Release Exists, Implementation Not Found
 
-**Unofficial draft (AICE v0.5.0).**
+**Unofficial draft (AICE v0.6.0).**
 
 ## Canonical identifier
 

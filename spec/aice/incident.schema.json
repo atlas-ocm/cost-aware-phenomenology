@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:cap:schema:aice-incident:v0.5",
+  "$id": "urn:cap:schema:aice-incident:v0.6",
   "title": "AICE 6xx Incident Envelope",
-  "description": "Unofficial draft schema (AICE v0.5) for a single AI Chaos Engineering incident. An AICE incident records a discrepancy between narrative_state (what an agent, verifier, orchestrator, or report claims occurred) and physical_state (what is supported by observable events, independently readable artifacts, process receipts, state inspection, or verified postconditions). Canonical codes are AICE-604 through AICE-613. Unknown codes are rejected. The default workflow effect of an unresolved incident is STATE_UNCHANGED, which every incident MUST carry.",
+  "description": "Unofficial draft schema (AICE v0.6) for a single AI Chaos Engineering incident. An AICE incident records a discrepancy between narrative_state (what an agent, verifier, orchestrator, or report claims occurred) and physical_state (what is supported by observable events, independently readable artifacts, process receipts, state inspection, or verified postconditions). Canonical codes are AICE-604 through AICE-614. Unknown codes are rejected. The default workflow effect of an unresolved incident is STATE_UNCHANGED, which every incident MUST carry.",
   "type": "object",
   "required": [
     "code",
@@ -20,7 +20,7 @@
   "additionalProperties": false,
   "properties": {
     "code": {
-      "description": "Canonical AICE identifier. The v0.5 code set is closed to AICE-604..AICE-613; any other value is rejected.",
+      "description": "Canonical AICE identifier. The v0.6 code set is closed to AICE-604..AICE-614; any other value is rejected.",
       "enum": [
         "AICE-604",
         "AICE-605",
@@ -31,7 +31,8 @@
         "AICE-610",
         "AICE-611",
         "AICE-612",
-        "AICE-613"
+        "AICE-613",
+        "AICE-614"
       ]
     },
     "title": {
@@ -41,7 +42,7 @@
     },
     "spec_version": {
       "description": "AICE specification version this envelope conforms to.",
-      "const": "0.5.0"
+      "const": "0.6.0"
     },
     "timestamp": {
       "description": "Optional ISO 8601 date-time at which the incident was emitted. Omit rather than fabricate.",

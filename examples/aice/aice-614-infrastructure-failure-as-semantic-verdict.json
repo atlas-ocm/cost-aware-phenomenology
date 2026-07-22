@@ -1,0 +1,67 @@
+{
+  "code": "AICE-614",
+  "title": "Infrastructure Failure as Semantic Verdict",
+  "spec_version": "0.6.0",
+  "claim": "An independent verifier reviewed the candidate patch and returned a substantive verdict (BLOCKED_SEMANTIC) requiring the workflow to act on verifier criticism.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "verifier_request_envelope",
+      "detail": "The verifier request carried no canonical claim (claim_text absent/empty), so the intended verifier had nothing to review."
+    },
+    {
+      "type": "preflight_trace",
+      "detail": "A frozen timeout policy contradiction blocked the verifier call before any model invocation; no request reached the provider and no response bytes were received or parsed."
+    },
+    {
+      "type": "terminal_normalization",
+      "detail": "The runner collapsed the infrastructure failure (VERIFIER_CLAIM_MISSING) into a generic BLOCKED and the workflow stored it as a semantic VERIFIER_BLOCKED_SEMANTIC attributed to the verifier stage; a repair loop consumed it as substantive criticism and it was written into evidence."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "canonical_claim_delivery", "detail": "No canonical, non-empty claim was delivered to the intended verifier." },
+    { "type": "verifier_response", "detail": "No response bytes were received or attributed to the intended verifier for this attempt; no output was parsed under the verdict contract." },
+    { "type": "completed_semantic_review", "detail": "No completed, attributed, parseable semantic review result exists; the attributed semantic verdict has no supporting evidence." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Separate semantic and infrastructure terminal-result domains; preserve the original infrastructure failure class (VERIFIER_CLAIM_MISSING); require a canonical claim and an attributed, parseable verifier response before any semantic verdict; route the infrastructure failure to infrastructure remediation (fix claim construction and the timeout contract) rather than product repair; and record the semantic status as NOT_ESTABLISHED. Do not infer PASS from the invalid veto, and do not train the repair loop or evidence store on the fabricated criticism.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "claim": {
+      "verifier_review_required": true,
+      "canonical_claim_present": false
+    },
+    "execution": {
+      "verifier_invocation_completed": false,
+      "transport_completed": false,
+      "response_received": false,
+      "response_attributed": false,
+      "output_parsed": false,
+      "semantic_review_completed": false
+    },
+    "infrastructure_result": {
+      "present": true,
+      "failure_class": "VERIFIER_CLAIM_MISSING"
+    },
+    "invalid_normalization": {
+      "semantic_verdict_recorded": true,
+      "recorded_verdict": "VERIFIER_BLOCKED_SEMANTIC",
+      "attributed_to_verifier": true,
+      "mapping_valid": false
+    },
+    "downstream_effect": {
+      "repair_loop_triggered": true,
+      "semantic_evidence_recorded": true
+    },
+    "correct_state": {
+      "semantic_verdict": "absent",
+      "workflow_blocked": true,
+      "semantic_review_status": "NOT_ESTABLISHED"
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. No commit id, path, timestamp, timeout value, model call, verdict, episode count, digest, or production receipt is asserted as fact. The defect is not lack of verifier independence (AICE-608), not a false PASS without a run (AICE-606), not generic end-to-end unreachability (AICE-611), and not cross-actor path substitution (AICE-612): it is the promotion of a non-semantic infrastructure failure (VERIFIER_CLAIM_MISSING) into a semantic verifier verdict attributed to a review that never occurred. The correct replacement for the fabricated veto is NOT_ESTABLISHED, never an inferred PASS. A workflow may remain blocked with no semantic verdict."
+}

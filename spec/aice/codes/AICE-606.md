@@ -1,6 +1,6 @@
 # AICE-606 — PASS Exists, Test Run Not Found
 
-**Unofficial draft (AICE v0.5.0).**
+**Unofficial draft (AICE v0.6.0).**
 
 ## Canonical identifier
 
@@ -71,3 +71,4 @@ workflow_effect: STATE_UNCHANGED, BLOCK_ACCEPTANCE
 
 - [`AICE-608`](./AICE-608.md) — verification lacking independence.
 - [`AICE-609`](./AICE-609.md) — consensus offered in place of evidence.
+- [`AICE-614`](./AICE-614.md) — infrastructure failure recorded as a semantic verifier verdict; unlike a false PASS without a run, its common form is a fabricated negative review.

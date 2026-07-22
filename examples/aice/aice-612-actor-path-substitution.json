@@ -1,7 +1,7 @@
 {
   "code": "AICE-612",
   "title": "Actor Path Substitution",
-  "spec_version": "0.5.0",
+  "spec_version": "0.6.0",
   "claim": "An audit exercised only the model/proposer surface, observed that direct execution is denied, and concluded that the authorized operator execution path does not exist.",
   "narrative_state": "COMPLETE",
   "physical_state": "UNOBSERVED",

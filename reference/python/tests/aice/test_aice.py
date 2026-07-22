@@ -1,11 +1,12 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.5).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.6).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed code set, mandatory STATE_UNCHANGED), version,
 code-range, and schema-$id parity, and the deterministic integrity check
 (registry <-> codes <-> examples <-> links). Includes AICE-610, AICE-611,
-AICE-612, and AICE-613 coverage (with focused AICE-612 cross-actor-inference and
-AICE-613 self-hosting-mutation-deadlock invariants) plus adversarial scratch-copy
+AICE-612, AICE-613, and AICE-614 coverage (with focused AICE-612
+cross-actor-inference, AICE-613 self-hosting-mutation-deadlock, and AICE-614
+infrastructure-vs-semantic-verdict invariants) plus adversarial scratch-copy
 tests that prove the validator detects registry, doc, link, code-range, version,
 and schema-$id tampering.
 """
@@ -28,6 +29,7 @@ EXAMPLE_610 = EXAMPLES_DIR / "aice-610-control-without-enforcement.json"
 EXAMPLE_611 = EXAMPLES_DIR / "aice-611-operational-reachability-substitution.json"
 EXAMPLE_612 = EXAMPLES_DIR / "aice-612-actor-path-substitution.json"
 EXAMPLE_613 = EXAMPLES_DIR / "aice-613-self-hosting-mutation-shape-deadlock.json"
+EXAMPLE_614 = EXAMPLES_DIR / "aice-614-infrastructure-failure-as-semantic-verdict.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
 sys.path.insert(0, str(CHECK_AICE.parent))
@@ -63,7 +65,7 @@ def test_schema_rejects_unknown_code():
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
     example["code"] = "AICE-699"
     errors = list(_validator().iter_errors(example))
-    assert errors, "Schema must reject codes outside AICE-604..AICE-613"
+    assert errors, "Schema must reject codes outside AICE-604..AICE-614"
 
 
 def test_schema_requires_state_unchanged_in_workflow_effect():
@@ -124,22 +126,23 @@ def test_aice_610_example_is_valid():
     assert not errors, [e.message for e in errors]
 
 
-def test_expected_codes_are_closed_at_604_613():
-    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(604, 614)]
-    assert "AICE-612" in check_aice.EXPECTED_CODES
+def test_expected_codes_are_closed_at_604_614():
+    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(604, 615)]
     assert "AICE-613" in check_aice.EXPECTED_CODES
-    assert "AICE-614" not in check_aice.EXPECTED_CODES
-    assert len(check_aice.EXPECTED_CODES) == 10
+    assert "AICE-614" in check_aice.EXPECTED_CODES
+    assert "AICE-615" not in check_aice.EXPECTED_CODES
+    assert len(check_aice.EXPECTED_CODES) == 11
 
 
-def test_schema_accepts_610_through_613_but_rejects_614():
+def test_schema_accepts_610_through_614_but_rejects_615():
     assert not list(_validator().iter_errors(_load_610())), "AICE-610 example must validate"
     assert not list(_validator().iter_errors(_load_611())), "AICE-611 example must validate"
     assert not list(_validator().iter_errors(_load_612())), "AICE-612 example must validate"
     assert not list(_validator().iter_errors(_load_613())), "AICE-613 example must validate"
-    incident = _load_613()
-    incident["code"] = "AICE-614"
-    assert list(_validator().iter_errors(incident)), "AICE-614 must be rejected (closed set)"
+    assert not list(_validator().iter_errors(_load_614())), "AICE-614 example must validate"
+    incident = _load_614()
+    incident["code"] = "AICE-615"
+    assert list(_validator().iter_errors(incident)), "AICE-615 must be rejected (closed set)"
 
 
 def test_registry_and_doc_metadata_agree_for_610():
@@ -159,7 +162,7 @@ def test_610_example_requires_state_unchanged():
     assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
 
 
-def test_existing_examples_remain_valid_under_v0_5():
+def test_existing_examples_remain_valid_under_v0_6():
     for name in (
         "aice-604-metaphysical-artifact.json",
         "aice-605-release-without-implementation.json",
@@ -167,6 +170,7 @@ def test_existing_examples_remain_valid_under_v0_5():
         "aice-611-operational-reachability-substitution.json",
         "aice-612-actor-path-substitution.json",
         "aice-613-self-hosting-mutation-shape-deadlock.json",
+        "aice-614-infrastructure-failure-as-semantic-verdict.json",
     ):
         incident = json.loads((EXAMPLES_DIR / name).read_text(encoding="utf-8"))
         errors = list(_validator().iter_errors(incident))
@@ -489,38 +493,208 @@ def test_613_mutations_invalidate_deadlock_predicate(mutate):
     assert not _aice_613_invariants_ok(incident)
 
 
+# --- AICE-614: Infrastructure Failure as Semantic Verdict ----------------------
+
+AICE_614_TITLE = "Infrastructure Failure as Semantic Verdict"
+
+_SEMANTIC_VERDICTS = {"VERIFIER_PASS", "VERIFIER_NEEDS_FIX", "VERIFIER_BLOCKED_SEMANTIC"}
+
+
+def _load_614():
+    return json.loads(EXAMPLE_614.read_text(encoding="utf-8"))
+
+
+def _aice_614_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-614.
+
+    Not imposed on arbitrary envelopes. The predicate requires an infrastructure
+    failure that was fabricated into an attributed semantic verdict reaching an
+    authoritative surface, with no completed semantic review. A correctly
+    preserved infrastructure result (semantic verdict absent), a real completed
+    semantic review, or a correct NOT_ESTABLISHED status must all break it.
+    """
+    if incident.get("code") != "AICE-614":
+        return True
+    cd = incident.get("code_details", {})
+    claim = cd.get("claim", {})
+    ex = cd.get("execution", {})
+    infra = cd.get("infrastructure_result", {})
+    inv = cd.get("invalid_normalization", {})
+    down = cd.get("downstream_effect", {})
+    correct = cd.get("correct_state", {})
+    effect = incident.get("workflow_effect", [])
+    authoritative_effect = bool(
+        down.get("repair_loop_triggered") or down.get("semantic_evidence_recorded")
+    )
+    return all(
+        [
+            claim.get("verifier_review_required") is True,
+            # no completed semantic review occurred
+            ex.get("semantic_review_completed") is False,
+            ex.get("transport_completed") is False,
+            # a concrete infrastructure failure exists
+            infra.get("present") is True,
+            bool(infra.get("failure_class")),
+            # a semantic verdict was fabricated and attributed to the verifier
+            inv.get("semantic_verdict_recorded") is True,
+            inv.get("recorded_verdict") in _SEMANTIC_VERDICTS,
+            inv.get("attributed_to_verifier") is True,
+            inv.get("mapping_valid") is False,
+            # the false verdict reached an authoritative surface
+            authoritative_effect,
+            # the correct state is absent / NOT_ESTABLISHED, not an inferred PASS
+            correct.get("semantic_verdict") == "absent",
+            correct.get("semantic_review_status") == "NOT_ESTABLISHED",
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_614_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_614()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_614():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-614")
+    assert entry["title"] == AICE_614_TITLE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-614.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-614 — {AICE_614_TITLE}")
+    assert _load_614()["title"] == entry["title"]
+
+
+def test_614_example_requires_state_unchanged():
+    incident = _load_614()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_614_example_blocks_acceptance():
+    incident = _load_614()
+    assert "BLOCK_ACCEPTANCE" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "BLOCK_ACCEPTANCE"]
+    assert not _aice_614_invariants_ok(incident)
+
+
+def test_614_example_is_representative_not_historical():
+    incident = _load_614()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+def test_614_canonical_example_satisfies_invariants():
+    assert _aice_614_invariants_ok(_load_614())
+
+
+def test_614_transport_incomplete_is_the_forbidding_condition():
+    # The canonical example encodes transport_completed=false while a semantic
+    # verdict was recorded — exactly the forbidden mapping.
+    cd = _load_614()["code_details"]
+    assert cd["execution"]["transport_completed"] is False
+    assert cd["invalid_normalization"]["semantic_verdict_recorded"] is True
+    assert cd["invalid_normalization"]["recorded_verdict"] in _SEMANTIC_VERDICTS
+
+
+def test_614_completed_semantic_review_is_not_614():
+    # A real completed semantic review (NEEDS_FIX/BLOCKED_SEMANTIC delivered through
+    # a valid claim + attributed parsed response) is NOT AICE-614.
+    incident = _load_614()
+    cd = incident["code_details"]
+    cd["claim"]["canonical_claim_present"] = True
+    cd["execution"].update(
+        transport_completed=True,
+        response_received=True,
+        response_attributed=True,
+        output_parsed=True,
+        semantic_review_completed=True,
+    )
+    cd["invalid_normalization"]["mapping_valid"] = True
+    assert not _aice_614_invariants_ok(incident)
+
+
+def test_614_preserved_infrastructure_result_is_not_614():
+    # If the infrastructure failure is preserved (no fabricated semantic verdict),
+    # the AICE-614 predicate must not hold — this is the correct fail-closed shape.
+    incident = _load_614()
+    incident["code_details"]["invalid_normalization"]["semantic_verdict_recorded"] = False
+    assert not _aice_614_invariants_ok(incident)
+
+
+def test_614_correct_replacement_is_not_established_not_pass():
+    # The correct replacement for a fabricated veto is NOT_ESTABLISHED, never PASS.
+    incident = _load_614()
+    incident["code_details"]["correct_state"]["semantic_review_status"] = "PASS"
+    incident["code_details"]["correct_state"]["semantic_verdict"] = "VERIFIER_PASS"
+    assert not _aice_614_invariants_ok(incident)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["execution"].__setitem__("semantic_review_completed", True),
+        lambda cd: cd["invalid_normalization"].__setitem__("mapping_valid", True),
+        lambda cd: cd["invalid_normalization"].__setitem__("semantic_verdict_recorded", False),
+        lambda cd: cd["invalid_normalization"].__setitem__("attributed_to_verifier", False),
+        lambda cd: cd["infrastructure_result"].__setitem__("present", False),
+        lambda cd: (
+            cd["downstream_effect"].__setitem__("repair_loop_triggered", False),
+            cd["downstream_effect"].__setitem__("semantic_evidence_recorded", False),
+        ),
+        lambda cd: cd["correct_state"].__setitem__("semantic_verdict", "VERIFIER_NEEDS_FIX"),
+    ],
+    ids=[
+        "review_completed",
+        "mapping_valid",
+        "verdict_not_recorded",
+        "not_attributed_to_verifier",
+        "no_infrastructure_failure",
+        "no_authoritative_downstream_effect",
+        "semantic_verdict_not_absent",
+    ],
+)
+def test_614_mutations_invalidate_predicate(mutate):
+    incident = _load_614()
+    mutate(incident["code_details"])
+    assert not _aice_614_invariants_ok(incident)
+
+
 # --- Version / range / $id parity ---------------------------------------------
 
-def test_spec_version_is_consistently_0_5_0():
+def test_spec_version_is_consistently_0_6_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.5.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.5.0"
-    assert check_aice.EXPECTED_VERSION == "0.5.0"
+    assert registry["spec_version"] == "0.6.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.6.0"
+    assert check_aice.EXPECTED_VERSION == "0.6.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.5.0", ex.name
+        assert data["spec_version"] == "0.6.0", ex.name
 
 
-def test_schema_id_is_v0_5_and_unique():
+def test_schema_id_is_v0_6_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.5"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.6"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.5" in text:
+        if "urn:cap:schema:aice-incident:v0.6" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
 
-def test_registry_canonical_range_is_604_613():
+def test_registry_canonical_range_is_604_614():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
-    assert registry["canonical_code_range"] == ["AICE-604", "AICE-613"]
+    assert registry["canonical_code_range"] == ["AICE-604", "AICE-614"]
 
 
-# --- Adversarial: validator must catch AICE-613 / range / version / $id tampering
+# --- Adversarial: validator must catch AICE-614 / range / version / $id tampering
 
 def _build_scratch(tmp_path: Path) -> Path:
     """Mirror the minimal tree check_aice.py expects (its ROOT = parents[4])."""
@@ -541,30 +715,30 @@ def _registry_path(tmp: Path) -> Path:
     return tmp / "spec" / "aice" / "registry.json"
 
 
-def _tamper_remove_613(tmp: Path) -> None:
+def _tamper_remove_614(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["codes"] = [c for c in data["codes"] if c.get("code") != "AICE-613"]
+    data["codes"] = [c for c in data["codes"] if c.get("code") != "AICE-614"]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _tamper_rename_614(tmp: Path) -> None:
+def _tamper_rename_615(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     for c in data["codes"]:
-        if c.get("code") == "AICE-613":
-            c["code"] = "AICE-614"
+        if c.get("code") == "AICE-614":
+            c["code"] = "AICE-615"
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_delete_doc(tmp: Path) -> None:
-    (tmp / "spec" / "aice" / "codes" / "AICE-613.md").unlink()
+    (tmp / "spec" / "aice" / "codes" / "AICE-614.md").unlink()
 
 
 def _tamper_break_link(tmp: Path) -> None:
-    doc = tmp / "spec" / "aice" / "codes" / "AICE-613.md"
+    doc = tmp / "spec" / "aice" / "codes" / "AICE-614.md"
     doc.write_text(
-        doc.read_text(encoding="utf-8") + "\n[broken](./NONEXISTENT-613.md)\n",
+        doc.read_text(encoding="utf-8") + "\n[broken](./NONEXISTENT-614.md)\n",
         encoding="utf-8",
     )
 
@@ -572,29 +746,29 @@ def _tamper_break_link(tmp: Path) -> None:
 def _tamper_stale_range(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["canonical_code_range"] = ["AICE-604", "AICE-612"]
+    data["canonical_code_range"] = ["AICE-604", "AICE-613"]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_stale_version(tmp: Path) -> None:
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["spec_version"] = "0.4.0"
+    data["spec_version"] = "0.5.0"
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_stale_schema_id(tmp: Path) -> None:
     schema = tmp / "spec" / "aice" / "incident.schema.json"
     data = json.loads(schema.read_text(encoding="utf-8"))
-    data["$id"] = "urn:cap:schema:aice-incident:v0.4"
+    data["$id"] = "urn:cap:schema:aice-incident:v0.5"
     schema.write_text(json.dumps(data), encoding="utf-8")
 
 
 @pytest.mark.parametrize(
     "tamper",
     [
-        _tamper_remove_613,
-        _tamper_rename_614,
+        _tamper_remove_614,
+        _tamper_rename_615,
         _tamper_delete_doc,
         _tamper_break_link,
         _tamper_stale_range,
@@ -603,7 +777,7 @@ def _tamper_stale_schema_id(tmp: Path) -> None:
     ],
     ids=[
         "remove_from_registry",
-        "rename_to_614",
+        "rename_to_615",
         "delete_doc",
         "break_link",
         "stale_code_range",

@@ -1,12 +1,12 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.5.0",
+  "spec_version": "0.6.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
   "canonical_code_range": [
     "AICE-604",
-    "AICE-613"
+    "AICE-614"
   ],
   "codes": [
     {
@@ -132,6 +132,19 @@
       "human_alias": "HTTP 613 — Self-Hosting Mutation-Shape Deadlock",
       "short_description": "A bounded state delta is known, but the only authorized mutation representation requires reproducing the complete target artifact; the full-object payload exceeds an observed hard capacity, no delta-capable path is reachable, and installing one requires modifying — through the same insufficient full-object form — the mutation mechanism itself or another over-capacity artifact.",
       "trigger_summary": "The intended delta is materially smaller than the target, but full-object replacement is the only authorized mutation form and its payload exceeds an observed capacity; a delta-capable mechanism is absent or unreachable, and upgrading the mutation mechanism recursively requires the same insufficient full-object form with no separately authorized bounded bootstrap, so the required state transition remains unmaterialized.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-614",
+      "title": "Infrastructure Failure as Semantic Verdict",
+      "human_alias": "HTTP 614 — Infrastructure Failure as Semantic Verdict",
+      "short_description": "A transport, timeout, configuration, envelope, protocol, runtime, authentication, or other infrastructure failure prevents a verifier from completing a semantic review, but the system records or consumes that non-semantic terminal result as if it were a substantive verifier verdict (e.g. NEEDS_FIX or BLOCKED_SEMANTIC), giving it authority over workflow state, repair loops, evidence, memory, or learning that no completed review ever granted.",
+      "trigger_summary": "A semantic verifier review was required but did not complete; an infrastructure/protocol failure occurred and no valid semantic verdict was established; yet a semantic verdict was fabricated, attributed to the verifier stage, and allowed to affect an authoritative surface, while the original infrastructure failure class was collapsed or misrepresented.",
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "BLOCK_ACCEPTANCE"

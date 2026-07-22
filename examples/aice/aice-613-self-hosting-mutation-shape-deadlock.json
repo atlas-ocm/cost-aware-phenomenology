@@ -1,7 +1,7 @@
 {
   "code": "AICE-613",
   "title": "Self-Hosting Mutation-Shape Deadlock",
-  "spec_version": "0.5.0",
+  "spec_version": "0.6.0",
   "claim": "An autonomous self-repair agent reports that it can apply a small, well-understood fix to an existing artifact, and that its self-maintenance capability is operational.",
   "narrative_state": "COMPLETE",
   "physical_state": "UNOBSERVED",

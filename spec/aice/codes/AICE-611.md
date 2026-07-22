@@ -1,6 +1,6 @@
 # AICE-611 — Operational Reachability Substitution
 
-**Unofficial draft (AICE v0.5.0).**
+**Unofficial draft (AICE v0.6.0).**
 
 ## Canonical identifier
 
@@ -308,3 +308,4 @@ conclusion is asserted.
 - [`AICE-610`](./AICE-610.md) — a control the executor is not bound to (a possible cause).
 - [`AICE-612`](./AICE-612.md) — actor path substitution: an operator-path conclusion (including a `NOT_ESTABLISHED` verdict here) MUST NOT be inferred from a different actor's path result.
 - [`AICE-613`](./AICE-613.md) — self-hosting mutation-shape deadlock: when the end-to-end path is unreachable specifically because the system cannot materialize the bounded mutation required to fix or upgrade its own limiting mechanism, AICE-613 is the first broken edge; report it precisely rather than collapsing it into a generic AICE-611 unobserved-postcondition finding.
+- [`AICE-614`](./AICE-614.md) — infrastructure failure as semantic verdict: an AICE-614 result may cause or coexist with an AICE-611 finding, but converting an infrastructure failure into a semantic verifier verdict is a distinct defect from an unestablished end-to-end path.
