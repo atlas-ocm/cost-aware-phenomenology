@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.2).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.3).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
@@ -7,9 +7,11 @@ Runnable standalone and wired into check_repo.ps1.
 
 Checks:
 - all AICE JSON files parse;
-- the registry code set is exactly AICE-604..AICE-610 with unique codes;
+- the registry code set is exactly AICE-604..AICE-611 with unique codes;
+- the registry spec_version and canonical_code_range match the expected values;
+- the schema $id and spec_version const match the expected values;
 - every registry code has a corresponding codes/AICE-XXX.md document;
-- every code document contains the required normative headings;
+- every code document contains the required normative headings and version marker;
 - example payloads conform to spec/aice/incident.schema.json;
 - example code/title agree with the registry;
 - no example embeds a 64-hex-char digest value (no invented SHA-256);
@@ -34,7 +36,10 @@ SCHEMA_PATH = AICE_SPEC / "incident.schema.json"
 CODES_DIR = AICE_SPEC / "codes"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 
-EXPECTED_CODES = [f"AICE-{n}" for n in range(604, 611)]
+EXPECTED_CODES = [f"AICE-{n}" for n in range(604, 612)]
+EXPECTED_VERSION = "0.3.0"
+EXPECTED_CODE_RANGE = [EXPECTED_CODES[0], EXPECTED_CODES[-1]]
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.3"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",
@@ -89,6 +94,19 @@ def main() -> int:
         except jsonschema.exceptions.SchemaError as exc:
             issues.append(f"incident.schema.json is not valid Draft 2020-12: {exc}")
 
+        if schema.get("$id") != EXPECTED_SCHEMA_ID:
+            issues.append(
+                f"schema $id is {schema.get('$id')!r}; expected {EXPECTED_SCHEMA_ID!r}"
+            )
+        schema_const = (
+            schema.get("properties", {}).get("spec_version", {}).get("const")
+        )
+        if schema_const != EXPECTED_VERSION:
+            issues.append(
+                f"schema spec_version const is {schema_const!r}; "
+                f"expected {EXPECTED_VERSION!r}"
+            )
+
     registry_titles: dict[str, str] = {}
     if registry is not None:
         entries = registry.get("codes", [])
@@ -102,6 +120,18 @@ def main() -> int:
                 f"registry code set is not exactly {EXPECTED_CODES}; got {sorted(codes)}"
             )
 
+        if registry.get("spec_version") != EXPECTED_VERSION:
+            issues.append(
+                f"registry spec_version is {registry.get('spec_version')!r}; "
+                f"expected {EXPECTED_VERSION!r}"
+            )
+        if registry.get("canonical_code_range") != EXPECTED_CODE_RANGE:
+            issues.append(
+                f"registry canonical_code_range is {registry.get('canonical_code_range')!r}; "
+                f"expected {EXPECTED_CODE_RANGE!r}"
+            )
+
+        version_marker = f"AICE v{EXPECTED_VERSION}"
         for code in EXPECTED_CODES:
             code_doc = CODES_DIR / f"{code}.md"
             if not code_doc.exists():
@@ -111,6 +141,8 @@ def main() -> int:
             for heading in REQUIRED_HEADINGS:
                 if heading not in doc_text:
                     issues.append(f"{code}.md missing heading: '{heading}'")
+            if version_marker not in doc_text:
+                issues.append(f"{code}.md missing version marker '{version_marker}'")
 
     # Examples must conform to the schema and agree with the registry.
     if schema is not None:

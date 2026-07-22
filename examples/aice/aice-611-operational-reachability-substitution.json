@@ -1,0 +1,52 @@
+{
+  "code": "AICE-611",
+  "title": "Operational Reachability Substitution",
+  "spec_version": "0.3.0",
+  "claim": "A self-maintenance workflow is reported operational because its validators, guards, scorer, coder path, verifier path, component tests, and receipts all exist and pass when invoked directly.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "UNOBSERVED",
+  "observed_evidence": [
+    {
+      "type": "component_test_pass",
+      "detail": "Component-local tests pass when internal functions are invoked directly by the test harness."
+    },
+    {
+      "type": "component_receipt",
+      "detail": "Validators, guards, scorer, coder path, and verifier path each produce a passing local result in isolation."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "end_to_end_trace", "detail": "No runtime trace shows a real operator-style request traversing entrypoint -> FSM -> scorer -> coder -> verifier -> episode." },
+    { "type": "reachability_proof", "detail": "The declared real entrypoint does not reach the executor: an authorized transition is not wired, so the full chain is not reachable from the real entrypoint." },
+    { "type": "postcondition_readback", "detail": "The required externally observable postcondition has never been produced or independently read back from a real execution." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Execute the authorized path from the real declared entrypoint through the production router/FSM, required controls, and real executor until the required postcondition occurs and is independently read back; bind input, path, result, and postcondition in a durable episode. Static wiring evidence is not sufficient.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "claim": {
+      "operational": true
+    },
+    "local_evidence": {
+      "components_present": true,
+      "validators_passed": true,
+      "component_tests_passed": true,
+      "receipts_present": true
+    },
+    "required_path": {
+      "real_entrypoint_defined": true,
+      "end_to_end_path_required": true,
+      "reachability_established": false,
+      "executed_from_real_entrypoint": false,
+      "subcase": "STRUCTURALLY_UNREACHABLE"
+    },
+    "required_postcondition": {
+      "observed": false,
+      "independently_read_back": false
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. No commit id, file path, timestamp, digest, or production receipt is asserted. The defining defect is the substitution of validated local components for an observed working end-to-end system: direct calls to internal components passed, but the real operator entrypoint could not reach the full workflow and the required postcondition was never observed."
+}
