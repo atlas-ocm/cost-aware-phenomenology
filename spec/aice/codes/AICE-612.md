@@ -288,6 +288,98 @@ auditor from "remediating" a correctly protected system by weakening its authori
 > Do not repair an audit substitution by granting the tested actor the authority of the
 > untested actor.
 
+## Non-normative explanatory model: Algorithmic Solipsism
+
+A lock proves boundary enforcement, not system unavailability.
+
+An automated auditor may incorrectly transform an actor-scoped observation:
+
+> I cannot reach this operation.
+
+into a system-wide conclusion:
+
+> This operation cannot be reached.
+
+This is an actor-context error, not evidence of global unavailability. A denial observed
+for one principal establishes a fact only about that principal, authority context,
+entrypoint, route, environment, and requested postcondition.
+
+For example:
+
+```text
+REACHABLE(model_proposer, direct_executor) = false
+REACHABLE(authorized_operator, approved_route) = NOT_ESTABLISHED
+```
+
+The first result does not determine the second. A correctly denied proposer may demonstrate
+that authority separation is working as designed; it does not demonstrate that no authorized
+operator path exists. In informal terms, the auditor mistakes the limits of its own
+authority context for the limits of the system:
+
+```text
+DENIED_FOR_ME
+  -> incorrectly generalized as
+NONEXISTENT_FOR_ALL
+```
+
+"Algorithmic Solipsism" names this mechanism memorably only; it introduces no new normative
+defect and anthropomorphizes nothing in the normative contract.
+
+## Non-normative remediation hazard: Compliance-Driven Degradation
+
+AICE-612 can become dangerous when an invalid cross-actor conclusion is passed to an
+automated remediation system. A representative failure chain is:
+
+```text
+CORRECT_PROPOSER_DENIAL
+  -> MISCLASSIFIED_AS_OPERATIONAL_UNREACHABILITY
+  -> REACHABILITY_REPAIR_REQUESTED
+  -> AUTHORITY_BOUNDARY_WEAKENED_OR_REMOVED
+  -> PROPOSER_GAINS_EXECUTION
+  -> END_TO_END_PROBE_PASSES
+  -> FORMAL_COMPLIANCE_IMPROVES
+  -> ACTUAL_SYSTEM_SAFETY_DEGRADES
+```
+
+This is *compliance-driven degradation*: the system is modified to satisfy an incorrect
+audit conclusion, and the resulting green path is achieved by destroying a valid authority
+boundary. Do not remediate AICE-612 by:
+
+- granting the tested actor the claimed actor's authority;
+- removing approval requirements;
+- exposing a protected executor directly;
+- merging proposer and operator roles;
+- weakening a control until the original probe passes.
+
+The correct remediation is to test the claimed actor through its own authorized path. A
+successful proposer denial and a successful operator execution are not contradictory:
+
+```text
+PROPOSER_DIRECT_EXECUTION = DENIED
+OPERATOR_AUTHORIZATION    = OBSERVED
+OPERATOR_EXECUTION        = OBSERVED
+POSTCONDITION_READBACK    = OBSERVED
+```
+
+Together, these results may demonstrate correct authority separation. Compliance-Driven
+Degradation is documented here as a remediation hazard within AICE-612, **not** as a new
+incident code; it is not yet a separately observed incident class.
+
+### Field maxims (non-normative)
+
+> A blocked proposer is not a missing operator.
+
+> Reachability evidence does not transfer across authority boundaries.
+
+> A lock proves boundary enforcement, not system unavailability.
+
+### Relationship to adjacent controls
+
+- **AICE-610** asks whether execution can bypass the barrier.
+- **AICE-611** asks whether an authorized actor can traverse the real path.
+- **AICE-612** asks whether the audit tested the same actor about whom it made the
+  conclusion.
+
 ## Example
 
 `REPRESENTATIVE_EXAMPLE` — `NOT_A_VERIFIED_HISTORICAL_INCIDENT`.
