@@ -113,7 +113,8 @@ CAP/
 ├── 04_extensions/                 <- diagnostic add-ons and positioning
 │   ├── looking_glass.md
 │   ├── latent_cause_reconstruction.md
-│   ├── memory_dreaming.md
+│   ├── memory_dreaming/
+│   │   └── framework.md
 │   └── comparative_positioning.md
 ├── 05_applications/               <- applied use cases
 │   └── llm_dialogue_proxy.md
@@ -172,7 +173,7 @@ For a deeper dive, navigate by folder:
 9. Read the full-stack Gold Case: [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md)
 10. Compare CAP against prompt-only, RAG-only, validators, fine-tuning, and hybrid stacks: [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md)
 11. Inspect the current deployable architecture demo: [`04_extensions/deployable_architecture_comparison.md`](./04_extensions/deployable_architecture_comparison.md)
-12. Review the Memory Dreaming ontology and framework: [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md)
+12. Review the Memory Dreaming ontology and framework: [`04_extensions/memory_dreaming/framework.md`](./04_extensions/memory_dreaming/framework.md)
 13. Inspect the LLM dialogue proxy coverage report: [`validation_artifacts/llm_dialogue_proxy/benchmark_report.md`](./validation_artifacts/llm_dialogue_proxy/benchmark_report.md)
 14. Inspect the LLM dialogue benchmark scaffold: [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md)
 15. Inspect the first live LLM dialogue benchmark run: [`validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md`](./validation_artifacts/llm_dialogue_benchmark/model_outputs/comet_silicon_report.md)
@@ -215,7 +216,7 @@ and [`reference/python/cap_lite.py`](./reference/python/cap_lite.py).
 Start with [`01_foundations/thesis.md`](./01_foundations/thesis.md) and [`01_foundations/positioning.md`](./01_foundations/positioning.md). These show what CAP claims and how it relates to Goodman, Varela, Clark, Friston, and Lieder & Griffiths.
 
 **If you are an AI safety or LLM engineer:**
-Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md), and [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md). These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, release-gated memory recompilation, benchmark scaffolding, integration, failure traces, and comparative deployment trade-offs.
+Start with [`05_applications/integration_guide.md`](./05_applications/integration_guide.md), [`reference/python/cap_lite.py`](./reference/python/cap_lite.py), [`05_applications/llm_dialogue_proxy.md`](./05_applications/llm_dialogue_proxy.md), [`examples/anti_self_justification_loop.md`](./examples/anti_self_justification_loop.md), [`gold_cases/anti_self_justification_loop_gold.md`](./gold_cases/anti_self_justification_loop_gold.md), [`trace_library/`](./trace_library/), [`validation_artifacts/llm_dialogue_benchmark/scaffold_report.md`](./validation_artifacts/llm_dialogue_benchmark/scaffold_report.md), [`04_extensions/memory_dreaming/framework.md`](./04_extensions/memory_dreaming/framework.md), and [`04_extensions/comparative_positioning.md`](./04_extensions/comparative_positioning.md). These show how CAP applies to RAG confidence gating, anti-sycophancy, self-audit telemetry, release-gated memory recompilation, benchmark scaffolding, integration, failure traces, and comparative deployment trade-offs.
 
 **If you are a reviewer or grant evaluator:**
 Start with [`PITCH_ONE_PAGER.md`](./PITCH_ONE_PAGER.md), [`03_validation/methodology.md`](./03_validation/methodology.md), [`03_validation/falsifiability.md`](./03_validation/falsifiability.md), [`validation_artifacts/`](./validation_artifacts/), and [`validation_artifacts/case_design_policy.md`](./validation_artifacts/case_design_policy.md). These document what CAP has and has not shown empirically, and how public-facing benchmark cases are kept review-safe.

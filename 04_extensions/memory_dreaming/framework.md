@@ -8,7 +8,7 @@ does not write to canonical memory directly.
 The short form:
 
 ```text
-old memory store + transcripts + COM telemetry
+L0/L1 memory state + transcripts + artifacts + COM telemetry
   -> offline Dream run
   -> candidate memory store + memory diff + review report
   -> verifier / human approval / release gate
@@ -39,10 +39,13 @@ No memory becomes canonical merely because a model compressed it.
 
 | Term | Meaning | Write rule |
 |---|---|---|
+| `RawTraceStore` | Raw session traces, tool traces, and user-visible exchanges | Evidence input; not canon |
 | `CanonicalMemoryStore` | Approved long-lived anchors and their provenance | Read-dominant; updated only by approved diff |
 | `CandidateMemoryStore` | Dream output prepared for review | Writeable by Dream run; not canonical |
-| `QuarantinedMemoryStore` | Contaminated, weak, contradictory, or unsafe nodes | Writeable by verifier; not used as authority |
-| `DeprecatedMemoryLedger` (= `L1-D` Superseded Anchor Ledger in `PDF_spec`) | Superseded or retired anchors kept for audit | Append-only audit surface |
+| `QuarantineLedger` / `L1-Q` | Contaminated, weak, contradictory, or unsafe nodes | No truth authority |
+| `SupersededAnchorLedger` / `L1-D` | Superseded or retired anchors kept for audit | Append-only audit surface |
+| `MemoryDiffLedger` | Explicit proposed operations from the Dream Compiler | Review surface |
+| `DreamReviewReport` | Verifier results, approval status, and blocked items | Gate evidence |
 | `TranscriptTraceSet` | Raw conversations, tool traces, and session references | Read-only input |
 | `ComTelemetrySet` | COM logs, state transitions, validation outcomes | Read-only input |
 
@@ -92,15 +95,16 @@ only after verifier and approval gates pass.
 ### Dream run input
 
 Field names below match the machine-readable schema
-[`../spec/memory_dreaming.schema.json`](../spec/memory_dreaming.schema.json).
+[`../../spec/memory_dreaming/run.schema.json`](../../spec/memory_dreaming/run.schema.json).
 Each `*_refs` field is an array of `source_ref` pointers, not inlined stores.
 
 ```text
 canonical_store_refs
 proposed_store_refs
 quarantined_store_refs
-deprecated_ledger_refs
+superseded_ledger_refs
 session_transcript_refs
+artifact_refs
 com_telemetry_refs
 policy
 ```
@@ -109,7 +113,7 @@ policy
 
 ```text
 candidate_store
-diff
+memory_diff
 review_items
 rejected_items
 telemetry
@@ -117,7 +121,8 @@ telemetry
 
 ### Pipeline
 
-1. Read canonical memory, quarantined memory, transcripts, and COM telemetry.
+1. Read canonical memory, proposed memory, quarantined memory, superseded
+   ledger refs, artifact refs, transcripts, and COM telemetry.
 2. Detect duplicate anchors, stale anchors, contradictions, weak provenance,
    contaminated traces, and unsupported promotions.
 3. Propose explicit diff operations.
@@ -155,9 +160,11 @@ Reconcile is the preferred path when multiple nodes are compatible. It merges
 or de-duplicates without rewriting history.
 
 ```text
-L1-P / approved nodes
+L1-P / compatible nodes
   -> merge / de-dupe / strengthen provenance
-  -> one cleaner approved anchor
+  -> one cleaner proposed anchor
+  -> approval gate
+  -> optional L1-C
 ```
 
 Reconcile must not hide dissenting evidence. If two nodes are only apparently
@@ -237,9 +244,9 @@ Memory Dreaming may not:
 ## Machine-Readable Contract
 
 The corresponding schema is
-[`../spec/memory_dreaming.schema.json`](../spec/memory_dreaming.schema.json).
-It defines a `MemoryDreamingRun` record with candidate store, diff operations,
-review items, verifier outcomes, and approval state.
+[`../../spec/memory_dreaming/run.schema.json`](../../spec/memory_dreaming/run.schema.json).
+It defines a `MemoryDreamingRun` record with candidate store, `memory_diff`
+operations, review items, verifier outcomes, and approval state.
 
 The schema is the enforcement surface for the doc-level invariants in this
 extension. In particular it rejects:
@@ -251,6 +258,9 @@ extension. In particular it rejects:
 - `memory_diff` with `op` in `{keep, reconcile, deprecate, supersede, retcon,
   quarantine}` and no `target_id`;
 - `memory_diff` with `op` in `{supersede, retcon}` and no `proposed_id`;
+- missing `artifact_refs` or `superseded_ledger_refs` in `input`;
+- missing `contradicts`, `supersedes`, `valid_from`, or `valid_until` on a
+  memory node;
 - `input.policy.allow_direct_canonical_write: true`,
   `input.policy.require_provenance: false`, or
   `input.policy.require_approval: false`;
@@ -260,9 +270,9 @@ extension. In particular it rejects:
   empty `approved_diff_indexes`.
 
 A worked example covering all seven diff operations lives at
-[`../examples/memory_dreaming_run_example.json`](../examples/memory_dreaming_run_example.json)
+[`../../examples/memory_dreaming/run_example.json`](../../examples/memory_dreaming/run_example.json)
 and is exercised by
-[`../reference/python/tests/test_memory_dreaming_schema.py`](../reference/python/tests/test_memory_dreaming_schema.py).
+[`../../reference/python/tests/memory_dreaming/test_schema.py`](../../reference/python/tests/memory_dreaming/test_schema.py).
 
 ## Status
 

@@ -1,6 +1,6 @@
 """Tests for the Memory Dreaming schema.
 
-Covers the golden example and the doc-level invariants that the v0.2 schema
+Covers the golden example and the doc-level invariants that the v0.3 schema
 is supposed to enforce:
 
 - candidate_store / rejected_items cannot carry status=approved or status=raw
@@ -15,16 +15,15 @@ is supposed to enforce:
 """
 from __future__ import annotations
 
-import copy
 import json
 from pathlib import Path
 
 import jsonschema
 import pytest
 
-ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "spec" / "memory_dreaming.schema.json"
-EXAMPLE_PATH = ROOT / "examples" / "memory_dreaming_run_example.json"
+ROOT = Path(__file__).resolve().parents[4]
+SCHEMA_PATH = ROOT / "spec" / "memory_dreaming" / "run.schema.json"
+EXAMPLE_PATH = ROOT / "examples" / "memory_dreaming" / "run_example.json"
 
 
 def _load_schema():
@@ -71,14 +70,14 @@ def test_dream_output_rejects_approved_status_in_rejected_items():
 
 def test_memory_diff_requires_provenance():
     run = _load_example()
-    run["output"]["diff"][0]["provenance"] = []
+    run["output"]["memory_diff"][0]["provenance"] = []
     errors = list(_validator().iter_errors(run))
     assert errors, "memory_diff.provenance must have minItems:1"
 
 
 def test_memory_diff_provenance_field_is_required():
     run = _load_example()
-    del run["output"]["diff"][0]["provenance"]
+    del run["output"]["memory_diff"][0]["provenance"]
     errors = list(_validator().iter_errors(run))
     assert errors, "memory_diff must require provenance field"
 
@@ -90,7 +89,7 @@ def test_memory_diff_provenance_field_is_required():
 )
 def test_target_id_required_for_non_rollback_ops(op_index):
     run = _load_example()
-    diff = run["output"]["diff"][op_index]
+    diff = run["output"]["memory_diff"][op_index]
     if "target_id" not in diff:
         pytest.skip(f"example diff[{op_index}] has no target_id to remove")
     del diff["target_id"]
@@ -101,7 +100,7 @@ def test_target_id_required_for_non_rollback_ops(op_index):
 @pytest.mark.parametrize("op_index", [3, 4], ids=["supersede", "retcon"])
 def test_proposed_id_required_for_supersede_and_retcon(op_index):
     run = _load_example()
-    diff = run["output"]["diff"][op_index]
+    diff = run["output"]["memory_diff"][op_index]
     assert "proposed_id" in diff
     del diff["proposed_id"]
     errors = list(_validator().iter_errors(run))
@@ -163,3 +162,30 @@ def test_memory_node_requires_non_empty_provenance():
     run["output"]["candidate_store"][0]["provenance"] = []
     errors = list(_validator().iter_errors(run))
     assert errors, "memory_node.provenance must have minItems:1"
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["contradicts", "supersedes", "valid_from", "valid_until"],
+)
+def test_memory_node_requires_pdf_spec_audit_fields(field):
+    run = _load_example()
+    del run["output"]["candidate_store"][0][field]
+    errors = list(_validator().iter_errors(run))
+    assert errors, f"memory_node must require {field}"
+
+
+def test_dream_input_requires_artifact_refs():
+    run = _load_example()
+    del run["input"]["artifact_refs"]
+    errors = list(_validator().iter_errors(run))
+    assert errors, "DreamRunInput must include artifact_refs"
+
+
+def test_dream_input_uses_superseded_ledger_refs():
+    run = _load_example()
+    run["input"]["deprecated_ledger_refs"] = run["input"].pop(
+        "superseded_ledger_refs"
+    )
+    errors = list(_validator().iter_errors(run))
+    assert errors, "DreamRunInput must use superseded_ledger_refs"

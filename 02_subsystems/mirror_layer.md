@@ -285,7 +285,7 @@ appears only in transcripts; what is a model interpretation; what is
 already canonical; what is conflicting or stale. Without Mirror, Memory
 Dreaming would recompile a fantasy of memory, not memory itself.
 
-See [`../04_extensions/memory_dreaming.md`](../04_extensions/memory_dreaming.md).
+See [`../04_extensions/memory_dreaming/framework.md`](../04_extensions/memory_dreaming/framework.md).
 
 ---
 

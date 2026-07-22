@@ -265,7 +265,7 @@ rollback        candidate or change recognized as harmful;
                 state restored to last approved snapshot
 ```
 
-See [`../04_extensions/memory_dreaming.md`](../04_extensions/memory_dreaming.md)
+See [`../04_extensions/memory_dreaming/framework.md`](../04_extensions/memory_dreaming/framework.md)
 for the dream-side semantics. The gate side is the same regardless of
 producer.
 

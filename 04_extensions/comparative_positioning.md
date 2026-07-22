@@ -220,8 +220,8 @@ Rollback protects canon.
 Release Gate decides.
 ```
 
-See [`memory_dreaming.md`](./memory_dreaming.md) and
-[`../spec/memory_dreaming.schema.json`](../spec/memory_dreaming.schema.json).
+See [`memory_dreaming/framework.md`](./memory_dreaming/framework.md) and
+[`../spec/memory_dreaming/run.schema.json`](../spec/memory_dreaming/run.schema.json).
 
 ---
 

@@ -19,10 +19,16 @@
         "source_id": "L1-Q/quarantined_set/2026-05-17"
       }
     ],
-    "deprecated_ledger_refs": [
+    "superseded_ledger_refs": [
       {
         "source_type": "memory",
         "source_id": "L1-D/superseded_set/2026-05-17"
+      }
+    ],
+    "artifact_refs": [
+      {
+        "source_type": "artifact",
+        "source_id": "validation_artifacts/com_grammar/manifest_v0.json"
       }
     ],
     "session_transcript_refs": [
@@ -70,6 +76,10 @@
           }
         ],
         "evidence_count": 2,
+        "contradicts": [],
+        "supersedes": [],
+        "valid_from": "2026-05-17",
+        "valid_until": null,
         "review_required": false
       },
       {
@@ -86,10 +96,12 @@
           }
         ],
         "evidence_count": 1,
+        "contradicts": [],
         "supersedes": [
           "node_old_project_state_v0"
         ],
         "valid_from": "2026-05-17",
+        "valid_until": null,
         "review_required": true
       },
       {
@@ -106,9 +118,12 @@
           }
         ],
         "evidence_count": 1,
+        "contradicts": [],
         "supersedes": [
           "node_old_decision_v0"
         ],
+        "valid_from": "2026-05-17",
+        "valid_until": null,
         "review_required": true
       },
       {
@@ -128,6 +143,9 @@
         "contradicts": [
           "node_boundary_canonical_v1"
         ],
+        "supersedes": [],
+        "valid_from": "2026-05-17",
+        "valid_until": null,
         "review_required": true
       },
       {
@@ -143,11 +161,14 @@
           }
         ],
         "evidence_count": 1,
+        "contradicts": [],
+        "supersedes": [],
+        "valid_from": "2026-05-01",
         "valid_until": "2026-05-17",
         "review_required": false
       }
     ],
-    "diff": [
+    "memory_diff": [
       {
         "op": "keep",
         "target_id": "node_canonical_keep_v1",
@@ -317,12 +338,18 @@
           }
         ],
         "evidence_count": 1,
+        "contradicts": [
+          "node_boundary_canonical_v1"
+        ],
+        "supersedes": [],
+        "valid_from": null,
+        "valid_until": null,
         "review_required": false
       }
     ],
     "telemetry": [
       "candidate_store_size=5",
-      "diff_count=7",
+      "memory_diff_count=7",
       "quarantined=1",
       "rolled_back_diff_indexes=[6]"
     ]
@@ -337,5 +364,5 @@
     "approver": "release_gate@cap.local",
     "approval_note": "keep / reconcile / deprecate approved; supersede + retcon + quarantine remain in review; rollback executed."
   },
-  "notes": "Reference example covering all seven diff operations. Used by test_memory_dreaming_schema.py and check_repo.ps1 smoke."
+  "notes": "Reference example covering all seven diff operations. Used by memory_dreaming/test_schema.py and check_repo.ps1 smoke."
 }

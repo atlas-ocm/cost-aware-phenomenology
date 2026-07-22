@@ -215,7 +215,7 @@ Full definitions in [`spec/operator_alphabet.json`](./spec/operator_alphabet.jso
 ### Memory Dreaming
 **Short:** Offline memory recompilation under CAP release gates.
 
-**Technical:** Reads canonical memory, transcripts, retrieval traces, and COM telemetry; writes only candidate memory store, memory diff, review items, rejected items, and Dream telemetry. Canonical memory changes only after verifier and approval gates. See [`04_extensions/memory_dreaming.md`](./04_extensions/memory_dreaming.md).
+**Technical:** Reads canonical memory, transcripts, retrieval traces, artifact refs, and COM telemetry; writes only candidate memory store, memory diff, review items, rejected items, and Dream telemetry. Canonical memory changes only after verifier and approval gates. See [`04_extensions/memory_dreaming/framework.md`](./04_extensions/memory_dreaming/framework.md).
 
 **Not to be confused with:** Fine-tuning, RAG retrieval, or automatic memory overwrite. Dreaming proposes memory; it does not canonicalize memory.
 

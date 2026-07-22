@@ -12,9 +12,9 @@ from pathlib import Path
 
 import jsonschema
 
-ROOT = Path(__file__).resolve().parents[3]
-SCHEMA_PATH = ROOT / "spec" / "memory_dreaming.schema.json"
-EXAMPLE_PATH = ROOT / "examples" / "memory_dreaming_run_example.json"
+ROOT = Path(__file__).resolve().parents[4]
+SCHEMA_PATH = ROOT / "spec" / "memory_dreaming" / "run.schema.json"
+EXAMPLE_PATH = ROOT / "examples" / "memory_dreaming" / "run_example.json"
 
 
 def main() -> int:

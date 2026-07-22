@@ -51,7 +51,7 @@ try {
 
     Write-Host ""
     Write-Host "Validating Memory Dreaming example against schema..."
-    python reference\python\scripts\validate_memory_dreaming_example.py
+    python reference\python\scripts\memory_dreaming\validate_example.py
 
     Write-Host ""
     Write-Host "Validating Looking-Glass and Latent Cause case packs..."

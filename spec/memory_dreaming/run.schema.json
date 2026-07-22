@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:cap:schema:memory-dreaming:v0.2",
+  "$id": "urn:cap:schema:memory-dreaming:v0.3",
   "title": "CAP Memory Dreaming Run",
-  "description": "Schema for an offline Memory Dreaming run. Dream output is a candidate artifact and cannot directly update canonical memory. The schema enforces the doc-level invariants: no approved/raw status in dream output, provenance required on every diff, target_id required for reconcile/deprecate/supersede/retcon/quarantine, proposed_id required for supersede/retcon, and consistency between approval.status and approved_diff_indexes.",
+  "description": "Schema for an offline Memory Dreaming run. Dream output is a candidate artifact and cannot directly update canonical memory. The schema follows the PDF_spec DreamRunInput/DreamRunOutput contract with source-ref arrays, artifact_refs, superseded_ledger_refs, memory_diff, full MemoryNode audit fields, provenance on every diff, target_id for keep/reconcile/deprecate/supersede/retcon/quarantine, proposed_id for supersede/retcon, and consistency between approval.status and approved_diff_indexes.",
   "type": "object",
   "required": [
     "run_id",
@@ -68,6 +68,10 @@
         "confidence",
         "provenance",
         "evidence_count",
+        "contradicts",
+        "supersedes",
+        "valid_from",
+        "valid_until",
         "review_required"
       ],
       "additionalProperties": false,
@@ -135,10 +139,16 @@
           }
         },
         "valid_from": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "valid_until": {
-          "type": "string"
+          "type": [
+            "string",
+            "null"
+          ]
         },
         "review_required": {
           "type": "boolean"
@@ -169,7 +179,11 @@
       "type": "object",
       "required": [
         "canonical_store_refs",
+        "proposed_store_refs",
+        "quarantined_store_refs",
+        "superseded_ledger_refs",
         "session_transcript_refs",
+        "artifact_refs",
         "com_telemetry_refs",
         "policy"
       ],
@@ -193,13 +207,19 @@
             "$ref": "#/$defs/source_ref"
           }
         },
-        "deprecated_ledger_refs": {
+        "superseded_ledger_refs": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/source_ref"
           }
         },
         "session_transcript_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/source_ref"
+          }
+        },
+        "artifact_refs": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/source_ref"
@@ -415,7 +435,7 @@
       "type": "object",
       "required": [
         "candidate_store",
-        "diff",
+        "memory_diff",
         "review_items",
         "rejected_items",
         "telemetry"
@@ -428,7 +448,7 @@
             "$ref": "#/$defs/dream_output_node"
           }
         },
-        "diff": {
+        "memory_diff": {
           "type": "array",
           "items": {
             "$ref": "#/$defs/memory_diff"
