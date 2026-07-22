@@ -59,6 +59,43 @@ def test_schema_requires_state_unchanged_in_workflow_effect():
     assert errors, "workflow_effect must contain STATE_UNCHANGED"
 
 
+def _load_604():
+    path = EXAMPLES_DIR / "aice-604-metaphysical-artifact.json"
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def test_digest_value_with_unverified_flag_is_rejected():
+    incident = _load_604()
+    incident["artifact"]["digest"]["value"] = "a" * 64
+    incident["artifact"]["digest"]["verified_against_bytes"] = False
+    errors = list(_validator().iter_errors(incident))
+    assert errors, "digest.value must require verified_against_bytes: true"
+
+
+def test_digest_value_without_verified_flag_is_rejected():
+    incident = _load_604()
+    incident["artifact"]["digest"]["value"] = "a" * 64
+    incident["artifact"]["digest"].pop("verified_against_bytes", None)
+    errors = list(_validator().iter_errors(incident))
+    assert errors, "digest.value present must require the verified_against_bytes field"
+
+
+def test_digest_value_with_verified_flag_is_accepted():
+    incident = _load_604()
+    incident["artifact"]["digest"]["value"] = "a" * 64
+    incident["artifact"]["digest"]["verified_against_bytes"] = True
+    errors = list(_validator().iter_errors(incident))
+    assert not errors, [e.message for e in errors]
+
+
+def test_declared_digest_without_value_remains_valid():
+    incident = _load_604()
+    incident["artifact"]["digest"].pop("value", None)
+    incident["artifact"]["digest"]["verified_against_bytes"] = False
+    errors = list(_validator().iter_errors(incident))
+    assert not errors, [e.message for e in errors]
+
+
 def test_check_aice_reports_no_issues():
     result = subprocess.run(
         [sys.executable, str(CHECK_AICE)],

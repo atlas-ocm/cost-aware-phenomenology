@@ -1,6 +1,6 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.1.0. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.1.1. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
@@ -54,7 +54,7 @@ machine-readable shape.
 |---|---|---|
 | `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-609`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.1.0`). |
+| `spec_version` | MUST | AICE spec version (`0.1.1`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |

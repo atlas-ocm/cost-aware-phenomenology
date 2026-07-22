@@ -37,7 +37,7 @@
     },
     "spec_version": {
       "description": "AICE specification version this envelope conforms to.",
-      "const": "0.1.0"
+      "const": "0.1.1"
     },
     "timestamp": {
       "description": "Optional ISO 8601 date-time at which the incident was emitted. Omit rather than fabricate.",
@@ -201,6 +201,19 @@
             "verified_against_bytes": {
               "description": "True only when the value was recomputed from independently read bytes.",
               "type": "boolean"
+            }
+          },
+          "dependentSchemas": {
+            "value": {
+              "description": "A digest value may be recorded only when it was verified against observed bytes. Presence of value therefore requires verified_against_bytes: true, so no unverified (potentially fabricated) hash can be carried as fact.",
+              "required": [
+                "verified_against_bytes"
+              ],
+              "properties": {
+                "verified_against_bytes": {
+                  "const": true
+                }
+              }
             }
           }
         }

@@ -1,7 +1,7 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
 ## Draft Specification v0.1
 
-> **Status: Draft / Research-only — Version: 0.1.0**
+> **Status: Draft / Research-only — Version: 0.1.1**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
@@ -112,7 +112,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.1.0
+Version: 0.1.1
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

@@ -1,6 +1,6 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.1.0",
+  "spec_version": "0.1.1",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
