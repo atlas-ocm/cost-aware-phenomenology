@@ -11,6 +11,11 @@ This is **not** an HTTP status-code extension, **not** an IETF standard, and **n
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
 aliases only. The canonical identifiers are `AICE-604` … `AICE-609`.
 
+AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
+Protocols** series — deterministic control protocols for probabilistic software. That
+series name is a non-normative parent-series label; it is not an expansion of the
+acronym `AICE` and does not change the machine namespace, which remains `AICE`.
+
 The key words **MUST**, **MUST NOT**, **SHOULD**, and **MAY** in this document are to
 be interpreted in their ordinary RFC-style normative sense, with the explicit caveat
 that this is an unofficial draft and imposes no obligation outside a system that

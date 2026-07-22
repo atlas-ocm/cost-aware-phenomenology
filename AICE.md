@@ -8,6 +8,20 @@
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
 > the canonical identifiers are `AICE-604` … `AICE-609`.
 
+**Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
+
+> Deterministic control protocols for probabilistic software.
+
+Field maxim (non-normative):
+
+> Reality checks for software that can confidently invent its own execution history.
+
+AICE 6xx is the first incident family in the **AI Chaos Control Protocols** series — the
+umbrella name for the evidence-gated, postcondition-checked control mechanisms this
+repository develops. "AI Chaos Control Protocols" is a series/field name; it is **not**
+an expansion of the acronym `AICE`, and it introduces no competing abbreviation. The
+machine and incident-family namespace remains `AICE`.
+
 AICE (AI Chaos Engineering) classifies failures in agentic systems where the
 **narrative state** claims that work is complete, but the required observable event,
 evidence chain, or physical postcondition is **absent or contradictory**.
