@@ -1,12 +1,12 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.1.1",
+  "spec_version": "0.2.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
   "canonical_code_range": [
     "AICE-604",
-    "AICE-609"
+    "AICE-610"
   ],
   "codes": [
     {
@@ -84,6 +84,19 @@
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "REQUEST_EVIDENCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-610",
+      "title": "Control Exists, Enforcement Not Found",
+      "human_alias": "HTTP 610 — Control Exists, Enforcement Not Found",
+      "short_description": "A control, guardrail, policy object, safety capsule, or approval result physically exists and may validate, but the real execution path is not causally bound to it, so it enforces nothing it is claimed to govern.",
+      "trigger_summary": "Control present and validated, yet the governed action can proceed without consuming the control result; a bypass, alternate route, or disconnected consumer is observed, so the enforcement postcondition is absent.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
       ],
       "default_retryability": "requires_new_evidence",
       "spec_status": "draft"

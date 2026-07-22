@@ -1,6 +1,6 @@
 # AICE-609 — Consensus Exists, Evidence Not Found
 
-**Unofficial draft (AICE v0.1.1).**
+**Unofficial draft (AICE v0.2.0).**
 
 ## Canonical identifier
 

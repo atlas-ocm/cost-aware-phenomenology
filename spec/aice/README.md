@@ -1,15 +1,15 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.1.1. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.2.0. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
-AICE-604 through AICE-609 code set and the machine-readable incident envelope
+AICE-604 through AICE-610 code set and the machine-readable incident envelope
 ([`incident.schema.json`](./incident.schema.json)).
 
 This is **not** an HTTP status-code extension, **not** an IETF standard, and **not**
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
-aliases only. The canonical identifiers are `AICE-604` … `AICE-609`.
+aliases only. The canonical identifiers are `AICE-604` … `AICE-610`.
 
 AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
 Protocols** series — deterministic control protocols for probabilistic software. That
@@ -57,9 +57,9 @@ machine-readable shape.
 
 | Field | Requirement | Meaning |
 |---|---|---|
-| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-609`. Unknown codes MUST be rejected. |
+| `code` | MUST | Canonical identifier, one of `AICE-604`…`AICE-610`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.1.1`). |
+| `spec_version` | MUST | AICE spec version (`0.2.0`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |
@@ -143,8 +143,9 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
   - [`AICE-607`](./codes/AICE-607.md) — Deployment Exists, Production Not Found
   - [`AICE-608`](./codes/AICE-608.md) — Verification Exists, Independence Not Found
   - [`AICE-609`](./codes/AICE-609.md) — Consensus Exists, Evidence Not Found
+  - [`AICE-610`](./codes/AICE-610.md) — Control Exists, Enforcement Not Found
 
-For v0.1 the code set is exactly `AICE-604` … `AICE-609`.
+For v0.2 the code set is exactly `AICE-604` … `AICE-610`.
 
 ## 7. Relationship to CAP
 

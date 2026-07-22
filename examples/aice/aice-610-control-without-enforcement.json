@@ -1,0 +1,44 @@
+{
+  "code": "AICE-610",
+  "title": "Control Exists, Enforcement Not Found",
+  "spec_version": "0.2.0",
+  "claim": "A validated safety/coder capsule governs the coder execution path; the protected action is reported as safely controlled.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "control_object",
+      "detail": "A safety/coder capsule was constructed and passed its own validation."
+    },
+    {
+      "type": "control_validation_receipt",
+      "detail": "The capsule validated successfully as a standalone object."
+    },
+    {
+      "type": "runtime_trace",
+      "detail": "The observed coder execution path reached the protected action through an alternate route that never read the capsule result."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "enforcement_binding", "detail": "No observation shows the real executor consuming the capsule result before the protected action." },
+    { "type": "fail_closed_receipt", "detail": "No evidence that a missing or invalid capsule blocks the protected action; the action can proceed regardless." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Bind the protected action to the control: require the real executor to consume the capsule result and fail closed when it is missing or invalid, then re-observe the actual execution path.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "control": {
+      "present": true,
+      "validated": true
+    },
+    "execution": {
+      "expected_to_consume_control": true,
+      "consumed_control": false,
+      "bypass_observed": true
+    }
+  },
+  "notes": "Representative, sanitized example — not a verified historical record. No third-party commit id, file path, timestamp, or digest is asserted. The control exists and validates, but the real execution path is not causally bound to it, so enforcement is unproven and STATE_UNCHANGED holds."
+}
