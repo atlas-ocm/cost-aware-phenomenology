@@ -1,6 +1,6 @@
 # AICE-606 — PASS Exists, Test Run Not Found
 
-**Unofficial draft (AICE v0.6.0).**
+**Unofficial draft (AICE v0.7.0).**
 
 ## Canonical identifier
 

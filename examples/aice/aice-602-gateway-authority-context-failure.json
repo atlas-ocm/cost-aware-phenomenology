@@ -1,0 +1,75 @@
+{
+  "code": "AICE-602",
+  "title": "Gateway Authority Context Failure",
+  "spec_version": "0.7.0",
+  "claim": "A hosted analysis gateway correctly governs authorized incident-response forensic analysis of real attack artifacts.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "public_source",
+      "detail": "Two official Hugging Face sources (a July 2026 security-incident disclosure and a July 2026 self-hosting guide) state that forensic analysis required submitting large volumes of real attack commands, exploit payloads, and command-and-control artifacts, and that those requests were blocked by the commercial providers' safety guardrails."
+    },
+    {
+      "type": "authority_context",
+      "detail": "The blocked party was the operator's own incident-response function analyzing an attack against its own infrastructure; the authorization was organizational and bounded to the active incident, not merely asserted in prompt text."
+    },
+    {
+      "type": "alternate_path_readback",
+      "detail": "The forensic analysis was instead completed on GLM 5.2, an open-weight model, running on the operator's own infrastructure; the sources attribute the hosted refusal to guardrails that cannot distinguish an incident responder from an attacker."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "consumed_actor_context",
+      "detail": "No trusted channel is established by which the commercial-API gateway could receive and consume the responder's authenticated identity, delegated authority, and bounded forensic purpose; the decision was applied on content shape alone (subform CONTEXT_REQUIRED_BUT_NOT_ESTABLISHABLE)."
+    },
+    {
+      "type": "authority_aware_acceptance",
+      "detail": "No evidence establishes that the hosted path correctly governs the incident-response operational class; acceptance of the hosted gateway as authority-aware is not supported."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Establish a bounded trusted responder path (authenticated identity, explicit delegated authority, bounded purpose, target and environment scope, capability-specific permission, an isolated analysis lane, and payload interpretation separated from payload execution) whose gateway materially consumes the actor's authority context. Until such a control run is independently observed, record the hosted path as NOT accepted for the incident-response operational class. Do not accept a prompt-only role assertion as authority, and do not merge separate control planes into a single-gateway inversion claim.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "reviewed_action": {
+      "security_relevant": true,
+      "operation_kind": "forensic_artifact_analysis",
+      "operation_within_authority": true
+    },
+    "actor": {
+      "identity_established": true,
+      "role": "incident_responder",
+      "authority_established": true,
+      "authority_self_declared_only": false
+    },
+    "scope": {
+      "purpose_bounded": true,
+      "target_bounded": true,
+      "analysis_environment_bounded": true
+    },
+    "gateway": {
+      "decision_applied": true,
+      "actor_context_required": true,
+      "actor_context_consumed": false,
+      "content_shape_used_as_authority_proxy": true
+    },
+    "context_failure_subform": "CONTEXT_REQUIRED_BUT_NOT_ESTABLISHABLE",
+    "decision": {
+      "authorized_action_denied": true,
+      "untrusted_action_admitted": false,
+      "denial_operationally_effective": true
+    },
+    "authority_context_failure_mode": "AUTHORIZED_DENIAL",
+    "result": {
+      "hosted_analysis_path_accepted": false,
+      "alternate_controlled_path_required": true,
+      "authority_aware_governance_established": false
+    }
+  },
+  "notes": "Historical classification: VERIFIED_PUBLIC_HISTORICAL_SCOPE (narrow) for the authorized-denial predicate only. Two official Hugging Face primary sources support exactly this: a hosted forensic-analysis path was blocked because its safety layer could not distinguish an authorized incident responder processing real attack artifacts from an attacker, and the operator switched to a locally controlled GLM 5.2 path. NOT claimed as fact: which commercial provider refused (the sources name none); that a signed actor-context field was supplied and ignored (this is subform CONTEXT_REQUIRED_BUT_NOT_ESTABLISHABLE, not CONTEXT_AVAILABLE_NOT_CONSUMED); that the same gateway admitted the original attacker; that this is a full authority inversion or one inverted gateway; that all providers behaved identically; any request id, timestamp, model prompt, exact refusal text, payload, credential, hash, commit, gateway log, or IAM record. The offensive-evaluation asymmetry reported elsewhere is a SEPARATE_CONTROL_PLANE_CONTRAST whose primary source was not independently retrievable in this build and is therefore not encoded here. This is not a control bypass (AICE-610), not a cross-actor audit inference (AICE-612), and not a fabricated verdict from an infrastructure failure (AICE-614): it is an authoritative gateway decision made without the actor authority context required to interpret the request."
+}

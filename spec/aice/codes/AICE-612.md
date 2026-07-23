@@ -1,6 +1,6 @@
 # AICE-612 — Actor Path Substitution
 
-**Unofficial draft (AICE v0.6.0).**
+**Unofficial draft (AICE v0.7.0).**
 
 ## Canonical identifier
 
@@ -403,6 +403,9 @@ historical conclusion is asserted as fact.
 
 ## Related codes
 
+- [`AICE-602`](./AICE-602.md) — a real gateway collapses the actor's authority context
+  inside its own decision; AICE-612 instead transfers one actor's path evidence to a
+  different actor without a real gateway decision.
 - [`AICE-608`](./AICE-608.md) — verification lacking independence.
 - [`AICE-610`](./AICE-610.md) — a control the executor is not bound to (runtime enforcement).
 - [`AICE-611`](./AICE-611.md) — operational reachability of the claimed path not established.

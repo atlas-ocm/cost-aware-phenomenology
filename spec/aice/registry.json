@@ -1,14 +1,45 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.6.0",
+  "spec_version": "0.7.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
-  "canonical_code_range": [
+  "canonical_defined_set": [
+    "AICE-602",
     "AICE-604",
+    "AICE-605",
+    "AICE-606",
+    "AICE-607",
+    "AICE-608",
+    "AICE-609",
+    "AICE-610",
+    "AICE-611",
+    "AICE-612",
+    "AICE-613",
     "AICE-614"
   ],
+  "unassigned_codes": [
+    "AICE-600",
+    "AICE-601",
+    "AICE-603"
+  ],
+  "set_topology": "closed-sparse",
+  "set_note": "The defined set is closed but intentionally sparse. AICE-600, AICE-601, and AICE-603 are UNASSIGNED — no observed incident class yet — not reserved for predetermined meanings. A gap in the registry is not missing specification; it is missing evidence. The set is not a contiguous range: there is no defined AICE-603, so no 'AICE-602..AICE-614' claim is valid. Adding a code still requires a normative versioned change.",
   "codes": [
+    {
+      "code": "AICE-602",
+      "title": "Gateway Authority Context Failure",
+      "human_alias": "HTTP 602 — Bad Gateway",
+      "machine_name": "GATEWAY_AUTHORITY_CONTEXT_FAILURE",
+      "short_description": "A gateway, safety layer, policy engine, model-access layer, or approval service makes a security-relevant decision from the shape or content of a request while failing to establish, preserve, or consume the actor authority context required to interpret it, so an authorized action is denied or an unauthorized action is admitted.",
+      "trigger_summary": "An authoritative gateway decision governs a security-relevant path for an actor whose authorization and bounded purpose are independently established, but the required actor/authority/purpose/provenance/target/incident-state context was unavailable, ignored, collapsed, or replaced by content-shape as an authority proxy, yielding an authority-incorrect admit or deny with a real operational effect. Payload similarity is not actor equivalence; prompt-declared authority is not established authority.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
     {
       "code": "AICE-604",
       "title": "Hash Exists, Reality Not Found",

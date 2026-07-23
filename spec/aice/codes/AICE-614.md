@@ -1,6 +1,6 @@
 # AICE-614 — Infrastructure Failure as Semantic Verdict
 
-**Unofficial draft (AICE v0.6.0).**
+**Unofficial draft (AICE v0.7.0).**
 
 ## Canonical identifier
 
@@ -679,6 +679,9 @@ fact.
 
 ## Related codes
 
+- [`AICE-602`](./AICE-602.md) — a real gateway decision made with the wrong security
+  ontology (authority-blind); AICE-614 is the case where no valid gateway/verifier opinion
+  exists at all yet one is fabricated from an infrastructure failure.
 - [`AICE-606`](./AICE-606.md) — a PASS claimed without an observed run (614 is the
   inverse-and-adjacent case: a real failure re-identified as a semantic verdict,
   commonly a fabricated NEEDS_FIX rather than a false PASS).

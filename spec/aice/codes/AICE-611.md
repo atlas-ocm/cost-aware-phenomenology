@@ -1,6 +1,6 @@
 # AICE-611 — Operational Reachability Substitution
 
-**Unofficial draft (AICE v0.6.0).**
+**Unofficial draft (AICE v0.7.0).**
 
 ## Canonical identifier
 

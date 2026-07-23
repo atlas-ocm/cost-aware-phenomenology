@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.6).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.7).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
 Runnable standalone and wired into check_repo.ps1.
 
+The v0.7 code set is a CLOSED but SPARSE set: AICE-602 and AICE-604..AICE-614.
+AICE-600, AICE-601, and AICE-603 are unassigned. Membership is checked by exact
+set comparison, never derived from a numeric min/max range, so the sparse set is
+not silently treated as the contiguous range AICE-602..AICE-614.
+
 Checks:
 - all AICE JSON files parse;
-- the registry code set is exactly AICE-604..AICE-614 with unique codes;
-- the registry spec_version and canonical_code_range match the expected values;
+- the registry defined-code set is exactly {AICE-602, AICE-604..AICE-614}, unique;
+- the registry declares the unassigned set {AICE-600, AICE-601, AICE-603};
+- no registry entry or code document exists for an unassigned code;
+- the registry carries no contiguity-promising `canonical_code_range` field;
+- registry entries that declare a machine_name have it present in their code doc;
+- the registry spec_version matches the expected value;
 - the schema $id and spec_version const match the expected values;
-- every registry code has a corresponding codes/AICE-XXX.md document;
+- every defined registry code has a corresponding codes/AICE-XXX.md document;
 - every code document contains the required normative headings and version marker;
 - example payloads conform to spec/aice/incident.schema.json;
 - example code/title agree with the registry;
@@ -36,10 +45,11 @@ SCHEMA_PATH = AICE_SPEC / "incident.schema.json"
 CODES_DIR = AICE_SPEC / "codes"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 
-EXPECTED_CODES = [f"AICE-{n}" for n in range(604, 615)]
-EXPECTED_VERSION = "0.6.0"
-EXPECTED_CODE_RANGE = [EXPECTED_CODES[0], EXPECTED_CODES[-1]]
-EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.6"
+# Closed but sparse: an explicit set, never a numeric min/max range.
+EXPECTED_CODES = ["AICE-602"] + [f"AICE-{n}" for n in range(604, 615)]
+EXPECTED_UNASSIGNED = ["AICE-600", "AICE-601", "AICE-603"]
+EXPECTED_VERSION = "0.7.0"
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.7"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",
@@ -115,20 +125,64 @@ def main() -> int:
 
         if len(codes) != len(set(codes)):
             issues.append("registry contains duplicate codes")
-        if sorted(c for c in codes if c) != EXPECTED_CODES:
+        # Exact sparse-set membership — NOT derived from a numeric min/max range.
+        if sorted(c for c in codes if c) != sorted(EXPECTED_CODES):
             issues.append(
-                f"registry code set is not exactly {EXPECTED_CODES}; got {sorted(codes)}"
+                f"registry defined-code set is not exactly {sorted(EXPECTED_CODES)}; "
+                f"got {sorted(codes)}"
             )
+
+        declared_set = registry.get("canonical_defined_set")
+        if declared_set is None:
+            issues.append("registry is missing 'canonical_defined_set'")
+        elif sorted(declared_set) != sorted(EXPECTED_CODES):
+            issues.append(
+                f"registry canonical_defined_set is {sorted(declared_set)}; "
+                f"expected {sorted(EXPECTED_CODES)}"
+            )
+
+        declared_unassigned = registry.get("unassigned_codes")
+        if declared_unassigned is None:
+            issues.append("registry is missing 'unassigned_codes'")
+        elif sorted(declared_unassigned) != sorted(EXPECTED_UNASSIGNED):
+            issues.append(
+                f"registry unassigned_codes is {sorted(declared_unassigned)}; "
+                f"expected {sorted(EXPECTED_UNASSIGNED)}"
+            )
+
+        # The set is sparse and closed: a contiguity-promising range field is a false claim.
+        if "canonical_code_range" in registry:
+            issues.append(
+                "registry declares 'canonical_code_range' (a contiguity claim); "
+                "the defined set is sparse and must use 'canonical_defined_set'"
+            )
+
+        # No defined code may also be listed as unassigned, and no unassigned code
+        # may have a registry entry or a code document.
+        defined_codes = {c for c in codes if c}
+        for code in EXPECTED_UNASSIGNED:
+            if code in defined_codes:
+                issues.append(f"unassigned code {code} has a registry entry")
+            if (CODES_DIR / f"{code}.md").exists():
+                issues.append(f"unassigned code {code} has a placeholder document")
+
+        # Machine-name parity: an entry declaring a machine_name must have it in its doc.
+        for entry in entries:
+            machine_name = entry.get("machine_name")
+            code = entry.get("code")
+            if machine_name and code:
+                code_doc = CODES_DIR / f"{code}.md"
+                if code_doc.exists() and machine_name not in code_doc.read_text(
+                    encoding="utf-8"
+                ):
+                    issues.append(
+                        f"{code}.md does not contain registry machine_name {machine_name!r}"
+                    )
 
         if registry.get("spec_version") != EXPECTED_VERSION:
             issues.append(
                 f"registry spec_version is {registry.get('spec_version')!r}; "
                 f"expected {EXPECTED_VERSION!r}"
-            )
-        if registry.get("canonical_code_range") != EXPECTED_CODE_RANGE:
-            issues.append(
-                f"registry canonical_code_range is {registry.get('canonical_code_range')!r}; "
-                f"expected {EXPECTED_CODE_RANGE!r}"
             )
 
         version_marker = f"AICE v{EXPECTED_VERSION}"

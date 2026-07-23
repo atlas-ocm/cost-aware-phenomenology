@@ -1,12 +1,13 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
-## Draft Specification v0.6
+## Draft Specification v0.7
 
-> **Status: Draft / Research-only — Version: 0.6.0**
+> **Status: Draft / Research-only — Version: 0.7.0**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
-> the canonical identifiers are `AICE-604` … `AICE-614`.
+> the canonical defined set is closed but sparse — `AICE-602` and `AICE-604` … `AICE-614`
+> (`AICE-600`, `AICE-601`, and `AICE-603` are unassigned).
 
 **Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
 
@@ -104,6 +105,7 @@ When an AICE incident is emitted:
 
 | Code | Alias | Title | Default effect |
 |---|---|---|---|
+| `AICE-602` | HTTP 602 (Bad Gateway) | Gateway Authority Context Failure | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-604` | HTTP 604 | Hash Exists, Reality Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-605` | HTTP 605 | Release Exists, Implementation Not Found | `STATE_UNCHANGED`, `BLOCK_RELEASE` |
 | `AICE-606` | HTTP 606 | PASS Exists, Test Run Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
@@ -118,6 +120,12 @@ When an AICE incident is emitted:
 
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
+
+The defined set is **closed but sparse**: `AICE-602` and `AICE-604` … `AICE-614`.
+`AICE-600`, `AICE-601`, and `AICE-603` are **unassigned** — no observed incident class yet,
+not reserved for predetermined meanings. There is no defined `AICE-603`, so the set is
+**not** the contiguous range `AICE-602..AICE-614`. A gap in the registry is not missing
+specification; it is missing evidence.
 
 On verifier independence (`AICE-608`) — field maxim, non-normative:
 
@@ -138,7 +146,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.6.0
+Version: 0.7.0
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

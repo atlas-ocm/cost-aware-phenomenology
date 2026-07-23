@@ -1,6 +1,6 @@
 # AICE-610 — Control Exists, Enforcement Not Found
 
-**Unofficial draft (AICE v0.6.0).**
+**Unofficial draft (AICE v0.7.0).**
 
 ## Canonical identifier
 
@@ -167,6 +167,9 @@ The example is labeled representative; no third-party commit, path, or digest is
 
 ## Related codes
 
+- [`AICE-602`](./AICE-602.md) — an enforced-but-authority-blind gateway decision; AICE-610
+  is the complementary case where the control is not causally bound to the executor and can
+  be bypassed.
 - [`AICE-605`](./AICE-605.md) — release without an observed implementation delta.
 - [`AICE-606`](./AICE-606.md) — PASS without a verified run.
 - [`AICE-608`](./AICE-608.md) — verification lacking independence.

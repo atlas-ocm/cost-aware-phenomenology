@@ -1,7 +1,7 @@
 {
   "code": "AICE-614",
   "title": "Infrastructure Failure as Semantic Verdict",
-  "spec_version": "0.6.0",
+  "spec_version": "0.7.0",
   "claim": "An independent verifier reviewed the candidate patch and returned a substantive verdict (BLOCKED_SEMANTIC) requiring the workflow to act on verifier criticism.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",
