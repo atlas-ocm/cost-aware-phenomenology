@@ -1,0 +1,57 @@
+{
+  "code": "AICE-616",
+  "title": "Baseline Diff Conflation",
+  "spec_version": "0.8.0",
+  "claim": "The independent verifier reviewed and voted on exactly the current episode's change.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "review_payload_source",
+      "detail": "The authoritative verifier review payload was built from a repository-relative baseline diff (git diff HEAD) rather than from the exact current-episode preimage-to-postimage delta."
+    },
+    {
+      "type": "baseline_contamination",
+      "detail": "The target was dirty versus HEAD: prior accepted uncommitted bytes not authored by the current episode were included in the payload and presented as part of the current episode."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "episode_delta_binding",
+      "detail": "No normalized episode preimage-to-postimage delta was constructed and used as the authoritative review payload; the current episode identity owns only a subset of the reviewed bytes."
+    },
+    {
+      "type": "episode_scoped_verdict",
+      "detail": "No evidence that the verifier verdict authorizes only the current episode; the verdict may reflect non-episode bytes."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Construct the authoritative review payload from the exact episode preimage and postimage as a normalization-aware unified delta; expose its kind and digest; send only that delta to the verifier. Retain the repository-relative diff as non-authoritative diagnostics. Bind preimage, postimage, patch, normalized episode-delta, scope, job, attempt, and target identities into durable evidence. Do not accept the candidate until the review input is rebound to the exact episode delta.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "review_payload": {
+      "derived_from": "GIT_DIFF_AGAINST_HEAD",
+      "equals_normalized_episode_delta": false
+    },
+    "target": {
+      "dirty_vs_head": true,
+      "contains_non_episode_bytes": true
+    },
+    "episode": {
+      "owns_only_current_delta": true
+    },
+    "conflation": {
+      "authority_affecting": true,
+      "verifier_reviews_non_episode_bytes": true,
+      "verifier_independent": true
+    },
+    "correct_terminal": {
+      "required_payload": "NORMALIZED_EPISODE_PREIMAGE_TO_POSTIMAGE_DELTA",
+      "repo_diff_retained_as_diagnostic_only": true
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. The class governs review-input identity (which exact bytes the verifier reviews) and was distilled from internal CAP Processor forensic evidence; no commit id, path, digest, receipt, timestamp, or production landing is asserted as canonical fact. verifier_independent is true to show AICE-616 can occur even with a fully independent verifier that simply receives the wrong payload — so this is NOT AICE-608 (independence), NOT AICE-609 (consensus without evidence), and NOT AICE-615 (rollback-restore identity): it is evidence-object ownership, where the payload includes bytes not authored by the episode being decided. REPOSITORY_DIFF does not imply CURRENT_EPISODE_DELTA. Part of the non-normative EPISODE_EXACT_IDENTITY_BINDING family with AICE-615; the family has no numeric code."
+}

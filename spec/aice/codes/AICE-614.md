@@ -1,6 +1,6 @@
 # AICE-614 — Infrastructure Failure as Semantic Verdict
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 
@@ -691,3 +691,6 @@ fact.
   cause or coexist with it).
 - [`AICE-612`](./AICE-612.md) — evidence transferred across actor scope (614
   transfers failure identity across epistemic type instead).
+- [`AICE-618`](./AICE-618.md) — a required verifier control made unreachable by a
+  role-eligibility error; infrastructure retries during its repair are AICE-614's
+  concern, not AICE-618's.

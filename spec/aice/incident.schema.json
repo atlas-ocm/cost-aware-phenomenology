@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:cap:schema:aice-incident:v0.7",
+  "$id": "urn:cap:schema:aice-incident:v0.8",
   "title": "AICE 6xx Incident Envelope",
-  "description": "Unofficial draft schema (AICE v0.7) for a single AI Chaos Engineering incident. An AICE incident records a discrepancy between narrative_state (what an agent, verifier, orchestrator, or report claims occurred) and physical_state (what is supported by observable events, independently readable artifacts, process receipts, state inspection, or verified postconditions). The canonical defined code set is closed but sparse: AICE-602 and AICE-604 through AICE-614 (AICE-600, AICE-601, and AICE-603 are unassigned). Unknown codes are rejected. The default workflow effect of an unresolved incident is STATE_UNCHANGED, which every incident MUST carry.",
+  "description": "Unofficial draft schema (AICE v0.8) for a single AI Chaos Engineering incident. An AICE incident records a discrepancy between narrative_state (what an agent, verifier, orchestrator, or report claims occurred) and physical_state (what is supported by observable events, independently readable artifacts, process receipts, state inspection, or verified postconditions). The canonical defined code set is closed but sparse: AICE-602, AICE-604 through AICE-616, and AICE-618 (AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned). Unknown codes are rejected. The default workflow effect of an unresolved incident is STATE_UNCHANGED, which every incident MUST carry.",
   "type": "object",
   "required": [
     "code",
@@ -20,7 +20,7 @@
   "additionalProperties": false,
   "properties": {
     "code": {
-      "description": "Canonical AICE identifier. The v0.7 code set is closed but sparse — AICE-602 and AICE-604..AICE-614; AICE-600, AICE-601, and AICE-603 are unassigned and any other value is rejected.",
+      "description": "Canonical AICE identifier. The v0.8 code set is closed but sparse — AICE-602, AICE-604..AICE-616, and AICE-618; AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned and any other value is rejected.",
       "enum": [
         "AICE-602",
         "AICE-604",
@@ -33,7 +33,10 @@
         "AICE-611",
         "AICE-612",
         "AICE-613",
-        "AICE-614"
+        "AICE-614",
+        "AICE-615",
+        "AICE-616",
+        "AICE-618"
       ]
     },
     "title": {
@@ -43,7 +46,7 @@
     },
     "spec_version": {
       "description": "AICE specification version this envelope conforms to.",
-      "const": "0.7.0"
+      "const": "0.8.0"
     },
     "timestamp": {
       "description": "Optional ISO 8601 date-time at which the incident was emitted. Omit rather than fabricate.",

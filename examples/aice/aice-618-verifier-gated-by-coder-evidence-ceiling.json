@@ -1,0 +1,58 @@
+{
+  "code": "AICE-618",
+  "title": "Verifier Gated by Coder Evidence Ceiling",
+  "spec_version": "0.8.0",
+  "claim": "The verifier assignment is valid and the required independent-verification control is reachable at this risk level.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "eligibility_gate",
+      "detail": "A coder-derived execution-evidence ceiling was applied to verifier candidate eligibility; verifier routes carry no coder execution-evidence receipts, so their effective ceiling collapsed to low."
+    },
+    {
+      "type": "excluded_verifier_universe",
+      "detail": "At risk >= medium every otherwise-capable verifier route was excluded with risk_above_supported_ceiling, leaving the verifier-eligible universe empty; the coder-role output was unaffected."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "reachable_required_control",
+      "detail": "No proof that the required independent-verification control is reachable; the absence of an eligible verifier is being treated as though no capable verifier exists."
+    },
+    {
+      "type": "role_aware_ceiling",
+      "detail": "No evidence that verifier eligibility was computed from canonical verifier registry review-capability facts rather than from coder execution evidence."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Make the ceiling computation role-aware: retain min(registry, evidence) for the coder role and keep coder output byte-for-byte identical; for the verifier role use the canonical registry review-capability ceiling, treat canonical not-applicable/unrestricted values per existing registry semantics, and fail closed on malformed verifier capability data without requiring coder runtime-evidence receipts. Prove the eligible verifier universe is non-empty where canonical capability permits. Block the assignment or use corrected role-specific capability semantics; do not read an empty verifier universe as proof that no capable verifier exists.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "role": "verifier",
+    "ceiling_applied": {
+      "source": "CODER_EXECUTION_EVIDENCE",
+      "correct_source_for_role": "VERIFIER_REGISTRY_REVIEW_CAPABILITY"
+    },
+    "eligibility_change": {
+      "real": true,
+      "valid_candidates_excluded": true
+    },
+    "required_control": {
+      "kind": "INDEPENDENT_VERIFICATION",
+      "became_unreachable": true
+    },
+    "coder_output": {
+      "byte_for_byte_unchanged": true
+    },
+    "correct_terminal": {
+      "verifier_ceiling_source": "VERIFIER_REGISTRY_REVIEW_CAPABILITY",
+      "not_applicable_means_unrestricted": true,
+      "malformed_fails_closed": true
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. The narrowest justified class (VERIFIER_GATED_BY_CODER_EVIDENCE_CEILING); the broader ROLE_SEMANTIC_RISK_CEILING_CONFLATION phrasing is not adopted, as no second distinct instance is observed. Distilled from internal CAP Processor forensic evidence; no commit id, path, digest, receipt, timestamp, or production landing is asserted as canonical fact. CODER_EVIDENCE_CEILING does not imply VERIFIER_REVIEW_CAPABILITY, and SCORER_RETURNED_ROWS does not imply REQUIRED_VERIFIER_CONTROL_REACHABLE. This is NOT a gateway authority-context failure (AICE-602), NOT a bypassable/unbound control (AICE-610), NOT component-vs-end-to-end reachability substitution (AICE-611), and NOT an infrastructure failure recorded as a semantic verdict (AICE-614): infrastructure retries may occur during repair but are not this class. The incident requires the coder path to remain byte-for-byte unchanged."
+}

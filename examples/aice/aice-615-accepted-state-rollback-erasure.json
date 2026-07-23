@@ -1,0 +1,55 @@
+{
+  "code": "AICE-615",
+  "title": "Accepted-State Rollback Erasure",
+  "spec_version": "0.8.0",
+  "claim": "The non-accepting episode was safely rolled back, restoring the target to its correct pre-episode state.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "rollback_trace",
+      "detail": "After a non-accepting terminal, the rollback restored the target from repository-relative state (HEAD/index) rather than from the exact episode preimage owned by the rollback authority."
+    },
+    {
+      "type": "preimage_digest_mismatch",
+      "detail": "The post-rollback digest of the target does not equal the episode preimage digest; accepted uncommitted sibling bytes present at episode start are absent after rollback."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "exact_preimage_restore_proof",
+      "detail": "No proof that the restored bytes equal the exact episode preimage; the restore target was derived from repository baseline, not from an episode/job/attempt/path-bound snapshot."
+    },
+    {
+      "type": "accepted_state_preservation",
+      "detail": "No evidence that previously accepted or unrelated uncommitted bytes on the target were preserved through the rollback."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Restore the exact authoritative episode preimage (bound to episode/job/attempt/target/path identity, persisted outside the mutable target surface) atomically and digest-verify that restored_sha256 equals preimage_sha256. On a missing, ambiguous, or mismatched preimage binding, fail closed with the repository blocked terminal (BLOCKED_EXACT_PREIMAGE_ROLLBACK / BLOCKED_PREIMAGE_BINDING_MISMATCH). Never substitute Git baseline state for episode-owned state. Do not close the episode as safely restored, and do not claim clean state.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "episode": {
+      "mutated_real_target": true,
+      "non_accepting_terminal": true
+    },
+    "rollback": {
+      "target_derivation": "REPOSITORY_RELATIVE",
+      "exact_episode_preimage_used": false,
+      "restored_bytes_equal_episode_preimage": false
+    },
+    "preimage": {
+      "accepted_or_unrelated_bytes_present": true,
+      "accepted_bytes_erased": true
+    },
+    "correct_terminal": {
+      "required_target": "EXACT_EPISODE_PREIMAGE",
+      "restored_digest_equals_preimage_digest": false,
+      "blocked_terminal": "BLOCKED_EXACT_PREIMAGE_ROLLBACK"
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. The class governs restore identity (which exact bytes rollback may restore) and was distilled from internal CAP Processor forensic evidence; no commit id, path, digest, receipt, timestamp, or production landing is asserted as canonical fact. This is not review-input conflation (AICE-616), not a deadlocked mutation shape (AICE-613), and not a missing/unverifiable artifact (AICE-604): it is a rollback that restored repository-relative bytes instead of the exact episode preimage, erasing previously accepted uncommitted state. ROLLBACK_EXECUTED does not imply RESTORED_BYTES_EQUAL_EPISODE_PREIMAGE. Part of the non-normative EPISODE_EXACT_IDENTITY_BINDING family with AICE-616; the family has no numeric code."
+}

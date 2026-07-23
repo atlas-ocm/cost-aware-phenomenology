@@ -1,6 +1,6 @@
 # AICE-608 — Verification Exists, Independence Not Found
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 
@@ -88,3 +88,4 @@ workflow_effect: STATE_UNCHANGED, BLOCK_PROMOTION
 - [`AICE-606`](./AICE-606.md) — PASS without a verified run.
 - [`AICE-609`](./AICE-609.md) — consensus offered in place of evidence.
 - [`AICE-614`](./AICE-614.md) — a semantic review occurred here but lacks independence; AICE-614 is the case where no valid semantic review result exists yet a verifier opinion is attributed.
+- [`AICE-616`](./AICE-616.md) — a fully independent verifier may still review the wrong bytes; independence (608) and review-input identity (616) are distinct properties.

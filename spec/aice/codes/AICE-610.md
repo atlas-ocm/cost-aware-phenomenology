@@ -1,6 +1,6 @@
 # AICE-610 — Control Exists, Enforcement Not Found
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 

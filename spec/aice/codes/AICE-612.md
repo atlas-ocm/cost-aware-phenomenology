@@ -1,6 +1,6 @@
 # AICE-612 — Actor Path Substitution
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 

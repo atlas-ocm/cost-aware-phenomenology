@@ -1,6 +1,6 @@
 # AICE-613 — Self-Hosting Mutation-Shape Deadlock
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 
@@ -618,3 +618,5 @@ fact.
   unmaterialized change is falsely reported as tested).
 - [`AICE-611`](./AICE-611.md) — operational reachability substitution (AICE-613 can
   be the first broken edge behind an AICE-611 failure).
+- [`AICE-615`](./AICE-615.md) — rollback-restore identity after a mutation succeeded
+  (distinct boundary from the inability to materialize a required mutation shape).

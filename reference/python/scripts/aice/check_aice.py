@@ -1,22 +1,24 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.7).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.8).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
 Runnable standalone and wired into check_repo.ps1.
 
-The v0.7 code set is a CLOSED but SPARSE set: AICE-602 and AICE-604..AICE-614.
-AICE-600, AICE-601, and AICE-603 are unassigned. Membership is checked by exact
-set comparison, never derived from a numeric min/max range, so the sparse set is
-not silently treated as the contiguous range AICE-602..AICE-614.
+The v0.8 code set is a CLOSED but SPARSE set: AICE-602, AICE-604..AICE-616, and
+AICE-618. AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned. Membership
+is checked by exact set comparison, never derived from a numeric min/max range,
+so the sparse set is not silently treated as the contiguous range
+AICE-602..AICE-618.
 
 Checks:
 - all AICE JSON files parse;
-- the registry defined-code set is exactly {AICE-602, AICE-604..AICE-614}, unique;
-- the registry declares the unassigned set {AICE-600, AICE-601, AICE-603};
+- the registry defined-code set is exactly {AICE-602, AICE-604..AICE-616, AICE-618}, unique;
+- the registry declares the unassigned set {AICE-600, AICE-601, AICE-603, AICE-617};
 - no registry entry or code document exists for an unassigned code;
 - the registry carries no contiguity-promising `canonical_code_range` field;
 - registry entries that declare a machine_name have it present in their code doc;
+- registry machine_name values are unique (no two codes share a machine name);
 - the registry spec_version matches the expected value;
 - the schema $id and spec_version const match the expected values;
 - every defined registry code has a corresponding codes/AICE-XXX.md document;
@@ -46,10 +48,11 @@ CODES_DIR = AICE_SPEC / "codes"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 
 # Closed but sparse: an explicit set, never a numeric min/max range.
-EXPECTED_CODES = ["AICE-602"] + [f"AICE-{n}" for n in range(604, 615)]
-EXPECTED_UNASSIGNED = ["AICE-600", "AICE-601", "AICE-603"]
-EXPECTED_VERSION = "0.7.0"
-EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.7"
+# AICE-617 is unassigned, so the set skips it between AICE-616 and AICE-618.
+EXPECTED_CODES = ["AICE-602"] + [f"AICE-{n}" for n in range(604, 617)] + ["AICE-618"]
+EXPECTED_UNASSIGNED = ["AICE-600", "AICE-601", "AICE-603", "AICE-617"]
+EXPECTED_VERSION = "0.8.0"
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.8"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",
@@ -167,10 +170,12 @@ def main() -> int:
                 issues.append(f"unassigned code {code} has a placeholder document")
 
         # Machine-name parity: an entry declaring a machine_name must have it in its doc.
+        machine_names: list[str] = []
         for entry in entries:
             machine_name = entry.get("machine_name")
             code = entry.get("code")
             if machine_name and code:
+                machine_names.append(machine_name)
                 code_doc = CODES_DIR / f"{code}.md"
                 if code_doc.exists() and machine_name not in code_doc.read_text(
                     encoding="utf-8"
@@ -178,6 +183,10 @@ def main() -> int:
                     issues.append(
                         f"{code}.md does not contain registry machine_name {machine_name!r}"
                     )
+        # Machine names must be unique across the registry.
+        if len(machine_names) != len(set(machine_names)):
+            dupes = sorted({m for m in machine_names if machine_names.count(m) > 1})
+            issues.append(f"registry contains duplicate machine_name(s): {dupes}")
 
         if registry.get("spec_version") != EXPECTED_VERSION:
             issues.append(

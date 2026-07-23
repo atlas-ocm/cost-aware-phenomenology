@@ -1,18 +1,20 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.7).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.8).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed but SPARSE code set, mandatory STATE_UNCHANGED),
 version, defined-set, and schema-$id parity, and the deterministic integrity
 check (registry <-> codes <-> examples <-> links). Includes AICE-602, AICE-610,
-AICE-611, AICE-612, AICE-613, and AICE-614 coverage (with focused AICE-602
-gateway-authority-context, AICE-612 cross-actor-inference, AICE-613
-self-hosting-mutation-deadlock, and AICE-614 infrastructure-vs-semantic-verdict
-invariants) plus adversarial scratch-copy tests that prove the validator detects
-registry, doc, link, sparse-set, unassigned-code, false-contiguity, version, and
-schema-$id tampering.
+AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616, and AICE-618 coverage
+(with focused AICE-602 gateway-authority-context, AICE-612 cross-actor-inference,
+AICE-613 self-hosting-mutation-deadlock, AICE-614 infrastructure-vs-semantic-verdict,
+AICE-615 rollback-restore-identity, AICE-616 review-input-identity, and AICE-618
+verifier-eligibility-ceiling invariants) plus adversarial scratch-copy tests that
+prove the validator detects registry, doc, link, sparse-set, unassigned-code,
+false-contiguity, version, and schema-$id tampering.
 
-The v0.7 defined set is closed but sparse: AICE-602 and AICE-604..AICE-614.
-AICE-600, AICE-601, and AICE-603 are unassigned.
+The v0.8 defined set is closed but sparse: AICE-602, AICE-604..AICE-616, and
+AICE-618. AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned. AICE-615 and
+AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
 """
 from __future__ import annotations
 
@@ -35,6 +37,9 @@ EXAMPLE_611 = EXAMPLES_DIR / "aice-611-operational-reachability-substitution.jso
 EXAMPLE_612 = EXAMPLES_DIR / "aice-612-actor-path-substitution.json"
 EXAMPLE_613 = EXAMPLES_DIR / "aice-613-self-hosting-mutation-shape-deadlock.json"
 EXAMPLE_614 = EXAMPLES_DIR / "aice-614-infrastructure-failure-as-semantic-verdict.json"
+EXAMPLE_615 = EXAMPLES_DIR / "aice-615-accepted-state-rollback-erasure.json"
+EXAMPLE_616 = EXAMPLES_DIR / "aice-616-baseline-diff-conflation.json"
+EXAMPLE_618 = EXAMPLES_DIR / "aice-618-verifier-gated-by-coder-evidence-ceiling.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
 sys.path.insert(0, str(CHECK_AICE.parent))
@@ -140,40 +145,68 @@ def test_aice_610_example_is_valid():
 
 
 def test_expected_codes_are_the_sparse_defined_set():
-    assert check_aice.EXPECTED_CODES == ["AICE-602"] + [f"AICE-{n}" for n in range(604, 615)]
+    assert check_aice.EXPECTED_CODES == (
+        ["AICE-602"] + [f"AICE-{n}" for n in range(604, 617)] + ["AICE-618"]
+    )
     assert "AICE-602" in check_aice.EXPECTED_CODES
-    assert "AICE-614" in check_aice.EXPECTED_CODES
-    assert "AICE-615" not in check_aice.EXPECTED_CODES
-    # The set is sparse, not contiguous: 600, 601, and 603 are unassigned.
-    for unassigned in ("AICE-600", "AICE-601", "AICE-603"):
+    for newly_defined in ("AICE-615", "AICE-616", "AICE-618"):
+        assert newly_defined in check_aice.EXPECTED_CODES
+    # AICE-619 is beyond the defined set; must not be present.
+    assert "AICE-619" not in check_aice.EXPECTED_CODES
+    # The set is sparse, not contiguous: 600, 601, 603, and 617 are unassigned.
+    for unassigned in ("AICE-600", "AICE-601", "AICE-603", "AICE-617"):
         assert unassigned not in check_aice.EXPECTED_CODES
         assert unassigned in check_aice.EXPECTED_UNASSIGNED
-    assert len(check_aice.EXPECTED_CODES) == 12
+    assert len(check_aice.EXPECTED_CODES) == 15
 
 
 def test_registry_declares_sparse_closed_set_and_unassigned():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     assert sorted(registry["canonical_defined_set"]) == sorted(check_aice.EXPECTED_CODES)
-    assert sorted(registry["unassigned_codes"]) == ["AICE-600", "AICE-601", "AICE-603"]
+    assert sorted(registry["unassigned_codes"]) == ["AICE-600", "AICE-601", "AICE-603", "AICE-617"]
     codes = [c["code"] for c in registry["codes"]]
     assert sorted(codes) == sorted(check_aice.EXPECTED_CODES)
-    assert len(codes) == 12
+    assert len(codes) == 15
     # No contiguity-promising range field, and no entry for an unassigned code.
     assert "canonical_code_range" not in registry
-    for unassigned in ("AICE-600", "AICE-601", "AICE-603"):
+    for unassigned in ("AICE-600", "AICE-601", "AICE-603", "AICE-617"):
         assert unassigned not in codes
         assert not (ROOT / "spec" / "aice" / "codes" / f"{unassigned}.md").exists()
 
 
-def test_schema_accepts_610_through_614_but_rejects_615():
-    assert not list(_validator().iter_errors(_load_610())), "AICE-610 example must validate"
-    assert not list(_validator().iter_errors(_load_611())), "AICE-611 example must validate"
-    assert not list(_validator().iter_errors(_load_612())), "AICE-612 example must validate"
-    assert not list(_validator().iter_errors(_load_613())), "AICE-613 example must validate"
-    assert not list(_validator().iter_errors(_load_614())), "AICE-614 example must validate"
+def test_aice_617_is_genuinely_unassigned():
+    # AICE-617 has NO title, machine name, definition, file, example, or registry
+    # entry — it exists only in the machine-readable UNASSIGNED_CODES set.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    assert "AICE-617" in registry["unassigned_codes"]
+    assert "AICE-617" not in registry["canonical_defined_set"]
+    assert "AICE-617" not in [c["code"] for c in registry["codes"]]
+    assert "AICE-617" not in check_aice.EXPECTED_CODES
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-617.md").exists()
+    assert not list(EXAMPLES_DIR.glob("aice-617*.json"))
+    # Schema must reject AICE-617 as an incident code.
+    incident = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
+    incident["code"] = "AICE-617"
+    assert list(_validator().iter_errors(incident)), "AICE-617 is unassigned and must be rejected"
+
+
+def test_registry_machine_names_are_unique():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    names = [c.get("machine_name") for c in registry["codes"] if c.get("machine_name")]
+    assert len(names) == len(set(names)), f"duplicate machine_name(s): {names}"
+
+
+def test_schema_accepts_defined_set_but_rejects_unassigned_617():
+    # Migrated from the v0.7 form (which rejected AICE-615): AICE-615/616/618 are
+    # now DEFINED and must validate, while the still-unassigned AICE-617 must be
+    # rejected. The original safety intent — the closed set rejects codes outside
+    # it — is preserved, retargeted to the current sparse gap.
+    for loader in (_load_610, _load_611, _load_612, _load_613, _load_614,
+                   _load_615, _load_616, _load_618):
+        assert not list(_validator().iter_errors(loader())), f"{loader.__name__} must validate"
     incident = _load_614()
-    incident["code"] = "AICE-615"
-    assert list(_validator().iter_errors(incident)), "AICE-615 must be rejected (closed set)"
+    incident["code"] = "AICE-617"
+    assert list(_validator().iter_errors(incident)), "AICE-617 must be rejected (unassigned)"
 
 
 def test_registry_and_doc_metadata_agree_for_610():
@@ -193,7 +226,7 @@ def test_610_example_requires_state_unchanged():
     assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
 
 
-def test_existing_examples_remain_valid_under_v0_7():
+def test_existing_examples_remain_valid_under_v0_8():
     for name in (
         "aice-602-gateway-authority-context-failure.json",
         "aice-604-metaphysical-artifact.json",
@@ -203,6 +236,9 @@ def test_existing_examples_remain_valid_under_v0_7():
         "aice-612-actor-path-substitution.json",
         "aice-613-self-hosting-mutation-shape-deadlock.json",
         "aice-614-infrastructure-failure-as-semantic-verdict.json",
+        "aice-615-accepted-state-rollback-erasure.json",
+        "aice-616-baseline-diff-conflation.json",
+        "aice-618-verifier-gated-by-coder-evidence-ceiling.json",
     ):
         incident = json.loads((EXAMPLES_DIR / name).read_text(encoding="utf-8"))
         errors = list(_validator().iter_errors(incident))
@@ -923,26 +959,26 @@ def test_602_example_historical_scope_is_narrow_and_verified():
 
 # --- Version / defined-set / $id parity ---------------------------------------
 
-def test_spec_version_is_consistently_0_7_0():
+def test_spec_version_is_consistently_0_8_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.7.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.7.0"
-    assert check_aice.EXPECTED_VERSION == "0.7.0"
+    assert registry["spec_version"] == "0.8.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.8.0"
+    assert check_aice.EXPECTED_VERSION == "0.8.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.7.0", ex.name
+        assert data["spec_version"] == "0.8.0", ex.name
 
 
-def test_schema_id_is_v0_7_and_unique():
+def test_schema_id_is_v0_8_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.7"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.8"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.7" in text:
+        if "urn:cap:schema:aice-incident:v0.8" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
@@ -1053,7 +1089,9 @@ def _tamper_stale_defined_set(tmp: Path) -> None:
 
 
 def _tamper_stale_count_11(tmp: Path) -> None:
-    # Drop a code so the defined count is a stale 11 instead of 12.
+    # Drop AICE-602 from both the entries and the declared set so the defined
+    # set no longer matches the expected sparse set (a stale pre-602 shape).
+    # Retained from the v0.7 suite; still detects the dropped code under v0.8.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["codes"] = [c for c in data["codes"] if c.get("code") != "AICE-602"]
@@ -1093,6 +1131,87 @@ def _tamper_stale_schema_id(tmp: Path) -> None:
     schema.write_text(json.dumps(data), encoding="utf-8")
 
 
+def _tamper_remove_code(tmp: Path, code: str) -> None:
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["codes"] = [c for c in data["codes"] if c.get("code") != code]
+    data["canonical_defined_set"] = [c for c in data["canonical_defined_set"] if c != code]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_remove_615(tmp: Path) -> None:
+    _tamper_remove_code(tmp, "AICE-615")
+
+
+def _tamper_remove_616(tmp: Path) -> None:
+    _tamper_remove_code(tmp, "AICE-616")
+
+
+def _tamper_remove_618(tmp: Path) -> None:
+    _tamper_remove_code(tmp, "AICE-618")
+
+
+def _tamper_stale_count_14(tmp: Path) -> None:
+    # Drop AICE-618 so the defined count is a stale 14 instead of 15.
+    _tamper_remove_code(tmp, "AICE-618")
+
+
+def _tamper_placeholder_617(tmp: Path) -> None:
+    # Insert a placeholder entry for the UNASSIGNED code AICE-617.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["codes"].append(
+        {
+            "code": "AICE-617",
+            "title": "Placeholder",
+            "default_workflow_effect": ["STATE_UNCHANGED"],
+            "default_retryability": "requires_new_evidence",
+            "spec_status": "draft",
+        }
+    )
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_false_contiguous_range_618(tmp: Path) -> None:
+    # A false 'AICE-602..AICE-618' contiguity claim that hides unassigned 603/617.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["canonical_code_range"] = ["AICE-602", "AICE-618"]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_stale_defined_set_v07(tmp: Path) -> None:
+    # The pre-0.8 defined set (602 + 604..614) — stale: missing 615/616/618.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["canonical_defined_set"] = ["AICE-602"] + [f"AICE-{n}" for n in range(604, 615)]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_stale_version_07(tmp: Path) -> None:
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["spec_version"] = "0.7.0"
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_stale_schema_id_v07(tmp: Path) -> None:
+    schema = tmp / "spec" / "aice" / "incident.schema.json"
+    data = json.loads(schema.read_text(encoding="utf-8"))
+    data["$id"] = "urn:cap:schema:aice-incident:v0.7"
+    schema.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_duplicate_machine_name(tmp: Path) -> None:
+    # Give AICE-616 the same machine_name as AICE-615 (duplicate must be caught).
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    for c in data["codes"]:
+        if c.get("code") == "AICE-616":
+            c["machine_name"] = "ACCEPTED_STATE_ROLLBACK_ERASURE"
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
 @pytest.mark.parametrize(
     "tamper",
     [
@@ -1111,6 +1230,16 @@ def _tamper_stale_schema_id(tmp: Path) -> None:
         _tamper_placeholder_603,
         _tamper_stale_version,
         _tamper_stale_schema_id,
+        _tamper_remove_615,
+        _tamper_remove_616,
+        _tamper_remove_618,
+        _tamper_stale_count_14,
+        _tamper_placeholder_617,
+        _tamper_false_contiguous_range_618,
+        _tamper_stale_defined_set_v07,
+        _tamper_stale_version_07,
+        _tamper_stale_schema_id_v07,
+        _tamper_duplicate_machine_name,
     ],
     ids=[
         "remove_614_from_registry",
@@ -1128,6 +1257,16 @@ def _tamper_stale_schema_id(tmp: Path) -> None:
         "placeholder_unassigned_603",
         "stale_spec_version",
         "stale_schema_id",
+        "remove_615_from_registry",
+        "remove_616_from_registry",
+        "remove_618_from_registry",
+        "stale_count_14",
+        "placeholder_unassigned_617",
+        "false_contiguous_range_618",
+        "stale_defined_set_v07",
+        "stale_spec_version_07",
+        "stale_schema_id_v07",
+        "duplicate_machine_name",
     ],
 )
 def test_check_aice_detects_tampering(tmp_path, tamper):
@@ -1155,3 +1294,431 @@ def test_check_aice_reports_no_issues():
         "check_aice.py reported integrity issues:\n"
         f"{result.stdout}\n{result.stderr}"
     )
+
+
+# --- AICE-615: Accepted-State Rollback Erasure ---------------------------------
+
+AICE_615_TITLE = "Accepted-State Rollback Erasure"
+AICE_615_MACHINE = "ACCEPTED_STATE_ROLLBACK_ERASURE"
+
+
+def _load_615():
+    return json.loads(EXAMPLE_615.read_text(encoding="utf-8"))
+
+
+def _aice_615_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-615 (restore identity).
+
+    The predicate requires a real mutation, a non-accepting terminal, a
+    repository-relative rollback target (not the exact preimage), preimage bytes
+    that were accepted/unrelated and got erased, and the block effect. An
+    exact-preimage digest-verified restore, or a clean HEAD==preimage case with
+    nothing to erase, must break it.
+    """
+    if incident.get("code") != "AICE-615":
+        return True
+    cd = incident.get("code_details", {})
+    ep = cd.get("episode", {})
+    rb = cd.get("rollback", {})
+    pre = cd.get("preimage", {})
+    correct = cd.get("correct_terminal", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            ep.get("mutated_real_target") is True,
+            ep.get("non_accepting_terminal") is True,
+            rb.get("target_derivation") == "REPOSITORY_RELATIVE",
+            rb.get("exact_episode_preimage_used") is False,
+            rb.get("restored_bytes_equal_episode_preimage") is False,
+            pre.get("accepted_or_unrelated_bytes_present") is True,
+            pre.get("accepted_bytes_erased") is True,
+            correct.get("required_target") == "EXACT_EPISODE_PREIMAGE",
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_615_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_615()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_615():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-615")
+    assert entry["title"] == AICE_615_TITLE
+    assert entry["machine_name"] == AICE_615_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-615.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-615 — {AICE_615_TITLE}")
+    assert AICE_615_MACHINE in doc
+    assert _load_615()["title"] == entry["title"]
+
+
+def test_615_example_requires_state_unchanged():
+    incident = _load_615()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_615_canonical_example_satisfies_invariants():
+    assert _aice_615_invariants_ok(_load_615())
+
+
+def test_615_repository_relative_rollback_erasing_accepted_state_triggers():
+    cd = _load_615()["code_details"]
+    assert cd["rollback"]["target_derivation"] == "REPOSITORY_RELATIVE"
+    assert cd["preimage"]["accepted_bytes_erased"] is True
+
+
+def test_615_exact_preimage_digest_verified_restore_is_not_615():
+    incident = _load_615()
+    incident["code_details"]["rollback"]["target_derivation"] = "EXACT_EPISODE_PREIMAGE"
+    incident["code_details"]["rollback"]["exact_episode_preimage_used"] = True
+    incident["code_details"]["rollback"]["restored_bytes_equal_episode_preimage"] = True
+    assert not _aice_615_invariants_ok(incident)
+
+
+def test_615_clean_head_equals_preimage_is_false_positive():
+    # Nothing accepted existed to erase -> not AICE-615.
+    incident = _load_615()
+    incident["code_details"]["preimage"]["accepted_or_unrelated_bytes_present"] = False
+    incident["code_details"]["preimage"]["accepted_bytes_erased"] = False
+    assert not _aice_615_invariants_ok(incident)
+
+
+def test_615_example_is_representative_not_historical():
+    incident = _load_615()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["episode"].__setitem__("mutated_real_target", False),
+        lambda cd: cd["episode"].__setitem__("non_accepting_terminal", False),
+        lambda cd: cd["rollback"].__setitem__("target_derivation", "EXACT_EPISODE_PREIMAGE"),
+        lambda cd: cd["rollback"].__setitem__("restored_bytes_equal_episode_preimage", True),
+        lambda cd: cd["preimage"].__setitem__("accepted_bytes_erased", False),
+    ],
+    ids=[
+        "no_real_mutation",
+        "accepting_terminal",
+        "exact_preimage_target",
+        "restored_equals_preimage",
+        "nothing_erased",
+    ],
+)
+def test_615_mutations_invalidate_erasure_predicate(mutate):
+    incident = _load_615()
+    mutate(incident["code_details"])
+    assert not _aice_615_invariants_ok(incident)
+
+
+# --- AICE-616: Baseline Diff Conflation ----------------------------------------
+
+AICE_616_TITLE = "Baseline Diff Conflation"
+AICE_616_MACHINE = "BASELINE_DIFF_CONFLATION"
+
+
+def _load_616():
+    return json.loads(EXAMPLE_616.read_text(encoding="utf-8"))
+
+
+def _aice_616_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-616 (review-input identity).
+
+    The predicate requires a review payload derived from a repository baseline
+    diff (not the normalized episode delta), a dirty target with non-episode
+    bytes, an authority-affecting conflation, and the block effect. An
+    episode-delta payload, or a clean worktree where repo diff == episode delta,
+    must break it. It must hold even when the verifier is independent.
+    """
+    if incident.get("code") != "AICE-616":
+        return True
+    cd = incident.get("code_details", {})
+    rp = cd.get("review_payload", {})
+    tgt = cd.get("target", {})
+    conf = cd.get("conflation", {})
+    correct = cd.get("correct_terminal", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            rp.get("derived_from") == "GIT_DIFF_AGAINST_HEAD",
+            rp.get("equals_normalized_episode_delta") is False,
+            tgt.get("dirty_vs_head") is True,
+            tgt.get("contains_non_episode_bytes") is True,
+            conf.get("authority_affecting") is True,
+            conf.get("verifier_reviews_non_episode_bytes") is True,
+            correct.get("required_payload") == "NORMALIZED_EPISODE_PREIMAGE_TO_POSTIMAGE_DELTA",
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_616_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_616()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_616():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-616")
+    assert entry["title"] == AICE_616_TITLE
+    assert entry["machine_name"] == AICE_616_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-616.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-616 — {AICE_616_TITLE}")
+    assert AICE_616_MACHINE in doc
+    assert _load_616()["title"] == entry["title"]
+
+
+def test_616_example_requires_state_unchanged():
+    incident = _load_616()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_616_canonical_example_satisfies_invariants():
+    assert _aice_616_invariants_ok(_load_616())
+
+
+def test_616_dirty_repo_diff_with_prior_accepted_bytes_triggers():
+    cd = _load_616()["code_details"]
+    assert cd["review_payload"]["derived_from"] == "GIT_DIFF_AGAINST_HEAD"
+    assert cd["target"]["contains_non_episode_bytes"] is True
+
+
+def test_616_exact_normalized_episode_delta_is_not_616():
+    incident = _load_616()
+    incident["code_details"]["review_payload"]["derived_from"] = "NORMALIZED_EPISODE_DELTA"
+    incident["code_details"]["review_payload"]["equals_normalized_episode_delta"] = True
+    assert not _aice_616_invariants_ok(incident)
+
+
+def test_616_clean_worktree_repo_diff_equals_episode_delta_is_false_positive():
+    incident = _load_616()
+    incident["code_details"]["target"]["dirty_vs_head"] = False
+    incident["code_details"]["target"]["contains_non_episode_bytes"] = False
+    assert not _aice_616_invariants_ok(incident)
+
+
+def test_616_holds_even_with_independent_verifier():
+    # Independence (AICE-608) is orthogonal: a fully independent verifier that
+    # receives the wrong payload still yields AICE-616.
+    incident = _load_616()
+    assert incident["code_details"]["conflation"]["verifier_independent"] is True
+    assert _aice_616_invariants_ok(incident)
+
+
+def test_616_example_is_representative_not_historical():
+    incident = _load_616()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+def test_615_and_616_do_not_collapse_and_are_separable():
+    # 615 governs restore identity (rollback fields); 616 governs review-input
+    # identity (review_payload fields). Neither example carries the other's
+    # defining structure — they are separable, not one class.
+    cd615 = _load_615()["code_details"]
+    cd616 = _load_616()["code_details"]
+    assert "rollback" in cd615 and "review_payload" not in cd615
+    assert "review_payload" in cd616 and "rollback" not in cd616
+    # The 616 example does not satisfy the 615 predicate and vice versa when
+    # each is coerced to the other's code with mismatched details.
+    coerced = _load_616()
+    coerced["code"] = "AICE-615"
+    assert not _aice_615_invariants_ok(coerced)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["review_payload"].__setitem__("derived_from", "NORMALIZED_EPISODE_DELTA"),
+        lambda cd: cd["review_payload"].__setitem__("equals_normalized_episode_delta", True),
+        lambda cd: cd["target"].__setitem__("dirty_vs_head", False),
+        lambda cd: cd["target"].__setitem__("contains_non_episode_bytes", False),
+        lambda cd: cd["conflation"].__setitem__("authority_affecting", False),
+    ],
+    ids=[
+        "payload_is_episode_delta",
+        "payload_equals_episode_delta",
+        "clean_worktree",
+        "no_non_episode_bytes",
+        "not_authority_affecting",
+    ],
+)
+def test_616_mutations_invalidate_conflation_predicate(mutate):
+    incident = _load_616()
+    mutate(incident["code_details"])
+    assert not _aice_616_invariants_ok(incident)
+
+
+# --- AICE-618: Verifier Gated by Coder Evidence Ceiling ------------------------
+
+AICE_618_TITLE = "Verifier Gated by Coder Evidence Ceiling"
+AICE_618_MACHINE = "VERIFIER_GATED_BY_CODER_EVIDENCE_CEILING"
+
+
+def _load_618():
+    return json.loads(EXAMPLE_618.read_text(encoding="utf-8"))
+
+
+def _aice_618_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-618 (verifier eligibility).
+
+    The predicate requires a verifier role, a coder-execution-evidence ceiling
+    applied to it, a real eligibility change excluding valid candidates, a
+    required control made unreachable, coder output byte-for-byte unchanged, and
+    the block effect. A role-aware verifier ceiling, an unchanged coder output
+    assumption violated, or an infrastructure-sourced exclusion must break it.
+    """
+    if incident.get("code") != "AICE-618":
+        return True
+    cd = incident.get("code_details", {})
+    ceiling = cd.get("ceiling_applied", {})
+    elig = cd.get("eligibility_change", {})
+    ctrl = cd.get("required_control", {})
+    coder = cd.get("coder_output", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            cd.get("role") == "verifier",
+            ceiling.get("source") == "CODER_EXECUTION_EVIDENCE",
+            ceiling.get("correct_source_for_role") == "VERIFIER_REGISTRY_REVIEW_CAPABILITY",
+            elig.get("real") is True,
+            elig.get("valid_candidates_excluded") is True,
+            ctrl.get("became_unreachable") is True,
+            coder.get("byte_for_byte_unchanged") is True,
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_618_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_618()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_618():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-618")
+    assert entry["title"] == AICE_618_TITLE
+    assert entry["machine_name"] == AICE_618_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-618.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-618 — {AICE_618_TITLE}")
+    assert AICE_618_MACHINE in doc
+    assert _load_618()["title"] == entry["title"]
+
+
+def test_618_narrow_title_not_broad_alias():
+    # The narrowest justified title is canonical; the broad operator-era phrasing
+    # must NOT be the normative title or machine name.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-618")
+    assert entry["title"] == "Verifier Gated by Coder Evidence Ceiling"
+    assert entry["machine_name"] == "VERIFIER_GATED_BY_CODER_EVIDENCE_CEILING"
+    assert "ROLE_SEMANTIC_RISK_CEILING_CONFLATION" != entry["machine_name"]
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-618.md").read_text(encoding="utf-8")
+    assert doc.startswith("# AICE-618 — Verifier Gated by Coder Evidence Ceiling")
+
+
+def test_618_example_requires_state_unchanged():
+    incident = _load_618()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_618_canonical_example_satisfies_invariants():
+    assert _aice_618_invariants_ok(_load_618())
+
+
+def test_618_coder_ceiling_applied_to_verifier_triggers():
+    cd = _load_618()["code_details"]
+    assert cd["role"] == "verifier"
+    assert cd["ceiling_applied"]["source"] == "CODER_EXECUTION_EVIDENCE"
+    assert cd["required_control"]["became_unreachable"] is True
+
+
+def test_618_role_aware_verifier_capability_is_not_618():
+    incident = _load_618()
+    incident["code_details"]["ceiling_applied"]["source"] = "VERIFIER_REGISTRY_REVIEW_CAPABILITY"
+    incident["code_details"]["eligibility_change"]["valid_candidates_excluded"] = False
+    incident["code_details"]["required_control"]["became_unreachable"] = False
+    assert not _aice_618_invariants_ok(incident)
+
+
+def test_618_requires_coder_output_byte_for_byte_unchanged():
+    # A deliberate coder change is a different episode; 618 requires the coder
+    # path byte-for-byte unchanged.
+    incident = _load_618()
+    incident["code_details"]["coder_output"]["byte_for_byte_unchanged"] = False
+    assert not _aice_618_invariants_ok(incident)
+
+
+def test_618_infrastructure_sourced_exclusion_is_not_618():
+    # An exclusion sourced from infrastructure failure (AICE-614 territory), not
+    # a coder evidence ceiling, must not satisfy AICE-618.
+    incident = _load_618()
+    incident["code_details"]["ceiling_applied"]["source"] = "INFRASTRUCTURE_FAILURE"
+    assert not _aice_618_invariants_ok(incident)
+
+
+def test_618_inert_ceiling_change_excluding_no_candidate_is_not_618():
+    incident = _load_618()
+    incident["code_details"]["eligibility_change"]["real"] = False
+    incident["code_details"]["eligibility_change"]["valid_candidates_excluded"] = False
+    assert not _aice_618_invariants_ok(incident)
+
+
+def test_618_example_is_representative_not_historical():
+    incident = _load_618()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd.__setitem__("role", "coder"),
+        lambda cd: cd["ceiling_applied"].__setitem__("source", "VERIFIER_REGISTRY_REVIEW_CAPABILITY"),
+        lambda cd: cd["eligibility_change"].__setitem__("real", False),
+        lambda cd: cd["eligibility_change"].__setitem__("valid_candidates_excluded", False),
+        lambda cd: cd["required_control"].__setitem__("became_unreachable", False),
+        lambda cd: cd["coder_output"].__setitem__("byte_for_byte_unchanged", False),
+    ],
+    ids=[
+        "role_is_coder",
+        "ceiling_source_role_aware",
+        "eligibility_change_inert",
+        "no_candidate_excluded",
+        "control_reachable",
+        "coder_output_changed",
+    ],
+)
+def test_618_mutations_invalidate_ceiling_predicate(mutate):
+    incident = _load_618()
+    mutate(incident["code_details"])
+    assert not _aice_618_invariants_ok(incident)
+
+
+def test_618_distinct_from_602_610_611_614():
+    # 618 governs verifier eligibility; it carries none of the defining fields of
+    # 602 (gateway/actor context), and its example is a distinct code.
+    cd618 = _load_618()["code_details"]
+    assert "gateway" not in cd618
+    assert "role" in cd618 and "required_control" in cd618
+    for other in (_load_602(), _load_610(), _load_611(), _load_614()):
+        assert other["code"] != "AICE-618"

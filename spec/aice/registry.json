@@ -1,6 +1,6 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.7.0",
+  "spec_version": "0.8.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
@@ -16,15 +16,19 @@
     "AICE-611",
     "AICE-612",
     "AICE-613",
-    "AICE-614"
+    "AICE-614",
+    "AICE-615",
+    "AICE-616",
+    "AICE-618"
   ],
   "unassigned_codes": [
     "AICE-600",
     "AICE-601",
-    "AICE-603"
+    "AICE-603",
+    "AICE-617"
   ],
   "set_topology": "closed-sparse",
-  "set_note": "The defined set is closed but intentionally sparse. AICE-600, AICE-601, and AICE-603 are UNASSIGNED — no observed incident class yet — not reserved for predetermined meanings. A gap in the registry is not missing specification; it is missing evidence. The set is not a contiguous range: there is no defined AICE-603, so no 'AICE-602..AICE-614' claim is valid. Adding a code still requires a normative versioned change.",
+  "set_note": "The defined set is closed but intentionally sparse. AICE-600, AICE-601, AICE-603, and AICE-617 are UNASSIGNED — no observed incident class yet — not reserved for predetermined meanings. A gap in the registry is not missing specification; it is missing evidence. The set is not a contiguous range: there is no defined AICE-603 or AICE-617, so no 'AICE-602..AICE-618' claim is valid. Adding a code still requires a normative versioned change. AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family (rollback-restore identity and review-input identity respectively); that family has no numeric code.",
   "codes": [
     {
       "code": "AICE-602",
@@ -176,6 +180,50 @@
       "human_alias": "HTTP 614 — Infrastructure Failure as Semantic Verdict",
       "short_description": "A transport, timeout, configuration, envelope, protocol, runtime, authentication, or other infrastructure failure prevents a verifier from completing a semantic review, but the system records or consumes that non-semantic terminal result as if it were a substantive verifier verdict (e.g. NEEDS_FIX or BLOCKED_SEMANTIC), giving it authority over workflow state, repair loops, evidence, memory, or learning that no completed review ever granted.",
       "trigger_summary": "A semantic verifier review was required but did not complete; an infrastructure/protocol failure occurred and no valid semantic verdict was established; yet a semantic verdict was fabricated, attributed to the verifier stage, and allowed to affect an authoritative surface, while the original infrastructure failure class was collapsed or misrepresented.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-615",
+      "title": "Accepted-State Rollback Erasure",
+      "human_alias": "HTTP 615 — Accepted-State Rollback Erasure",
+      "machine_name": "ACCEPTED_STATE_ROLLBACK_ERASURE",
+      "short_description": "A non-accepting episode rollback restores repository-relative state (HEAD/index/baseline) instead of the exact episode preimage owned by that rollback authority, erasing previously accepted or unrelated uncommitted bytes on the target.",
+      "trigger_summary": "An episode mutated an existing target and reached a non-accepting terminal; the rollback target was derived from repository-relative state rather than the exact episode preimage; the preimage held accepted or unrelated bytes absent from the baseline; and rollback erased or may erase them. ROLLBACK_EXECUTED does not imply RESTORED_BYTES_EQUAL_EPISODE_PREIMAGE.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft",
+      "non_normative_family": "EPISODE_EXACT_IDENTITY_BINDING"
+    },
+    {
+      "code": "AICE-616",
+      "title": "Baseline Diff Conflation",
+      "human_alias": "HTTP 616 — Baseline Diff Conflation",
+      "machine_name": "BASELINE_DIFF_CONFLATION",
+      "short_description": "A repository-relative diff is substituted for the exact current-episode delta, causing a verifier or acceptance mechanism to evaluate bytes that do not belong exclusively to the current episode.",
+      "trigger_summary": "The authoritative review/acceptance payload was built from a repository baseline diff (git diff HEAD) while the target was dirty with non-episode bytes that were presented as the current episode and affected an authority-bearing decision. REPOSITORY_DIFF does not imply CURRENT_EPISODE_DELTA; may occur even with a fully independent verifier receiving the wrong payload.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft",
+      "non_normative_family": "EPISODE_EXACT_IDENTITY_BINDING"
+    },
+    {
+      "code": "AICE-618",
+      "title": "Verifier Gated by Coder Evidence Ceiling",
+      "human_alias": "HTTP 618 — Verifier Gated by Coder Evidence Ceiling",
+      "machine_name": "VERIFIER_GATED_BY_CODER_EVIDENCE_CEILING",
+      "short_description": "A coder execution-evidence ceiling is applied to verifier candidate eligibility, excluding technically and policy-capable verifier routes and making a required independent-verification control unreachable.",
+      "trigger_summary": "A coder-derived execution-evidence ceiling was applied to a verifier role governed by distinct canonical review-capability facts; the misapplication changed real eligibility, excluded otherwise valid verifier candidates, and made a required verification control unreachable, while coder output remained byte-for-byte unchanged. CODER_EVIDENCE_CEILING does not imply VERIFIER_REVIEW_CAPABILITY.",
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "BLOCK_ACCEPTANCE"

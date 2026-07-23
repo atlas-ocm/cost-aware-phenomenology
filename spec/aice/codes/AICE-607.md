@@ -1,6 +1,6 @@
 # AICE-607 — Deployment Exists, Production Not Found
 
-**Unofficial draft (AICE v0.7.0).**
+**Unofficial draft (AICE v0.8.0).**
 
 ## Canonical identifier
 
