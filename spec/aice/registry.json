@@ -1,11 +1,13 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.8.0",
+  "spec_version": "0.9.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
   "canonical_defined_set": [
+    "AICE-601",
     "AICE-602",
+    "AICE-603",
     "AICE-604",
     "AICE-605",
     "AICE-606",
@@ -23,13 +25,25 @@
   ],
   "unassigned_codes": [
     "AICE-600",
-    "AICE-601",
-    "AICE-603",
     "AICE-617"
   ],
   "set_topology": "closed-sparse",
-  "set_note": "The defined set is closed but intentionally sparse. AICE-600, AICE-601, AICE-603, and AICE-617 are UNASSIGNED — no observed incident class yet — not reserved for predetermined meanings. A gap in the registry is not missing specification; it is missing evidence. The set is not a contiguous range: there is no defined AICE-603 or AICE-617, so no 'AICE-602..AICE-618' claim is valid. Adding a code still requires a normative versioned change. AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family (rollback-restore identity and review-input identity respectively); that family has no numeric code.",
+  "set_note": "The defined set is closed but intentionally sparse. AICE-600 and AICE-617 are UNASSIGNED — no observed incident class yet — not reserved for predetermined meanings. A gap in the registry is not missing specification; it is missing evidence. The set is not a contiguous range: there is no defined AICE-617, so no 'AICE-601..AICE-618' claim is valid. Adding a code still requires a normative versioned change. The AICE-601/602/603 public HTTP mirrors (501/502/503) are non-normative presentation labels only; canonical authority remains exclusively in the AICE-6xx identifiers. AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family (rollback-restore identity and review-input identity respectively); that family has no numeric code.",
   "codes": [
+    {
+      "code": "AICE-601",
+      "title": "Minimum Sufficient Mechanism Bypass",
+      "human_alias": "HTTP 601 — Not Implemented",
+      "machine_name": "MINIMUM_SUFFICIENT_MECHANISM_BYPASS",
+      "short_description": "A bounded objective has a currently evidenced admissible mechanism that satisfies all active safety, authority, evidence, rollback, and verification invariants, but a larger mechanism is introduced, landed, or made prerequisite without a unique necessity witness, increasing control surface or execution cost and delaying, blocking, or displacing the sufficient path.",
+      "trigger_summary": "A minimum sufficient path is established and satisfies every active invariant, yet a larger mechanism is made prerequisite with no unique-necessity witness, increasing authority, state, path, failure, cost, or verification surface, and the sufficient path is delayed, blocked, or displaced. More architecture is not more safety; generic extensibility is not a current requirement; minimum sufficient means the smallest currently evidenced admissible mechanism, not fewest files or least governance.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
     {
       "code": "AICE-602",
       "title": "Gateway Authority Context Failure",
@@ -37,6 +51,20 @@
       "machine_name": "GATEWAY_AUTHORITY_CONTEXT_FAILURE",
       "short_description": "A gateway, safety layer, policy engine, model-access layer, or approval service makes a security-relevant decision from the shape or content of a request while failing to establish, preserve, or consume the actor authority context required to interpret it, so an authorized action is denied or an unauthorized action is admitted.",
       "trigger_summary": "An authoritative gateway decision governs a security-relevant path for an actor whose authorization and bounded purpose are independently established, but the required actor/authority/purpose/provenance/target/incident-state context was unavailable, ignored, collapsed, or replaced by content-shape as an authority proxy, yielding an authority-incorrect admit or deny with a real operational effect. Payload similarity is not actor equivalence; prompt-declared authority is not established authority.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-603",
+      "title": "Governance-Induced Service Unavailability",
+      "human_alias": "HTTP 603 — Service Unavailable",
+      "machine_name": "GOVERNANCE_INDUCED_SERVICE_UNAVAILABILITY",
+      "short_description": "An underlying capability and at least one admissible execution path exist, but an unnecessary governance dependency is made mandatory; that dependency is unavailable, unreachable, or unsatisfiable, and the otherwise available capability is consequently withheld from the authorized workflow.",
+      "trigger_summary": "A service implementation and a valid authority-preserving execution path exist, but a governance dependency not uniquely required by the objective is mandatory and unavailable, unreachable, or unsatisfiable, so the capability is withheld from the authorized workflow. Dependency unavailable is not capability unavailable; one route unavailable is not all admissible routes unavailable; a genuine provider outage or a uniquely-required safety/independence dependency is not this incident.",
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "BLOCK_ACCEPTANCE"

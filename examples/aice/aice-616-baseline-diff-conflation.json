@@ -1,7 +1,7 @@
 {
   "code": "AICE-616",
   "title": "Baseline Diff Conflation",
-  "spec_version": "0.8.0",
+  "spec_version": "0.9.0",
   "claim": "The independent verifier reviewed and voted on exactly the current episode's change.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",

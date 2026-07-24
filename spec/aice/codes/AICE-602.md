@@ -1,6 +1,6 @@
 # AICE-602 — Gateway Authority Context Failure
 
-**Unofficial draft (AICE v0.8.0).**
+**Unofficial draft (AICE v0.9.0).**
 
 ## Canonical identifier
 

@@ -1,6 +1,6 @@
 # AICE-613 — Self-Hosting Mutation-Shape Deadlock
 
-**Unofficial draft (AICE v0.8.0).**
+**Unofficial draft (AICE v0.9.0).**
 
 ## Canonical identifier
 

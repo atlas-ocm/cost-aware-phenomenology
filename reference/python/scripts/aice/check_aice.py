@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.8).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.9).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
 Runnable standalone and wired into check_repo.ps1.
 
-The v0.8 code set is a CLOSED but SPARSE set: AICE-602, AICE-604..AICE-616, and
-AICE-618. AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned. Membership
-is checked by exact set comparison, never derived from a numeric min/max range,
-so the sparse set is not silently treated as the contiguous range
-AICE-602..AICE-618.
+The v0.9 code set is a CLOSED but SPARSE set: AICE-601..AICE-616 and AICE-618.
+AICE-600 and AICE-617 are unassigned. Membership is checked by exact set
+comparison, never derived from a numeric min/max range, so the sparse set is
+not silently treated as the contiguous range AICE-601..AICE-618.
 
 Checks:
 - all AICE JSON files parse;
 - the registry defined-code set is exactly {AICE-602, AICE-604..AICE-616, AICE-618}, unique;
-- the registry declares the unassigned set {AICE-600, AICE-601, AICE-603, AICE-617};
+- the registry declares the unassigned set {AICE-600, AICE-617};
 - no registry entry or code document exists for an unassigned code;
 - the registry carries no contiguity-promising `canonical_code_range` field;
 - registry entries that declare a machine_name have it present in their code doc;
@@ -49,10 +48,10 @@ EXAMPLES_DIR = ROOT / "examples" / "aice"
 
 # Closed but sparse: an explicit set, never a numeric min/max range.
 # AICE-617 is unassigned, so the set skips it between AICE-616 and AICE-618.
-EXPECTED_CODES = ["AICE-602"] + [f"AICE-{n}" for n in range(604, 617)] + ["AICE-618"]
-EXPECTED_UNASSIGNED = ["AICE-600", "AICE-601", "AICE-603", "AICE-617"]
-EXPECTED_VERSION = "0.8.0"
-EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.8"
+EXPECTED_CODES = [f"AICE-{n}" for n in range(601, 617)] + ["AICE-618"]
+EXPECTED_UNASSIGNED = ["AICE-600", "AICE-617"]
+EXPECTED_VERSION = "0.9.0"
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.9"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",

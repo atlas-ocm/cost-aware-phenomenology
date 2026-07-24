@@ -1,7 +1,7 @@
 {
   "code": "AICE-605",
   "title": "Release Exists, Implementation Not Found",
-  "spec_version": "0.8.0",
+  "spec_version": "0.9.0",
   "claim": "Release notes for a Rust package state a behavioral/implementation change; the manifest version was advanced.",
   "narrative_state": "COMPLETE",
   "physical_state": "UNOBSERVED",

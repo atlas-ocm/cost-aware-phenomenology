@@ -1,0 +1,60 @@
+{
+  "code": "AICE-603",
+  "title": "Governance-Induced Service Unavailability",
+  "spec_version": "0.9.0",
+  "claim": "Independent verification was unavailable to the authorized workflow.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "capability_exists",
+      "detail": "Independent verification capability existed with more than one admissible authority-preserving route (independent, exact-bytes, read-only, attributable, transport-complete)."
+    },
+    {
+      "type": "mandatory_dependency_preimage",
+      "detail": "The pre-cleanup instruction surfaces made a specific stale MCP dependency mandatory and forbade the alternative: 'Run advisory verification via run_advisory_verifier only; never call the verifier directly', 'MCP/tooling unavailable -> MCP_UNAVAILABLE_HOLD', and 'If MCP is unavailable: hold and report the gap. Do not bypass the workflow or self-route manually.'"
+    },
+    {
+      "type": "restoration_postimage",
+      "detail": "Cleanup Episode A (cap-processor 5a5b750, v5.com.ua 3069ad2, Concept-Arena ddad2d0) restored tool-agnostic admissible routing while preserving independence and evidence requirements: 'TOOL_UNAVAILABLE != WORK_SEMANTICALLY_INVALID' and 'independent verification may use any authorized available route that preserves independence, exact-byte identity, read-only behavior, attributable output, and complete transport.'"
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "unique_dependency_requirement",
+      "detail": "No evidence establishes that the mandatory MCP dependency was uniquely required by any safety or independence invariant; the postimage preserves those invariants through other admissible routes."
+    },
+    {
+      "type": "no_admissible_alternative",
+      "detail": "No evidence establishes that every admissible authority-preserving route was unavailable; an alternative route existed and was forbidden by policy rather than absent."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Establish that the mandatory dependency is not uniquely required, then restore an admissible authority-preserving path to the existing capability (any authorized route that preserves independence, exact-byte identity, read-only behavior where required, attributable output, and complete transport). Do not invent a new route, simulate the missing tool, or weaken an invariant the dependency legitimately protects, and do not accept the false 'capability unavailable' conclusion.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "capability": {
+      "exists": true
+    },
+    "admissible_path": {
+      "exists": true,
+      "forbidden_by_policy": true
+    },
+    "mandatory_dependency": {
+      "exists": true,
+      "uniquely_required_by_objective": false,
+      "status": "UNAVAILABLE"
+    },
+    "withholding": {
+      "capability_withheld_from_authorized_workflow": true
+    },
+    "result": {
+      "false_unavailability_claim_accepted": false,
+      "admissible_path_restored": true
+    }
+  },
+  "notes": "Historical classification: VERIFIED_INTERNAL_HISTORICAL_SCOPE (narrow) for the withholding predicate only. Primary evidence is Cleanup Episode A (the 'chore(ai): remove stale cap-probe governance' commits cap-processor 5a5b750, v5.com.ua 3069ad2, Concept-Arena ddad2d0), whose exact preimage made a specific stale MCP dependency mandatory and mandated withholding-on-unavailability while forbidding the admissible alternative, and whose postimage restored tool-agnostic admissible routing. NOT claimed as fact: any particular per-episode unavailability timestamp; that the underlying provider itself was ever down; any request id or model call. Negative controls that must NOT be read as this incident: a genuine external provider outage; a case where no admissible alternative path exists (service legitimately unavailable); a dependency uniquely required by a verified safety or independence invariant; a transient transport failure that was correctly held and reported as an infrastructure terminal without granting a false service-unavailable conclusion. This is not an authority-blind gateway decision (AICE-602), not a self-hosting mutation deadlock where installing the capability needs the same missing capability (AICE-613), and not an infrastructure failure fabricated into a semantic verdict (AICE-614): it is an existing capability withheld because an unnecessary broken governance dependency was mandatory over an available admissible route."
+}

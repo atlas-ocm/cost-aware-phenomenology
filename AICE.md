@@ -1,13 +1,13 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
-## Draft Specification v0.8
+## Draft Specification v0.9
 
-> **Status: Draft / Research-only — Version: 0.8.0**
+> **Status: Draft / Research-only — Version: 0.9.0**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
-> the canonical defined set is closed but sparse — `AICE-602`, `AICE-604` … `AICE-616`,
-> and `AICE-618` (`AICE-600`, `AICE-601`, `AICE-603`, and `AICE-617` are unassigned).
+> the canonical defined set is closed but sparse — `AICE-601` … `AICE-616`,
+> and `AICE-618` (`AICE-600` and `AICE-617` are unassigned).
 
 **Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
 
@@ -124,8 +124,8 @@ When an AICE incident is emitted:
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
 
-The defined set is **closed but sparse**: `AICE-602`, `AICE-604` … `AICE-616`, and
-`AICE-618`. `AICE-600`, `AICE-601`, `AICE-603`, and `AICE-617` are **unassigned** — no
+The defined set is **closed but sparse**: `AICE-601` … `AICE-616`, and
+`AICE-618`. `AICE-600` and `AICE-617` are **unassigned** — no
 observed incident class yet, not reserved for predetermined meanings. There is no defined
 `AICE-603` or `AICE-617`, so the set is **not** the contiguous range `AICE-602..AICE-618`. A
 gap in the registry is not missing specification; it is missing evidence.
@@ -153,7 +153,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.8.0
+Version: 0.9.0
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

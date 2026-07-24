@@ -1,20 +1,21 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.8).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.9).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed but SPARSE code set, mandatory STATE_UNCHANGED),
 version, defined-set, and schema-$id parity, and the deterministic integrity
-check (registry <-> codes <-> examples <-> links). Includes AICE-602, AICE-610,
-AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616, and AICE-618 coverage
-(with focused AICE-602 gateway-authority-context, AICE-612 cross-actor-inference,
-AICE-613 self-hosting-mutation-deadlock, AICE-614 infrastructure-vs-semantic-verdict,
-AICE-615 rollback-restore-identity, AICE-616 review-input-identity, and AICE-618
-verifier-eligibility-ceiling invariants) plus adversarial scratch-copy tests that
-prove the validator detects registry, doc, link, sparse-set, unassigned-code,
-false-contiguity, version, and schema-$id tampering.
+check (registry <-> codes <-> examples <-> links). Includes AICE-601, AICE-602,
+AICE-603, AICE-610, AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616,
+and AICE-618 coverage (with focused AICE-601 minimum-sufficient-mechanism-bypass,
+AICE-602 gateway-authority-context, AICE-603 governance-induced-service-unavailability,
+AICE-612 cross-actor-inference, AICE-613 self-hosting-mutation-deadlock,
+AICE-614 infrastructure-vs-semantic-verdict, AICE-615 rollback-restore-identity,
+AICE-616 review-input-identity, and AICE-618 verifier-eligibility-ceiling invariants)
+plus adversarial scratch-copy tests that prove the validator detects registry, doc,
+link, sparse-set, unassigned-code, false-contiguity, version, and schema-$id tampering.
 
-The v0.8 defined set is closed but sparse: AICE-602, AICE-604..AICE-616, and
-AICE-618. AICE-600, AICE-601, AICE-603, and AICE-617 are unassigned. AICE-615 and
-AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
+The v0.9 defined set is closed but sparse: AICE-601..AICE-616 and AICE-618.
+AICE-600 and AICE-617 are unassigned. AICE-615 and AICE-616 share the
+non-normative EPISODE_EXACT_IDENTITY_BINDING family.
 """
 from __future__ import annotations
 
@@ -31,7 +32,9 @@ ROOT = Path(__file__).resolve().parents[4]
 SCHEMA_PATH = ROOT / "spec" / "aice" / "incident.schema.json"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 CHECK_AICE = ROOT / "reference" / "python" / "scripts" / "aice" / "check_aice.py"
+EXAMPLE_601 = EXAMPLES_DIR / "aice-601-minimum-sufficient-mechanism-bypass.json"
 EXAMPLE_602 = EXAMPLES_DIR / "aice-602-gateway-authority-context-failure.json"
+EXAMPLE_603 = EXAMPLES_DIR / "aice-603-governance-induced-service-unavailability.json"
 EXAMPLE_610 = EXAMPLES_DIR / "aice-610-control-without-enforcement.json"
 EXAMPLE_611 = EXAMPLES_DIR / "aice-611-operational-reachability-substitution.json"
 EXAMPLE_612 = EXAMPLES_DIR / "aice-612-actor-path-substitution.json"
@@ -78,7 +81,7 @@ def test_schema_rejects_unknown_code():
     assert errors, "Schema must reject codes outside the defined sparse set"
 
 
-@pytest.mark.parametrize("unassigned", ["AICE-600", "AICE-601", "AICE-603"])
+@pytest.mark.parametrize("unassigned", ["AICE-600", "AICE-617"])
 def test_schema_rejects_unassigned_codes(unassigned):
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
     example["code"] = unassigned
@@ -146,30 +149,29 @@ def test_aice_610_example_is_valid():
 
 def test_expected_codes_are_the_sparse_defined_set():
     assert check_aice.EXPECTED_CODES == (
-        ["AICE-602"] + [f"AICE-{n}" for n in range(604, 617)] + ["AICE-618"]
+        [f"AICE-{n}" for n in range(601, 617)] + ["AICE-618"]
     )
-    assert "AICE-602" in check_aice.EXPECTED_CODES
-    for newly_defined in ("AICE-615", "AICE-616", "AICE-618"):
+    for newly_defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-618"):
         assert newly_defined in check_aice.EXPECTED_CODES
     # AICE-619 is beyond the defined set; must not be present.
     assert "AICE-619" not in check_aice.EXPECTED_CODES
-    # The set is sparse, not contiguous: 600, 601, 603, and 617 are unassigned.
-    for unassigned in ("AICE-600", "AICE-601", "AICE-603", "AICE-617"):
+    # The set is sparse, not contiguous: 600 and 617 are unassigned.
+    for unassigned in ("AICE-600", "AICE-617"):
         assert unassigned not in check_aice.EXPECTED_CODES
         assert unassigned in check_aice.EXPECTED_UNASSIGNED
-    assert len(check_aice.EXPECTED_CODES) == 15
+    assert len(check_aice.EXPECTED_CODES) == 17
 
 
 def test_registry_declares_sparse_closed_set_and_unassigned():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     assert sorted(registry["canonical_defined_set"]) == sorted(check_aice.EXPECTED_CODES)
-    assert sorted(registry["unassigned_codes"]) == ["AICE-600", "AICE-601", "AICE-603", "AICE-617"]
+    assert sorted(registry["unassigned_codes"]) == ["AICE-600", "AICE-617"]
     codes = [c["code"] for c in registry["codes"]]
     assert sorted(codes) == sorted(check_aice.EXPECTED_CODES)
-    assert len(codes) == 15
+    assert len(codes) == 17
     # No contiguity-promising range field, and no entry for an unassigned code.
     assert "canonical_code_range" not in registry
-    for unassigned in ("AICE-600", "AICE-601", "AICE-603", "AICE-617"):
+    for unassigned in ("AICE-600", "AICE-617"):
         assert unassigned not in codes
         assert not (ROOT / "spec" / "aice" / "codes" / f"{unassigned}.md").exists()
 
@@ -201,8 +203,8 @@ def test_schema_accepts_defined_set_but_rejects_unassigned_617():
     # now DEFINED and must validate, while the still-unassigned AICE-617 must be
     # rejected. The original safety intent — the closed set rejects codes outside
     # it — is preserved, retargeted to the current sparse gap.
-    for loader in (_load_610, _load_611, _load_612, _load_613, _load_614,
-                   _load_615, _load_616, _load_618):
+    for loader in (_load_601, _load_602, _load_603, _load_610, _load_611, _load_612,
+                   _load_613, _load_614, _load_615, _load_616, _load_618):
         assert not list(_validator().iter_errors(loader())), f"{loader.__name__} must validate"
     incident = _load_614()
     incident["code"] = "AICE-617"
@@ -228,7 +230,9 @@ def test_610_example_requires_state_unchanged():
 
 def test_existing_examples_remain_valid_under_v0_8():
     for name in (
+        "aice-601-minimum-sufficient-mechanism-bypass.json",
         "aice-602-gateway-authority-context-failure.json",
+        "aice-603-governance-induced-service-unavailability.json",
         "aice-604-metaphysical-artifact.json",
         "aice-605-release-without-implementation.json",
         "aice-610-control-without-enforcement.json",
@@ -959,26 +963,26 @@ def test_602_example_historical_scope_is_narrow_and_verified():
 
 # --- Version / defined-set / $id parity ---------------------------------------
 
-def test_spec_version_is_consistently_0_8_0():
+def test_spec_version_is_consistently_0_9_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.8.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.8.0"
-    assert check_aice.EXPECTED_VERSION == "0.8.0"
+    assert registry["spec_version"] == "0.9.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.9.0"
+    assert check_aice.EXPECTED_VERSION == "0.9.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.8.0", ex.name
+        assert data["spec_version"] == "0.9.0", ex.name
 
 
-def test_schema_id_is_v0_8_and_unique():
+def test_schema_id_is_v0_9_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.8"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.9"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.8" in text:
+        if "urn:cap:schema:aice-incident:v0.9" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
@@ -1039,14 +1043,14 @@ def _tamper_remove_602(tmp: Path) -> None:
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _tamper_rename_602_to_603(tmp: Path) -> None:
-    # Rename AICE-602 to the UNASSIGNED code AICE-603: breaks set membership and
+def _tamper_rename_602_to_600(tmp: Path) -> None:
+    # Rename AICE-602 to the UNASSIGNED code AICE-600: breaks set membership and
     # gives an unassigned code a registry entry.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     for c in data["codes"]:
         if c.get("code") == "AICE-602":
-            c["code"] = "AICE-603"
+            c["code"] = "AICE-600"
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
@@ -1101,13 +1105,13 @@ def _tamper_stale_count_11(tmp: Path) -> None:
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _tamper_placeholder_603(tmp: Path) -> None:
-    # Insert a placeholder entry for the UNASSIGNED code AICE-603.
+def _tamper_placeholder_600(tmp: Path) -> None:
+    # Insert a placeholder entry for the UNASSIGNED code AICE-600.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["codes"].append(
         {
-            "code": "AICE-603",
+            "code": "AICE-600",
             "title": "Placeholder",
             "default_workflow_effect": ["STATE_UNCHANGED"],
             "default_retryability": "requires_new_evidence",
@@ -1220,14 +1224,14 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         _tamper_delete_doc,
         _tamper_break_link,
         _tamper_remove_602,
-        _tamper_rename_602_to_603,
+        _tamper_rename_602_to_600,
         _tamper_rename_602_to_615,
         _tamper_delete_602_doc,
         _tamper_break_602_link,
         _tamper_false_contiguous_range,
         _tamper_stale_defined_set,
         _tamper_stale_count_11,
-        _tamper_placeholder_603,
+        _tamper_placeholder_600,
         _tamper_stale_version,
         _tamper_stale_schema_id,
         _tamper_remove_615,
@@ -1247,14 +1251,14 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         "delete_614_doc",
         "break_614_link",
         "remove_602_from_registry",
-        "rename_602_to_unassigned_603",
+        "rename_602_to_unassigned_600",
         "rename_602_to_615",
         "delete_602_doc",
         "break_602_link",
         "false_contiguous_range",
         "stale_defined_set",
         "stale_count_11",
-        "placeholder_unassigned_603",
+        "placeholder_unassigned_600",
         "stale_spec_version",
         "stale_schema_id",
         "remove_615_from_registry",
@@ -1722,3 +1726,270 @@ def test_618_distinct_from_602_610_611_614():
     assert "role" in cd618 and "required_control" in cd618
     for other in (_load_602(), _load_610(), _load_611(), _load_614()):
         assert other["code"] != "AICE-618"
+
+
+# --- AICE-601: Minimum Sufficient Mechanism Bypass -----------------------------
+
+AICE_601_TITLE = "Minimum Sufficient Mechanism Bypass"
+AICE_601_MACHINE = "MINIMUM_SUFFICIENT_MECHANISM_BYPASS"
+
+
+def _load_601():
+    return json.loads(EXAMPLE_601.read_text(encoding="utf-8"))
+
+
+def _aice_601_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-601 (mechanism bypass).
+
+    The predicate requires a bounded objective with an established minimum
+    sufficient path that satisfies all active invariants, a larger mechanism made
+    prerequisite with NO unique necessity witness, an increase in surface/cost,
+    and displacement of the sufficient path. A verified necessity witness, a
+    sufficient path that does not preserve invariants, or no displacement must
+    all break it.
+    """
+    if incident.get("code") != "AICE-601":
+        return True
+    cd = incident.get("code_details", {})
+    obj = cd.get("objective", {})
+    msp = cd.get("minimum_sufficient_path", {})
+    larger = cd.get("larger_mechanism", {})
+    exp = cd.get("expansion_effect", {})
+    disp = cd.get("displacement", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            obj.get("mechanically_bounded") is True,
+            msp.get("identified") is True,
+            msp.get("satisfies_all_active_invariants") is True,
+            larger.get("introduced_or_made_prerequisite") is True,
+            larger.get("unique_necessity_witness") is False,
+            exp.get("increases_surface_or_cost") is True,
+            disp.get("sufficient_path_delayed_blocked_displaced_or_denied") is True,
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_601_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_601()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_601():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-601")
+    assert entry["title"] == AICE_601_TITLE
+    assert entry["machine_name"] == AICE_601_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-601.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-601 — {AICE_601_TITLE}")
+    assert AICE_601_MACHINE in doc
+    assert _load_601()["title"] == entry["title"]
+
+
+def test_601_example_requires_state_unchanged():
+    incident = _load_601()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_601_canonical_example_satisfies_invariants():
+    assert _aice_601_invariants_ok(_load_601())
+
+
+def test_601_necessity_witness_present_is_not_601():
+    # A verified unique necessity witness for the expansion is the primary false
+    # positive guard: with it, the larger mechanism is justified, not an incident.
+    incident = _load_601()
+    incident["code_details"]["larger_mechanism"]["unique_necessity_witness"] = True
+    assert not _aice_601_invariants_ok(incident)
+
+
+def test_601_no_displacement_is_not_601():
+    # Architecture merely proposed and refused (no displacement) is not an incident.
+    incident = _load_601()
+    incident["code_details"]["displacement"]["sufficient_path_delayed_blocked_displaced_or_denied"] = False
+    assert not _aice_601_invariants_ok(incident)
+
+
+def test_601_insufficient_smaller_path_is_not_601():
+    # If the smaller path does not satisfy all active invariants, it was not a
+    # sufficient path and the expansion may be legitimate.
+    incident = _load_601()
+    incident["code_details"]["minimum_sufficient_path"]["satisfies_all_active_invariants"] = False
+    assert not _aice_601_invariants_ok(incident)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["objective"].__setitem__("mechanically_bounded", False),
+        lambda cd: cd["minimum_sufficient_path"].__setitem__("identified", False),
+        lambda cd: cd["larger_mechanism"].__setitem__("introduced_or_made_prerequisite", False),
+        lambda cd: cd["larger_mechanism"].__setitem__("unique_necessity_witness", True),
+        lambda cd: cd["expansion_effect"].__setitem__("increases_surface_or_cost", False),
+        lambda cd: cd["displacement"].__setitem__("sufficient_path_delayed_blocked_displaced_or_denied", False),
+    ],
+    ids=[
+        "objective_unbounded",
+        "no_sufficient_path",
+        "expansion_not_prerequisite",
+        "necessity_witness_present",
+        "no_surface_increase",
+        "no_displacement",
+    ],
+)
+def test_601_mutations_invalidate_bypass_predicate(mutate):
+    incident = _load_601()
+    mutate(incident["code_details"])
+    assert not _aice_601_invariants_ok(incident)
+
+
+def test_601_example_scope_is_narrow_and_verified():
+    notes = _load_601()["notes"]
+    assert "VERIFIED_INTERNAL_HISTORICAL_SCOPE" in notes
+    # The negative controls are recorded and must not be read as this incident.
+    assert "proposed and refused" in notes
+    assert "complexity alone" in notes
+
+
+# --- AICE-603: Governance-Induced Service Unavailability -----------------------
+
+AICE_603_TITLE = "Governance-Induced Service Unavailability"
+AICE_603_MACHINE = "GOVERNANCE_INDUCED_SERVICE_UNAVAILABILITY"
+
+_UNAVAILABLE_STATES = {"UNAVAILABLE", "UNREACHABLE", "UNSATISFIABLE"}
+
+
+def _load_603():
+    return json.loads(EXAMPLE_603.read_text(encoding="utf-8"))
+
+
+def _aice_603_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-603 (governance unavailability).
+
+    The predicate requires an existing capability, an admissible alternative
+    path, a mandatory governance dependency NOT uniquely required, that
+    dependency unavailable/unreachable/unsatisfiable, and the capability withheld.
+    A genuinely absent capability, no admissible alternative, a uniquely-required
+    dependency, or a satisfiable dependency must all break it.
+    """
+    if incident.get("code") != "AICE-603":
+        return True
+    cd = incident.get("code_details", {})
+    cap = cd.get("capability", {})
+    path = cd.get("admissible_path", {})
+    dep = cd.get("mandatory_dependency", {})
+    withholding = cd.get("withholding", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            cap.get("exists") is True,
+            path.get("exists") is True,
+            dep.get("exists") is True,
+            dep.get("uniquely_required_by_objective") is False,
+            dep.get("status") in _UNAVAILABLE_STATES,
+            withholding.get("capability_withheld_from_authorized_workflow") is True,
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_603_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_603()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_603():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-603")
+    assert entry["title"] == AICE_603_TITLE
+    assert entry["machine_name"] == AICE_603_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_new_evidence"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-603.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-603 — {AICE_603_TITLE}")
+    assert AICE_603_MACHINE in doc
+    assert _load_603()["title"] == entry["title"]
+
+
+def test_603_example_requires_state_unchanged():
+    incident = _load_603()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_603_canonical_example_satisfies_invariants():
+    assert _aice_603_invariants_ok(_load_603())
+
+
+def test_603_ordinary_outage_is_not_603():
+    # If the underlying capability is genuinely absent, it is an ordinary outage,
+    # not governance-induced unavailability.
+    incident = _load_603()
+    incident["code_details"]["capability"]["exists"] = False
+    assert not _aice_603_invariants_ok(incident)
+
+
+def test_603_no_admissible_alternative_is_not_603():
+    # If no admissible alternative path exists, the service is legitimately
+    # unavailable.
+    incident = _load_603()
+    incident["code_details"]["admissible_path"]["exists"] = False
+    assert not _aice_603_invariants_ok(incident)
+
+
+def test_603_uniquely_required_dependency_is_not_603():
+    # A dependency uniquely required by a verified safety/independence invariant
+    # is not this incident.
+    incident = _load_603()
+    incident["code_details"]["mandatory_dependency"]["uniquely_required_by_objective"] = True
+    assert not _aice_603_invariants_ok(incident)
+
+
+def test_603_available_dependency_is_not_603():
+    # If the mandatory dependency is available/satisfiable, nothing is withheld.
+    incident = _load_603()
+    incident["code_details"]["mandatory_dependency"]["status"] = "AVAILABLE"
+    assert not _aice_603_invariants_ok(incident)
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["capability"].__setitem__("exists", False),
+        lambda cd: cd["admissible_path"].__setitem__("exists", False),
+        lambda cd: cd["mandatory_dependency"].__setitem__("exists", False),
+        lambda cd: cd["mandatory_dependency"].__setitem__("uniquely_required_by_objective", True),
+        lambda cd: cd["mandatory_dependency"].__setitem__("status", "AVAILABLE"),
+        lambda cd: cd["withholding"].__setitem__("capability_withheld_from_authorized_workflow", False),
+    ],
+    ids=[
+        "capability_absent",
+        "no_admissible_alternative",
+        "no_mandatory_dependency",
+        "dependency_uniquely_required",
+        "dependency_available",
+        "nothing_withheld",
+    ],
+)
+def test_603_mutations_invalidate_unavailability_predicate(mutate):
+    incident = _load_603()
+    mutate(incident["code_details"])
+    assert not _aice_603_invariants_ok(incident)
+
+
+def test_601_and_603_are_separable():
+    # 601 governs mechanism bypass (minimum_sufficient_path fields); 603 governs
+    # capability withholding (capability/mandatory_dependency fields). Neither
+    # example carries the other's defining structure.
+    cd601 = _load_601()["code_details"]
+    cd603 = _load_603()["code_details"]
+    assert "minimum_sufficient_path" in cd601 and "mandatory_dependency" not in cd601
+    assert "mandatory_dependency" in cd603 and "minimum_sufficient_path" not in cd603

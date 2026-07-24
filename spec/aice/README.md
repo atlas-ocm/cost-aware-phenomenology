@@ -1,17 +1,17 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.8.0. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.9.0. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
-AICE code set — the closed but sparse set `AICE-602`, `AICE-604` … `AICE-616`, and
+AICE code set — the closed but sparse set `AICE-601` … `AICE-616`, and
 `AICE-618` — and the machine-readable incident envelope
 ([`incident.schema.json`](./incident.schema.json)).
 
 This is **not** an HTTP status-code extension, **not** an IETF standard, and **not**
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
-aliases only. The canonical defined identifiers are `AICE-602`, `AICE-604` … `AICE-616`,
-and `AICE-618`; `AICE-600`, `AICE-601`, `AICE-603`, and `AICE-617` are unassigned.
+aliases only. The canonical defined identifiers are `AICE-601` … `AICE-616`,
+and `AICE-618`; `AICE-600` and `AICE-617` are unassigned.
 
 AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
 Protocols** series — deterministic control protocols for probabilistic software. That
@@ -59,9 +59,9 @@ machine-readable shape.
 
 | Field | Requirement | Meaning |
 |---|---|---|
-| `code` | MUST | Canonical identifier from the defined set `AICE-602`, `AICE-604`…`AICE-616`, `AICE-618`. Unknown codes MUST be rejected. |
+| `code` | MUST | Canonical identifier from the defined set `AICE-601`…`AICE-616`, `AICE-618`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.8.0`). |
+| `spec_version` | MUST | AICE spec version (`0.9.0`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |
@@ -139,7 +139,9 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
 - [`registry.json`](./registry.json) — compact machine-readable registry of the code
   set, titles, trigger summaries, default effects, and retryability.
 - [`codes/`](./codes/) — one normative Markdown document per code:
+  - [`AICE-601`](./codes/AICE-601.md) — Minimum Sufficient Mechanism Bypass
   - [`AICE-602`](./codes/AICE-602.md) — Gateway Authority Context Failure
+  - [`AICE-603`](./codes/AICE-603.md) — Governance-Induced Service Unavailability
   - [`AICE-604`](./codes/AICE-604.md) — Hash Exists, Reality Not Found
   - [`AICE-605`](./codes/AICE-605.md) — Release Exists, Implementation Not Found
   - [`AICE-606`](./codes/AICE-606.md) — PASS Exists, Test Run Not Found
@@ -155,10 +157,12 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
   - [`AICE-616`](./codes/AICE-616.md) — Baseline Diff Conflation
   - [`AICE-618`](./codes/AICE-618.md) — Verifier Gated by Coder Evidence Ceiling
 
-For v0.8 the defined code set is closed but sparse: exactly `AICE-602`, `AICE-604` …
-`AICE-616`, and `AICE-618`. `AICE-600`, `AICE-601`, `AICE-603`, and `AICE-617` are
-unassigned, so the set is not the contiguous range `AICE-602..AICE-618`. Adding a code
-requires a normative versioned change. `AICE-615` and `AICE-616` share the non-normative
+For v0.9 the defined code set is closed but sparse: exactly `AICE-601` … `AICE-616`,
+and `AICE-618`. `AICE-600` and `AICE-617` are unassigned, so the set is not the
+contiguous range `AICE-601..AICE-618`. Adding a code requires a normative versioned
+change. The `AICE-601`/`AICE-602`/`AICE-603` public labels mirror `HTTP 501`/`502`/`503`
+as non-normative presentation only; canonical authority stays in the `AICE-6xx`
+identifiers. `AICE-615` and `AICE-616` share the non-normative
 `EPISODE_EXACT_IDENTITY_BINDING` family (restore-identity and review-input identity); that
 family has no numeric code.
 

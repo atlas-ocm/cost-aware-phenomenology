@@ -1,0 +1,68 @@
+{
+  "code": "AICE-601",
+  "title": "Minimum Sufficient Mechanism Bypass",
+  "spec_version": "0.9.0",
+  "claim": "A mandatory MCP/FSM/verifier-broker apparatus was required to preserve the workflow's safety, authority, evidence, and independence invariants.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "governance_preimage",
+      "detail": "The pre-cleanup instruction surfaces made a larger apparatus prerequisite for a bounded objective (preserve the discipline invariants): e.g. 'Call start_task before any non-trivial work', 'Run advisory verification via run_advisory_verifier only; never call the verifier directly', and direct routes labelled 'deprecated bypass'."
+    },
+    {
+      "type": "governance_postimage",
+      "detail": "Cleanup Episode A (cap-processor 5a5b750, v5.com.ua 3069ad2, Concept-Arena ddad2d0) replaced that apparatus with a smaller tool-agnostic rule that retains every invariant it protected: no self-review, verifier independence, scoped evidence, explicit human authorization, transport honesty."
+    },
+    {
+      "type": "necessity_witness_search",
+      "detail": "The invariant-preserving postimage is the witness that the larger apparatus had no unique necessity witness: the same invariants hold under the smaller rule, so no reproduced failure, missing invariant, compatibility constraint, or measured scale requirement justified making the larger mechanism prerequisite."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "unique_necessity_witness",
+      "detail": "No reproduced failure mode, missing verifier independence, missing rollback/atomicity, missing evidence binding, mandatory compatibility constraint, measured operational-scale requirement, or confirmed multi-use demand is recorded that the smaller sufficient path did not already satisfy."
+    },
+    {
+      "type": "expansion_acceptance_basis",
+      "detail": "No evidence establishes that admitting the larger mechanism as prerequisite was required; the sufficient path was displaced (direct routes declared deprecated bypass) without such a basis."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Select the minimum sufficient path — the smallest currently evidenced admissible mechanism that satisfies the frozen objective and every active invariant (the tool-agnostic rule) — and admit the larger apparatus only once a unique necessity witness for it is produced (a reproduced failure, a missing invariant, a measured scale requirement, or a confirmed multi-use demand). Do not delete governance, verification, rollback, or evidence binding to go smaller.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "objective": {
+      "mechanically_bounded": true
+    },
+    "minimum_sufficient_path": {
+      "identified": true,
+      "satisfies_all_active_invariants": true
+    },
+    "larger_mechanism": {
+      "introduced_or_made_prerequisite": true,
+      "unique_necessity_witness": false
+    },
+    "expansion_effect": {
+      "increases_surface_or_cost": true,
+      "surfaces_increased": [
+        "authority",
+        "execution_paths",
+        "failure_modes",
+        "verification_burden"
+      ]
+    },
+    "displacement": {
+      "sufficient_path_delayed_blocked_displaced_or_denied": true
+    },
+    "result": {
+      "expansion_accepted": false,
+      "minimum_sufficient_path_selected": true
+    }
+  },
+  "notes": "Historical classification: VERIFIED_INTERNAL_HISTORICAL_SCOPE (narrow) for the displacement predicate only. Primary evidence is Cleanup Episode A (the 'chore(ai): remove stale cap-probe governance' commits cap-processor 5a5b750, v5.com.ua 3069ad2, Concept-Arena ddad2d0), whose exact preimage/postimage pair shows a mandatory larger apparatus replaced by a smaller invariant-preserving rule. NOT claimed as fact: that any particular component of the apparatus caused a specific outage; that the apparatus never had value in any other context; any per-episode runtime timing, request id, or model call. Negative controls that must NOT be read as this incident: an added component with a verified unique necessity witness; architecture merely proposed and refused; complexity alone; a deterministic mechanism later adopted to replace a model-mediated one (the correct direction); a reserved-but-unimplemented operation cited as the sufficient path. This is not an authority-blind gateway decision (AICE-602), not an unenforced control (AICE-610), and not a self-hosting mutation deadlock (AICE-613): it is a larger mechanism made prerequisite without a unique necessity witness, displacing an established sufficient path."
+}
