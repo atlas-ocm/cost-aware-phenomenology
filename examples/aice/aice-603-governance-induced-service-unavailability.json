@@ -1,7 +1,7 @@
 {
   "code": "AICE-603",
   "title": "Governance-Induced Service Unavailability",
-  "spec_version": "0.10.0",
+  "spec_version": "0.11.0",
   "claim": "Independent verification was unavailable to the authorized workflow.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",

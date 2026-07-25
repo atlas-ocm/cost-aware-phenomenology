@@ -1,6 +1,6 @@
 # AICE-618 — Verifier Gated by Coder Evidence Ceiling
 
-**Unofficial draft (AICE v0.10.0).**
+**Unofficial draft (AICE v0.11.0).**
 
 ## Canonical identifier
 

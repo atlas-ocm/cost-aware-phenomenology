@@ -1,26 +1,32 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.10).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.11).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed, contiguous code set, mandatory STATE_UNCHANGED),
 version, defined-set, and schema-$id parity, and the deterministic integrity
-check (registry <-> codes <-> examples <-> links). Includes AICE-601, AICE-602,
+check (registry <-> codes <-> examples <-> links <-> the AICE.md summary
+table). Includes AICE-601, AICE-602,
 AICE-603, AICE-610, AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616,
-AICE-617, and AICE-618 coverage (with focused AICE-601 minimum-sufficient-mechanism-bypass,
+AICE-617, AICE-618, AICE-619, and AICE-620 coverage (with focused
+AICE-601 minimum-sufficient-mechanism-bypass,
 AICE-602 gateway-authority-context, AICE-603 governance-induced-service-unavailability,
 AICE-612 cross-actor-inference, AICE-613 self-hosting-mutation-deadlock,
 AICE-614 infrastructure-vs-semantic-verdict, AICE-615 rollback-restore-identity,
 AICE-616 review-input-identity, AICE-617 process-activity-outcome-substitution, and
-AICE-618 verifier-eligibility-ceiling invariants) plus adversarial scratch-copy tests
-that prove the validator detects registry, doc, link, defined-set, unassigned-code,
-false-contiguity, version, and schema-$id tampering.
+AICE-618 verifier-eligibility-ceiling, AICE-619 canonical-summary-entry-omission, and
+AICE-620 canonical-execution-path-reintroduction invariants) plus adversarial
+scratch-copy tests that prove the validator detects registry, doc, link, defined-set,
+unassigned-code, false-contiguity, version, and schema-$id tampering.
 
-The v0.10 defined set is closed and contiguous: AICE-601..AICE-618. AICE-600 is
-unassigned; AICE-619 is neither defined nor reserved. AICE-615 and AICE-616 share
-the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
+The v0.11 defined set is closed and contiguous: AICE-601..AICE-620. AICE-600 is
+unassigned; AICE-621 is neither defined nor reserved. The unreserved-successor
+sentinel moves with the set — extending the range never reserves the next number,
+and the tests below assert that at the new boundary rather than the old one.
+AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
 """
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -45,6 +51,8 @@ EXAMPLE_615 = EXAMPLES_DIR / "aice-615-accepted-state-rollback-erasure.json"
 EXAMPLE_616 = EXAMPLES_DIR / "aice-616-baseline-diff-conflation.json"
 EXAMPLE_617 = EXAMPLES_DIR / "aice-617-process-activity-outcome-substitution.json"
 EXAMPLE_618 = EXAMPLES_DIR / "aice-618-verifier-gated-by-coder-evidence-ceiling.json"
+EXAMPLE_619 = EXAMPLES_DIR / "aice-619-canonical-summary-entry-omission.json"
+EXAMPLE_620 = EXAMPLES_DIR / "aice-620-canonical-execution-path-reintroduction.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
 sys.path.insert(0, str(CHECK_AICE.parent))
@@ -59,6 +67,14 @@ def _load_schema():
 
 def _validator():
     return jsonschema.Draft202012Validator(_load_schema())
+
+
+def _load_619():
+    return json.loads(EXAMPLE_619.read_text(encoding="utf-8"))
+
+
+def _load_620():
+    return json.loads(EXAMPLE_620.read_text(encoding="utf-8"))
 
 
 def test_schema_is_valid_draft_2020_12():
@@ -83,9 +99,9 @@ def test_schema_rejects_unknown_code():
     assert errors, "Schema must reject codes outside the defined sparse set"
 
 
-@pytest.mark.parametrize("out_of_set", ["AICE-600", "AICE-619"])
+@pytest.mark.parametrize("out_of_set", ["AICE-600", "AICE-621"])
 def test_schema_rejects_codes_outside_defined_set(out_of_set):
-    # AICE-600 is unassigned; AICE-619 is neither defined nor reserved. Both are
+    # AICE-600 is unassigned; AICE-621 is neither defined nor reserved. Both are
     # outside the closed defined set and must be rejected.
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
     example["code"] = out_of_set
@@ -152,17 +168,21 @@ def test_aice_610_example_is_valid():
 
 
 def test_expected_codes_are_the_contiguous_defined_set():
-    # With AICE-617 assigned the defined set is the closed, contiguous range
-    # AICE-601..AICE-618.
-    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(601, 619)]
-    for defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-617", "AICE-618"):
+    # With AICE-619 and AICE-620 assigned the defined set is the closed, contiguous
+    # range AICE-601..AICE-620.
+    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(601, 621)]
+    for defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-617",
+                    "AICE-618", "AICE-619", "AICE-620"):
         assert defined in check_aice.EXPECTED_CODES
-    # AICE-600 is unassigned; AICE-619 is neither defined nor reserved.
+    # AICE-600 is unassigned; AICE-621 is neither defined nor reserved. The
+    # sentinel moved from 619 to 621 when 619 and 620 were assigned — the point of
+    # the assertion is that SOME successor is always unreserved, not that a
+    # particular number is.
     assert "AICE-600" not in check_aice.EXPECTED_CODES
     assert "AICE-600" in check_aice.EXPECTED_UNASSIGNED
-    assert "AICE-619" not in check_aice.EXPECTED_CODES
-    assert "AICE-619" not in check_aice.EXPECTED_UNASSIGNED
-    assert len(check_aice.EXPECTED_CODES) == 18
+    assert "AICE-621" not in check_aice.EXPECTED_CODES
+    assert "AICE-621" not in check_aice.EXPECTED_UNASSIGNED
+    assert len(check_aice.EXPECTED_CODES) == 20
 
 
 def test_registry_declares_closed_set_and_unassigned():
@@ -171,15 +191,36 @@ def test_registry_declares_closed_set_and_unassigned():
     assert sorted(registry["unassigned_codes"]) == ["AICE-600"]
     codes = [c["code"] for c in registry["codes"]]
     assert sorted(codes) == sorted(check_aice.EXPECTED_CODES)
-    assert len(codes) == 18
+    assert len(codes) == 20
     # No contiguity-promising range field, and no entry for an unassigned code.
     assert "canonical_code_range" not in registry
     assert "AICE-600" not in codes
     assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
-    # AICE-619 must not appear anywhere as defined or reserved.
-    assert "AICE-619" not in codes
-    assert "AICE-619" not in registry["canonical_defined_set"]
-    assert "AICE-619" not in registry.get("unassigned_codes", [])
+    # AICE-621 must not appear anywhere as defined or reserved.
+    assert "AICE-621" not in codes
+    assert "AICE-621" not in registry["canonical_defined_set"]
+    assert "AICE-621" not in registry.get("unassigned_codes", [])
+
+
+def test_aice_md_summary_table_matches_registry():
+    # The AICE.md summary table is a presentation of the registry, not a second source
+    # of truth. It drifted once: AICE-601 and AICE-603 were defined in the registry but
+    # never given rows, so the table listed 16 of 18 codes while the prose two lines
+    # below already claimed the contiguous range AICE-601..AICE-618.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entries = {c["code"]: c for c in registry["codes"]}
+    rows = re.findall(
+        r"^\| `(AICE-\d{3})` \| ([^|]+?) \| ([^|]+?) \| (.+?) \|$",
+        (ROOT / "AICE.md").read_text(encoding="utf-8"),
+        re.M,
+    )
+    # Every defined code has exactly one row, in registry order; unassigned codes have none.
+    assert [code for code, _alias, _title, _effect in rows] == registry["canonical_defined_set"]
+    for code, _alias, title, effect in rows:
+        entry = entries[code]
+        assert title.strip() == entry["title"], f"{code} title differs from the registry"
+        expected_effect = ", ".join(f"`{e}`" for e in entry["default_workflow_effect"])
+        assert effect.strip() == expected_effect, f"{code} default effect differs from the registry"
 
 
 def test_aice_617_is_defined():
@@ -195,6 +236,262 @@ def test_aice_617_is_defined():
     # Schema must accept AICE-617 as an incident code.
     incident = json.loads(EXAMPLE_617.read_text(encoding="utf-8"))
     assert not list(_validator().iter_errors(incident)), "AICE-617 must validate as defined"
+
+
+@pytest.mark.parametrize(
+    "code, example",
+    [("AICE-619", EXAMPLE_619), ("AICE-620", EXAMPLE_620)],
+)
+def test_promoted_codes_are_defined_on_every_surface(code, example):
+    # Promotion is only real when every surface carries it. A code present in the
+    # registry but missing from the schema enum, the code document, or the examples
+    # is exactly the projection gap AICE-619 itself describes.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    schema = _load_schema()
+    assert code in registry["canonical_defined_set"]
+    assert code not in registry["unassigned_codes"]
+    assert code in [c["code"] for c in registry["codes"]]
+    assert code in schema["properties"]["code"]["enum"]
+    assert code in check_aice.EXPECTED_CODES
+    assert (ROOT / "spec" / "aice" / "codes" / f"{code}.md").exists()
+    assert example.exists()
+    incident = json.loads(example.read_text(encoding="utf-8"))
+    assert not list(_validator().iter_errors(incident)), f"{code} must validate as defined"
+
+
+@pytest.mark.parametrize(
+    "code, example, title, machine",
+    [
+        ("AICE-619", EXAMPLE_619, "Registry Entry Exists, Summary Not Found",
+         "CANONICAL_SUMMARY_ENTRY_OMISSION"),
+        ("AICE-620", EXAMPLE_620, "Architectural Groundhog Loop",
+         "CANONICAL_EXECUTION_PATH_REINTRODUCTION"),
+    ],
+)
+def test_registry_and_doc_metadata_agree_for_promoted_codes(code, example, title, machine):
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == code)
+    assert entry["title"] == title
+    assert entry["machine_name"] == machine
+    doc = (ROOT / "spec" / "aice" / "codes" / f"{code}.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# {code} — {title}")
+    assert machine in doc
+    incident = json.loads(example.read_text(encoding="utf-8"))
+    assert incident["title"] == entry["title"]
+    assert incident["workflow_effect"] == entry["default_workflow_effect"]
+    assert incident["retryability"] == entry["default_retryability"]
+
+
+def test_619_blocks_release_not_acceptance():
+    # AICE-619 blocks publication CLOSURE, not the published bytes. BLOCK_RELEASE
+    # carries that; the terminal must never retract the canonical entry.
+    incident = json.loads(EXAMPLE_619.read_text(encoding="utf-8"))
+    assert incident["workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_RELEASE"]
+    cd = incident["code_details"]
+    assert cd["set_comparison"]["parity_established"] is False
+    assert cd["set_comparison"]["missing_from_public_summary"] > 0
+    assert all(cd["predicates"].values()), "all seven trigger predicates must hold"
+    # The projection is short, not the canonical set — sibling projections were fine.
+    assert cd["scope_isolation"]["sibling_projections_complete"] is True
+
+
+def test_620_records_partial_authority_return_honestly():
+    # The candidate conceded that two authority dimensions never returned. A
+    # promotion that quietly upgraded that to a total reversal would be overstating
+    # the evidence, so the example must keep both lists non-empty.
+    incident = json.loads(EXAMPLE_620.read_text(encoding="utf-8"))
+    cd = incident["code_details"]
+    assert all(cd["predicates"].values()), "all eight trigger predicates must hold"
+    assert cd["authority_dimensions_returned"]
+    assert cd["authority_dimensions_not_returned"]
+    assert cd["honest_limits"]["total_authority_reversal_claimed"] is False
+    # AICE-610 does not co-emit without a declared enforcement control.
+    assert cd["co_emission"]["enforcement_control_declared"] is False
+    assert cd["co_emission"]["aice_610_co_emitted"] is False
+
+
+def _aice_619_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-619.
+
+    The load-bearing pair is predicates 4 and 5. Predicate 4 (the summary presents
+    itself as the current canonical projection) and predicate 5 (it was updated or
+    reaffirmed for this release) are what separate a failed projection from ordinary
+    documentation debt. A summary nobody touched, or one that declares itself a
+    partial view, is drift — not this incident.
+    """
+    if incident.get("code") != "AICE-619":
+        return False
+    cd = incident.get("code_details", {})
+    preds = cd.get("predicates", {})
+    required = (
+        "canonical_entry_exists",
+        "canonical_entry_is_published",
+        "public_summary_exists",
+        "public_summary_purports_to_represent_current_canonical_set",
+        "public_summary_updated_or_reaffirmed_for_current_release",
+        "canonical_entry_absent_stale_or_contradicted_in_summary",
+        "publication_or_documentation_closure_claimed",
+    )
+    if not all(preds.get(p) is True for p in required):
+        return False
+    cmp_ = cd.get("set_comparison", {})
+    return cmp_.get("parity_established") is False and cmp_.get(
+        "missing_from_public_summary", 0
+    ) > 0
+
+
+def _aice_620_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-620.
+
+    Predicate 7 excludes a path that regained authority in code but was never
+    exercised; predicate 6 excludes a genuine new premise that uniquely required the
+    duplicated authority. Async transport is the standing example of a premise that
+    is real and still does not justify a second semantic lifecycle.
+    """
+    if incident.get("code") != "AICE-620":
+        return False
+    cd = incident.get("code_details", {})
+    preds = cd.get("predicates", {})
+    required = (
+        "canonical_execution_spine_established",
+        "competing_path_previously_demoted_or_displaced",
+        "canonical_spine_later_reaffirmed",
+        "displaced_path_remained_executable",
+        "displaced_path_regained_independent_authority",
+        "no_new_premise_uniquely_requires_duplicated_authority",
+        "authority_reintroduction_actually_occurred",
+        "material_workflow_effect_established",
+    )
+    if not all(preds.get(p) is True for p in required):
+        return False
+    return bool(cd.get("authority_dimensions_returned"))
+
+
+def test_619_canonical_example_satisfies_invariants():
+    assert _aice_619_invariants_ok(_load_619())
+
+
+@pytest.mark.parametrize(
+    "flipped, why",
+    [
+        ("public_summary_purports_to_represent_current_canonical_set",
+         "a declared partial or illustrative view is not this incident"),
+        ("public_summary_updated_or_reaffirmed_for_current_release",
+         "a summary nobody touched is documentation drift, not a failed projection"),
+        ("publication_or_documentation_closure_claimed",
+         "a release openly marked in flight is honest work, not this incident"),
+        ("canonical_entry_is_published",
+         "an unpublished canonical entry means the summary is correct"),
+    ],
+)
+def test_619_is_distinct_from_generic_documentation_drift(flipped, why):
+    # Each of these predicates, alone, separates AICE-619 from ordinary doc drift.
+    incident = _load_619()
+    incident["code_details"]["predicates"][flipped] = False
+    assert not _aice_619_invariants_ok(incident), why
+
+
+def test_619_parity_restored_is_not_the_incident():
+    # Once the projection matches the registry there is no incident left to report,
+    # regardless of how the omission originally arose.
+    incident = _load_619()
+    incident["code_details"]["set_comparison"]["parity_established"] = True
+    incident["code_details"]["set_comparison"]["missing_from_public_summary"] = 0
+    assert not _aice_619_invariants_ok(incident)
+
+
+def test_620_canonical_example_satisfies_invariants():
+    assert _aice_620_invariants_ok(_load_620())
+
+
+@pytest.mark.parametrize(
+    "flipped, why",
+    [
+        ("authority_reintroduction_actually_occurred",
+         "a dormant reactivation surface is a risk, not an incident"),
+        ("no_new_premise_uniquely_requires_duplicated_authority",
+         "a genuinely invalidating new premise defeats the incident"),
+        ("displaced_path_remained_executable",
+         "a properly retired path defeats the incident"),
+        ("competing_path_previously_demoted_or_displaced",
+         "without a prior displacement there is no return, only AICE-610 shape"),
+    ],
+)
+def test_620_authority_return_must_be_proven_not_assumed(flipped, why):
+    incident = _load_620()
+    incident["code_details"]["predicates"][flipped] = False
+    assert not _aice_620_invariants_ok(incident), why
+
+
+def test_620_async_transport_alone_does_not_justify_a_second_lifecycle():
+    # The narrow finding the candidate rested on: the async premise was real and is
+    # not denied, but it explains transport concerns only. If the returned authority
+    # were purely transport-shaped, predicate 5 would fail and this would be the
+    # legitimate-async-adapter negative control instead.
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-620.md").read_text(encoding="utf-8")
+    assert "NEW_TRANSPORT_REQUIREMENT          != NEW_LIFECYCLE_AUTHORITY_REQUIREMENT" in doc
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c["code"] == "AICE-620")
+    assert "ASYNC_TRANSPORT_NEEDED does not imply SECOND_EXECUTION_FSM_NEEDED" in entry["trigger_summary"]
+    incident = _load_620()
+    assert incident["code_details"]["predicates"][
+        "no_new_premise_uniquely_requires_duplicated_authority"
+    ] is True
+
+
+def test_candidate_surface_is_excluded_from_canonical_count_and_schema():
+    # The quarantine surface may hold promoted candidates' evidence, but it must
+    # never contribute a code. Promotion copies a class into the canonical surfaces;
+    # it does not make the dossier authoritative. Nothing under candidates/ is read
+    # by the checker, and no candidate file may masquerade as a code document.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    schema = _load_schema()
+    candidates_dir = ROOT / "spec" / "aice" / "candidates"
+    if not candidates_dir.exists():
+        pytest.skip("candidate surface absent in this tree")
+
+    # Evidence preservation: the surface is not emptied by promotion.
+    dossiers = sorted(p for p in candidates_dir.glob("*.md") if p.name != "README.md")
+    assert dossiers, "promoted candidates' evidence must be preserved, not deleted"
+
+    # Exclusion: the canonical count comes from the registry alone.
+    assert len(registry["canonical_defined_set"]) == len(check_aice.EXPECTED_CODES)
+    assert len(registry["codes"]) == len(check_aice.EXPECTED_CODES)
+    assert len(schema["properties"]["code"]["enum"]) == len(check_aice.EXPECTED_CODES)
+
+    # No candidate file is named as, or resolves to, a code document.
+    for path in candidates_dir.glob("*.md"):
+        assert not re.fullmatch(r"AICE-\d{3}\.md", path.name), (
+            f"{path.name} names itself a code document inside the quarantine surface"
+        )
+
+    # The checker must not reference the candidate surface at all.
+    checker = (ROOT / "reference" / "python" / "scripts" / "aice" / "check_aice.py").read_text(
+        encoding="utf-8"
+    )
+    assert "candidate" not in checker.lower()
+
+
+def test_619_doc_discloses_the_single_instance_waiver():
+    # AICE-619 was promoted on ONE instance; its candidate record demanded two. The
+    # operator waived that condition explicitly, and the waiver is disclosed on the
+    # published surface rather than buried in an episode note. A future edit that
+    # quietly drops the disclosure would make the code look better-evidenced than it
+    # is, so the disclosure is asserted here.
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-619.md").read_text(encoding="utf-8")
+    assert "## Promotion provenance and operator waiver (non-normative)" in doc
+    assert "promoted on **one** observed instance" in doc
+    assert "UNCOMMITTED_WORKING_TREE != CANONICAL_PUBLISHED_STATE" in doc
+
+
+def test_620_normative_doc_resolves_the_610_overlap():
+    # The candidate left the AICE-610 relationship as an open taxonomy question and
+    # made resolving it a promotion condition. The published code document must
+    # actually resolve it, not restate the question.
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-620.md").read_text(encoding="utf-8")
+    assert "## AICE-610 resolution (normative)" in doc
+    assert "orthogonal" in doc
+    assert "ARCHITECTURAL_DECLARATION != ENFORCEMENT_CONTROL" in doc
 
 
 def test_aice_600_is_genuinely_unassigned():
@@ -213,15 +510,38 @@ def test_aice_600_is_genuinely_unassigned():
     assert list(_validator().iter_errors(incident)), "AICE-600 is unassigned and must be rejected"
 
 
-def test_aice_619_is_neither_defined_nor_reserved():
+def test_aice_621_is_neither_defined_nor_reserved():
+    # The successor sentinel. It was AICE-619 until AICE-619 and AICE-620 were
+    # assigned; assigning them relocated the guard to AICE-621 rather than removing
+    # it. Contiguity up to the current boundary promises nothing past it, and
+    # extending the range is not a mechanism for reserving the next number.
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
-    assert "AICE-619" not in registry["canonical_defined_set"]
-    assert "AICE-619" not in registry.get("unassigned_codes", [])
-    assert "AICE-619" not in [c["code"] for c in registry["codes"]]
-    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-619.md").exists()
+    assert "AICE-621" not in registry["canonical_defined_set"]
+    assert "AICE-621" not in registry.get("unassigned_codes", [])
+    assert "AICE-621" not in [c["code"] for c in registry["codes"]]
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-621.md").exists()
+    assert not list(EXAMPLES_DIR.glob("aice-621*.json"))
     incident = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
-    incident["code"] = "AICE-619"
-    assert list(_validator().iter_errors(incident)), "AICE-619 is unreserved and must be rejected"
+    incident["code"] = "AICE-621"
+    assert list(_validator().iter_errors(incident)), "AICE-621 is unreserved and must be rejected"
+
+
+def test_successor_sentinel_tracks_the_defined_set_boundary():
+    # Guards the relocation itself: whatever the highest defined code is, the very
+    # next number must be absent from the registry, the schema enum, the checker's
+    # expected set, the code documents, and the examples. This survives future
+    # promotions without being rewritten, which the hardcoded AICE-619 guard did not.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    schema = _load_schema()
+    highest = max(int(c.split("-")[1]) for c in registry["canonical_defined_set"])
+    successor = f"AICE-{highest + 1}"
+    assert successor not in registry["canonical_defined_set"]
+    assert successor not in registry.get("unassigned_codes", [])
+    assert successor not in [c["code"] for c in registry["codes"]]
+    assert successor not in schema["properties"]["code"]["enum"]
+    assert successor not in check_aice.EXPECTED_CODES
+    assert not (ROOT / "spec" / "aice" / "codes" / f"{successor}.md").exists()
+    assert not list(EXAMPLES_DIR.glob(f"aice-{highest + 1}*.json"))
 
 
 def test_registry_machine_names_are_unique():
@@ -236,7 +556,8 @@ def test_schema_accepts_defined_set_but_rejects_unassigned_600():
     # intent — the closed set rejects codes outside it — is preserved, retargeted
     # to the current unassigned code.
     for loader in (_load_601, _load_602, _load_603, _load_610, _load_611, _load_612,
-                   _load_613, _load_614, _load_615, _load_616, _load_617, _load_618):
+                   _load_613, _load_614, _load_615, _load_616, _load_617, _load_618,
+                   _load_619, _load_620):
         assert not list(_validator().iter_errors(loader())), f"{loader.__name__} must validate"
     incident = _load_614()
     incident["code"] = "AICE-600"
@@ -276,6 +597,8 @@ def test_existing_examples_remain_valid_under_current_version():
         "aice-616-baseline-diff-conflation.json",
         "aice-617-process-activity-outcome-substitution.json",
         "aice-618-verifier-gated-by-coder-evidence-ceiling.json",
+        "aice-619-canonical-summary-entry-omission.json",
+        "aice-620-canonical-execution-path-reintroduction.json",
     ):
         incident = json.loads((EXAMPLES_DIR / name).read_text(encoding="utf-8"))
         errors = list(_validator().iter_errors(incident))
@@ -996,26 +1319,26 @@ def test_602_example_historical_scope_is_narrow_and_verified():
 
 # --- Version / defined-set / $id parity ---------------------------------------
 
-def test_spec_version_is_consistently_0_10_0():
+def test_spec_version_is_consistently_0_11_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.10.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.10.0"
-    assert check_aice.EXPECTED_VERSION == "0.10.0"
+    assert registry["spec_version"] == "0.11.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.11.0"
+    assert check_aice.EXPECTED_VERSION == "0.11.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.10.0", ex.name
+        assert data["spec_version"] == "0.11.0", ex.name
 
 
-def test_schema_id_is_v0_10_and_unique():
+def test_schema_id_is_v0_11_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.10"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.11"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.10" in text:
+        if "urn:cap:schema:aice-incident:v0.11" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
@@ -1188,9 +1511,9 @@ def _tamper_remove_618(tmp: Path) -> None:
     _tamper_remove_code(tmp, "AICE-618")
 
 
-def _tamper_stale_count_17(tmp: Path) -> None:
-    # Drop AICE-618 so the defined count is a stale 17 instead of 18.
-    _tamper_remove_code(tmp, "AICE-618")
+def _tamper_stale_count_19(tmp: Path) -> None:
+    # Drop AICE-620 so the defined count is a stale 19 instead of 20.
+    _tamper_remove_code(tmp, "AICE-620")
 
 
 def _tamper_remove_617(tmp: Path) -> None:
@@ -1198,30 +1521,45 @@ def _tamper_remove_617(tmp: Path) -> None:
     _tamper_remove_code(tmp, "AICE-617")
 
 
-def _tamper_add_619(tmp: Path) -> None:
-    # AICE-619 is neither defined nor reserved; adding it as a defined code (with
-    # no doc) must break exact-set membership.
+def _tamper_remove_619(tmp: Path) -> None:
+    # AICE-619 is now DEFINED; removing it must break the closed defined set.
+    _tamper_remove_code(tmp, "AICE-619")
+
+
+def _tamper_add_621(tmp: Path) -> None:
+    # AICE-621 is neither defined nor reserved; adding it as a defined code (with
+    # no doc) must break exact-set membership. This is the relocated form of the
+    # guard that previously targeted AICE-619 — promoting 619 and 620 moved the
+    # sentinel forward, it did not retire it.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["codes"].append(
         {
-            "code": "AICE-619",
+            "code": "AICE-621",
             "title": "Placeholder",
             "default_workflow_effect": ["STATE_UNCHANGED"],
             "default_retryability": "requires_new_evidence",
             "spec_status": "draft",
         }
     )
-    data["canonical_defined_set"].append("AICE-619")
+    data["canonical_defined_set"].append("AICE-621")
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
-def _tamper_false_contiguous_range_618(tmp: Path) -> None:
-    # Any contiguity-promising range field is forbidden: 'AICE-601..AICE-618' would
-    # falsely imply AICE-600 is defined and forward-reserve AICE-619.
+def _tamper_false_contiguous_range_620(tmp: Path) -> None:
+    # Any contiguity-promising range field is forbidden: 'AICE-601..AICE-620' would
+    # falsely imply AICE-600 is defined and forward-reserve AICE-621.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["canonical_code_range"] = ["AICE-601", "AICE-618"]
+    data["canonical_code_range"] = ["AICE-601", "AICE-620"]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_stale_defined_set_v010(tmp: Path) -> None:
+    # The pre-0.11 defined set (601..618) — stale: missing the promoted 619/620.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["canonical_defined_set"] = [f"AICE-{n}" for n in range(601, 619)]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
@@ -1278,11 +1616,13 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         _tamper_remove_615,
         _tamper_remove_616,
         _tamper_remove_618,
-        _tamper_stale_count_17,
+        _tamper_stale_count_19,
         _tamper_remove_617,
-        _tamper_add_619,
-        _tamper_false_contiguous_range_618,
+        _tamper_remove_619,
+        _tamper_add_621,
+        _tamper_false_contiguous_range_620,
         _tamper_stale_defined_set_v07,
+        _tamper_stale_defined_set_v010,
         _tamper_stale_version_07,
         _tamper_stale_schema_id_v07,
         _tamper_duplicate_machine_name,
@@ -1306,11 +1646,13 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         "remove_615_from_registry",
         "remove_616_from_registry",
         "remove_618_from_registry",
-        "stale_count_17",
+        "stale_count_19",
         "remove_defined_617",
-        "add_undefined_619",
-        "false_contiguous_range_618",
+        "remove_defined_619",
+        "add_undefined_621",
+        "false_contiguous_range_620",
         "stale_defined_set_v07",
+        "stale_defined_set_v010",
         "stale_spec_version_07",
         "stale_schema_id_v07",
         "duplicate_machine_name",

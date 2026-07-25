@@ -1,14 +1,14 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
-## Draft Specification v0.10
+## Draft Specification v0.11
 
-> **Status: Draft / Research-only — Version: 0.10.0**
+> **Status: Draft / Research-only — Version: 0.11.0**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
-> with `AICE-617` assigned the canonical defined set is the closed, contiguous range
-> `AICE-601` … `AICE-618` (`AICE-600` is unassigned; `AICE-619` is neither defined nor
-> reserved).
+> with `AICE-619` and `AICE-620` assigned the canonical defined set is the closed,
+> contiguous range `AICE-601` … `AICE-620` (`AICE-600` is unassigned; `AICE-621` is
+> neither defined nor reserved).
 
 **Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
 
@@ -106,7 +106,9 @@ When an AICE incident is emitted:
 
 | Code | Alias | Title | Default effect |
 |---|---|---|---|
+| `AICE-601` | HTTP 601 (Not Implemented) | Minimum Sufficient Mechanism Bypass | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-602` | HTTP 602 (Bad Gateway) | Gateway Authority Context Failure | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
+| `AICE-603` | HTTP 603 (Service Unavailable) | Governance-Induced Service Unavailability | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-604` | HTTP 604 | Hash Exists, Reality Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-605` | HTTP 605 | Release Exists, Implementation Not Found | `STATE_UNCHANGED`, `BLOCK_RELEASE` |
 | `AICE-606` | HTTP 606 | PASS Exists, Test Run Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
@@ -122,16 +124,19 @@ When an AICE incident is emitted:
 | `AICE-616` | HTTP 616 | Baseline Diff Conflation | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-617` | HTTP 617 | Work Exists, Result Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-618` | HTTP 618 | Verifier Gated by Coder Evidence Ceiling | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
+| `AICE-619` | HTTP 619 | Registry Entry Exists, Summary Not Found | `STATE_UNCHANGED`, `BLOCK_RELEASE` |
+| `AICE-620` | HTTP 620 | Architectural Groundhog Loop | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
 
-The defined set is **closed** and, with `AICE-617` now assigned, the contiguous range
-`AICE-601` … `AICE-618`. `AICE-600` remains **unassigned** — no observed incident class yet,
+The defined set is **closed** and, with `AICE-619` and `AICE-620` now assigned, the contiguous
+range `AICE-601` … `AICE-620`. `AICE-600` remains **unassigned** — no observed incident class yet,
 not reserved for a predetermined meaning; a gap in the registry is not missing specification,
-it is missing evidence. `AICE-619` is **neither defined nor reserved**: the contiguity of
-`AICE-601..AICE-618` promises no `AICE-619`, and adding a code still requires a normative
-versioned change.
+it is missing evidence. `AICE-621` is **neither defined nor reserved**: the contiguity of
+`AICE-601..AICE-620` promises no `AICE-621`, and adding a code still requires a normative
+versioned change. Extending the range is not a mechanism for reserving its successor — the
+sentinel moves with the set precisely so that nothing is silently promised ahead of evidence.
 
 `AICE-615` and `AICE-616` share the non-normative `EPISODE_EXACT_IDENTITY_BINDING` family
 (rollback-restore identity and review-input identity, respectively); that family has no
@@ -156,7 +161,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.10.0
+Version: 0.11.0
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

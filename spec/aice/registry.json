@@ -1,6 +1,6 @@
 {
   "registry": "AICE 6xx — AI Chaos Engineering Incident Taxonomy",
-  "spec_version": "0.10.0",
+  "spec_version": "0.11.0",
   "status": "draft",
   "unofficial": true,
   "not_an_http_or_ietf_standard": true,
@@ -22,13 +22,15 @@
     "AICE-615",
     "AICE-616",
     "AICE-617",
-    "AICE-618"
+    "AICE-618",
+    "AICE-619",
+    "AICE-620"
   ],
   "unassigned_codes": [
     "AICE-600"
   ],
   "set_topology": "closed-contiguous",
-  "set_note": "The defined set is closed. With AICE-617 now assigned, the defined identifiers are the contiguous range AICE-601..AICE-618. AICE-600 remains UNASSIGNED — no observed incident class yet — not reserved for a predetermined meaning; a gap in the registry is not missing specification, it is missing evidence. AICE-619 is neither defined nor reserved: contiguity of AICE-601..AICE-618 promises no AICE-619, and any 'AICE-601..AICE-619' claim is invalid. Adding a code still requires a normative versioned change. The AICE-601/602/603 public HTTP mirrors (501/502/503) are non-normative presentation labels only; canonical authority remains exclusively in the AICE-6xx identifiers. AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family (rollback-restore identity and review-input identity respectively); that family has no numeric code.",
+  "set_note": "The defined set is closed. With AICE-619 and AICE-620 now assigned, the defined identifiers are the contiguous range AICE-601..AICE-620. AICE-600 remains UNASSIGNED — no observed incident class yet — not reserved for a predetermined meaning; a gap in the registry is not missing specification, it is missing evidence. AICE-621 is neither defined nor reserved: contiguity of AICE-601..AICE-620 promises no AICE-621, and any 'AICE-601..AICE-621' claim is invalid. Extending the range is not a mechanism for reserving its successor. Adding a code still requires a normative versioned change. The AICE-601/602/603 public HTTP mirrors (501/502/503) are non-normative presentation labels only; canonical authority remains exclusively in the AICE-6xx identifiers. AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family (rollback-restore identity and review-input identity respectively); that family has no numeric code.",
   "codes": [
     {
       "code": "AICE-601",
@@ -267,6 +269,36 @@
       "machine_name": "VERIFIER_GATED_BY_CODER_EVIDENCE_CEILING",
       "short_description": "A coder execution-evidence ceiling is applied to verifier candidate eligibility, excluding technically and policy-capable verifier routes and making a required independent-verification control unreachable.",
       "trigger_summary": "A coder-derived execution-evidence ceiling was applied to a verifier role governed by distinct canonical review-capability facts; the misapplication changed real eligibility, excluded otherwise valid verifier candidates, and made a required verification control unreachable, while coder output remained byte-for-byte unchanged. CODER_EVIDENCE_CEILING does not imply VERIFIER_REVIEW_CAPABILITY.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_ACCEPTANCE"
+      ],
+      "default_retryability": "requires_new_evidence",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-619",
+      "title": "Registry Entry Exists, Summary Not Found",
+      "human_alias": "HTTP 619 — Registry Entry Exists, Summary Not Found",
+      "descriptive_alias": "Implementation Exists, Documentation Not Found",
+      "machine_name": "CANONICAL_SUMMARY_ENTRY_OMISSION",
+      "short_description": "A canonical entry is implemented and included in a published release, and a public summary that is required or reasonably presented as the current projection of that canonical registry is updated for the release, but the entry is absent, stale, or contradicted in that summary while publication closure is claimed. The defect is in the projection, not in the canonical bytes: the registry is correct and the reader is not served it.",
+      "trigger_summary": "A published canonical entry exists; a public summary purporting to represent the current canonical set exists and was updated or reaffirmed for the release; the entry is absent, stale, or contradicted in that summary; and publication or documentation closure is claimed. ENTRY_PRESENT_IN_REGISTRY does not imply ENTRY_PRESENT_TO_THE_READER, and CHECKER_PASS does not imply PUBLIC_SUMMARY_PARITY_ESTABLISHED. A document that explicitly declares itself a selected, illustrative, or pinned-historical view is not this incident; the presumption of completeness must be defeated by the document's own scope statement, never inferred from the omission itself.",
+      "default_workflow_effect": [
+        "STATE_UNCHANGED",
+        "BLOCK_RELEASE"
+      ],
+      "default_retryability": "requires_state_materialization",
+      "spec_status": "draft"
+    },
+    {
+      "code": "AICE-620",
+      "title": "Architectural Groundhog Loop",
+      "human_alias": "HTTP 620 — Architectural Groundhog Loop",
+      "descriptive_alias": "Canonical Execution Path Reintroduction",
+      "machine_name": "CANONICAL_EXECUTION_PATH_REINTRODUCTION",
+      "short_description": "An execution path that previously held or could exercise independent control authority is explicitly subordinated, displaced, or reduced to a thin adapter when another path becomes the canonical execution spine; the displaced path remains executable and later regains independent lifecycle, identity, state, routing, retry, admission, mutation, cancellation, lease, or terminal authority without a new premise uniquely requiring duplicated control authority, recreating the competing execution topology the earlier architectural decision was intended to remove.",
+      "trigger_summary": "A canonical execution spine was established and later reaffirmed; a competing path was demoted or displaced from it; that path remained executable rather than retired; it regained independent control authority; no new premise uniquely required the duplicated authority; the reintroduced authority was actually exercised, not merely reachable; and a material workflow effect exists. ASYNC_TRANSPORT_NEEDED does not imply SECOND_EXECUTION_FSM_NEEDED; PATH_STILL_CALLABLE does not imply PATH_HAS_RETURNED_AS_AUTHORITY; DORMANT_EXECUTABLE_PATH does not imply REINTRODUCED_EXECUTION_AUTHORITY. Multiple entrypoints that converge immediately on one identity, lifecycle, retry ledger, and terminal are not this incident; non-convergence is.",
       "default_workflow_effect": [
         "STATE_UNCHANGED",
         "BLOCK_ACCEPTANCE"

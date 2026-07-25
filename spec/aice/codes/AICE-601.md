@@ -1,6 +1,6 @@
 # AICE-601 — Minimum Sufficient Mechanism Bypass
 
-**Unofficial draft (AICE v0.10.0).**
+**Unofficial draft (AICE v0.11.0).**
 
 ## Canonical identifier
 

@@ -1,0 +1,103 @@
+{
+  "code": "AICE-620",
+  "title": "Architectural Groundhog Loop",
+  "spec_version": "0.11.0",
+  "claim": "The workflow/control plane is the single canonical execution spine; the legacy loop controller is a compatibility wrapper that executes one bounded attempt and obeys the returned transition.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "spine_establishment",
+      "detail": "One commit removes the entire cross-attempt decision ladder from the controller and installs it in a new transition module, whose own bytes state that the controller becomes a thin driver obeying the returned transition."
+    },
+    {
+      "type": "spine_reaffirmation",
+      "detail": "A workflow module re-exports the transition and driver functions under a comment naming itself the declared owner, and the standing client contract names that plane the control plane while mentioning the controller nowhere."
+    },
+    {
+      "type": "displaced_path_survival",
+      "detail": "A deletion-filtered history search for the controller is empty. It is registered, advertised in the model-facing tool catalog, and dispatched at the pinned head."
+    },
+    {
+      "type": "transition_interception",
+      "detail": "The controller intercepts the spine's own retry and escalate transition kinds on the coder path and routes them to a second cross-attempt decision function carrying its own policy version."
+    },
+    {
+      "type": "bound_substitution",
+      "detail": "The caller-supplied loop bound is hard-validated against a declared ceiling and then discarded on the code-change path in favour of a constant owned by the loop plane; the substituted value is fed back into the spine's own budget rule."
+    },
+    {
+      "type": "runtime_record",
+      "detail": "A persisted loop record shows a recorded escalate transition followed immediately by a retry-allowed state and a further attempt. Classified TEST_EXECUTION: it demonstrates the mechanism, not production usage."
+    },
+    {
+      "type": "lineage_fragmentation",
+      "detail": "Two persisted identity namespaces share no join in either direction, and none of the six loop-plane modules reaches the spine's task-start or step-result entrypoints."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "unique_necessity_witness",
+      "detail": "No design note, ADR, or governance surface anywhere in the bounded evidence universe explains why the returning decision function was placed outside the spine. NOT_FOUND_IN_BOUNDED_EVIDENCE_UNIVERSE does not imply contrary evidence cannot exist."
+    },
+    {
+      "type": "premise_alignment",
+      "detail": "The genuine new premise was asynchronous transport, which explains the job table, worker, leases, and cancellation. The retry-authority return entered under a later commit whose stated premise was reassignment, which has no synchrony component."
+    },
+    {
+      "type": "governance_declaration",
+      "detail": "The returning entrypoint is declared neither canonical nor retired in any governance prose, while the contract requires the spine entrypoint and forbids substitution."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Block acceptance of the competing topology; do not delete the reintroduced path or decommission a running system as a remediation step. Then either converge — return the intercepted transition decision and the loop bound to the spine, so the adapter receives them rather than supplying them — or record the necessity: declare the second authority canonical for its named scope, bind it into the governance contract, and reconcile the two identity namespaces so lineage joins in at least one direction. Restating in documentation that the spine is authoritative is not a remediation; prose reaffirmation is what predicate 3 already recorded and predicate 5 already survived.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "form": "B",
+    "form_note": "A former authority was displaced and later returned. The returning path did not originate subordinate.",
+    "predicates": {
+      "canonical_execution_spine_established": true,
+      "competing_path_previously_demoted_or_displaced": true,
+      "canonical_spine_later_reaffirmed": true,
+      "displaced_path_remained_executable": true,
+      "displaced_path_regained_independent_authority": true,
+      "no_new_premise_uniquely_requires_duplicated_authority": true,
+      "authority_reintroduction_actually_occurred": true,
+      "material_workflow_effect_established": true
+    },
+    "authority_dimensions_returned": [
+      "primary_job_identity",
+      "persisted_lifecycle_state",
+      "cross_attempt_transition_authority",
+      "retry_budget",
+      "reassignment_ledger",
+      "admission",
+      "cancellation",
+      "leases",
+      "terminal_classification",
+      "terminal_result_persistence"
+    ],
+    "authority_dimensions_not_returned": [
+      "routing_model_selection",
+      "apply_rollback_authority"
+    ],
+    "honest_limits": {
+      "total_authority_reversal_claimed": false,
+      "detail": "Two dimensions never returned. A partial return is sufficient for predicate 5 and is recorded as partial rather than overstated."
+    },
+    "material_effects": {
+      "duplicated_retry_authority": "The executed attempt bound on the code-change path is a constant owned by the loop plane, while the same module declares, validates against, and documents a lower ceiling. The effective bound is the one neither surface advertises.",
+      "authoritative_lineage_fragmentation": "Two disjoint persisted identity namespaces with no join in either direction.",
+      "contract_execution_contradiction": "An advertised, exercised entrypoint reaches no spine task-start, while the standing contract requires it and forbids substitution."
+    },
+    "co_emission": {
+      "enforcement_control_declared": false,
+      "aice_610_co_emitted": false,
+      "detail": "The reaffirmation instrument was a re-export binding and an observe-only lifecycle handle. Neither validates and produces a result that could be bypassed, so there is no declared-but-unenforced control. ARCHITECTURAL_DECLARATION is not ENFORCEMENT_CONTROL."
+    }
+  },
+  "notes": "Derived from an observed episode spanning three repositories, none of them this one. Load-bearing claims rest on file bytes and persisted runtime artifacts; commit-message text is HISTORICAL_CORROBORATION used only to date or label, and suite-produced records are TEST_EXECUTION used to demonstrate mechanism, never production usage. No commit id, path, digest, receipt, or timestamp is asserted here as canonical fact. NEW_TRANSPORT_REQUIREMENT does not imply NEW_LIFECYCLE_AUTHORITY_REQUIREMENT, and PATH_STILL_CALLABLE does not imply PATH_HAS_RETURNED_AS_AUTHORITY. Had the async adapter landed without the later transition interception and bound substitution, this incident would not exist."
+}

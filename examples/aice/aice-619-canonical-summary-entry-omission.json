@@ -1,0 +1,78 @@
+{
+  "code": "AICE-619",
+  "title": "Registry Entry Exists, Summary Not Found",
+  "spec_version": "0.11.0",
+  "claim": "The v0.10.0 release is published and closed: registry, schema, code documents, examples, checker, and tests are all consistent and independently verified.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "canonical_set",
+      "detail": "The registry declares eighteen defined codes, and the schema code enum contains the identical eighteen. Both are machine-parsed, not read from prose."
+    },
+    {
+      "type": "public_summary_set",
+      "detail": "The document section headed 'Registry summary' carries sixteen table rows. Two published codes have no row; a git history search finds no commit that ever added one."
+    },
+    {
+      "type": "summary_in_scope_for_release",
+      "detail": "The publication commit edited that same table to add the newest code's row and rewrote the surrounding set prose, so the summary was in scope and reaffirmed, not merely untouched."
+    },
+    {
+      "type": "scope_framing",
+      "detail": "The section is headed 'Registry summary' with no 'selected', 'partial', or 'examples only' qualifier, and the prose two lines below restates the full contiguous defined set correctly."
+    },
+    {
+      "type": "closure_claim",
+      "detail": "Publication closure is asserted for the release, and the published ref matches the local ref with no divergence."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "summary_parity_check",
+      "detail": "No surface compares the public summary row set to the canonical defined set. The integrity checker reads the document only as a relative-link resolution target."
+    },
+    {
+      "type": "public_projection_of_two_codes",
+      "detail": "Two published canonical codes have no representation in the document most readers treat as the registry."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_RELEASE"
+  ],
+  "required_action": "Block publication closure, not the published bytes. Add the missing rows to the summary using titles and default effects taken from the registry rather than re-authored. Add a deterministic parity check that parses the canonical defined set and the summary row set and fails on any missing or extra member, covered by an adversarial tamper test. Re-freeze and independently review the repaired bytes: PREVIOUS_VERIFIER_PASS is not PASS_FOR_MUTATED_BYTES. Do not remove the canonical entries, roll back the codes, or claim the implementation or the release is absent.",
+  "retryability": "requires_state_materialization",
+  "code_details": {
+    "predicates": {
+      "canonical_entry_exists": true,
+      "canonical_entry_is_published": true,
+      "public_summary_exists": true,
+      "public_summary_purports_to_represent_current_canonical_set": true,
+      "public_summary_updated_or_reaffirmed_for_current_release": true,
+      "canonical_entry_absent_stale_or_contradicted_in_summary": true,
+      "publication_or_documentation_closure_claimed": true
+    },
+    "set_comparison": {
+      "canonical_defined_set_size": 18,
+      "public_summary_defined_set_size": 16,
+      "missing_from_public_summary": 2,
+      "extra_in_public_summary": 0,
+      "parity_established": false
+    },
+    "scope_isolation": {
+      "detail": "Sibling projections were correct at the observed commit, which is evidence against an intentionally-partial reading and bounds the required repair to one table.",
+      "sibling_projections_complete": true
+    },
+    "detection_gap": {
+      "checker_enforces": "registry <-> codes <-> examples <-> schema <-> links",
+      "checker_does_not_enforce": "summary table row set vs canonical defined set",
+      "genuine_pass_would_still_be_silent": true
+    },
+    "co_emission": {
+      "summary_parity_control_declared": false,
+      "aice_610_co_emitted": false
+    }
+  },
+  "notes": "Derived from an observed episode in this repository; the defect was in the projection only, and the canonical bytes were correct throughout. Provenance of the underlying set comparison is PRIMARY_PERSISTED — committed bytes machine-parsed on both sides — while narrative details are omitted rather than reconstructed. No commit id, digest, path, or timestamp is asserted here as canonical fact. ENTRY_PRESENT_IN_REGISTRY does not imply ENTRY_PRESENT_TO_THE_READER. The author of the release also recorded the defect, which is a reason for independent review of these bytes, not a reason to soften the record."
+}

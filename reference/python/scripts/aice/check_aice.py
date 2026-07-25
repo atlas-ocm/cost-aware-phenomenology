@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.10).
+"""Deterministic integrity check for the AICE 6xx taxonomy (draft v0.11).
 
 Placed under reference/python/scripts/ to match this repository's convention
 (Python validators live here; scripts/ holds only the PowerShell orchestrator).
 Runnable standalone and wired into check_repo.ps1.
 
-The v0.10 code set is CLOSED and, with AICE-617 now assigned, contiguous:
-AICE-601..AICE-618. AICE-600 is unassigned; AICE-619 is neither defined nor
-reserved. Membership is checked by exact set comparison, never derived from a
-numeric min/max range, so no unassigned/unreserved code (AICE-600, AICE-619) is
-silently admitted by treating the set as an open range.
+The v0.11 code set is CLOSED and, with AICE-619 and AICE-620 now assigned,
+contiguous: AICE-601..AICE-620. AICE-600 is unassigned; AICE-621 is neither
+defined nor reserved. Membership is checked by exact set comparison, never derived
+from a numeric min/max range, so no unassigned/unreserved code (AICE-600,
+AICE-621) is silently admitted by treating the set as an open range.
 
 Checks:
 - all AICE JSON files parse;
-- the registry defined-code set is exactly {AICE-601..AICE-618}, unique;
+- the registry defined-code set is exactly {AICE-601..AICE-620}, unique;
 - the registry declares the unassigned set {AICE-600};
 - no registry entry or code document exists for an unassigned code;
 - the registry carries no contiguity-promising `canonical_code_range` field;
@@ -47,13 +47,14 @@ SCHEMA_PATH = AICE_SPEC / "incident.schema.json"
 CODES_DIR = AICE_SPEC / "codes"
 EXAMPLES_DIR = ROOT / "examples" / "aice"
 
-# Closed and contiguous (AICE-617 now assigned): an explicit set, still compared
-# by exact membership and never derived from a numeric min/max range, so the
-# unassigned AICE-600 and the unreserved AICE-619 stay out of the defined set.
-EXPECTED_CODES = [f"AICE-{n}" for n in range(601, 619)]
+# Closed and contiguous (AICE-619 and AICE-620 now assigned): an explicit set,
+# still compared by exact membership and never derived from a numeric min/max
+# range, so the unassigned AICE-600 and the unreserved AICE-621 stay out of the
+# defined set. Extending the range does not reserve its successor.
+EXPECTED_CODES = [f"AICE-{n}" for n in range(601, 621)]
 EXPECTED_UNASSIGNED = ["AICE-600"]
-EXPECTED_VERSION = "0.10.0"
-EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.10"
+EXPECTED_VERSION = "0.11.0"
+EXPECTED_SCHEMA_ID = "urn:cap:schema:aice-incident:v0.11"
 
 REQUIRED_HEADINGS = [
     "## Canonical identifier",
