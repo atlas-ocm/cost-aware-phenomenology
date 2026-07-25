@@ -196,7 +196,7 @@ For a deeper dive, navigate by folder:
 [`AICE.md`](./AICE.md) is a draft, unofficial CAP application: an incident taxonomy for
 agentic workflows where the **narrative state** claims work is complete but the required
 **physical state** — an observable event, evidence chain, or postcondition — is absent.
-It is machine-checkable (defined codes `AICE-602`, `AICE-604`…`AICE-616`, `AICE-618`) and is
+It is machine-checkable (defined codes `AICE-601`…`AICE-618`) and is
 *not* an HTTP/IETF standard.
 
 - Normative spec: [`spec/aice/README.md`](./spec/aice/README.md)

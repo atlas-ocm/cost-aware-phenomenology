@@ -1,0 +1,63 @@
+{
+  "code": "AICE-617",
+  "title": "Work Exists, Result Not Found",
+  "spec_version": "0.10.0",
+  "claim": "The image-optimizer parity objective is being progressed and closed by continued research, construction, validation, and audit rounds.",
+  "narrative_state": "PARTIAL",
+  "physical_state": "UNOBSERVED",
+  "observed_evidence": [
+    {
+      "type": "process_artifact",
+      "detail": "Research rounds R1-R8, a MILP construction, candidate-construction logic, seals, receipts, roots, and audits exist and the construction is internally verified."
+    },
+    {
+      "type": "deferral_record",
+      "detail": "At the incident boundary another process-only round is proposed while the outcome-producing encode is again deferred."
+    }
+  ],
+  "missing_evidence": [
+    { "type": "product_outcome", "detail": "No encoded output candidate exists: the outcome-producing action was never executed and the encoded-candidate count is zero." },
+    { "type": "outcome_measurement", "detail": "No exact output bytes, measured size, quality observation, or target comparison has been produced; the parity conclusion remains UNKNOWN." },
+    { "type": "product_uncertainty_delta", "detail": "No per-round assessment shows the posterior product uncertainty materially reduced; process artifact count increased while product information did not." }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Perform the minimum outcome-producing action and record its direct result: one real source image -> one actual encode -> exact output bytes -> measured size -> quality observation -> comparison against the target -> positive or negative product conclusion. Preserve the existing research artifacts as honest evidence but stop treating them as product progress, closure, or authority for another process-only round. The encode may lose; a negative product result is a product result. State remains UNKNOWN until an outcome witness exists.",
+  "retryability": "requires_state_materialization",
+  "code_details": {
+    "objective": {
+      "bounded_product_objective_exists": true,
+      "authoritative_product_outcome_defined": true,
+      "outcome_definition": "an encoded output that compresses no worse than the target at comparable quality, or an actual encode establishing the candidate loses"
+    },
+    "minimum_outcome_producing_action": {
+      "identified": true,
+      "admissible": true,
+      "description": "run one real source image through one actual bounded encode; measure output bytes, size, and quality; compare to the target"
+    },
+    "process_activity": {
+      "accumulates": true,
+      "artifacts": "R1-R8 rounds, MILP construction, candidate logic, seals, receipts, roots, audits",
+      "treated_as": [
+        "product_progress",
+        "closure_evidence",
+        "authority_for_another_process_only_round"
+      ]
+    },
+    "product_outcome": {
+      "outcome_evidence_present": false,
+      "encoded_candidate_count": 0,
+      "product_conclusion": "UNKNOWN"
+    },
+    "deferral": {
+      "outcome_producing_action_repeatedly_deferred": true,
+      "additional_process_reduces_product_uncertainty": false
+    },
+    "deployment_claim": {
+      "deployment_or_production_claim_exists": false
+    }
+  },
+  "notes": "REPRESENTATIVE_EXAMPLE — NOT_A_VERIFIED_HISTORICAL_INCIDENT. No commit id, file path, timestamp, digest, or production receipt is asserted as canonical fact; provenance of the underlying episode is HISTORICAL_CORROBORATION / UNKNOWN, not PRIMARY_PERSISTED. The defining defect is the substitution of accumulated process activity for the product outcome while an admissible outcome-producing action stays deferred and product uncertainty is not reduced. WORK_EXISTS does not imply RESULT_EXISTS. A negative product result (an actual encode that loses) would be a product result, not this incident. This is a laboratory-only pipeline with no deployment/production claim, so AICE-607 is not co-emitted; a paired variant that additionally claimed production readiness could co-emit AICE-607 as the consequence."
+}

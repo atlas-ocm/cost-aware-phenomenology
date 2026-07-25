@@ -1,21 +1,22 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.9).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.10).
 
 Covers the incident schema, the golden examples, the schema invariants that
-the taxonomy relies on (closed but SPARSE code set, mandatory STATE_UNCHANGED),
+the taxonomy relies on (closed, contiguous code set, mandatory STATE_UNCHANGED),
 version, defined-set, and schema-$id parity, and the deterministic integrity
 check (registry <-> codes <-> examples <-> links). Includes AICE-601, AICE-602,
 AICE-603, AICE-610, AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616,
-and AICE-618 coverage (with focused AICE-601 minimum-sufficient-mechanism-bypass,
+AICE-617, and AICE-618 coverage (with focused AICE-601 minimum-sufficient-mechanism-bypass,
 AICE-602 gateway-authority-context, AICE-603 governance-induced-service-unavailability,
 AICE-612 cross-actor-inference, AICE-613 self-hosting-mutation-deadlock,
 AICE-614 infrastructure-vs-semantic-verdict, AICE-615 rollback-restore-identity,
-AICE-616 review-input-identity, and AICE-618 verifier-eligibility-ceiling invariants)
-plus adversarial scratch-copy tests that prove the validator detects registry, doc,
-link, sparse-set, unassigned-code, false-contiguity, version, and schema-$id tampering.
+AICE-616 review-input-identity, AICE-617 process-activity-outcome-substitution, and
+AICE-618 verifier-eligibility-ceiling invariants) plus adversarial scratch-copy tests
+that prove the validator detects registry, doc, link, defined-set, unassigned-code,
+false-contiguity, version, and schema-$id tampering.
 
-The v0.9 defined set is closed but sparse: AICE-601..AICE-616 and AICE-618.
-AICE-600 and AICE-617 are unassigned. AICE-615 and AICE-616 share the
-non-normative EPISODE_EXACT_IDENTITY_BINDING family.
+The v0.10 defined set is closed and contiguous: AICE-601..AICE-618. AICE-600 is
+unassigned; AICE-619 is neither defined nor reserved. AICE-615 and AICE-616 share
+the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
 """
 from __future__ import annotations
 
@@ -42,6 +43,7 @@ EXAMPLE_613 = EXAMPLES_DIR / "aice-613-self-hosting-mutation-shape-deadlock.json
 EXAMPLE_614 = EXAMPLES_DIR / "aice-614-infrastructure-failure-as-semantic-verdict.json"
 EXAMPLE_615 = EXAMPLES_DIR / "aice-615-accepted-state-rollback-erasure.json"
 EXAMPLE_616 = EXAMPLES_DIR / "aice-616-baseline-diff-conflation.json"
+EXAMPLE_617 = EXAMPLES_DIR / "aice-617-process-activity-outcome-substitution.json"
 EXAMPLE_618 = EXAMPLES_DIR / "aice-618-verifier-gated-by-coder-evidence-ceiling.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
@@ -81,12 +83,14 @@ def test_schema_rejects_unknown_code():
     assert errors, "Schema must reject codes outside the defined sparse set"
 
 
-@pytest.mark.parametrize("unassigned", ["AICE-600", "AICE-617"])
-def test_schema_rejects_unassigned_codes(unassigned):
+@pytest.mark.parametrize("out_of_set", ["AICE-600", "AICE-619"])
+def test_schema_rejects_codes_outside_defined_set(out_of_set):
+    # AICE-600 is unassigned; AICE-619 is neither defined nor reserved. Both are
+    # outside the closed defined set and must be rejected.
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
-    example["code"] = unassigned
+    example["code"] = out_of_set
     errors = list(_validator().iter_errors(example))
-    assert errors, f"{unassigned} is unassigned and must be rejected by the closed set"
+    assert errors, f"{out_of_set} is outside the defined set and must be rejected"
 
 
 def test_schema_requires_state_unchanged_in_workflow_effect():
@@ -147,49 +151,77 @@ def test_aice_610_example_is_valid():
     assert not errors, [e.message for e in errors]
 
 
-def test_expected_codes_are_the_sparse_defined_set():
-    assert check_aice.EXPECTED_CODES == (
-        [f"AICE-{n}" for n in range(601, 617)] + ["AICE-618"]
-    )
-    for newly_defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-618"):
-        assert newly_defined in check_aice.EXPECTED_CODES
-    # AICE-619 is beyond the defined set; must not be present.
+def test_expected_codes_are_the_contiguous_defined_set():
+    # With AICE-617 assigned the defined set is the closed, contiguous range
+    # AICE-601..AICE-618.
+    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(601, 619)]
+    for defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-617", "AICE-618"):
+        assert defined in check_aice.EXPECTED_CODES
+    # AICE-600 is unassigned; AICE-619 is neither defined nor reserved.
+    assert "AICE-600" not in check_aice.EXPECTED_CODES
+    assert "AICE-600" in check_aice.EXPECTED_UNASSIGNED
     assert "AICE-619" not in check_aice.EXPECTED_CODES
-    # The set is sparse, not contiguous: 600 and 617 are unassigned.
-    for unassigned in ("AICE-600", "AICE-617"):
-        assert unassigned not in check_aice.EXPECTED_CODES
-        assert unassigned in check_aice.EXPECTED_UNASSIGNED
-    assert len(check_aice.EXPECTED_CODES) == 17
+    assert "AICE-619" not in check_aice.EXPECTED_UNASSIGNED
+    assert len(check_aice.EXPECTED_CODES) == 18
 
 
-def test_registry_declares_sparse_closed_set_and_unassigned():
+def test_registry_declares_closed_set_and_unassigned():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     assert sorted(registry["canonical_defined_set"]) == sorted(check_aice.EXPECTED_CODES)
-    assert sorted(registry["unassigned_codes"]) == ["AICE-600", "AICE-617"]
+    assert sorted(registry["unassigned_codes"]) == ["AICE-600"]
     codes = [c["code"] for c in registry["codes"]]
     assert sorted(codes) == sorted(check_aice.EXPECTED_CODES)
-    assert len(codes) == 17
+    assert len(codes) == 18
     # No contiguity-promising range field, and no entry for an unassigned code.
     assert "canonical_code_range" not in registry
-    for unassigned in ("AICE-600", "AICE-617"):
-        assert unassigned not in codes
-        assert not (ROOT / "spec" / "aice" / "codes" / f"{unassigned}.md").exists()
+    assert "AICE-600" not in codes
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
+    # AICE-619 must not appear anywhere as defined or reserved.
+    assert "AICE-619" not in codes
+    assert "AICE-619" not in registry["canonical_defined_set"]
+    assert "AICE-619" not in registry.get("unassigned_codes", [])
 
 
-def test_aice_617_is_genuinely_unassigned():
-    # AICE-617 has NO title, machine name, definition, file, example, or registry
+def test_aice_617_is_defined():
+    # AICE-617 is now a fully defined code: registry entry, defined-set membership,
+    # code document, example, and schema acceptance.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    assert "AICE-617" in registry["canonical_defined_set"]
+    assert "AICE-617" not in registry["unassigned_codes"]
+    assert "AICE-617" in [c["code"] for c in registry["codes"]]
+    assert "AICE-617" in check_aice.EXPECTED_CODES
+    assert (ROOT / "spec" / "aice" / "codes" / "AICE-617.md").exists()
+    assert list(EXAMPLES_DIR.glob("aice-617*.json"))
+    # Schema must accept AICE-617 as an incident code.
+    incident = json.loads(EXAMPLE_617.read_text(encoding="utf-8"))
+    assert not list(_validator().iter_errors(incident)), "AICE-617 must validate as defined"
+
+
+def test_aice_600_is_genuinely_unassigned():
+    # AICE-600 has NO title, machine name, definition, file, example, or registry
     # entry — it exists only in the machine-readable UNASSIGNED_CODES set.
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
-    assert "AICE-617" in registry["unassigned_codes"]
-    assert "AICE-617" not in registry["canonical_defined_set"]
-    assert "AICE-617" not in [c["code"] for c in registry["codes"]]
-    assert "AICE-617" not in check_aice.EXPECTED_CODES
-    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-617.md").exists()
-    assert not list(EXAMPLES_DIR.glob("aice-617*.json"))
-    # Schema must reject AICE-617 as an incident code.
+    assert "AICE-600" in registry["unassigned_codes"]
+    assert "AICE-600" not in registry["canonical_defined_set"]
+    assert "AICE-600" not in [c["code"] for c in registry["codes"]]
+    assert "AICE-600" not in check_aice.EXPECTED_CODES
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
+    assert not list(EXAMPLES_DIR.glob("aice-600*.json"))
+    # Schema must reject AICE-600 as an incident code.
     incident = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
-    incident["code"] = "AICE-617"
-    assert list(_validator().iter_errors(incident)), "AICE-617 is unassigned and must be rejected"
+    incident["code"] = "AICE-600"
+    assert list(_validator().iter_errors(incident)), "AICE-600 is unassigned and must be rejected"
+
+
+def test_aice_619_is_neither_defined_nor_reserved():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    assert "AICE-619" not in registry["canonical_defined_set"]
+    assert "AICE-619" not in registry.get("unassigned_codes", [])
+    assert "AICE-619" not in [c["code"] for c in registry["codes"]]
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-619.md").exists()
+    incident = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
+    incident["code"] = "AICE-619"
+    assert list(_validator().iter_errors(incident)), "AICE-619 is unreserved and must be rejected"
 
 
 def test_registry_machine_names_are_unique():
@@ -198,17 +230,17 @@ def test_registry_machine_names_are_unique():
     assert len(names) == len(set(names)), f"duplicate machine_name(s): {names}"
 
 
-def test_schema_accepts_defined_set_but_rejects_unassigned_617():
-    # Migrated from the v0.7 form (which rejected AICE-615): AICE-615/616/618 are
-    # now DEFINED and must validate, while the still-unassigned AICE-617 must be
-    # rejected. The original safety intent — the closed set rejects codes outside
-    # it — is preserved, retargeted to the current sparse gap.
+def test_schema_accepts_defined_set_but_rejects_unassigned_600():
+    # AICE-617 is now DEFINED and must validate alongside the rest of the closed
+    # set; the still-unassigned AICE-600 must be rejected. The original safety
+    # intent — the closed set rejects codes outside it — is preserved, retargeted
+    # to the current unassigned code.
     for loader in (_load_601, _load_602, _load_603, _load_610, _load_611, _load_612,
-                   _load_613, _load_614, _load_615, _load_616, _load_618):
+                   _load_613, _load_614, _load_615, _load_616, _load_617, _load_618):
         assert not list(_validator().iter_errors(loader())), f"{loader.__name__} must validate"
     incident = _load_614()
-    incident["code"] = "AICE-617"
-    assert list(_validator().iter_errors(incident)), "AICE-617 must be rejected (unassigned)"
+    incident["code"] = "AICE-600"
+    assert list(_validator().iter_errors(incident)), "AICE-600 must be rejected (unassigned)"
 
 
 def test_registry_and_doc_metadata_agree_for_610():
@@ -228,7 +260,7 @@ def test_610_example_requires_state_unchanged():
     assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
 
 
-def test_existing_examples_remain_valid_under_v0_8():
+def test_existing_examples_remain_valid_under_current_version():
     for name in (
         "aice-601-minimum-sufficient-mechanism-bypass.json",
         "aice-602-gateway-authority-context-failure.json",
@@ -242,6 +274,7 @@ def test_existing_examples_remain_valid_under_v0_8():
         "aice-614-infrastructure-failure-as-semantic-verdict.json",
         "aice-615-accepted-state-rollback-erasure.json",
         "aice-616-baseline-diff-conflation.json",
+        "aice-617-process-activity-outcome-substitution.json",
         "aice-618-verifier-gated-by-coder-evidence-ceiling.json",
     ):
         incident = json.loads((EXAMPLES_DIR / name).read_text(encoding="utf-8"))
@@ -963,26 +996,26 @@ def test_602_example_historical_scope_is_narrow_and_verified():
 
 # --- Version / defined-set / $id parity ---------------------------------------
 
-def test_spec_version_is_consistently_0_9_0():
+def test_spec_version_is_consistently_0_10_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.9.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.9.0"
-    assert check_aice.EXPECTED_VERSION == "0.9.0"
+    assert registry["spec_version"] == "0.10.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.10.0"
+    assert check_aice.EXPECTED_VERSION == "0.10.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.9.0", ex.name
+        assert data["spec_version"] == "0.10.0", ex.name
 
 
-def test_schema_id_is_v0_9_and_unique():
+def test_schema_id_is_v0_10_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.9"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.10"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.9" in text:
+        if "urn:cap:schema:aice-incident:v0.10" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
@@ -1155,32 +1188,40 @@ def _tamper_remove_618(tmp: Path) -> None:
     _tamper_remove_code(tmp, "AICE-618")
 
 
-def _tamper_stale_count_14(tmp: Path) -> None:
-    # Drop AICE-618 so the defined count is a stale 14 instead of 15.
+def _tamper_stale_count_17(tmp: Path) -> None:
+    # Drop AICE-618 so the defined count is a stale 17 instead of 18.
     _tamper_remove_code(tmp, "AICE-618")
 
 
-def _tamper_placeholder_617(tmp: Path) -> None:
-    # Insert a placeholder entry for the UNASSIGNED code AICE-617.
+def _tamper_remove_617(tmp: Path) -> None:
+    # AICE-617 is now DEFINED; removing it must break the closed defined set.
+    _tamper_remove_code(tmp, "AICE-617")
+
+
+def _tamper_add_619(tmp: Path) -> None:
+    # AICE-619 is neither defined nor reserved; adding it as a defined code (with
+    # no doc) must break exact-set membership.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["codes"].append(
         {
-            "code": "AICE-617",
+            "code": "AICE-619",
             "title": "Placeholder",
             "default_workflow_effect": ["STATE_UNCHANGED"],
             "default_retryability": "requires_new_evidence",
             "spec_status": "draft",
         }
     )
+    data["canonical_defined_set"].append("AICE-619")
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
 def _tamper_false_contiguous_range_618(tmp: Path) -> None:
-    # A false 'AICE-602..AICE-618' contiguity claim that hides unassigned 603/617.
+    # Any contiguity-promising range field is forbidden: 'AICE-601..AICE-618' would
+    # falsely imply AICE-600 is defined and forward-reserve AICE-619.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
-    data["canonical_code_range"] = ["AICE-602", "AICE-618"]
+    data["canonical_code_range"] = ["AICE-601", "AICE-618"]
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
@@ -1237,8 +1278,9 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         _tamper_remove_615,
         _tamper_remove_616,
         _tamper_remove_618,
-        _tamper_stale_count_14,
-        _tamper_placeholder_617,
+        _tamper_stale_count_17,
+        _tamper_remove_617,
+        _tamper_add_619,
         _tamper_false_contiguous_range_618,
         _tamper_stale_defined_set_v07,
         _tamper_stale_version_07,
@@ -1264,8 +1306,9 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         "remove_615_from_registry",
         "remove_616_from_registry",
         "remove_618_from_registry",
-        "stale_count_14",
-        "placeholder_unassigned_617",
+        "stale_count_17",
+        "remove_defined_617",
+        "add_undefined_619",
         "false_contiguous_range_618",
         "stale_defined_set_v07",
         "stale_spec_version_07",
@@ -1993,3 +2036,191 @@ def test_601_and_603_are_separable():
     cd603 = _load_603()["code_details"]
     assert "minimum_sufficient_path" in cd601 and "mandatory_dependency" not in cd601
     assert "mandatory_dependency" in cd603 and "minimum_sufficient_path" not in cd603
+
+
+# --- AICE-617: Process Activity Outcome Substitution ---------------------------
+
+AICE_617_TITLE = "Work Exists, Result Not Found"
+AICE_617_MACHINE = "PROCESS_ACTIVITY_OUTCOME_SUBSTITUTION"
+
+
+def _load_617():
+    return json.loads(EXAMPLE_617.read_text(encoding="utf-8"))
+
+
+def _aice_617_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-617 (process/outcome substitution).
+
+    Not imposed on arbitrary envelopes — only used to guard the canonical
+    repository example and to prove that specific mutations invalidate it. The
+    predicate requires a bounded objective with a defined product outcome, an
+    identified AND admissible minimum outcome-producing action, accumulating
+    process activity, an ABSENT product outcome, repeated deferral of the outcome
+    action, no material product-uncertainty reduction, and process activity
+    treated as progress/closure/authority. A produced outcome (even a losing one),
+    a round that reduces product uncertainty, an inadmissible action, no deferral,
+    or process not claimed as progress must all break it.
+    """
+    if incident.get("code") != "AICE-617":
+        return True
+    cd = incident.get("code_details", {})
+    obj = cd.get("objective", {})
+    act = cd.get("minimum_outcome_producing_action", {})
+    proc = cd.get("process_activity", {})
+    out = cd.get("product_outcome", {})
+    deferral = cd.get("deferral", {})
+    effect = incident.get("workflow_effect", [])
+    return all(
+        [
+            obj.get("bounded_product_objective_exists") is True,
+            obj.get("authoritative_product_outcome_defined") is True,
+            act.get("identified") is True,
+            act.get("admissible") is True,
+            proc.get("accumulates") is True,
+            bool(proc.get("treated_as")),
+            out.get("outcome_evidence_present") is False,
+            deferral.get("outcome_producing_action_repeatedly_deferred") is True,
+            deferral.get("additional_process_reduces_product_uncertainty") is False,
+            "STATE_UNCHANGED" in effect,
+            "BLOCK_ACCEPTANCE" in effect,
+        ]
+    )
+
+
+def test_aice_617_example_is_valid():
+    errors = sorted(_validator().iter_errors(_load_617()), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_registry_and_doc_metadata_agree_for_617():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-617")
+    assert entry["title"] == AICE_617_TITLE
+    assert entry["machine_name"] == AICE_617_MACHINE
+    assert entry["default_workflow_effect"] == ["STATE_UNCHANGED", "BLOCK_ACCEPTANCE"]
+    assert entry["default_retryability"] == "requires_state_materialization"
+    doc = (ROOT / "spec" / "aice" / "codes" / "AICE-617.md").read_text(encoding="utf-8")
+    assert doc.startswith(f"# AICE-617 — {AICE_617_TITLE}")
+    # machine name present in the doc (registry <-> doc machine-name parity)
+    assert AICE_617_MACHINE in doc
+    assert _load_617()["title"] == entry["title"]
+
+
+def test_617_title_is_short_alias_machine_name_is_precise():
+    # The canonical title is the short "X Exists, Y Not Found" alias; the machine
+    # name remains the precise causal mechanism (they are intentionally distinct).
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-617")
+    assert entry["title"] == "Work Exists, Result Not Found"
+    assert entry["machine_name"] == "PROCESS_ACTIVITY_OUTCOME_SUBSTITUTION"
+    assert entry["title"] != entry["machine_name"]
+    assert entry.get("descriptive_alias") == "Process Activity Without Product Outcome"
+
+
+def test_617_example_requires_state_unchanged():
+    incident = _load_617()
+    assert "STATE_UNCHANGED" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "STATE_UNCHANGED"]
+    assert list(_validator().iter_errors(incident)), "workflow_effect must contain STATE_UNCHANGED"
+
+
+def test_617_example_blocks_acceptance():
+    incident = _load_617()
+    assert "BLOCK_ACCEPTANCE" in incident["workflow_effect"]
+    incident["workflow_effect"] = [e for e in incident["workflow_effect"] if e != "BLOCK_ACCEPTANCE"]
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_canonical_example_satisfies_invariants():
+    assert _aice_617_invariants_ok(_load_617())
+
+
+def test_617_produced_outcome_even_losing_is_not_617():
+    # A negative product result IS a product result: an actual outcome-producing
+    # action that loses is not this incident.
+    incident = _load_617()
+    incident["code_details"]["product_outcome"]["outcome_evidence_present"] = True
+    incident["code_details"]["product_outcome"]["encoded_candidate_count"] = 1
+    incident["code_details"]["product_outcome"]["product_conclusion"] = "NEGATIVE"
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_productive_round_reducing_uncertainty_is_not_617():
+    # A round that materially reduces the product uncertainty is legitimate.
+    incident = _load_617()
+    incident["code_details"]["deferral"]["additional_process_reduces_product_uncertainty"] = True
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_inadmissible_outcome_action_is_not_617():
+    # If the outcome-producing action is genuinely inadmissible/impossible now,
+    # waiting is a legitimate BLOCKED state, not process/outcome substitution.
+    incident = _load_617()
+    incident["code_details"]["minimum_outcome_producing_action"]["admissible"] = False
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_process_not_claimed_as_progress_is_not_617():
+    # Research artifacts preserved honestly but NOT claimed as product progress,
+    # closure, or authority for another round do not satisfy the predicate.
+    incident = _load_617()
+    incident["code_details"]["process_activity"]["treated_as"] = []
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_is_independent_of_deployment_claim():
+    # AICE-617 does not require a deployment/production claim (that is the
+    # conditional AICE-607 co-emission predicate). The lab-only example has no
+    # such claim, and asserting one does not break the 617 predicate.
+    incident = _load_617()
+    assert incident["code_details"]["deployment_claim"]["deployment_or_production_claim_exists"] is False
+    assert _aice_617_invariants_ok(incident)
+    incident["code_details"]["deployment_claim"]["deployment_or_production_claim_exists"] = True
+    assert _aice_617_invariants_ok(incident)
+
+
+def test_617_example_is_representative_not_historical():
+    incident = _load_617()
+    assert "REPRESENTATIVE_EXAMPLE" in incident["notes"]
+    assert "NOT_A_VERIFIED_HISTORICAL_INCIDENT" in incident["notes"]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        lambda cd: cd["objective"].__setitem__("bounded_product_objective_exists", False),
+        lambda cd: cd["objective"].__setitem__("authoritative_product_outcome_defined", False),
+        lambda cd: cd["minimum_outcome_producing_action"].__setitem__("identified", False),
+        lambda cd: cd["minimum_outcome_producing_action"].__setitem__("admissible", False),
+        lambda cd: cd["process_activity"].__setitem__("accumulates", False),
+        lambda cd: cd["process_activity"].__setitem__("treated_as", []),
+        lambda cd: cd["product_outcome"].__setitem__("outcome_evidence_present", True),
+        lambda cd: cd["deferral"].__setitem__("outcome_producing_action_repeatedly_deferred", False),
+        lambda cd: cd["deferral"].__setitem__("additional_process_reduces_product_uncertainty", True),
+    ],
+    ids=[
+        "objective_unbounded",
+        "outcome_undefined",
+        "action_not_identified",
+        "action_inadmissible",
+        "process_not_accumulating",
+        "process_not_claimed_as_progress",
+        "outcome_produced",
+        "not_deferred",
+        "uncertainty_reduced",
+    ],
+)
+def test_617_mutations_invalidate_substitution_predicate(mutate):
+    incident = _load_617()
+    mutate(incident["code_details"])
+    assert not _aice_617_invariants_ok(incident)
+
+
+def test_617_distinct_from_607_and_611():
+    # 617 governs process-for-outcome substitution (objective/product_outcome/
+    # deferral fields); it carries none of 611's required_path/postcondition
+    # structure, and does not depend on a deployment claim (607 territory).
+    cd617 = _load_617()["code_details"]
+    assert "product_outcome" in cd617 and "deferral" in cd617
+    assert "required_path" not in cd617
+    assert cd617["deployment_claim"]["deployment_or_production_claim_exists"] is False
