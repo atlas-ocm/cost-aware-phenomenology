@@ -1,14 +1,16 @@
 # AICE 6xx — AI Chaos Engineering Incident Taxonomy
-## Draft Specification v0.11
+## Draft Specification v0.12
 
-> **Status: Draft / Research-only — Version: 0.11.0**
+<!-- aice-prose-parity: defined-range 601 621; unassigned AICE-600; reserved AICE-600; unreserved AICE-622 -->
+> **Status: Draft / Research-only — Version: 0.12.0**
 >
 > AICE is an **unofficial draft** taxonomy. It is **not** an HTTP status-code
 > extension, **not** an IETF standard, and its existence is **not** evidence of
 > external adoption. The `HTTP 6xx` labels are memorable human-readable aliases only;
-> with `AICE-619` and `AICE-620` assigned the canonical defined set is the closed,
-> contiguous range `AICE-601` … `AICE-620` (`AICE-600` is unassigned; `AICE-621` is
-> neither defined nor reserved).
+> with `AICE-621` assigned the canonical defined set is the closed,
+> contiguous range `AICE-601` … `AICE-621` (`AICE-600` is reserved for Ontological
+> Lockdown and not yet defined; `AICE-622` is neither defined nor reserved).
+<!-- /aice-prose-parity -->
 
 **Series:** AI Chaos Control Protocols → **AICE 6xx** → Evidence-Gated Incident Taxonomy
 
@@ -126,17 +128,28 @@ When an AICE incident is emitted:
 | `AICE-618` | HTTP 618 | Verifier Gated by Coder Evidence Ceiling | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 | `AICE-619` | HTTP 619 | Registry Entry Exists, Summary Not Found | `STATE_UNCHANGED`, `BLOCK_RELEASE` |
 | `AICE-620` | HTTP 620 | Architectural Groundhog Loop | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
+| `AICE-621` | HTTP 621 | Task Admitted, Output Capacity Not Found | `STATE_UNCHANGED`, `BLOCK_ACCEPTANCE` |
 
 Per-code normative documents live in [`spec/aice/codes/`](./spec/aice/codes/). Worked
 envelopes: [`examples/aice/`](./examples/aice/).
 
-The defined set is **closed** and, with `AICE-619` and `AICE-620` now assigned, the contiguous
-range `AICE-601` … `AICE-620`. `AICE-600` remains **unassigned** — no observed incident class yet,
-not reserved for a predetermined meaning; a gap in the registry is not missing specification,
-it is missing evidence. `AICE-621` is **neither defined nor reserved**: the contiguity of
-`AICE-601..AICE-620` promises no `AICE-621`, and adding a code still requires a normative
-versioned change. Extending the range is not a mechanism for reserving its successor — the
-sentinel moves with the set precisely so that nothing is silently promised ahead of evidence.
+<!-- aice-prose-parity: defined-range 601 621; defined-count 21; unassigned AICE-600; reserved AICE-600; unreserved AICE-622 -->
+The defined set is **closed** and, with `AICE-621` now assigned, the contiguous
+range `AICE-601` … `AICE-621` — twenty-one codes. `AICE-600` is intentionally **reserved** for
+Ontological Lockdown: it is not yet a defined canonical incident code and must not be assigned
+to another class. Its absence from the defined set is an explicit operator reservation — not
+evidence that the number is available, and not a missing registry entry. A number therefore has
+three states, not two: **defined**, **reserved but undefined**, and **available**.
+`AICE-622` is **neither defined nor reserved**:
+the contiguity of `AICE-601..AICE-621` promises no `AICE-622`, and adding a code still requires
+a normative versioned change. Extending the range is not a mechanism for reserving its
+successor — the sentinel moves with the set precisely so that nothing is silently promised
+ahead of evidence.
+
+This paragraph is machine-checked against the registry: the claims above it are evaluated by
+`check_aice.py`, and a code identity named here that no claim covers is a build failure. A
+well-formed registry beside false prose is not a valid publication.
+<!-- /aice-prose-parity -->
 
 `AICE-615` and `AICE-616` share the non-normative `EPISODE_EXACT_IDENTITY_BINDING` family
 (rollback-restore identity and review-input identity, respectively); that family has no
@@ -161,7 +174,7 @@ machine-checkable and telemetry-gated approach.
 
 ```
 Status:  Draft / Research-only
-Version: 0.11.0
+Version: 0.12.0
 ```
 
 Memorable labels are not empirical validation. This repository does not claim

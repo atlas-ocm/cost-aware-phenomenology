@@ -1,6 +1,6 @@
 # AICE-614 — Infrastructure Failure as Semantic Verdict
 
-**Unofficial draft (AICE v0.11.0).**
+**Unofficial draft (AICE v0.12.0).**
 
 ## Canonical identifier
 

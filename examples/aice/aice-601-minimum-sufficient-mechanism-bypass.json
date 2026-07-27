@@ -1,7 +1,7 @@
 {
   "code": "AICE-601",
   "title": "Minimum Sufficient Mechanism Bypass",
-  "spec_version": "0.11.0",
+  "spec_version": "0.12.0",
   "claim": "A mandatory MCP/FSM/verifier-broker apparatus was required to preserve the workflow's safety, authority, evidence, and independence invariants.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",

@@ -1,7 +1,7 @@
 {
   "code": "AICE-619",
   "title": "Registry Entry Exists, Summary Not Found",
-  "spec_version": "0.11.0",
+  "spec_version": "0.12.0",
   "claim": "The v0.10.0 release is published and closed: registry, schema, code documents, examples, checker, and tests are all consistent and independently verified.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",
@@ -16,7 +16,7 @@
     },
     {
       "type": "summary_in_scope_for_release",
-      "detail": "The publication commit edited that same table to add the newest code's row and rewrote the surrounding set prose, so the summary was in scope and reaffirmed, not merely untouched."
+      "detail": "The publication commit edited that same table to add the newest code's row and rewrote the surrounding set prose, so the enumeration itself was engaged and the summary's currency was asserted for the release - not a mere incidental touch."
     },
     {
       "type": "scope_framing",
@@ -49,7 +49,7 @@
       "canonical_entry_is_published": true,
       "public_summary_exists": true,
       "public_summary_purports_to_represent_current_canonical_set": true,
-      "public_summary_updated_or_reaffirmed_for_current_release": true,
+      "public_summary_currency_asserted_for_current_release": true,
       "canonical_entry_absent_stale_or_contradicted_in_summary": true,
       "publication_or_documentation_closure_claimed": true
     },

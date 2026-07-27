@@ -90,7 +90,7 @@ For the current hard-holdout claim status, read the compact status map:
 CAP/
 ├── README.md                      <- you are here
 ├── PAPER.md                       <- single-document academic paper
-├── AICE.md                        <- AICE 6xx incident taxonomy (draft v0.11)
+├── AICE.md                        <- AICE 6xx incident taxonomy (draft v0.12)
 ├── LICENSE                        <- Apache License 2.0
 ├── ROADMAP.md                     <- versioned roadmap
 ├── CITATION.cff                   <- citation metadata
@@ -196,8 +196,10 @@ For a deeper dive, navigate by folder:
 [`AICE.md`](./AICE.md) is a draft, unofficial CAP application: an incident taxonomy for
 agentic workflows where the **narrative state** claims work is complete but the required
 **physical state** — an observable event, evidence chain, or postcondition — is absent.
-It is machine-checkable (defined codes `AICE-601`…`AICE-620`) and is
+<!-- aice-prose-parity: defined-range 601 621 -->
+It is machine-checkable (defined codes `AICE-601`…`AICE-621`) and is
 *not* an HTTP/IETF standard.
+<!-- /aice-prose-parity -->
 
 - Normative spec: [`spec/aice/README.md`](./spec/aice/README.md)
 - Registry: [`spec/aice/registry.json`](./spec/aice/registry.json)

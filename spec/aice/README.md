@@ -1,17 +1,20 @@
 # AICE 6xx — Normative Specification
 
-**Unofficial draft specification, version 0.11.0. Status: Draft / Research-only.**
+**Unofficial draft specification, version 0.12.0. Status: Draft / Research-only.**
 
 AICE (AI Chaos Engineering) is a proposed incident taxonomy for *evidence-boundary
 failures* in AI-assisted workflows. This document is the normative reference for the
-AICE code set — the closed, contiguous set `AICE-601` … `AICE-620` — and the
+AICE code set — the closed, contiguous set `AICE-601` … `AICE-621` — and the
 machine-readable incident envelope
 ([`incident.schema.json`](./incident.schema.json)).
 
+<!-- aice-prose-parity: defined-range 601 621; unassigned AICE-600; reserved AICE-600; unreserved AICE-622 -->
 This is **not** an HTTP status-code extension, **not** an IETF standard, and **not**
 evidence of external adoption. The `HTTP 6xx` labels are memorable human-readable
-aliases only. The canonical defined identifiers are `AICE-601` … `AICE-620`;
-`AICE-600` is unassigned and `AICE-621` is neither defined nor reserved.
+aliases only. The canonical defined identifiers are `AICE-601` … `AICE-621`;
+`AICE-600` is reserved for Ontological Lockdown and not yet defined, and `AICE-622` is
+neither defined nor reserved.
+<!-- /aice-prose-parity -->
 
 AICE 6xx is the evidence-gated incident taxonomy within the broader **AI Chaos Control
 Protocols** series — deterministic control protocols for probabilistic software. That
@@ -61,7 +64,7 @@ machine-readable shape.
 |---|---|---|
 | `code` | MUST | Canonical identifier from the defined set `AICE-601`…`AICE-620`. Unknown codes MUST be rejected. |
 | `title` | MUST | Human-readable code title (see the registry). |
-| `spec_version` | MUST | AICE spec version (`0.11.0`). |
+| `spec_version` | MUST | AICE spec version (`0.12.0`). |
 | `timestamp` | MAY | ISO 8601 emission time. Omit rather than fabricate. |
 | `claim` | MUST | The narrative claim under scrutiny. |
 | `narrative_state` | MUST | `COMPLETE` \| `PARTIAL` \| `ABSENT`. |
@@ -136,6 +139,8 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
 
 ## 6. Registry and codes
 
+<!-- aice-prose-parity: enumerates-all; defined-range 601 621 -->
+
 - [`registry.json`](./registry.json) — compact machine-readable registry of the code
   set, titles, trigger summaries, default effects, and retryability.
 - [`codes/`](./codes/) — one normative Markdown document per code:
@@ -159,16 +164,28 @@ false-positive guards (see [`codes/`](./codes/)). In particular:
   - [`AICE-618`](./codes/AICE-618.md) — Verifier Gated by Coder Evidence Ceiling
   - [`AICE-619`](./codes/AICE-619.md) — Registry Entry Exists, Summary Not Found
   - [`AICE-620`](./codes/AICE-620.md) — Architectural Groundhog Loop
+  - [`AICE-621`](./codes/AICE-621.md) — Task Admitted, Output Capacity Not Found
 
-For v0.11 the defined code set is closed and contiguous: exactly `AICE-601` … `AICE-620`.
-`AICE-600` is unassigned and `AICE-621` is neither defined nor reserved — the contiguity of
-`AICE-601..AICE-620` promises no `AICE-621`, and extending the range is not a mechanism for
+<!-- /aice-prose-parity -->
+
+This list is declared exhaustive and is machine-checked as such: a defined code missing from
+it fails `check_aice.py`. A registry that lists a code its own normative index omits is the
+defect AICE-619 names.
+
+<!-- aice-prose-parity: defined-range 601 621; unassigned AICE-600; reserved AICE-600; unreserved AICE-622 -->
+For v0.12 the defined code set is closed and contiguous: exactly `AICE-601` … `AICE-621`.
+`AICE-600` is **reserved** for Ontological Lockdown — not yet defined, and not available to any
+other incident class; its absence from the defined set is an explicit operator reservation, not
+evidence that the number is free.
+`AICE-622` is neither defined nor reserved — the contiguity of
+`AICE-601..AICE-621` promises no `AICE-622`, and extending the range is not a mechanism for
 reserving its successor. Adding a code requires a normative versioned
 change. The `AICE-601`/`AICE-602`/`AICE-603` public labels mirror `HTTP 501`/`502`/`503`
 as non-normative presentation only; canonical authority stays in the `AICE-6xx`
 identifiers. `AICE-615` and `AICE-616` share the non-normative
 `EPISODE_EXACT_IDENTITY_BINDING` family (restore-identity and review-input identity); that
 family has no numeric code.
+<!-- /aice-prose-parity -->
 
 ## 7. Relationship to CAP
 

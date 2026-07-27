@@ -1,7 +1,7 @@
 {
   "code": "AICE-620",
   "title": "Architectural Groundhog Loop",
-  "spec_version": "0.11.0",
+  "spec_version": "0.12.0",
   "claim": "The workflow/control plane is the single canonical execution spine; the legacy loop controller is a compatibility wrapper that executes one bounded attempt and obeys the returned transition.",
   "narrative_state": "COMPLETE",
   "physical_state": "CONTRADICTED",
@@ -96,7 +96,7 @@
     "co_emission": {
       "enforcement_control_declared": false,
       "aice_610_co_emitted": false,
-      "detail": "The reaffirmation instrument was a re-export binding and an observe-only lifecycle handle. Neither validates and produces a result that could be bypassed, so there is no declared-but-unenforced control. ARCHITECTURAL_DECLARATION is not ENFORCEMENT_CONTROL."
+      "detail": "The reaffirmation instrument was a re-export binding and an observe-only lifecycle handle. Neither reaches any successful control lifecycle stage - constructed, persisted, parsed, or validated - that produces an enforcement result which could be bypassed, so there is no declared-but-unenforced control. ARCHITECTURAL_DECLARATION is not ENFORCEMENT_CONTROL."
     }
   },
   "notes": "Derived from an observed episode spanning three repositories, none of them this one. Load-bearing claims rest on file bytes and persisted runtime artifacts; commit-message text is HISTORICAL_CORROBORATION used only to date or label, and suite-produced records are TEST_EXECUTION used to demonstrate mechanism, never production usage. No commit id, path, digest, receipt, or timestamp is asserted here as canonical fact. NEW_TRANSPORT_REQUIREMENT does not imply NEW_LIFECYCLE_AUTHORITY_REQUIREMENT, and PATH_STILL_CALLABLE does not imply PATH_HAS_RETURNED_AS_AUTHORITY. Had the async adapter landed without the later transition interception and bound substitution, this incident would not exist."

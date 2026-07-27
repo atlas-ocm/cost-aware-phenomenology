@@ -1,6 +1,6 @@
 # AICE-619 — Registry Entry Exists, Summary Not Found
 
-**Unofficial draft (AICE v0.11.0).**
+**Unofficial draft (AICE v0.12.0).**
 
 ## Canonical identifier
 
@@ -23,9 +23,9 @@ identity; the singular title is canonical.
 
 Catch the case where the canonical bytes are **correct** and the reader is nonetheless **not
 served them**. A canonical entry is implemented and published; a public summary that presents
-itself as the current projection of that canonical registry is updated for the release; the
-entry is absent, stale, or contradicted in that summary; and publication closure is claimed
-anyway.
+itself as the current projection of that canonical registry has its currency asserted for the
+release; the entry is absent, stale, or contradicted in that summary; and publication closure
+is claimed anyway.
 
 Canonical machine name: `CANONICAL_SUMMARY_ENTRY_OMISSION`.
 
@@ -53,8 +53,10 @@ All of the following hold:
 3. a public summary exists (`PUBLIC_SUMMARY_EXISTS`);
 4. that summary purports to represent the current canonical set
    (`PUBLIC_SUMMARY_PURPORTS_TO_REPRESENT_CURRENT_CANONICAL_SET`);
-5. it was updated or reaffirmed for the current release
-   (`PUBLIC_SUMMARY_UPDATED_OR_REAFFIRMED_FOR_CURRENT_RELEASE`);
+5. its currency for the current release was asserted — its enumeration was edited in the
+   release, or the document was explicitly restamped or reaffirmed as the current
+   projection (`PUBLIC_SUMMARY_CURRENCY_ASSERTED_FOR_CURRENT_RELEASE`); an edit that
+   neither touches the enumeration nor asserts currency does not qualify;
 6. the entry is absent, stale, or contradicted there
    (`CANONICAL_ENTRY_ABSENT_STALE_OR_CONTRADICTED_IN_SUMMARY`);
 7. publication or documentation closure is claimed
@@ -77,9 +79,20 @@ Required parity boundary:
 PUBLIC_SUMMARY_DEFINED_SET = CANONICAL_REGISTRY_DEFINED_SET
 ```
 
-Predicate 5 is load-bearing and distinguishes this incident from ordinary documentation debt.
-A summary that was *in scope and edited* during the release, and still omits a published
-entry, is a failed projection. A summary nobody touched is stale documentation.
+Predicate 5 is load-bearing and distinguishes this incident from ordinary documentation
+debt, and the discriminating act is the **currency assertion**, not the byte-touch. A
+summary whose enumeration was edited in the release, or which was explicitly reasserted as
+current for it, and still omits a published entry, is a failed projection. A summary nobody
+touched is stale documentation — and so is one that received only an incidental edit
+(formatting, a link fix) that neither engaged the enumeration nor asserted currency. A
+release-number restamp **is** a currency assertion: a document that says it is current for
+this release and omits a published entry fails as a projection, whatever else was edited.
+
+```
+SUMMARY_TOUCHED_IN_RELEASE   != SUMMARY_CURRENCY_ASSERTED
+CURRENCY_ASSERTED_AND_SHORT  -> FAILED_PROJECTION
+TOUCHED_BUT_NO_ASSERTION     -> DOCUMENTATION_ROT
+```
 
 ## Required observations
 
@@ -168,8 +181,9 @@ PREVIOUS_VERIFIER_PASS != PASS_FOR_MUTATED_BYTES
   independent; the review **contract** simply did not enumerate the projection. Independence is
   not the defect — scope is.
 - **AICE-610 — Control Exists, Enforcement Not Found.** 610 requires a declared control that
-  validates and whose result is bypassed. 619 typically arises where **no** parity control was
-  ever declared. See conditional co-emission below.
+  is successfully constructed, persisted, parsed, or validated, and whose result is bypassed.
+  619 typically arises where **no** parity control was ever declared. See conditional
+  co-emission below.
 - **AICE-617 — Work Exists, Result Not Found.** 617 concerns process substituting for the
   target outcome. In 619 the outcome genuinely exists; the documentation does not expose it.
 
@@ -197,6 +211,9 @@ registry values, add a parity guard with a tamper test, and re-review the repair
 Negative shapes that are **not** AICE-619: a document headed "Selected AICE codes
 (illustrative subset)" listing five of eighteen (predicate 4 fails); a `CHANGELOG-v0.9.md`
 showing a seventeen-code table after v0.10.0 ships (predicates 4 and 5 fail — it is pinned);
+a current-looking summary that received only a formatting or typo edit in the release, with
+no enumeration change and no currency restamp (predicate 5 fails — documentation rot, not a
+failed projection);
 a code document drafted in a working tree, absent from the published registry and therefore
 absent from the summary (predicate 2 fails — the summary is correct); a table known to be
 incomplete in a release explicitly marked in progress with no closure asserted (predicate 7
@@ -220,15 +237,16 @@ Instance ledger at promotion — one qualifying, three examined and rejected:
 | The registry-summary table at the published commit: 16 rows against 18 defined codes, both sets machine-parsed | **qualifying** — `PRIMARY_PERSISTED`, published, origin-verified |
 | A second in-repository document of the same shape, listing an obsolete set | rejected — untracked, therefore unpublished; predicates 2 and 7 fail |
 | A published index line naming a stale specification version | rejected — it projects a *version*, not a defined set, so the parity boundary cannot be evaluated. Adjacent shape, not an instance |
-| Eleven mirrored copies of the code index in four external repositories | rejected — **verified negative**. All were correct and complete against the published registry |
+| Mirrored copies of the code index in four external repositories — recorded at promotion as **eleven**, corrected in v0.12.0 to **twelve** | rejected at promotion as "verified negative — all correct and complete against the published registry". That sentence was recorded without repository identities, revisions, parsed sets, or a persisted sweep artifact, so it was never independently checkable, and its count was arithmetically wrong. Superseded by the v0.12.0 sweep correction below |
 
 The rationale offered for the waiver is that the mechanism is structural rather than local: an
 integrity check that validates machine-readable artifacts while treating the human-readable
 projection only as a link target cannot observe this defect in *any* project organised that
 way. That is an argument, not a second instance, and it is recorded as such.
 
-**Measurement warning.** During the promotion search, an automated sweep reported the eleven
-external copies as instances of this very incident. That finding was false: the copies had been
+**Measurement warning.** During the promotion search, an automated sweep reported the
+external copies (then recorded as eleven; see the correction below) as instances of this very
+incident. That finding was false: the copies had been
 measured against an uncommitted working tree rather than against published bytes. This
 incident's predicates 2 and 7 require a *published* canonical entry and a *claimed* closure. A
 projection cannot lag a version that has not been released.
@@ -238,7 +256,58 @@ UNCOMMITTED_WORKING_TREE != CANONICAL_PUBLISHED_STATE
 PROJECTION_BEHIND_UNRELEASED_CANON != CANONICAL_SUMMARY_ENTRY_OMISSION
 ```
 
-What would change this record: a genuine second primary instance, ideally in another project,
+### Projection-sweep correction (v0.12.0, 2026-07-25)
+
+Two defects in the ledger row above are corrected here rather than silently rewritten:
+
+1. **The count was arithmetically false.** The physical inventory contains **twelve**
+   mirror surfaces, not eleven: four repositories, each carrying `AGENTS.md`, `GEMINI.md`,
+   and `.claude/skills/aice-core/SKILL.md`.
+2. **The rejection was not falsifiable.** "Verified negative" was published with no
+   repository identities, revisions, parsed sets, or persisted result, so no reader could
+   re-establish or refute it — which an independent verifier duly reported against
+   v0.11.0.
+
+Re-sweep, machine-parsed, with the identities the original row lacked. The four
+repositories are local working copies with no configured remotes; they are identified by
+path and by `HEAD` at sweep time, and every surface file is git-tracked (working trees
+carried unrelated local modifications when swept):
+
+| Repository | HEAD at sweep |
+|---|---|
+| `F:\VibeCoding\Atlas` | `11c0ff80e8146fdec30322d6acd8e2d38e622692` |
+| `F:\VibeCoding\Concept-Arena` | `42c1dacba5a3cc67ccf589ce299532262b4c06ea` |
+| `F:\VibeCoding\cap-processor` | `f64c8d81de29963fa08525719754233a462f2e20` |
+| `F:\VibeCoding\v5.com.ua` | `6bd7bc38b97e0a0f6982f006799e4c0731b90170` |
+
+Distinct surface contents by SHA-256 (twelve surfaces, four distinct byte states):
+
+- `2709895a2f340a3e30f99bc858e29d2a9a7599f110f0eba01d2defd2986a0153` — `AGENTS.md` in
+  Atlas and Concept-Arena;
+- `9d5f70cf676a47cee2489e9a4f5159c9826e5b95b3560b7640d3565328762d9e` — `AGENTS.md` in
+  v5.com.ua;
+- `8ed5b79becb7162dbb35a563512708a900b28ef2039ee0b05ad2bd199f2ccd48` — `GEMINI.md` in all
+  four repositories, and `AGENTS.md` in cap-processor;
+- `e0fbde29e6b0412403b948fbce9486231963420d22a38292e45e301668701e50` —
+  `.claude/skills/aice-core/SKILL.md` in all four repositories.
+
+**Parsed result — enumeration-parsed, not mention-counted: all twelve surfaces pin
+`AICE_VERSION = 0.10.0` and `DEFINED_CODE_COUNT = 18`, enumerate exactly
+`AICE-601`…`AICE-618`, assert that `AICE-600` and `AICE-619` "are not defined", and do not
+mention `AICE-620` at all.** Against the published v0.11.0 canon every mirror therefore
+lags by two codes, and its `AICE-619` sentence is a false statement about the current
+canon, not merely an omission. The promotion-time sentence "all were correct and complete
+against the published registry" is accordingly false as a statement about the current
+state. These twelve lagging surfaces are still **not** qualifying AICE-619 instances, on
+two independent grounds: each document pins itself to the older named release 0.10.0,
+which is this code's own pinned-view false-positive guard; and none was edited or
+restamped as current for the v0.11.0 release, so under corrected predicate 5 no currency
+assertion exists. They are pinned, unsynced projections pending reconciliation, not failed
+projections. (An earlier draft of this very section reported the parsed set as
+`AICE-601`…`AICE-619` by counting token mentions — the denial sentence mentions
+`AICE-619` — which is exactly the parse-don't-infer error the Required observations
+section forbids; corrected here from enumeration rows.) What would falsify this record:
+any listed surface at the listed revision parsing to a different enumeration. a genuine second primary instance, ideally in another project,
 strengthens the class and retires the waiver. Evidence that the single observed instance was in
 fact a declared partial view falsifies predicate 4 and undermines the promotion — see the
 reopen rule in the candidate record. Note that the registry provides no rename, supersede, or

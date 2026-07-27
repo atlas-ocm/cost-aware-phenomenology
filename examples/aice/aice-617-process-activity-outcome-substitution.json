@@ -1,7 +1,7 @@
 {
   "code": "AICE-617",
   "title": "Work Exists, Result Not Found",
-  "spec_version": "0.11.0",
+  "spec_version": "0.12.0",
   "claim": "The image-optimizer parity objective is being progressed and closed by continued research, construction, validation, and audit rounds.",
   "narrative_state": "PARTIAL",
   "physical_state": "UNOBSERVED",

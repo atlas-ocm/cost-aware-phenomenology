@@ -1,0 +1,113 @@
+{
+  "code": "AICE-621",
+  "title": "Task Admitted, Output Capacity Not Found",
+  "spec_version": "0.12.0",
+  "claim": "The task was admitted and routed to capable coder models; the resulting failures are model schema defects and a transport failure.",
+  "narrative_state": "COMPLETE",
+  "physical_state": "CONTRADICTED",
+  "observed_evidence": [
+    {
+      "type": "task_admission",
+      "detail": "A frozen task envelope was persisted with a digest over its objective, and the recomputed digest matches. The envelope authorizes three mutation paths and four verification commands. Admission consumed execution resources across two models of different families."
+    },
+    {
+      "type": "delivery_contract_shape",
+      "detail": "The coder system contract requires ONE JSON object per reply. In the diff dialect it must carry a complete unified diff including a new-file hunk; in the ops dialect a create-file operation must be the only operation in the reply. Neither dialect admits a partial deliverable."
+    },
+    {
+      "type": "effective_output_ceiling",
+      "detail": "The transport layer sets the request output limit from the model pool entry for the selected model, with no role-specific override at the pinned commit. Every candidate coder carries the same output ceiling, an order of magnitude below its own declared input context window."
+    },
+    {
+      "type": "mandatory_verbatim_material",
+      "detail": "The frozen objective supplies an authoritative body of prose and instructs the actor to transcribe rather than author, forbidding shortening, expansion, reordering and rewording. The minimum valid result is therefore bounded below by material the actor is not permitted to compress."
+    },
+    {
+      "type": "reproducible_lower_bound",
+      "detail": "The smallest contract-valid response was reconstructed from the frozen envelope and the unchanged prestate files, rendered through the objective's own markup mapping, given the structural floor of the template it was ordered to mirror, wrapped in the mandated response fields and escaped for the carrier format. Measured against every tokenizer available offline, the diff-dialect response exceeds the ceiling; the most favourable measured tokenizer still exceeds it."
+    },
+    {
+      "type": "durable_attempt_outcomes",
+      "detail": "The durable score ledger records two consecutive schema-invalid coder attempts from the first model in the diff dialect, then one system-transport-failure outcome from a second model of a different family in the ops dialect. All three carry the same objective digest."
+    },
+    {
+      "type": "model_switch_under_identical_cap",
+      "detail": "The recorded trace shows a switch to a second coder attributed to deterministic evidence. The replacement model's pool entry carries the identical output ceiling. The delivery contract changed dialect but not capacity."
+    },
+    {
+      "type": "no_precall_comparison",
+      "detail": "At the pinned commit the coder call path performs an objective-digest check and a context-bundle budget check before dispatch, and no comparison of any output lower bound against the output ceiling. There is no code path that can emit a pre-call capacity block."
+    },
+    {
+      "type": "misattribution_at_the_transport_boundary",
+      "detail": "The transport helper returns only parsed JSON, response text, latency and an error string; the provider finish reason is read nowhere and retained nowhere. The caller treats empty response text as sufficient evidence of transport failure, and its own comment lists truncation among the possible causes while still classifying the outcome as transport."
+    },
+    {
+      "type": "terminal_without_deliverable",
+      "detail": "The task terminated blocked with an empty candidate diff, no verifier verdicts, and the target repository still on its prestate: every frozen context digest recomputes to its expected value and the file the task was to create does not exist."
+    }
+  ],
+  "missing_evidence": [
+    {
+      "type": "raw_payload_and_finish_reason",
+      "detail": "The raw response payload, the response envelope and the provider finish reason for all three attempts are not durably retained. LOST. Truncation therefore cannot be observed directly and is established analytically from the frozen contract."
+    },
+    {
+      "type": "delivering_model_tokenizers",
+      "detail": "The tokenizers of the two coder models are not available offline, so the bound rests on measured proxies rather than on the delivering models' own tokenizers. NOT_ESTABLISHED for the exact token count; the reported bound is the most favourable measured proxy and its margin is stated rather than rounded away."
+    },
+    {
+      "type": "ops_dialect_single_file_bound",
+      "detail": "For the second model the reconstructed create-file response for the new file alone measures below the ceiling. Its impossibility is structural rather than numeric: the contract admits one file per reply, each attempt is evaluated in a candidate rebuilt from the prestate, and no accumulation across replies exists, so no reply sequence can carry the three-path deliverable."
+    },
+    {
+      "type": "capacity_control_declaration",
+      "detail": "No design note or governance surface declares an output-capacity preflight that failed to enforce. NOT_FOUND_IN_BOUNDED_EVIDENCE_UNIVERSE. Absent a declared control there is nothing unenforced, so AICE-610 does not co-emit."
+    }
+  ],
+  "workflow_effect": [
+    "STATE_UNCHANGED",
+    "BLOCK_ACCEPTANCE"
+  ],
+  "required_action": "Block acceptance of the admitted-but-undeliverable contract. Do not retry under the same effective ceiling, do not switch models while preserving it, and do not charge the consumed attempts against model quality. Install the pre-call comparison: derive the minimum valid output from the frozen contract before dispatch and fail closed when it exceeds the role's effective ceiling. Then change the execution shape by one of raising the role-specific ceiling, routing to a contract with sufficient output capacity, splitting the task deterministically, enabling continuation, enabling an authorized artifact or repository-write channel, accepting a smaller valid mutation representation, or rescoping. Separately, retain the provider finish reason at the transport boundary so a length stop is distinguishable from a transport fault.",
+  "retryability": "requires_new_evidence",
+  "code_details": {
+    "predicates": {
+      "task_admitted": true,
+      "required_deliverable_exists": true,
+      "output_lower_bound_exceeds_effective_cap": true,
+      "no_admissible_alternative_output_route": true,
+      "same_authority_boundary": true,
+      "material_effect": true,
+      "no_precall_fail_closed": true
+    },
+    "alternative_route_inventory": {
+      "deterministic_chunking": "absent - one JSON object per reply, no chunk protocol",
+      "continuation": "absent - no continuation field in either dialect",
+      "artifact_storage": "absent - no artifact reference accepted by the response contract",
+      "direct_repository_write": "absent - the coder contract states it never applies edits",
+      "patch_decomposition": "unavailable across replies - each attempt is evaluated in a candidate rebuilt from the prestate, so nothing accumulates",
+      "external_reference": "absent - no external reference field",
+      "another_authorized_actor": "absent - the verifier judges and never rewrites; no other role may carry bytes"
+    },
+    "material_effects": {
+      "wasted_model_calls": "Two consumed coder attempts plus one further model call, all against a contract no reply could satisfy.",
+      "false_model_penalty": "Two schema-invalid outcomes recorded against the first model, attributing to model quality a shortfall the contract made unavoidable.",
+      "false_transport_classification": "A delivered empty completion recorded as a transport failure on the strength of empty response text alone.",
+      "model_switch_without_capacity_change": "A different family was selected under an identical ceiling, changing dialect but not deliverability.",
+      "terminal_without_deliverable": "The task ended blocked with the target repository fully on prestate."
+    },
+    "co_emission": {
+      "aice_614_co_emitted": true,
+      "detail": "The empty completion was converted into a semantic transport verdict without transport evidence. AICE-621 explains why nothing was emitted; AICE-614 is the separate act of classifying no-bytes as transport failure. The transport layer's discarding of the finish reason is the mechanism that made the misclassification unavoidable at the layer above.",
+      "aice_610_co_emitted": false,
+      "detail_610": "No output-capacity control is declared anywhere on the dispatch path, so there is no declared control whose result goes unconsumed. NO_CONTROL_DECLARED is not the same as CONTROL_DECLARED_BUT_UNENFORCED."
+    },
+    "honest_limits": {
+      "truncation_directly_observed": false,
+      "exemplar_class": "STRONG_EXEMPLAR",
+      "detail": "The raw payloads are lost and the delivering models' tokenizers are unavailable, so the bound is analytic and proxy-measured rather than observed. The diff-dialect bound exceeds the ceiling on every tokenizer measured, including the most favourable; the ops-dialect bound for a single file does not, and rests on the structural one-file-per-reply argument instead. This is recorded as a strong exemplar, not a sealed golden one."
+    }
+  },
+  "notes": "Derived from an observed episode in two repositories, neither of them this one. Load-bearing claims rest on a digest-verified frozen envelope, committed configuration and transport bytes at the pinned commit, a durable score ledger, and prestate files whose recorded digests still recompute. No commit id, path, digest, receipt, or timestamp is asserted here as canonical fact. TASK_IS_AUTHORIZED does not imply TASK_IS_DELIVERABLE, INPUT_CAPACITY does not imply OUTPUT_CAPACITY, and MODEL_SWITCHED does not imply DELIVERY_CONTRACT_CHANGED. Had the ceiling been compared against the frozen contract before dispatch, this incident would have been an admission decision rather than three consumed attempts and a false transport verdict."
+}

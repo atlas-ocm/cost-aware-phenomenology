@@ -1,6 +1,6 @@
 # AICE-620 — Architectural Groundhog Loop
 
-**Unofficial draft (AICE v0.11.0).**
+**Unofficial draft (AICE v0.12.0).**
 
 ## Canonical identifier
 
@@ -182,18 +182,31 @@ AICE-610 and AICE-620 are **orthogonal**, not nested. Neither implies the other,
 overlap is resolved by asking which independent predicate is established.
 
 ```
-AICE-610 requires   A DECLARED CONTROL THAT VALIDATES, WHOSE RESULT IS NOT CONSUMED
+AICE-610 requires   A DECLARED CONTROL, SUCCESSFULLY CONSTRUCTED, PERSISTED, PARSED,
+                    OR VALIDATED, WHOSE RESULT IS NOT CONSUMED
 AICE-620 requires   A DISPLACEMENT, A SURVIVAL, AND A RETURN OF AUTHORITY
 ```
+
+The control condition above is AICE-610's own canonical disjunction (AICE-610, Trigger
+condition, point 3), quoted in full. Reaching **any one** successful lifecycle stage —
+construction, persistence, parse, or validation — makes an artifact 610-eligible; a
+validation step is one sufficient stage, not a gate. A persisted policy object that parses
+successfully and is bypassed by a returning authority path satisfies AICE-610 and co-emits
+with AICE-620; requiring it to also *validate* before co-emitting would silently narrow
+AICE-610's canonical condition.
 
 - **610 without 620.** A repository that never displaced anything can still declare a control
   and fail to bind it. No displacement, no return, no 620.
 - **620 without 610.** Where the spine's authority was asserted by an architectural decision, a
-  module docstring, and a re-export binding, there is no control object that validates and
-  produces a result to be bypassed. A declaration is not a control. In that shape 610 does
+  module docstring, and a re-export binding, there is no control artifact that reaches any
+  successful lifecycle stage — constructed, persisted, parsed, or validated — and produces an
+  enforcement result to be bypassed. A declaration is not a control: what disqualifies it is
+  not a missing validation step but that no stage of it yields a consumable enforcement
+  result at all. In that shape 610 does
   **not** co-emit, and this is the common case: the reaffirmation instrument in the source
   episode was a re-export and an observe-only lifecycle handle, neither of which enforces.
-- **Both.** Where a parity, admission, or approval control genuinely exists, validates, and is
+- **Both.** Where a parity, admission, or approval control genuinely exists in any
+  successfully processed form — constructed, persisted, parsed, or validated — and is
   routed around by the returning path, both fire: 610 for the unenforced control, 620 for the
   authority return. They describe different objects — 610 the control, 620 the topology — so
   co-emission is neither redundant nor a merge condition.

@@ -1,4 +1,4 @@
-"""Tests for the AICE 6xx incident taxonomy (draft v0.11).
+"""Tests for the AICE 6xx incident taxonomy (draft v0.12).
 
 Covers the incident schema, the golden examples, the schema invariants that
 the taxonomy relies on (closed, contiguous code set, mandatory STATE_UNCHANGED),
@@ -6,19 +6,21 @@ version, defined-set, and schema-$id parity, and the deterministic integrity
 check (registry <-> codes <-> examples <-> links <-> the AICE.md summary
 table). Includes AICE-601, AICE-602,
 AICE-603, AICE-610, AICE-611, AICE-612, AICE-613, AICE-614, AICE-615, AICE-616,
-AICE-617, AICE-618, AICE-619, and AICE-620 coverage (with focused
+AICE-617, AICE-618, AICE-619, AICE-620, and AICE-621 coverage (with focused
 AICE-601 minimum-sufficient-mechanism-bypass,
 AICE-602 gateway-authority-context, AICE-603 governance-induced-service-unavailability,
 AICE-612 cross-actor-inference, AICE-613 self-hosting-mutation-deadlock,
 AICE-614 infrastructure-vs-semantic-verdict, AICE-615 rollback-restore-identity,
 AICE-616 review-input-identity, AICE-617 process-activity-outcome-substitution, and
 AICE-618 verifier-eligibility-ceiling, AICE-619 canonical-summary-entry-omission, and
-AICE-620 canonical-execution-path-reintroduction invariants) plus adversarial
+AICE-620 canonical-execution-path-reintroduction, and AICE-621
+output-capacity-authority-contradiction invariants) plus adversarial
 scratch-copy tests that prove the validator detects registry, doc, link, defined-set,
 unassigned-code, false-contiguity, version, and schema-$id tampering.
 
-The v0.11 defined set is closed and contiguous: AICE-601..AICE-620. AICE-600 is
-unassigned; AICE-621 is neither defined nor reserved. The unreserved-successor
+The v0.12 defined set is closed and contiguous: AICE-601..AICE-621. AICE-600 is
+RESERVED for Ontological Lockdown -- undefined, and not available to any other
+class; AICE-622 is neither defined nor reserved, i.e. genuinely available. The unreserved-successor
 sentinel moves with the set — extending the range never reserves the next number,
 and the tests below assert that at the new boundary rather than the old one.
 AICE-615 and AICE-616 share the non-normative EPISODE_EXACT_IDENTITY_BINDING family.
@@ -53,6 +55,7 @@ EXAMPLE_617 = EXAMPLES_DIR / "aice-617-process-activity-outcome-substitution.jso
 EXAMPLE_618 = EXAMPLES_DIR / "aice-618-verifier-gated-by-coder-evidence-ceiling.json"
 EXAMPLE_619 = EXAMPLES_DIR / "aice-619-canonical-summary-entry-omission.json"
 EXAMPLE_620 = EXAMPLES_DIR / "aice-620-canonical-execution-path-reintroduction.json"
+EXAMPLE_621 = EXAMPLES_DIR / "aice-621-output-capacity-authority-contradiction.json"
 
 # Import check_aice so its closed-code-set constant can be asserted directly.
 sys.path.insert(0, str(CHECK_AICE.parent))
@@ -99,9 +102,9 @@ def test_schema_rejects_unknown_code():
     assert errors, "Schema must reject codes outside the defined sparse set"
 
 
-@pytest.mark.parametrize("out_of_set", ["AICE-600", "AICE-621"])
+@pytest.mark.parametrize("out_of_set", ["AICE-600", "AICE-622"])
 def test_schema_rejects_codes_outside_defined_set(out_of_set):
-    # AICE-600 is unassigned; AICE-621 is neither defined nor reserved. Both are
+    # AICE-600 is unassigned; AICE-622 is neither defined nor reserved. Both are
     # outside the closed defined set and must be rejected.
     example = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
     example["code"] = out_of_set
@@ -168,21 +171,21 @@ def test_aice_610_example_is_valid():
 
 
 def test_expected_codes_are_the_contiguous_defined_set():
-    # With AICE-619 and AICE-620 assigned the defined set is the closed, contiguous
-    # range AICE-601..AICE-620.
-    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(601, 621)]
+    # With AICE-621 assigned the defined set is the closed, contiguous
+    # range AICE-601..AICE-621.
+    assert check_aice.EXPECTED_CODES == [f"AICE-{n}" for n in range(601, 622)]
     for defined in ("AICE-601", "AICE-603", "AICE-615", "AICE-616", "AICE-617",
-                    "AICE-618", "AICE-619", "AICE-620"):
+                    "AICE-618", "AICE-619", "AICE-620", "AICE-621"):
         assert defined in check_aice.EXPECTED_CODES
-    # AICE-600 is unassigned; AICE-621 is neither defined nor reserved. The
-    # sentinel moved from 619 to 621 when 619 and 620 were assigned — the point of
+    # AICE-600 is unassigned; AICE-622 is neither defined nor reserved. The
+    # sentinel moved from 621 to 622 when 621 was assigned — the point of
     # the assertion is that SOME successor is always unreserved, not that a
     # particular number is.
     assert "AICE-600" not in check_aice.EXPECTED_CODES
     assert "AICE-600" in check_aice.EXPECTED_UNASSIGNED
-    assert "AICE-621" not in check_aice.EXPECTED_CODES
-    assert "AICE-621" not in check_aice.EXPECTED_UNASSIGNED
-    assert len(check_aice.EXPECTED_CODES) == 20
+    assert "AICE-622" not in check_aice.EXPECTED_CODES
+    assert "AICE-622" not in check_aice.EXPECTED_UNASSIGNED
+    assert len(check_aice.EXPECTED_CODES) == 21
 
 
 def test_registry_declares_closed_set_and_unassigned():
@@ -191,15 +194,15 @@ def test_registry_declares_closed_set_and_unassigned():
     assert sorted(registry["unassigned_codes"]) == ["AICE-600"]
     codes = [c["code"] for c in registry["codes"]]
     assert sorted(codes) == sorted(check_aice.EXPECTED_CODES)
-    assert len(codes) == 20
+    assert len(codes) == 21
     # No contiguity-promising range field, and no entry for an unassigned code.
     assert "canonical_code_range" not in registry
     assert "AICE-600" not in codes
     assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
-    # AICE-621 must not appear anywhere as defined or reserved.
-    assert "AICE-621" not in codes
-    assert "AICE-621" not in registry["canonical_defined_set"]
-    assert "AICE-621" not in registry.get("unassigned_codes", [])
+    # AICE-622 must not appear anywhere as defined or reserved.
+    assert "AICE-622" not in codes
+    assert "AICE-622" not in registry["canonical_defined_set"]
+    assert "AICE-622" not in registry.get("unassigned_codes", [])
 
 
 def test_aice_md_summary_table_matches_registry():
@@ -240,7 +243,7 @@ def test_aice_617_is_defined():
 
 @pytest.mark.parametrize(
     "code, example",
-    [("AICE-619", EXAMPLE_619), ("AICE-620", EXAMPLE_620)],
+    [("AICE-619", EXAMPLE_619), ("AICE-620", EXAMPLE_620), ("AICE-621", EXAMPLE_621)],
 )
 def test_promoted_codes_are_defined_on_every_surface(code, example):
     # Promotion is only real when every surface carries it. A code present in the
@@ -266,6 +269,8 @@ def test_promoted_codes_are_defined_on_every_surface(code, example):
          "CANONICAL_SUMMARY_ENTRY_OMISSION"),
         ("AICE-620", EXAMPLE_620, "Architectural Groundhog Loop",
          "CANONICAL_EXECUTION_PATH_REINTRODUCTION"),
+        ("AICE-621", EXAMPLE_621, "Task Admitted, Output Capacity Not Found",
+         "OUTPUT_CAPACITY_AUTHORITY_CONTRADICTION"),
     ],
 )
 def test_registry_and_doc_metadata_agree_for_promoted_codes(code, example, title, machine):
@@ -314,9 +319,11 @@ def _aice_619_invariants_ok(incident) -> bool:
     """Focused canonical-example invariants for AICE-619.
 
     The load-bearing pair is predicates 4 and 5. Predicate 4 (the summary presents
-    itself as the current canonical projection) and predicate 5 (it was updated or
-    reaffirmed for this release) are what separate a failed projection from ordinary
-    documentation debt. A summary nobody touched, or one that declares itself a
+    itself as the current canonical projection) and predicate 5 (its currency for
+    this release was asserted — enumeration edited, or explicitly restamped or
+    reaffirmed as current) are what separate a failed projection from ordinary
+    documentation debt. A summary nobody touched, one that only received an
+    incidental edit with no currency assertion, or one that declares itself a
     partial view, is drift — not this incident.
     """
     if incident.get("code") != "AICE-619":
@@ -328,7 +335,7 @@ def _aice_619_invariants_ok(incident) -> bool:
         "canonical_entry_is_published",
         "public_summary_exists",
         "public_summary_purports_to_represent_current_canonical_set",
-        "public_summary_updated_or_reaffirmed_for_current_release",
+        "public_summary_currency_asserted_for_current_release",
         "canonical_entry_absent_stale_or_contradicted_in_summary",
         "publication_or_documentation_closure_claimed",
     )
@@ -376,8 +383,9 @@ def test_619_canonical_example_satisfies_invariants():
     [
         ("public_summary_purports_to_represent_current_canonical_set",
          "a declared partial or illustrative view is not this incident"),
-        ("public_summary_updated_or_reaffirmed_for_current_release",
-         "a summary nobody touched is documentation drift, not a failed projection"),
+        ("public_summary_currency_asserted_for_current_release",
+         "a summary with no currency assertion for the release — untouched, or touched "
+         "only incidentally — is documentation drift, not a failed projection"),
         ("publication_or_documentation_closure_claimed",
          "a release openly marked in flight is honest work, not this incident"),
         ("canonical_entry_is_published",
@@ -494,6 +502,37 @@ def test_620_normative_doc_resolves_the_610_overlap():
     assert "ARCHITECTURAL_DECLARATION != ENFORCEMENT_CONTROL" in doc
 
 
+def test_aice_600_reservation_is_machine_readable():
+    # The three-state model lives in data, not prose: DEFINED / RESERVED_UNDEFINED /
+    # AVAILABLE. AICE-600 is the middle state — nothing is defined under it, and it
+    # is not available to any other incident class.
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    reserved = {r["code"]: r for r in registry["reserved_codes"]}
+    assert "AICE-600" in reserved
+    assert reserved["AICE-600"]["status"] == "RESERVED_UNDEFINED"
+    assert reserved["AICE-600"]["reserved_title"] == "Ontological Lockdown"
+    # RESERVED != DEFINED: the reservation must not leak into any published surface.
+    assert "AICE-600" not in registry["canonical_defined_set"]
+    assert "AICE-600" not in [c["code"] for c in registry["codes"]]
+    assert "AICE-600" not in _load_schema()["properties"]["code"]["enum"]
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
+    assert check_aice.EXPECTED_RESERVED == {"AICE-600": "Ontological Lockdown"}
+
+
+@pytest.mark.parametrize(
+    "surface", ["AICE.md", "spec/aice/README.md"]
+)
+def test_reserved_600_prose_states_reservation_not_availability(surface):
+    # Claim-parity proves a claim is TRUE against the registry; it cannot read a
+    # sentence. So the retired wording is asserted against by content here — a
+    # revert to "not reserved for a predetermined meaning" fails the suite even
+    # though every parity claim would still evaluate true.
+    text = (ROOT / surface).read_text(encoding="utf-8")
+    assert "not reserved for a predetermined meaning" not in text
+    assert "Ontological Lockdown" in text
+    assert "AICE-600" in text
+
+
 def test_aice_600_is_genuinely_unassigned():
     # AICE-600 has NO title, machine name, definition, file, example, or registry
     # entry — it exists only in the machine-readable UNASSIGNED_CODES set.
@@ -510,20 +549,20 @@ def test_aice_600_is_genuinely_unassigned():
     assert list(_validator().iter_errors(incident)), "AICE-600 is unassigned and must be rejected"
 
 
-def test_aice_621_is_neither_defined_nor_reserved():
-    # The successor sentinel. It was AICE-619 until AICE-619 and AICE-620 were
-    # assigned; assigning them relocated the guard to AICE-621 rather than removing
+def test_aice_622_is_neither_defined_nor_reserved():
+    # The successor sentinel. It was AICE-619, then AICE-621; assigning AICE-621
+    # relocated the guard to AICE-622 rather than removing
     # it. Contiguity up to the current boundary promises nothing past it, and
     # extending the range is not a mechanism for reserving the next number.
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
-    assert "AICE-621" not in registry["canonical_defined_set"]
-    assert "AICE-621" not in registry.get("unassigned_codes", [])
-    assert "AICE-621" not in [c["code"] for c in registry["codes"]]
-    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-621.md").exists()
-    assert not list(EXAMPLES_DIR.glob("aice-621*.json"))
+    assert "AICE-622" not in registry["canonical_defined_set"]
+    assert "AICE-622" not in registry.get("unassigned_codes", [])
+    assert "AICE-622" not in [c["code"] for c in registry["codes"]]
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-622.md").exists()
+    assert not list(EXAMPLES_DIR.glob("aice-622*.json"))
     incident = json.loads(EXAMPLE_FILES[0].read_text(encoding="utf-8"))
-    incident["code"] = "AICE-621"
-    assert list(_validator().iter_errors(incident)), "AICE-621 is unreserved and must be rejected"
+    incident["code"] = "AICE-622"
+    assert list(_validator().iter_errors(incident)), "AICE-622 is unreserved and must be rejected"
 
 
 def test_successor_sentinel_tracks_the_defined_set_boundary():
@@ -542,6 +581,238 @@ def test_successor_sentinel_tracks_the_defined_set_boundary():
     assert successor not in check_aice.EXPECTED_CODES
     assert not (ROOT / "spec" / "aice" / "codes" / f"{successor}.md").exists()
     assert not list(EXAMPLES_DIR.glob(f"aice-{highest + 1}*.json"))
+    # The successor may not be promised in prose either. Outside protected spans the
+    # canonical docs may name only defined or unassigned codes; inside spans every
+    # named code must be covered by a claim. Exercised here against the live tree.
+    ctx = {
+        "registry": registry,
+        "defined": set(registry["canonical_defined_set"]),
+        "unassigned": set(registry.get("unassigned_codes") or []),
+        "reserved": {r.get("code") for r in (registry.get("reserved_codes") or [])
+                     if isinstance(r, dict)},
+        "entries": {c["code"] for c in registry["codes"]},
+        "enum": set(schema["properties"]["code"]["enum"]),
+    }
+    for rel in check_aice.REQUIRED_PROSE_FILES:
+        issues: list[str] = []
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        assert check_aice._check_doc_prose(text, rel, ctx, issues), (
+            f"{rel} must carry a protected prose span"
+        )
+        assert not issues, issues
+
+
+# --- Narrative-claim parity: bounded grammar, fail-closed parsing ----------------
+
+def _prose_ctx():
+    defined = {f"AICE-{n}" for n in range(601, 604)}
+    return {
+        "registry": {},
+        "defined": set(defined),
+        "unassigned": {"AICE-600"},
+        "reserved": {"AICE-600"},
+        "entries": set(defined),
+        "enum": set(defined),
+    }
+
+
+def test_prose_claims_true_claims_produce_no_issues():
+    issues: list[str] = []
+    span = (
+        "Defined are AICE-601 … AICE-603; AICE-600 is unassigned; "
+        "AICE-604 is neither defined nor reserved."
+    )
+    check_aice._check_prose_claims(
+        "defined-range 601 603; defined-count 3; unassigned AICE-600; unreserved AICE-604",
+        span,
+        "synthetic",
+        _prose_ctx(),
+        issues,
+    )
+    assert issues == []
+
+
+def test_prose_claims_false_range_is_reported():
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "defined-range 601 604", "AICE-601 … AICE-604.", "synthetic", _prose_ctx(), issues
+    )
+    assert len(issues) == 1 and "is false" in issues[0]
+
+
+def test_prose_claims_count_drift_is_reported():
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "defined-count 4", "four codes are defined.", "synthetic", _prose_ctx(), issues
+    )
+    assert len(issues) == 1 and "is false" in issues[0]
+
+
+def test_prose_claims_enumerates_all_catches_omission():
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "enumerates-all", "AICE-601 and AICE-602.", "synthetic", _prose_ctx(), issues
+    )
+    assert len(issues) == 1 and "omits" in issues[0] and "AICE-603" in issues[0]
+
+
+def test_prose_claims_unknown_claim_fails_closed():
+    # `reserved` used to serve as the unknown-grammar sentinel here; it is now a
+    # real claim kind, so this needs a word the grammar genuinely does not define.
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "allocated AICE-604", "AICE-604 is allocated.", "synthetic", _prose_ctx(), issues
+    )
+    assert any("unrecognised" in i for i in issues)
+
+
+def test_prose_claims_false_reservation_is_reported():
+    # The case the old sentinel used to cover, restated against the real grammar:
+    # `reserved` now parses, so a reservation that the registry does not hold must
+    # fail as a FALSE claim rather than slip through as an unknown one.
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "reserved AICE-604", "AICE-604 is reserved.", "synthetic", _prose_ctx(), issues
+    )
+    assert len(issues) == 1 and "is false" in issues[0] and "AICE-604" in issues[0]
+
+
+def test_prose_claims_true_reservation_passes():
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "reserved AICE-600", "AICE-600 is reserved.", "synthetic", _prose_ctx(), issues
+    )
+    assert issues == []
+
+
+def test_prose_claims_uncovered_successor_token_is_reported():
+    # The F1 shape inside a span: prose names a successor no claim answers for.
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "defined-range 601 603",
+        "The range is AICE-601 … AICE-603. AICE-604 is reserved.",
+        "synthetic",
+        _prose_ctx(),
+        issues,
+    )
+    assert len(issues) == 1 and "no claim covers" in issues[0] and "AICE-604" in issues[0]
+
+
+def test_prose_claims_ungrounded_claim_is_reported():
+    issues: list[str] = []
+    check_aice._check_prose_claims(
+        "unreserved AICE-604", "the set is closed.", "synthetic", _prose_ctx(), issues
+    )
+    assert len(issues) == 1 and "does not mention" in issues[0]
+
+
+def test_prose_unclosed_span_fails_closed():
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        "<!-- aice-prose-parity: defined-count 3 -->\nthree codes.\n",
+        "X.md",
+        _prose_ctx(),
+        issues,
+    )
+    assert any("never closed" in i for i in issues)
+
+
+def test_prose_marker_typo_fails_closed():
+    # A typo'd open marker (missing colon) must be an error, not a silent disarm.
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        "<!-- aice-prose-parity defined-count 3 -->\nthree codes.\n"
+        "<!-- /aice-prose-parity -->\n",
+        "X.md",
+        _prose_ctx(),
+        issues,
+    )
+    assert any("malformed" in i for i in issues)
+
+
+def test_prose_successor_outside_any_span_is_rejected():
+    # The F1 shape outside all spans: an unmarked paragraph promising a successor.
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        "AICE-601 is defined and AICE-600 is unassigned.\nAICE-604 is reserved.\n",
+        "X.md",
+        _prose_ctx(),
+        issues,
+    )
+    assert len(issues) == 1
+    assert "outside any protected span" in issues[0] and "AICE-604" in issues[0]
+
+
+@pytest.mark.parametrize(
+    "spelling",
+    [
+        "AICE&#8209;604",          # HTML numeric entity: non-breaking hyphen
+        "AICE&#45;604",            # HTML numeric entity: ASCII hyphen
+        "AICE‑604",           # Unicode non-breaking hyphen
+        "AICE–604",           # en dash
+        "AICE-​604",          # zero-width space inside the token
+        "AICE­-604",          # soft hyphen before the hyphen
+    ],
+)
+def test_prose_encoded_successor_spellings_are_the_same_token(spelling):
+    # Representation tricks must not hide a token: the scan normalizes HTML
+    # entities, Unicode hyphen variants, and invisible characters first.
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        f"{spelling} is reserved.\n", "X.md", _prose_ctx(), issues
+    )
+    assert issues, f"{spelling!r} evaded the prose guard"
+    assert any("AICE-604" in i for i in issues)
+
+
+@pytest.mark.parametrize(
+    "trick",
+    [
+        "AICE-6͏04",   # combining grapheme joiner inside the digits
+        "AICE-6⁣04",   # invisible separator inside the digits
+    ],
+)
+def test_prose_invisible_split_token_is_the_same_token(trick):
+    # Rendering-invisible characters are stripped BY CATEGORY (Cf, Mn), so a
+    # split that an enumerated blocklist would miss is still the same token.
+    issues: list[str] = []
+    check_aice._check_doc_prose(f"{trick} is reserved.\n", "X.md", _prose_ctx(), issues)
+    assert issues and any("AICE-604" in i for i in issues)
+
+
+@pytest.mark.parametrize(
+    "number",
+    [
+        "604",                       # plain ASCII
+        "6⁣" "04",              # U+2063 invisible separator splitting the digits
+        "6͏" "04",              # U+034F combining grapheme joiner splitting them
+        "٦٠٤",        # Arabic-Indic digits
+        "⁶⁰⁴",        # superscript digits (NFKC-folded)
+    ],
+)
+def test_prose_successor_by_bare_number_is_rejected(number):
+    # Naming the successor without the AICE- prefix must fail the same way,
+    # in any digit script and with any rendering-invisible split.
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        f"The next AICE code, number {number}, is reserved.\n",
+        "X.md",
+        _prose_ctx(),
+        issues,
+    )
+    assert len(issues) == 1 and "successor number 604" in issues[0]
+
+
+def test_prose_defined_bare_numbers_are_not_flagged():
+    # Bare numbers of defined codes are ordinary prose ("601 concerns X").
+    issues: list[str] = []
+    check_aice._check_doc_prose(
+        "601 concerns displacement and 603 concerns withholding.\n",
+        "X.md",
+        _prose_ctx(),
+        issues,
+    )
+    assert issues == []
 
 
 def test_registry_machine_names_are_unique():
@@ -1319,26 +1590,26 @@ def test_602_example_historical_scope_is_narrow_and_verified():
 
 # --- Version / defined-set / $id parity ---------------------------------------
 
-def test_spec_version_is_consistently_0_11_0():
+def test_spec_version_is_consistently_0_12_0():
     registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
     schema = _load_schema()
-    assert registry["spec_version"] == "0.11.0"
-    assert schema["properties"]["spec_version"]["const"] == "0.11.0"
-    assert check_aice.EXPECTED_VERSION == "0.11.0"
+    assert registry["spec_version"] == "0.12.0"
+    assert schema["properties"]["spec_version"]["const"] == "0.12.0"
+    assert check_aice.EXPECTED_VERSION == "0.12.0"
     for ex in EXAMPLE_FILES:
         data = json.loads(ex.read_text(encoding="utf-8"))
-        assert data["spec_version"] == "0.11.0", ex.name
+        assert data["spec_version"] == "0.12.0", ex.name
 
 
-def test_schema_id_is_v0_11_and_unique():
+def test_schema_id_is_v0_12_and_unique():
     schema = _load_schema()
-    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.11"
+    assert schema["$id"] == "urn:cap:schema:aice-incident:v0.12"
     # unique across spec/: no other schema carries this aice-incident id
     spec_dir = ROOT / "spec"
     hits = []
     for p in spec_dir.rglob("*.json"):
         text = p.read_text(encoding="utf-8")
-        if "urn:cap:schema:aice-incident:v0.11" in text:
+        if "urn:cap:schema:aice-incident:v0.12" in text:
             hits.append(p.name)
     assert hits == ["incident.schema.json"], hits
 
@@ -1353,6 +1624,8 @@ def _build_scratch(tmp_path: Path) -> Path:
     shutil.copytree(ROOT / "spec" / "aice", tmp_path / "spec" / "aice")
     shutil.copytree(EXAMPLES_DIR, tmp_path / "examples" / "aice")
     shutil.copy(ROOT / "AICE.md", tmp_path / "AICE.md")
+    # The narrative-parity guard requires protected prose in README.md too.
+    shutil.copy(ROOT / "README.md", tmp_path / "README.md")
     return script_dir / "check_aice.py"
 
 
@@ -1512,7 +1785,7 @@ def _tamper_remove_618(tmp: Path) -> None:
 
 
 def _tamper_stale_count_19(tmp: Path) -> None:
-    # Drop AICE-620 so the defined count is a stale 19 instead of 20.
+    # Drop AICE-620 so the defined count is short of the closed set.
     _tamper_remove_code(tmp, "AICE-620")
 
 
@@ -1526,29 +1799,149 @@ def _tamper_remove_619(tmp: Path) -> None:
     _tamper_remove_code(tmp, "AICE-619")
 
 
-def _tamper_add_621(tmp: Path) -> None:
-    # AICE-621 is neither defined nor reserved; adding it as a defined code (with
+def _tamper_add_622(tmp: Path) -> None:
+    # AICE-622 is neither defined nor reserved; adding it as a defined code (with
     # no doc) must break exact-set membership. This is the relocated form of the
-    # guard that previously targeted AICE-619 — promoting 619 and 620 moved the
-    # sentinel forward, it did not retire it.
+    # guard that previously targeted AICE-619 and then AICE-621 — promoting a code
+    # moves the sentinel forward, it does not retire it.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["codes"].append(
         {
-            "code": "AICE-621",
+            "code": "AICE-622",
             "title": "Placeholder",
             "default_workflow_effect": ["STATE_UNCHANGED"],
             "default_retryability": "requires_new_evidence",
             "spec_status": "draft",
         }
     )
-    data["canonical_defined_set"].append("AICE-621")
+    data["canonical_defined_set"].append("AICE-622")
     reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_duplicate_621_entry(tmp: Path) -> None:
+    # A second registry entry for AICE-621 must be rejected as a duplicate code,
+    # not silently deduplicated into one canonical identity.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    entry = next(c for c in data["codes"] if c.get("code") == "AICE-621")
+    data["codes"].append(dict(entry))
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_reassign_600_to_621_meaning(tmp: Path) -> None:
+    # AICE-600 must stay unassigned. Displacing it — moving AICE-621's identity onto
+    # AICE-600 — must fail, so a new code can never be smuggled into the reserved gap.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    for c in data["codes"]:
+        if c.get("code") == "AICE-621":
+            c["code"] = "AICE-600"
+    data["canonical_defined_set"] = [
+        "AICE-600" if c == "AICE-621" else c for c in data["canonical_defined_set"]
+    ]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_remove_600_from_unassigned(tmp: Path) -> None:
+    # Removing AICE-600 from unassigned_codes erases the record that nothing is
+    # DEFINED under the number. (That it is also RESERVED is carried separately by
+    # reserved_codes — see the reservation tampers below.)
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["unassigned_codes"] = [c for c in data["unassigned_codes"] if c != "AICE-600"]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_drop_reserved_codes(tmp: Path) -> None:
+    # Deleting the reservation wholesale is the cheapest way to make AICE-600 look
+    # available again, so it must be the loudest failure.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data.pop("reserved_codes", None)
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_unreserve_600(tmp: Path) -> None:
+    # Emptying the list while keeping the field is the quieter version of the same move.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["reserved_codes"] = [r for r in data["reserved_codes"] if r.get("code") != "AICE-600"]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_retitle_600_reservation(tmp: Path) -> None:
+    # The reservation is FOR something. Silently repointing it at another class is
+    # exactly the assignment the ruling forbids.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    for r in data["reserved_codes"]:
+        if r.get("code") == "AICE-600":
+            r["reserved_title"] = "Some Other Incident Class"
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_untitle_600_reservation(tmp: Path) -> None:
+    # An untitled reservation cannot be told apart from an available number.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    for r in data["reserved_codes"]:
+        if r.get("code") == "AICE-600":
+            r.pop("reserved_title", None)
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_downgrade_600_reservation_status(tmp: Path) -> None:
+    # RESERVED_UNDEFINED is the whole middle state; any other status collapses the
+    # three-state model back to defined-or-free.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    for r in data["reserved_codes"]:
+        if r.get("code") == "AICE-600":
+            r["status"] = "AVAILABLE"
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_duplicate_600_reservation(tmp: Path) -> None:
+    # Keyed accumulation collapses duplicates, so a second row can sit in the
+    # data unnoticed while the expected-key and title checks still pass. The
+    # duplicate must be rejected on its own, before that collapse.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["reserved_codes"] = list(data["reserved_codes"]) + [dict(data["reserved_codes"][0])]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_duplicate_600_reservation_divergent(tmp: Path) -> None:
+    # The dangerous shape: the shadowed row disagrees with the surviving one.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    shadow = dict(data["reserved_codes"][0])
+    shadow["reserved_title"] = "Something Else Entirely"
+    data["reserved_codes"] = [shadow] + list(data["reserved_codes"])
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_define_600_as_incident(tmp: Path) -> None:
+    # RESERVED != DEFINED. Publishing a reserved number as a canonical incident code
+    # without a ratification episode must fail even though the reservation exists.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    entry = dict(data["codes"][0])
+    entry["code"] = "AICE-600"
+    entry["machine_name"] = "ONTOLOGICAL_LOCKDOWN"
+    data["codes"].insert(0, entry)
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_remove_621(tmp: Path) -> None:
+    # AICE-621 is now DEFINED; removing it must break the closed defined set.
+    _tamper_remove_code(tmp, "AICE-621")
 
 
 def _tamper_false_contiguous_range_620(tmp: Path) -> None:
     # Any contiguity-promising range field is forbidden: 'AICE-601..AICE-620' would
-    # falsely imply AICE-600 is defined and forward-reserve AICE-621.
+    # falsely imply AICE-600 is defined and forward-reserve the next number.
     reg = _registry_path(tmp)
     data = json.loads(reg.read_text(encoding="utf-8"))
     data["canonical_code_range"] = ["AICE-601", "AICE-620"]
@@ -1595,6 +1988,110 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
     reg.write_text(json.dumps(data), encoding="utf-8")
 
 
+def _tamper_promise_622_in_aice_md(tmp: Path) -> None:
+    # The exact F1 attack: promise a successor in an unmarked paragraph while
+    # keeping it out of registry, schema, checker constants, docs, and examples.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8") + "\nAICE-622 is reserved for the next promotion.\n",
+        encoding="utf-8",
+    )
+
+
+def _tamper_promise_uncovered_code_in_set_note(tmp: Path) -> None:
+    # The same attack through the registry's own prose field. set_note is checked
+    # by claim coverage rather than by the out-of-span token rules, so the smuggled
+    # identity must be one no claim answers - here the number past the sentinel.
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    data["set_note"] = data["set_note"] + " AICE-623 is reserved."
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_strip_prose_markers(tmp: Path) -> None:
+    # Deleting the markers must not silently disarm the guard.
+    doc = tmp / "AICE.md"
+    kept = [
+        line
+        for line in doc.read_text(encoding="utf-8").splitlines(keepends=True)
+        if "aice-prose-parity" not in line
+    ]
+    doc.write_text("".join(kept), encoding="utf-8")
+
+
+def _tamper_typo_prose_marker(tmp: Path) -> None:
+    # A typo'd open marker must be an error, never a silently ignored span.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8").replace("aice-prose-parity:", "aice-prose-parity", 1),
+        encoding="utf-8",
+    )
+
+
+def _tamper_remove_set_note_claims(tmp: Path) -> None:
+    reg = _registry_path(tmp)
+    data = json.loads(reg.read_text(encoding="utf-8"))
+    del data["set_note_claims"]
+    reg.write_text(json.dumps(data), encoding="utf-8")
+
+
+def _tamper_false_prose_count(tmp: Path) -> None:
+    # Code-count drift: the prose claim says 20 while 21 codes are defined.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8").replace("defined-count 21", "defined-count 20"),
+        encoding="utf-8",
+    )
+
+
+def _tamper_promise_622_html_entity(tmp: Path) -> None:
+    # Representation-level evasion: HTML-encoded non-breaking hyphen.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8") + "\nAICE&#8209;622 is reserved.\n",
+        encoding="utf-8",
+    )
+
+
+def _tamper_promise_622_unicode_hyphen(tmp: Path) -> None:
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8") + "\nAICE‑622 is reserved.\n",
+        encoding="utf-8",
+    )
+
+
+def _tamper_promise_successor_by_number(tmp: Path) -> None:
+    # Identity-by-number evasion: no AICE-NNN token at all.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8")
+        + "\nThe next AICE code, number 622, is reserved.\n",
+        encoding="utf-8",
+    )
+
+
+def _tamper_promise_622_invisible_separator(tmp: Path) -> None:
+    # Round-2 verifier evasion: U+2063 INVISIBLE SEPARATOR inside the bare number.
+    doc = tmp / "AICE.md"
+    doc.write_text(
+        doc.read_text(encoding="utf-8")
+        + "\nThe next AICE code, number 6⁣22, is reserved.\n",
+        encoding="utf-8",
+    )
+
+
+def _tamper_omit_618_from_spec_readme_index(tmp: Path) -> None:
+    # The enumerates-all claim must catch an omitted identity in the normative index.
+    doc = tmp / "spec" / "aice" / "README.md"
+    kept = [
+        line
+        for line in doc.read_text(encoding="utf-8").splitlines(keepends=True)
+        if "[`AICE-618`](./codes/AICE-618.md)" not in line
+    ]
+    doc.write_text("".join(kept), encoding="utf-8")
+
+
 @pytest.mark.parametrize(
     "tamper",
     [
@@ -1619,13 +2116,36 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         _tamper_stale_count_19,
         _tamper_remove_617,
         _tamper_remove_619,
-        _tamper_add_621,
+        _tamper_remove_621,
+        _tamper_add_622,
+        _tamper_duplicate_621_entry,
+        _tamper_reassign_600_to_621_meaning,
+        _tamper_remove_600_from_unassigned,
+        _tamper_drop_reserved_codes,
+        _tamper_unreserve_600,
+        _tamper_retitle_600_reservation,
+        _tamper_untitle_600_reservation,
+        _tamper_downgrade_600_reservation_status,
+        _tamper_duplicate_600_reservation,
+        _tamper_duplicate_600_reservation_divergent,
+        _tamper_define_600_as_incident,
         _tamper_false_contiguous_range_620,
         _tamper_stale_defined_set_v07,
         _tamper_stale_defined_set_v010,
         _tamper_stale_version_07,
         _tamper_stale_schema_id_v07,
         _tamper_duplicate_machine_name,
+        _tamper_promise_622_in_aice_md,
+        _tamper_promise_uncovered_code_in_set_note,
+        _tamper_promise_622_html_entity,
+        _tamper_promise_622_unicode_hyphen,
+        _tamper_promise_successor_by_number,
+        _tamper_promise_622_invisible_separator,
+        _tamper_strip_prose_markers,
+        _tamper_typo_prose_marker,
+        _tamper_remove_set_note_claims,
+        _tamper_false_prose_count,
+        _tamper_omit_618_from_spec_readme_index,
     ],
     ids=[
         "remove_614_from_registry",
@@ -1649,13 +2169,36 @@ def _tamper_duplicate_machine_name(tmp: Path) -> None:
         "stale_count_19",
         "remove_defined_617",
         "remove_defined_619",
-        "add_undefined_621",
+        "remove_defined_621",
+        "add_undefined_622",
+        "duplicate_621_registry_entry",
+        "reassign_600_to_621_meaning",
+        "remove_600_from_unassigned",
+        "drop_reserved_codes",
+        "unreserve_600",
+        "retitle_600_reservation",
+        "untitle_600_reservation",
+        "downgrade_600_reservation_status",
+        "duplicate_600_reservation",
+        "duplicate_600_reservation_divergent",
+        "define_600_as_incident",
         "false_contiguous_range_620",
         "stale_defined_set_v07",
         "stale_defined_set_v010",
         "stale_spec_version_07",
         "stale_schema_id_v07",
         "duplicate_machine_name",
+        "promise_622_in_prose",
+        "promise_uncovered_code_in_set_note",
+        "promise_622_html_entity",
+        "promise_622_unicode_hyphen",
+        "promise_successor_by_bare_number",
+        "promise_622_invisible_separator",
+        "strip_prose_parity_markers",
+        "typo_prose_parity_marker",
+        "remove_set_note_claims",
+        "false_prose_defined_count",
+        "omit_618_from_spec_readme_index",
     ],
 )
 def test_check_aice_detects_tampering(tmp_path, tamper):
@@ -2566,3 +3109,227 @@ def test_617_distinct_from_607_and_611():
     assert "product_outcome" in cd617 and "deferral" in cd617
     assert "required_path" not in cd617
     assert cd617["deployment_claim"]["deployment_or_production_claim_exists"] is False
+
+
+# --- AICE-621: Task Admitted, Output Capacity Not Found -------------------------
+
+AICE_621_TITLE = "Task Admitted, Output Capacity Not Found"
+AICE_621_MACHINE = "OUTPUT_CAPACITY_AUTHORITY_CONTRADICTION"
+AICE_621_DOC = ROOT / "spec" / "aice" / "codes" / "AICE-621.md"
+
+# The seven canonical predicates, in trigger order.
+AICE_621_PREDICATES = (
+    "task_admitted",
+    "required_deliverable_exists",
+    "output_lower_bound_exceeds_effective_cap",
+    "no_admissible_alternative_output_route",
+    "same_authority_boundary",
+    "material_effect",
+    "no_precall_fail_closed",
+)
+
+
+def _load_621():
+    return json.loads(EXAMPLE_621.read_text(encoding="utf-8"))
+
+
+def _aice_621_invariants_ok(incident) -> bool:
+    """Focused canonical-example invariants for AICE-621.
+
+    All seven predicates must hold. The lower bound is what makes predicate 3 a
+    finding rather than an impression, and a route still available anywhere in the
+    alternative-route inventory defeats predicate 4 regardless of the numbers.
+    """
+    if incident.get("code") != "AICE-621":
+        return False
+    details = incident.get("code_details") or {}
+    predicates = details.get("predicates") or {}
+    if not all(predicates.get(name) is True for name in AICE_621_PREDICATES):
+        return False
+    routes = details.get("alternative_route_inventory") or {}
+    if not routes:
+        return False
+    # Every enumerated route must be recorded as closed, in words, not omitted.
+    if any("absent" not in v and "unavailable" not in v for v in routes.values()):
+        return False
+    return bool(details.get("material_effects"))
+
+
+# 1. AICE-621 exists in the registry with the exact number, title and machine name.
+def test_621_exists_in_registry_with_exact_identity():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-621")
+    assert entry["code"] == "AICE-621"
+    assert entry["title"] == AICE_621_TITLE
+    assert entry["machine_name"] == AICE_621_MACHINE
+    assert "AICE-621" in registry["canonical_defined_set"]
+    assert "AICE-621" in _load_schema()["properties"]["code"]["enum"]
+    assert "AICE-621" in check_aice.EXPECTED_CODES
+    assert AICE_621_DOC.exists()
+
+
+# 2. AICE-600 remains the unassigned gap and was not displaced by the promotion.
+def test_621_promotion_did_not_displace_600():
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    assert registry["unassigned_codes"] == ["AICE-600"]
+    assert "AICE-600" not in registry["canonical_defined_set"]
+    assert "AICE-600" not in [c["code"] for c in registry["codes"]]
+    assert "AICE-600" not in _load_schema()["properties"]["code"]["enum"]
+    assert not (ROOT / "spec" / "aice" / "codes" / "AICE-600.md").exists()
+    assert not list(EXAMPLES_DIR.glob("aice-600*.json"))
+    # AICE-621 took the next free number, never the reserved gap.
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-621")
+    assert entry["machine_name"] == AICE_621_MACHINE
+
+
+# 3. Canonical prose and machine-readable predicates stay aligned.
+def test_621_prose_and_machine_predicates_agree():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    incident = _load_621()
+    registry = json.loads((ROOT / "spec" / "aice" / "registry.json").read_text(encoding="utf-8"))
+    entry = next(c for c in registry["codes"] if c.get("code") == "AICE-621")
+    assert doc.startswith("# AICE-621 — " + AICE_621_TITLE)
+    assert AICE_621_MACHINE in doc
+    # Every predicate in the example appears in the normative document, and the
+    # example declares exactly the documented predicate set - no more, no fewer.
+    for name in AICE_621_PREDICATES:
+        assert name.upper() in doc, name + " missing from AICE-621.md"
+        assert name in incident["code_details"]["predicates"]
+    assert set(incident["code_details"]["predicates"]) == set(AICE_621_PREDICATES)
+    assert incident["title"] == entry["title"]
+    assert incident["workflow_effect"] == entry["default_workflow_effect"]
+    assert incident["retryability"] == entry["default_retryability"]
+    # The load-bearing maxim must survive in both prose surfaces.
+    assert "TASK_IS_AUTHORIZED" in doc and "TASK_IS_DELIVERABLE" in doc
+    assert "TASK_IS_AUTHORIZED" in entry["trigger_summary"]
+
+
+# 4. Positive exemplar: admitted + bound above cap + no route + attempt consumed.
+def test_621_canonical_example_satisfies_invariants():
+    incident = _load_621()
+    assert _aice_621_invariants_ok(incident)
+    assert not list(_validator().iter_errors(incident))
+    predicates = incident["code_details"]["predicates"]
+    assert predicates["task_admitted"] is True
+    assert predicates["output_lower_bound_exceeds_effective_cap"] is True
+    assert predicates["no_admissible_alternative_output_route"] is True
+    assert predicates["no_precall_fail_closed"] is True
+
+
+# 5-8. Negative controls: each defeats the classification on its own.
+@pytest.mark.parametrize(
+    "mutate, why",
+    [
+        (lambda d: d["predicates"].update(output_lower_bound_exceeds_effective_cap=False),
+         "a valid result that fits within the cap is not AICE-621"),
+        (lambda d: d["predicates"].update(no_admissible_alternative_output_route=False),
+         "usable deterministic chunking or continuation defeats predicate 4"),
+        (lambda d: d["alternative_route_inventory"].update(
+            deterministic_chunking="available - the contract accepts numbered chunks"),
+         "a route left open anywhere in the inventory defeats predicate 4"),
+        (lambda d: d["alternative_route_inventory"].update(
+            direct_repository_write="available - the coder may write the file itself"),
+         "an authorized repository-write route defeats predicate 4"),
+        (lambda d: d["predicates"].update(no_precall_fail_closed=False),
+         "a preflight that blocks before the model call consumes no attempt"),
+        (lambda d: d["predicates"].update(task_admitted=False),
+         "a task the system never admitted cannot contradict its own admission"),
+        (lambda d: d["predicates"].update(required_deliverable_exists=False),
+         "a deliberately partial result has no minimum valid representation"),
+        (lambda d: d["predicates"].update(same_authority_boundary=False),
+         "a cap binding some other actor is not this actor's contradiction"),
+        (lambda d: d["predicates"].update(material_effect=False),
+         "no material effect means nothing was damaged to report"),
+    ],
+    ids=[
+        "result_fits_within_cap",
+        "chunking_or_continuation_available",
+        "chunking_route_left_open_in_inventory",
+        "repository_write_route_available",
+        "preflight_blocks_before_model_call",
+        "task_never_admitted",
+        "task_scoped_as_partial_result",
+        "cap_binds_a_different_actor",
+        "no_material_effect",
+    ],
+)
+def test_621_negative_controls_defeat_the_classification(mutate, why):
+    incident = _load_621()
+    mutate(incident["code_details"])
+    assert not _aice_621_invariants_ok(incident), why
+
+
+# 8 (evidence form). Network truncation under a sufficient cap is not AICE-621.
+def test_621_network_truncation_under_sufficient_cap_is_not_621():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    assert "independent network interruption" in doc
+    # Modelled as the same predicate-3 failure: the cap was never the constraint.
+    incident = _load_621()
+    incident["code_details"]["predicates"]["output_lower_bound_exceeds_effective_cap"] = False
+    assert not _aice_621_invariants_ok(incident)
+
+
+# 9. An empty completion alone does not prove AICE-621.
+def test_621_empty_completion_alone_does_not_prove_the_incident():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    assert "EMPTY_COMPLETION" in doc and "TRANSPORT_FAILURE" in doc
+    # The example carries an empty completion AND an independently established
+    # lower bound. Strip the bound and the empty completion proves nothing.
+    incident = _load_621()
+    assert any("empty" in json.dumps(e).lower() for e in incident["observed_evidence"])
+    incident["code_details"]["predicates"]["output_lower_bound_exceeds_effective_cap"] = False
+    assert not _aice_621_invariants_ok(incident), (
+        "an empty completion without a lower bound is not a capacity finding"
+    )
+
+
+# 10. schema_invalid alone does not prove AICE-621.
+def test_621_schema_invalid_alone_does_not_prove_the_incident():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    assert "SCHEMA_INVALID" in doc
+    incident = _load_621()
+    assert any("schema-invalid" in json.dumps(e).lower()
+               for e in incident["observed_evidence"])
+    incident["code_details"]["predicates"]["output_lower_bound_exceeds_effective_cap"] = False
+    assert not _aice_621_invariants_ok(incident), (
+        "schema_invalid may be an effect of capacity failure but does not prove one"
+    )
+
+
+def test_621_differentials_are_normative_and_bounded():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    for neighbour in ("AICE-613", "AICE-614", "AICE-618", "AICE-610"):
+        assert neighbour in doc, "AICE-621.md must differentiate " + neighbour
+    # AICE-614 is resolved normatively, not merely listed.
+    assert "## AICE-614 resolution (normative)" in doc
+    assert "621 without 614" in doc and "614 without 621" in doc
+    # Neither 618 nor 610 is a precondition of 621.
+    assert "A verifier evidence ceiling is not required for 621" in doc
+    assert "610 is not required for 621" in doc
+
+
+def test_621_co_emits_614_and_does_not_co_emit_610():
+    incident = _load_621()
+    co = incident["code_details"]["co_emission"]
+    assert co["aice_614_co_emitted"] is True
+    assert co["aice_610_co_emitted"] is False
+    # 610 is declined for a stated reason - no declared control - not by silence.
+    assert "NO_CONTROL_DECLARED" in co["detail_610"]
+
+
+def test_621_records_its_exemplar_strength_honestly():
+    # The raw payloads are lost and the delivering tokenizers unavailable, so the
+    # bound is analytic. The example must say so rather than claim observation.
+    limits = _load_621()["code_details"]["honest_limits"]
+    assert limits["truncation_directly_observed"] is False
+    assert limits["exemplar_class"] == "STRONG_EXEMPLAR"
+    missing = json.dumps(_load_621()["missing_evidence"])
+    assert "LOST" in missing and "NOT_ESTABLISHED" in missing
+
+
+def test_621_prohibits_retry_and_model_switch_under_the_same_cap():
+    doc = AICE_621_DOC.read_text(encoding="utf-8")
+    assert "retry with the same effective cap" in doc
+    assert "switch models while preserving the same effective cap" in doc
+    assert "PRECALL_OUTPUT_CAPACITY_BLOCKED" in doc
+    assert "MODEL_SWITCHED" in doc and "DELIVERY_CONTRACT_CHANGED" in doc
