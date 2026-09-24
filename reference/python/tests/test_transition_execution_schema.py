@@ -185,3 +185,41 @@ def test_unresolvable_candidate_ref_still_passes_schema():
     case["candidate"]["candidate_ref"] = "examples/does_not_exist_candidate.json"
     errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))
     assert not errors, [e.message for e in errors]
+
+
+# -- 0.2: whole-route costs --
+
+
+def test_v0_2_record_without_route_rejected():
+    case = _load_example()
+    del case["costs"]["route"]
+    errors = list(_validator().iter_errors(case))
+    assert errors, "a 0.2 record must carry costs.route"
+
+
+def test_v0_2_record_with_well_formed_route_is_valid():
+    case = _load_example()
+    case["schema_version"] = "0.2"
+    case["costs"]["route"] = {
+        "attempts": [
+            {
+                "role": "cheap_coder",
+                "model_served": "example-model-served",
+                "turns": 1,
+                "output_tokens": 1,
+                "wall_s": 5.0,
+            }
+        ],
+        "turns_total": 1,
+        "output_tokens_total": 1,
+        "router_wall_s": 5.0,
+    }
+    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_route_attempt_with_unknown_role_rejected():
+    case = _load_example()
+    case["costs"]["route"]["attempts"][0]["role"] = "driver"
+    errors = list(_validator().iter_errors(case))
+    assert errors, "role enum is cheap_coder / fallback_coder"

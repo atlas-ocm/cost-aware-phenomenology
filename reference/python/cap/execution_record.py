@@ -122,6 +122,13 @@ def validate_execution_record(
     4. receipt fields: when provenance is established, the receipt must be a
        JSON object with matching decision, served model, and input hashes.
 
+    Rules 5 and 6 bind the reported costs to the same router receipt. Rule 5
+    binds costs.route to every attempt the receipt records, set-aside ones
+    included: the attempts in order, their turn and output-token totals, and
+    the router's total wall time. Rule 6 binds costs.measured to the figures of
+    the closing attempt. Whole-route costs are the receipt's figures for every
+    attempt; money, driver time and relay tokens are not bound by either rule.
+
     A passing record now means the named links between the record and its
     stored carriers are checked; full provenance of the execution is not
     established by this.
@@ -371,5 +378,112 @@ def validate_execution_record(
                                     problems.append(f"execution.receipt_ref: input {sha} is not among the receipt inputs")
                 except (json.JSONDecodeError, OSError):
                     problems.append(f"execution.receipt_ref: not a JSON object: {receipt_ref}")
+
+    # 5 and 6 both read the record's stored router receipt, whichever schema
+    # version the record carries; neither applies when the ref does not resolve
+    # to a JSON object (rule 4 already reports that when provenance is claimed).
+    receipt_doc: Any = None
+    stored_receipt_ref = execution.get("receipt_ref")
+    if _non_empty_str(stored_receipt_ref):
+        stored_target = base / stored_receipt_ref
+        if stored_target.is_file():
+            try:
+                loaded = json.loads(stored_target.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                loaded = None
+            if isinstance(loaded, dict):
+                receipt_doc = loaded
+
+    # 5. route costs: every attempt the receipt records, set-aside ones included
+    route_value = costs.get("route")
+    if isinstance(route_value, dict) and receipt_doc is not None:
+        route = route_value
+        attempt_names = ["first_attempt"]
+        if receipt_doc.get("fallback_used") is True:
+            attempt_names.append("fallback_attempt")
+
+        receipt_attempts: list[dict[str, Any]] = []
+        absent_attempts: set[str] = set()
+        for name in attempt_names:
+            attempt = receipt_doc.get(name)
+            if isinstance(attempt, dict):
+                receipt_attempts.append(attempt)
+            else:
+                receipt_attempts.append({})
+                absent_attempts.add(name)
+                problems.append(f"costs.route: receipt lacks {name}")
+
+        listed = _sequence(route.get("attempts"))
+        if len(listed) != len(receipt_attempts):
+            problems.append(
+                f"costs.route.attempts: {len(listed)} listed, receipt has "
+                f"{len(receipt_attempts)}"
+            )
+        else:
+            for index, name in enumerate(attempt_names):
+                if name in absent_attempts:
+                    continue
+                entry_map = _mapping(listed[index])
+                attempt = receipt_attempts[index]
+                for field in ("model_served", "turns", "output_tokens", "wall_s"):
+                    if field not in attempt:
+                        problems.append(f"costs.route: receipt lacks {name}.{field}")
+                    elif entry_map.get(field) != attempt.get(field):
+                        problems.append(
+                            f"costs.route.attempts[{index}].{field}: recorded "
+                            f"{entry_map.get(field)}, receipt says {attempt.get(field)}"
+                        )
+
+        def _attempt_sum(field: str) -> Any:
+            total: Any = 0
+            for attempt in receipt_attempts:
+                value = attempt.get(field)
+                if isinstance(value, bool) or not isinstance(value, (int, float)):
+                    return None
+                total += value
+            return total
+
+        turns_sum = _attempt_sum("turns")
+        if turns_sum is not None and route.get("turns_total") != turns_sum:
+            problems.append(
+                f"costs.route.turns_total: recorded {route.get('turns_total')}, "
+                f"receipt attempts sum to {turns_sum}"
+            )
+        tokens_sum = _attempt_sum("output_tokens")
+        if tokens_sum is not None and route.get("output_tokens_total") != tokens_sum:
+            problems.append(
+                f"costs.route.output_tokens_total: recorded "
+                f"{route.get('output_tokens_total')}, receipt attempts sum to {tokens_sum}"
+            )
+        if "total_wall_s" not in receipt_doc:
+            problems.append("costs.route: receipt lacks total_wall_s")
+        elif route.get("router_wall_s") != receipt_doc.get("total_wall_s"):
+            problems.append(
+                f"costs.route.router_wall_s: recorded {route.get('router_wall_s')}, "
+                f"receipt says {receipt_doc.get('total_wall_s')}"
+            )
+
+    # 6. closing attempt: measured figures must be the receipt's closing attempt
+    if receipt_doc is not None:
+        closing_name = (
+            "fallback_attempt"
+            if receipt_doc.get("fallback_used") is True
+            else "first_attempt"
+        )
+        closing = _mapping(receipt_doc.get(closing_name))
+        measured = _mapping(costs.get("measured"))
+        for record_field, receipt_field in (
+            ("worker_turns", "turns"),
+            ("worker_output_tokens", "output_tokens"),
+            ("worker_wall_s", "wall_s"),
+        ):
+            recorded = measured.get(record_field)
+            if recorded is None:
+                continue
+            if recorded != closing.get(receipt_field):
+                problems.append(
+                    f"costs.measured.{record_field}: recorded {recorded}, receipt "
+                    f"closing attempt says {closing.get(receipt_field)}"
+                )
 
     return problems

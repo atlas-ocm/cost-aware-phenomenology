@@ -21,7 +21,10 @@
   "additionalProperties": false,
   "properties": {
     "schema_version": {
-      "const": "0.1"
+      "enum": [
+        "0.1",
+        "0.2"
+      ]
     },
     "record_id": {
       "type": "string",
@@ -135,6 +138,28 @@
                 "minItems": 1
               }
             }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "A 0.2 record must carry the whole-route costs.",
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "0.2"
+          }
+        },
+        "required": [
+          "schema_version"
+        ]
+      },
+      "then": {
+        "properties": {
+          "costs": {
+            "required": [
+              "route"
+            ]
           }
         }
       }
@@ -532,6 +557,64 @@
               ]
             }
           }
+        },
+        "route": {
+          "type": "object",
+          "required": [
+            "attempts",
+            "turns_total",
+            "output_tokens_total",
+            "router_wall_s"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "attempts": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "role",
+                  "model_served",
+                  "turns",
+                  "output_tokens",
+                  "wall_s"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "cheap_coder",
+                      "fallback_coder"
+                    ]
+                  },
+                  "model_served": {
+                    "type": "string"
+                  },
+                  "turns": {
+                    "type": "integer"
+                  },
+                  "output_tokens": {
+                    "type": "integer"
+                  },
+                  "wall_s": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "turns_total": {
+              "type": "integer"
+            },
+            "output_tokens_total": {
+              "type": "integer"
+            },
+            "router_wall_s": {
+              "type": "number"
+            }
+          },
+          "$comment": "Costs of the whole route as the router receipt records them: every attempt in order (set-aside ones included) and the router's total wall time. The closing attempt's figures in costs.measured never stand in for the route."
         }
       }
     },

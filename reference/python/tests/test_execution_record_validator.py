@@ -265,6 +265,132 @@ def test_matching_router_receipt_resolves(tmp_path):
     assert not _named(problems, "receipt_ref"), problems
 
 
+# -- whole-route costs: rules 5 and 6 --
+
+
+def _receipt_in(tmp_path: Path, receipt: dict) -> str:
+    rec_file = tmp_path / "receipt.json"
+    rec_file.write_text(json.dumps(receipt), encoding="utf-8")
+    return str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)
+
+
+def test_v0_2_record_without_route_is_refused():
+    record = _load_example()
+    del record["costs"]["route"]
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "route"), problems
+
+
+def test_route_turns_total_off_by_one_is_named():
+    record = _load_example()
+    record["costs"]["route"]["turns_total"] += 1
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "costs.route.turns_total"), problems
+
+
+def test_route_attempt_field_differing_from_receipt_is_named():
+    record = _load_example()
+    record["costs"]["route"]["attempts"][0]["output_tokens"] += 1
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "costs.route.attempts[0].output_tokens"), problems
+
+
+def test_route_router_wall_replaced_by_closing_attempt_is_named(tmp_path):
+    record = _load_example()
+    receipt = {
+        "decision": "apply_candidate",
+        "fallback_used": False,
+        "first_attempt": {
+            "model_served": "example-model-served",
+            "turns": 1,
+            "output_tokens": 1,
+            "wall_s": 5.0,
+        },
+        "inputs": {
+            "packet": {
+                "sha256": "76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5"
+            },
+            "check_files": [],
+        },
+        "total_wall_s": 12.0,
+    }
+    record["execution"]["receipt_ref"] = _receipt_in(tmp_path, receipt)
+    # the closing attempt's wall time standing in for the router's total
+    record["costs"]["route"]["router_wall_s"] = record["costs"]["route"]["attempts"][0][
+        "wall_s"
+    ]
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert _named(problems, "costs.route.router_wall_s"), problems
+
+
+def test_route_dropping_a_set_aside_attempt_is_named(tmp_path):
+    record = _load_example()
+    receipt = {
+        "decision": "apply_candidate",
+        "fallback_used": True,
+        "first_attempt": {
+            "model_served": "cheap-model-served",
+            "turns": 2,
+            "output_tokens": 20,
+            "wall_s": 3.0,
+        },
+        "fallback_attempt": {
+            "model_served": "example-model-served",
+            "turns": 4,
+            "output_tokens": 40,
+            "wall_s": 6.0,
+        },
+        "inputs": {
+            "packet": {
+                "sha256": "76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5"
+            },
+            "check_files": [],
+        },
+        "total_wall_s": 9.0,
+    }
+    record["execution"]["receipt_ref"] = _receipt_in(tmp_path, receipt)
+    # the closing (fallback) attempt alone, with the set-aside cheap attempt dropped
+    record["costs"]["route"] = {
+        "attempts": [
+            {
+                "role": "fallback_coder",
+                "model_served": "example-model-served",
+                "turns": 4,
+                "output_tokens": 40,
+                "wall_s": 6.0,
+            }
+        ],
+        "turns_total": 4,
+        "output_tokens_total": 40,
+        "router_wall_s": 9.0,
+    }
+    record["costs"]["measured"]["worker_turns"] = 4
+    record["costs"]["measured"]["worker_output_tokens"] = 40
+    record["costs"]["measured"]["worker_wall_s"] = 6.0
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert _named(problems, "costs.route.attempts"), problems
+
+
+def test_measured_worker_turns_not_the_closing_attempt_is_named():
+    record = _load_example()
+    record["costs"]["measured"]["worker_turns"] += 1
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "costs.measured.worker_turns"), problems
+
+
+def test_v0_2_example_with_route_resolves_with_repo():
+    record = _load_example()
+    assert record["schema_version"] == "0.2"
+    assert _problems(record, repo_dir=ROOT) == []
+
+
+def test_v0_1_record_without_route_still_resolves():
+    record = _load_example()
+    record["schema_version"] = "0.1"
+    del record["costs"]["route"]
+    assert _problems(record, repo_dir=ROOT) == []
+
+
 # -- bad records are reported, never raised --
 
 

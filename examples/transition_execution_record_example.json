@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.1",
+  "schema_version": "0.2",
   "record_id": "transition_execution_record_example_2026-05-18T13_00_00",
   "object": {
     "kind": "repo",
@@ -75,11 +75,25 @@
   "costs": {
     "estimated_ref": "examples/adjustment_candidate_transition_example.json",
     "measured": {
-      "worker_output_tokens": 1234,
-      "worker_turns": 3,
-      "worker_wall_s": 42.5,
+      "worker_output_tokens": 1,
+      "worker_turns": 1,
+      "worker_wall_s": 5.0,
       "verifier_wall_s": 12.0,
       "money": "unknown"
+    },
+    "route": {
+      "attempts": [
+        {
+          "role": "cheap_coder",
+          "model_served": "example-model-served",
+          "turns": 1,
+          "output_tokens": 1,
+          "wall_s": 5.0
+        }
+      ],
+      "turns_total": 1,
+      "output_tokens_total": 1,
+      "router_wall_s": 5.0
     }
   },
   "verdict": {
