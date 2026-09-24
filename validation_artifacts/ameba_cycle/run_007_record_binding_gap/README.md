@@ -79,6 +79,23 @@ revisions and coverage resolve", not "its stored results support it". The
 binding step is prepared under `../prepared/record_binding/` (packet, oracle =
 this run's probe with `--expect-closed`, declared checks) and not executed.
 
+## 4a. Revision 2 of the packet and the oracle (after the review of `2731484`)
+
+The reviewer showed a counterexample to the first wording of rule 4 ("the
+receipt text contains the decision, the model and the hashes"): a receipt
+whose `decision` is `EXCEPTION`, whose served model and packet hash differ,
+and whose `notes` carry the record's values, passes that wording. Fixed in
+the packet: rule 4 compares values in the router receipt's specific fields
+(`decision`; the closing attempt's `model_served`; `inputs.packet.sha256` and
+`inputs.check_files[].sha256`) and nothing else; rule 3 compares revisions
+after git resolution (short and full SHA are one object) instead of string
+equality. The oracle (this directory, revision 2) requires each negative case
+to be refused with its named problem, keeps three positive controls, and adds
+the right-words-in-wrong-fields case; its output on the unchanged code is in
+`probe_output_2731484.txt` (five gap cases accepted, so still red). The
+reviewer's caution stands: a green run checks named links between the record
+and its stored carriers, not full provenance of the execution.
+
 ## 5. Costs of this run
 
 Driver only: two probe scripts, one route-cost script, corrections; no model

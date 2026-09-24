@@ -1,0 +1,26 @@
+# run 007, oracle revision 2, against the unchanged code at 2731484 (validator unchanged since 8d23161)
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . <scratch_base>
+case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]
+case=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=["checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt"]
+case=gap1_result_file_says_exit_1_record_says_pass observed=OK expected=REFUSE[checks[0].exit_code] holds=False problems=[]
+case=gap2_check_at_other_existing_revision observed=OK expected=REFUSE[checks[0].revision_checked] holds=False problems=[]
+case=gap3_check_command_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]
+case=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]
+case=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]
+probe_record_binding: observation mode, exit 0
+exit=0
+
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . <scratch_base> --expect-closed
+case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]
+case=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=["checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt"]
+case=gap1_result_file_says_exit_1_record_says_pass observed=OK expected=REFUSE[checks[0].exit_code] holds=False problems=[]
+case=gap2_check_at_other_existing_revision observed=OK expected=REFUSE[checks[0].revision_checked] holds=False problems=[]
+case=gap3_check_command_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]
+case=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]
+case=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]
+probe_record_binding: at least one expectation fails
+exit=1

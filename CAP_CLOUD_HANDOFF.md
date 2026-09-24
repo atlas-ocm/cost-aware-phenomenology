@@ -165,7 +165,7 @@ Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
 ```bash
 # unit tests (the only test command; works on any OS)
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider reference/python/tests
-# expected on a standalone clone at bbbc26c: 936 passed, 2 skipped
+# expected on a standalone clone, per revision: bbbc26c 936 passed; 989a7e2 941; 8d23161 981; ebe0ba0 and every later commit (no code change since) 1004; always 2 skipped
 
 # the remaining steps of scripts/check_repo.ps1, as plain Python (the .ps1 needs PowerShell)
 python -m compileall -q reference/python
@@ -289,7 +289,12 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   the maintainer's `main`.
 - NoMCP: `d0d9b6c` on the NoMCP master is an in-flight state record of the
   relay-ceiling facts, not a fix of the relay expectation; the transport
-  decision is still open there.
+  decision is still open there. Update at the end of the evening: the reviewer
+  of `2731484` recommended option B (a launch-then-wait rule: the relay waits
+  for its own run); the NoMCP session reports that the operator chose B, that
+  its code is on the NoMCP route branch and the relay install is in progress,
+  and that the status stays "wait mechanism probed; working-path fix not yet
+  confirmed" until an ordinary task confirms it in the app.
 
 ## 7. Next concrete unfinished step
 
@@ -300,16 +305,29 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    validator and schema tests, run 006's record still `OK`. Four rules, each a
    named problem: one `exit=` line in the stored result equal to `exit_code`;
    `checks[].command` equal to the criterion's `check_command`;
-   `revision_checked` equal to the re-observed revision, which equals
-   `object.revision_after`; with `provenance_established`, a JSON receipt that
-   mentions the decision, the served model and every hashed input. Acceptance:
-   the four probe cases refused, the control still refused, the example and
-   run 006 still resolve, run 005a refused by rule 4 (documented, intended).
+   `revision_checked`, the re-observed revision and `object.revision_after`
+   resolving through git to one commit (a short and a full SHA are one
+   object; applied only with `--repo`); with `provenance_established`, a
+   receipt in the router's shape whose specific fields match: top-level
+   `decision`, the closing attempt's `model_served` (`fallback_attempt` when
+   `fallback_used`, else `first_attempt`), and every hashed input among
+   `inputs.packet.sha256` / `inputs.check_files[].sha256`; text anywhere else
+   in the receipt counts for nothing. Revised after the review of `2731484`,
+   which showed that the first wording ("the receipt text contains the
+   values") accepts the right words in the wrong fields. The oracle (revision
+   2) requires each negative case to be refused with its named problem and
+   keeps three positive controls (unmodified example; router-shaped receipt
+   whose fields match; short SHA of the same commit). Acceptance: every
+   expectation of the oracle holds, run 006 still resolves, run 005a is
+   refused by rule 4(c) (documented, intended). A green run means the named
+   links between the record and its stored carriers are checked; it does not
+   establish full provenance of the execution.
    Follow-up after it lands: a schema field for whole-route costs. Route it as
    every other change (a coder that is not its own verifier, an explicit
    verifier, the driver adjudicating, an execution record).
-1. Reproduce on the cloud clone: the pytest command in §3 at `bbbc26c` or
-   later must give `936 passed, 2 skipped`; record the clone's directory name
+1. Reproduce on the cloud clone: the pytest command in §3 must give, per
+   revision: `bbbc26c` 936 passed, `989a7e2` 941, `8d23161` 981, `ebe0ba0` and
+   every later commit (no code change since) 1004, always 2 skipped; record the clone's directory name
    and OS as an environment difference, not a defect.
 2. Fix the baseline path before any comparison (brief §6). Proposed and not
    yet run: for the next bounded change on this repository, run it twice from
@@ -364,4 +382,11 @@ postcondition that is an existing repository check, the driver adjudicating)
 and record the requested and served model identity as the platform reports
 it; the maintainer's checkout with its 28 unpushed `main` commits and
 uncommitted AICE work; the scratchpad with raw receipts and Workflow
-transcripts.
+transcripts; the executed bytes of run 005a's packet (CRLF, 8,296 bytes,
+sha256 `08111685...`, the receipt's `inputs.packet.sha256`): the router keeps
+its copy under the out dir it was given, `<scratchpad>/out_coding/inputs/<sha>`
+(`inputs.packet.saved` is relative to that out dir, confirmed by the NoMCP
+session), and that copy plus the driver's `tasks5a.json` were copied unchanged
+to `F:/VibeCoding/CAP-retained-inputs/`. They cannot be stored byte-identical
+on the branch without a `.gitattributes` exception (`* text=auto eol=lf`
+normalises them), which is the operator's call.
