@@ -292,10 +292,11 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   relay-ceiling facts, not a fix of the relay expectation; the transport
   decision is still open there. Update at the end of the evening: the reviewer
   of `2731484` recommended option B (a launch-then-wait rule: the relay waits
-  for its own run); the NoMCP session reports that the operator chose B, that
-  its code is on the NoMCP route branch and the relay install is in progress,
-  and that the status stays "wait mechanism probed; working-path fix not yet
-  confirmed" until an ordinary task confirms it in the app.
+  for its own run) and the operator chose it. Per the NoMCP report, path B is
+  installed; the integration of the installed components was checked in
+  `claude -p` with fake executors. Work on an ordinary task in the local app
+  is not yet confirmed (a snapshot-speedup task was proposed for that check;
+  CAP does not need to wait for it).
 
 ## 7. Next concrete unfinished step
 
@@ -367,7 +368,10 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    cheaper reachable transition and reach a verified result? Fix the baseline
    path first (item 2), run the next real change both ways, and compare the
    two execution records on the brief's five axes. A green gate alone does
-   not answer it.
+   not answer it. Fix the baseline path and the same required postcondition
+   beforehand: one successfully executed task with Adjustment shows only the
+   cost of that execution, not a reduction of the full cost of reaching the
+   postcondition.
 6. Still open from data: whether Adjustment's route-level BudgetGate
    (`adjustment_dynamics.md` §Budget Gate) should be code, or whether the
    per-operator gate is sufficient.
