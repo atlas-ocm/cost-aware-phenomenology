@@ -132,6 +132,30 @@ This distinction matters. CAP does not control the observer; it controls itself.
 
 ---
 
+## Numeric Contract
+
+The numeric part of the admissibility rule (items 1 and 2 above) is encoded in
+[`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py)
+as `operator_admissibility(risk_weight, active_operator_risks,
+allowed_total_risk, telemetry_state)`, exercised by
+[`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py):
+
+- the telemetry ceiling (`max_permitted_risk`, from
+  [`telemetry_gating.md`](./telemetry_gating.md)) is checked first and returns
+  `blocked_by_telemetry`;
+- then `total_risk(active + [candidate]) > allowed_total_risk` returns
+  `blocked_by_budget`; equality admits, as in `is_cycle_admissible`;
+- otherwise the operator is `admissible` on the numeric checks.
+- Items 3–5 (preconditions, causal alignment with the LikelySplitPoint,
+  reversibility under the current telemetry) are **not** encoded: they need
+  inputs that no current artifact supplies, so they remain the analyst's or
+  the model's reading and are not claimed as machine-checked.
+- The worked example above is one of the test cases: at Loaded telemetry with
+  AllowedTotalRisk 60, Inversion 80 is `blocked_by_telemetry`, Fixation 25 and
+  then Boundary 35 are `admissible`, and a further 50 is `blocked_by_budget`.
+  The COM Grammar case `cgm_03` (Overheating, AllowedTotalRisk 30: Inversion 80
+  blocked, Hold 10 then Fixation 20 admissible) is the other.
+
 ## Where to Read Next
 
 - [`com_grammar.md`](./com_grammar.md) — the full operator alphabet that admissibility operates on

@@ -148,6 +148,25 @@ A high-stakes situation with bad telemetry is still bad telemetry. The framework
 
 ---
 
+## Numeric Contract
+
+The risk-throttling table above is encoded as a numeric contract in
+[`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py),
+exercised by
+[`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py):
+
+- `TELEMETRY_MAX_RISK` declares the ceilings `clean 90`, `loaded 60`,
+  `overheating 30`, `breach 0`; `max_permitted_risk(telemetry_state)` reads
+  them and refuses an unknown state.
+- `operator_admissibility(risk_weight, active_operator_risks,
+  allowed_total_risk, telemetry_state)` applies this ceiling before the budget
+  gate and returns `blocked_by_telemetry`, `blocked_by_budget` or `admissible`;
+  the rule itself is specified in
+  [`operator_admissibility.md`](./operator_admissibility.md).
+- The ceilings are engineering defaults, not measurements: Claim 4 in
+  [`../spec/falsifiability_status.json`](../spec/falsifiability_status.json)
+  (telemetry signals correlate with operator failure rate) remains deferred.
+
 ## Where to Read Next
 
 - [`operator_admissibility.md`](./operator_admissibility.md) — how budget and telemetry combine to determine which operators can fire

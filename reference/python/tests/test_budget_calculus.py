@@ -25,14 +25,17 @@ from cap.budget_calculus import (
     MODE_RTF_RANGE,
     RISK_BANDS,
     RISK_NOT_RECOMMENDED_THRESHOLD,
+    TELEMETRY_MAX_RISK,
     allowed_total_risk,
     classify_budget_state,
     classify_risk_zone,
     cycle_decision,
     importance_does_not_change_budget,
     is_cycle_admissible,
+    max_permitted_risk,
     mode_preferred_zone,
     mode_rtf_default,
+    operator_admissibility,
     permitted_risk_zones_for_budget,
     total_risk,
 )
@@ -326,3 +329,91 @@ def test_budget_bands_are_well_ordered():
     full_low, full_high = BUDGET_BANDS["full"]
     assert crit_low <= crit_high <= dep_low <= dep_high
     assert dep_high <= par_low <= par_high <= full_low <= full_high
+
+
+# -- Telemetry risk ceiling (telemetry_gating.md Risk Throttling) --
+
+
+def test_telemetry_max_risk_matches_doc():
+    assert TELEMETRY_MAX_RISK == {
+        "clean": 90,
+        "loaded": 60,
+        "overheating": 30,
+        "breach": 0,
+    }
+
+
+@pytest.mark.parametrize(
+    "state,ceiling",
+    [("clean", 90), ("loaded", 60), ("overheating", 30), ("breach", 0)],
+)
+def test_max_permitted_risk_matches_doc(state, ceiling):
+    assert max_permitted_risk(state) == ceiling
+
+
+def test_max_permitted_risk_rejects_unknown_state():
+    with pytest.raises(ValueError):
+        max_permitted_risk("hypothetical")
+
+
+# -- Combined admissibility (operator_admissibility.md The Admissibility Rule) --
+
+
+def test_cgm_03_risk_throttle_downgrade():
+    """cgm_03: Overheating caps risk at 30. The 80% operator is blocked by
+    telemetry; the 10 -> 20 downgrade sequence fits the ceiling and the
+    AllowedTotalRisk of 30; a further 25 breaches the budget gate."""
+    state = "overheating"
+    allowed = 30.0
+    assert operator_admissibility(80, [], allowed, state) == "blocked_by_telemetry"
+    assert operator_admissibility(10, [], allowed, state) == "admissible"
+    assert operator_admissibility(20, [10], allowed, state) == "admissible"
+    assert operator_admissibility(25, [10, 20], allowed, state) == (
+        "blocked_by_budget"
+    )
+
+
+def test_operator_admissibility_worked_example():
+    """operator_admissibility.md worked example: Loaded telemetry caps risk
+    at 60 with AllowedTotalRisk 60. 80 is throttled; 25 -> 35 stays inside
+    the budget; adding 50 on top exceeds it."""
+    state = "loaded"
+    allowed = 60.0
+    assert operator_admissibility(80, [], allowed, state) == "blocked_by_telemetry"
+    assert operator_admissibility(25, [], allowed, state) == "admissible"
+    assert operator_admissibility(35, [25], allowed, state) == "admissible"
+    assert operator_admissibility(50, [25, 35], allowed, state) == (
+        "blocked_by_budget"
+    )
+
+
+def test_breach_permits_only_zero_risk():
+    assert operator_admissibility(0, [], 100.0, "breach") == "admissible"
+    assert operator_admissibility(1, [], 100.0, "breach") == (
+        "blocked_by_telemetry"
+    )
+
+
+def test_telemetry_is_checked_before_budget():
+    """Even with a generous budget, the telemetry ceiling blocks first."""
+    assert operator_admissibility(80, [], 100.0, "overheating") == (
+        "blocked_by_telemetry"
+    )
+
+
+def test_equality_at_ceiling_and_budget_is_admissible():
+    """<= admits on both gates: risk_weight == ceiling and TotalRisk ==
+    AllowedTotalRisk are both admissible."""
+    assert operator_admissibility(30, [], 100.0, "overheating") == "admissible"
+    assert operator_admissibility(10, [20], 30.0, "clean") == "admissible"
+
+
+def test_operator_admissibility_rejects_bad_inputs():
+    with pytest.raises(ValueError):
+        operator_admissibility(-1, [], 100.0, "clean")
+    with pytest.raises(ValueError):
+        operator_admissibility(101, [], 100.0, "clean")
+    with pytest.raises(ValueError):
+        operator_admissibility(10, [], -1.0, "clean")
+    with pytest.raises(ValueError):
+        operator_admissibility(10, [], 100.0, "unknown_state")

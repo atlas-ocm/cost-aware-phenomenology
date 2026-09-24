@@ -30,6 +30,16 @@ RISK_BANDS: dict[str, tuple[int, int]] = {
 RISK_NOT_RECOMMENDED_THRESHOLD: int = 90
 
 
+# telemetry_gating.md Risk Throttling table: maximum permitted RiskWeight
+# per TelemetryState (percent).
+TELEMETRY_MAX_RISK: dict[str, int] = {
+    "clean": 90,
+    "loaded": 60,
+    "overheating": 30,
+    "breach": 0,
+}
+
+
 # observer_budget.md budget-state bands (percent).
 BUDGET_BANDS: dict[str, tuple[float, float]] = {
     "critical": (0.0, 30.0),
@@ -138,6 +148,52 @@ def is_cycle_admissible(
     return total_risk(active_operator_risks) <= allowed_total_risk(
         usable_budget_percent, risk_tolerance_factor
     )
+
+
+def max_permitted_risk(telemetry_state: str) -> int:
+    """Maximum permitted RiskWeight (percent) for a TelemetryState.
+
+    Encodes the Risk Throttling table in 02_subsystems/telemetry_gating.md:
+    Clean 90, Loaded 60, Overheating 30, Breach 0 (Pause only). An unknown
+    state has no ceiling to look up and is rejected rather than defaulted.
+    """
+    try:
+        return TELEMETRY_MAX_RISK[telemetry_state]
+    except (KeyError, TypeError):
+        raise ValueError(
+            f"unknown telemetry_state: {telemetry_state!r}"
+        ) from None
+
+
+def operator_admissibility(
+    risk_weight: float,
+    active_operator_risks: Sequence[float],
+    allowed_total_risk: float,
+    telemetry_state: str,
+) -> str:
+    """Combined telemetry-and-budget gate for a candidate operator.
+
+    Encodes "The Admissibility Rule" in 02_subsystems/operator_admissibility.md
+    (the numeric part): first the risk throttle, then the budget gate. Both
+    use <= admits, > blocks, exactly like is_cycle_admissible.
+
+    - risk_weight > max_permitted_risk(telemetry_state) -> "blocked_by_telemetry"
+    - total_risk(active + [risk_weight]) > allowed_total_risk
+      -> "blocked_by_budget"
+    - otherwise -> "admissible"
+    """
+    if not (0 <= risk_weight <= 100):
+        raise ValueError(f"risk_weight must be in [0, 100], got {risk_weight}")
+    if allowed_total_risk < 0:
+        raise ValueError(
+            f"allowed_total_risk must be non-negative, got {allowed_total_risk}"
+        )
+    if risk_weight > max_permitted_risk(telemetry_state):
+        return "blocked_by_telemetry"
+    proposed = list(active_operator_risks) + [risk_weight]
+    if total_risk(proposed) > allowed_total_risk:
+        return "blocked_by_budget"
+    return "admissible"
 
 
 def permitted_risk_zones_for_budget(
