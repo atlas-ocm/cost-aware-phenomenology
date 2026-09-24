@@ -101,3 +101,16 @@ state and an AllowedTotalRisk. There is no mapping between the two
 vocabularies, so `operator_admissibility` could not have been applied to the
 candidates of runs 001 and 002 either. Closing this is a schema decision and
 belongs to the ordinary coding route once the intended reading is chosen.
+
+## Corrections
+
+- correction_001 (2026-09-24, after operator review): in F3 the third stabilizer
+  of `cgm_07` was transcribed as "Boundary 15%". The case names "Очистка" =
+  Cleanup 15%; Boundary does not occur in the case. The original
+  `gate_outputs.json` is kept unchanged; the recomputation with the correct
+  operator is in `gate_outputs_correction_001.json`. The result and the
+  contradiction are the same (the function at `bbbc26c` has no operator
+  identity input), so F3's conclusion stands; its operator list should be read
+  as Fixation 20, Hold 10, Cleanup 15. The `allowed_total_risk = 100` in that
+  probe is an explicitly marked isolation condition, not a substitute for the
+  case's missing budget.

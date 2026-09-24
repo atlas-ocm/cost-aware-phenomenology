@@ -1,0 +1,55 @@
+{
+  "correction_of": "gate_outputs.json, key cgm_07_budget_recovery_limits_to_stabilizers",
+  "error": "the third stabilizer was transcribed as 'Boundary 15'; the case text (Cyrillic, verified with the utf-8 bytes) names 'Очистка' = Cleanup 15. 'Граница' (Boundary) does not occur in cgm_07.",
+  "original_kept": true,
+  "inputs": {
+    "telemetry_state": "breach (structured)",
+    "allowed_total_risk": "not given by the case; 100 used ONLY as the explicitly marked condition of an isolated probe, never as a substitute for a missing budget",
+    "operators_transcribed_corrected": [
+      [
+        "Fixation",
+        20
+      ],
+      [
+        "Hold",
+        10
+      ],
+      [
+        "Cleanup",
+        15
+      ],
+      [
+        "domain action",
+        50
+      ]
+    ]
+  },
+  "computed_at": "bbbc26c (function without operator identity; the operator name does not change the result)",
+  "computed": [
+    {
+      "operator": "Fixation",
+      "risk_weight": 20,
+      "active_before": [],
+      "verdict": "blocked_by_telemetry"
+    },
+    {
+      "operator": "Hold",
+      "risk_weight": 10,
+      "active_before": [],
+      "verdict": "blocked_by_telemetry"
+    },
+    {
+      "operator": "Cleanup",
+      "risk_weight": 15,
+      "active_before": [],
+      "verdict": "blocked_by_telemetry"
+    },
+    {
+      "operator": "domain action",
+      "risk_weight": 50,
+      "active_before": [],
+      "verdict": "blocked_by_telemetry"
+    }
+  ],
+  "finding_unchanged": "with the table's Breach ceiling of 0 every stabilizer is blocked_by_telemetry; the contradiction with the Breach row, the Budget Recovery paragraph and the case stands with the correct operator names"
+}

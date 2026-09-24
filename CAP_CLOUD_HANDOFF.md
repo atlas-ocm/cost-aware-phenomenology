@@ -44,7 +44,11 @@ the plain sum), `budget_calculus.total_risk` and its 41 tests all bound the
 plain sum of RiskWeights, and no artifact supplies a separate `P(failure)`.
 The prose line was corrected; code and tests unchanged. Same family:
 `GLOSSARY.md` gave RTF values 0.4 / 0.7 / 1.0 against the doc ranges and
-`MODE_RTF_RANGE`; corrected to the ranges. Driver-authored, docs only.
+`MODE_RTF_RANGE`; corrected to the ranges. Found afterwards: `spec/operator_alphabet.json`
+(`risk_tolerance_factors`, v1.1) also carries 0.4 / 0.7 / 1.0, so the glossary was not the
+only carrier and that correction chose a side without seeing the spec; the glossary now
+names both, and the spec-vs-doc/code discrepancy is open (§5). No code reads the
+alphabet's values. Driver-authored, docs only.
 
 Deferred, not dropped: if `P(failure)` is ever meant to be a separate axis, it
 needs a producer (no schema, case or COM-Log carries it today) and a decision
@@ -79,8 +83,9 @@ this file, `validation_artifacts/ameba_cycle/` (two run records),
 gate can decide from the 25 pack cases. 0 of 25 carry structured operator
 risk weights; with driver transcription of the prose numbers the gate agrees
 with `cgm_03`, contradicts `cgm_07` (the ceiling table's Breach = 0 blocks the
-stabilizers that the Breach row, the Budget Recovery paragraph and the
-validated case permit), classifies `pal_h01`'s 40% as `depleted` where the
+stabilizers Fixation 20 / Hold 10 / Cleanup 15 that the Breach row, the Budget
+Recovery paragraph and the validated case permit; correction_001 in the run
+directory fixes an earlier "Boundary" transcription slip), classifies `pal_h01`'s 40% as `depleted` where the
 prose says "partial" (behaviour consistent), and cannot touch `cgm_06`
 (no persistent-fault code). `02_subsystems/telemetry_gating.md` now flags the
 Breach contradiction as open next to its Numeric Contract. Nothing was
@@ -170,6 +175,9 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   gate's inputs (RiskWeight percent, telemetry state, AllowedTotalRisk) or a
   mapping from its [0, 1] risk axes is defined. The test and oracle of
   `bbbc26c` encode the table line and inherit the contradiction.
+- Open: which RiskToleranceFactor carrier is canonical: `observer_budget.md` +
+  `MODE_RTF_RANGE` (0.5-0.7 / 0.7-0.85 / 0.85-0.95) or `spec/operator_alphabet.json`
+  `risk_tolerance_factors` (0.4 / 0.7 / 1.0). Not decided here.
 - Rejected hypotheses: rename the checkout to `CAP` (hides the assumption);
   encode the whole five-item rule with invented inputs; treat one green
   trajectory as evidence of minimal cost.

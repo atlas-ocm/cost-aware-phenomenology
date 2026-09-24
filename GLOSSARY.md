@@ -18,7 +18,7 @@ A reference for the terms used throughout this framework. Format per term: short
 ### Observer Budget (ObserverUsableBudget)
 **Short:** The current usable capacity of the observer.
 
-**Technical:** Bounds total active risk: `TotalRisk(active chains) ≤ AllowedTotalRisk = ObserverUsableBudget × RiskToleranceFactor`. `RiskToleranceFactor` ranges by operating mode: conservative 0.5–0.7, nominal 0.7–0.85, expansion 0.85–0.95 (see [`02_subsystems/observer_budget.md`](./02_subsystems/observer_budget.md) and the numeric contract in `reference/python/cap/budget_calculus.py`).
+**Technical:** Bounds total active risk: `TotalRisk(active chains) ≤ AllowedTotalRisk = ObserverUsableBudget × RiskToleranceFactor`. `RiskToleranceFactor` ranges by operating mode: conservative 0.5–0.7, nominal 0.7–0.85, expansion 0.85–0.95 (see [`02_subsystems/observer_budget.md`](./02_subsystems/observer_budget.md) and the numeric contract in `reference/python/cap/budget_calculus.py`). Note: `spec/operator_alphabet.json` (`risk_tolerance_factors`) still carries the older single values conservative 0.4 / nominal 0.7 / expansion 1.0, which no code reads; which carrier is canonical is an open decision recorded in `CAP_CLOUD_HANDOFF.md`.
 
 **Not to be confused with:** Total available time or money — observer budget is the cognitive/affective capacity to execute operators safely.
 
