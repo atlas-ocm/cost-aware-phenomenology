@@ -166,6 +166,13 @@ exercised by
 - The ceilings are engineering defaults, not measurements: Claim 4 in
   [`../spec/falsifiability_status.json`](../spec/falsifiability_status.json)
   (telemetry signals correlate with operator failure rate) remains deferred.
+- Open question, found by executing the contract (run 003,
+  [`../validation_artifacts/ameba_cycle/run_003_numeric_coverage/`](../validation_artifacts/ameba_cycle/run_003_numeric_coverage/README.md)):
+  the table's Breach ceiling of 0% blocks Hold 10%, Boundary 15% and
+  Fixation 20%, while the Breach row above, the Budget Recovery paragraph
+  below and the validated case `cgm_07` permit exactly those stabilizers in
+  Breach. The code encodes the table as written; which reading is intended
+  is an open decision, not resolved here.
 
 ## Where to Read Next
 

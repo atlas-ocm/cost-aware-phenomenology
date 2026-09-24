@@ -14,7 +14,7 @@ its hash is reported in the local Driver's final message, not here.
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
 | verified code revision | `bbbc26c` (`feat(budget): ...`): full suite `936 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 in 46 s |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then the handoff commit (this file, the brief copy, the run records, docs updates) |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then the handoff commit `90e1c72` (this file, the brief copy, the run records, docs updates); then the run 003 commit (evidence record, docs flag, this update) |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -72,6 +72,19 @@ section). Authored by NoMCP fallback_coder `deepseek-v4.1-flash:cloud` after
 this file, `validation_artifacts/ameba_cycle/` (two run records),
 `REPRODUCIBILITY.md` (expected test result on a clone; layout note),
 `validation_artifacts/README.md` (index entry).
+
+### 2.5 Run 003 — evidence only, no transition
+
+`validation_artifacts/ameba_cycle/run_003_numeric_coverage/`: what the new
+gate can decide from the 25 pack cases. 0 of 25 carry structured operator
+risk weights; with driver transcription of the prose numbers the gate agrees
+with `cgm_03`, contradicts `cgm_07` (the ceiling table's Breach = 0 blocks the
+stabilizers that the Breach row, the Budget Recovery paragraph and the
+validated case permit), classifies `pal_h01`'s 40% as `depleted` where the
+prose says "partial" (behaviour consistent), and cannot touch `cgm_06`
+(no persistent-fault code). `02_subsystems/telemetry_gating.md` now flags the
+Breach contradiction as open next to its Numeric Contract. Nothing was
+changed to make either side green.
 
 ## 3. Exact commands, dependencies, inputs and outputs
 
@@ -151,6 +164,12 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   3–5 of admissibility (no inputs); a downgrade-sequence / candidate selector
   (no reproduced failure asks for it yet); a cycle runner script (would be a
   mechanism ahead of a failure); vendoring the external packs (private).
+- Open after run 003, operator decision, not a coding task: which reading of
+  Breach is intended (ceiling 0% = Pause only, or the conservation band with a
+  stabilizer whitelist); and whether a `CandidateTransition` should carry the
+  gate's inputs (RiskWeight percent, telemetry state, AllowedTotalRisk) or a
+  mapping from its [0, 1] risk axes is defined. The test and oracle of
+  `bbbc26c` encode the table line and inherit the contradiction.
 - Rejected hypotheses: rename the checkout to `CAP` (hides the assumption);
   encode the whole five-item rule with invented inputs; treat one green
   trajectory as evidence of minimal cost.
@@ -189,12 +208,19 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    met and constraints violated; unverified completion claims; interventions,
    retries, regressions, rollbacks; time and tokens in their own units; new
    evidence produced). Two runs of one change is a probe, not a result.
-3. Run 003 (evidence, no new mechanism): apply `operator_admissibility` to the
-   COM Grammar cases whose constraints are numeric (`cgm_03`, `cgm_07`) and
-   record which of the 8 cases the numeric contract can decide and which need
-   prose reading. Only if a case shows the gate choosing wrongly, or a
-   downgrade search being required, is a selector justified.
-4. Then decide, from data, whether Adjustment's route-level BudgetGate
+3. Run 003 is done locally (see §2.5). It leaves an OPERATOR DECISION, not a
+   coding task: which reading of Breach is intended. Do not change
+   `TELEMETRY_MAX_RISK`, the docs, the test or the oracle to make either side
+   green before that is decided; both readings and what each would change
+   are in the run 003 README (F3).
+4. Vocabulary gap to close before the gate can act inside the cycle (run 003,
+   F6): a `CandidateTransition` carries six risk axes in [0, 1] and five
+   ordinal cost bands and no telemetry state or AllowedTotalRisk; the gate
+   consumes a RiskWeight percent, a telemetry state and an AllowedTotalRisk.
+   Decide from the next real runs whether the candidate carries the gate's
+   inputs or a mapping is defined; either is a schema change and goes through
+   the ordinary coding route with the schema tests as the postcondition.
+5. Then decide, from data, whether Adjustment's route-level BudgetGate
    (`adjustment_dynamics.md` §Budget Gate) should be code, or whether the
    per-operator gate is sufficient.
 

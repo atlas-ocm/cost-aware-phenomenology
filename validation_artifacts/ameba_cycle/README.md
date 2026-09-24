@@ -34,6 +34,11 @@ Runs:
 - [`run_002_telemetry_admissibility/`](./run_002_telemetry_admissibility/README.md)
   — first measured escalation; cheap tier broke an existing definition,
   fallback tier closed it (`FALLBACK_PASS`); commit `bbbc26c`.
+- [`run_003_numeric_coverage/`](./run_003_numeric_coverage/README.md) —
+  evidence-only run (no transition): what the numeric gate can decide from
+  the 25 pack cases; files are `coverage.json`, `gate_outputs.json`,
+  `README.md`. Found the Breach ceiling contradiction and the
+  candidate-vs-gate vocabulary gap; both left as open decisions.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet

@@ -1,0 +1,123 @@
+{
+  "note": "operator risk weights below were transcribed by the driver from the case prose (summary / claim_attempt); telemetry_state and allowed_total_risk are the cases' structured fields where present. No parser was used.",
+  "TELEMETRY_MAX_RISK": {
+    "clean": 90,
+    "loaded": 60,
+    "overheating": 30,
+    "breach": 0
+  },
+  "cgm_03_risk_throttle_downgrade_applied": {
+    "inputs": {
+      "telemetry_state": "overheating (structured)",
+      "allowed_total_risk": "30 (structured)",
+      "operators_transcribed": [
+        [
+          "Inversion",
+          80
+        ],
+        [
+          "Hold",
+          10
+        ],
+        [
+          "Fixation",
+          20
+        ]
+      ]
+    },
+    "expected_by_case": "Inversion blocked; downgrade to Hold 10 then Fixation 20",
+    "computed": [
+      {
+        "operator": "Inversion",
+        "risk_weight": 80,
+        "active_before": [],
+        "verdict": "blocked_by_telemetry"
+      },
+      {
+        "operator": "Hold",
+        "risk_weight": 10,
+        "active_before": [],
+        "verdict": "admissible"
+      },
+      {
+        "operator": "Fixation",
+        "risk_weight": 20,
+        "active_before": [
+          10
+        ],
+        "verdict": "admissible"
+      }
+    ]
+  },
+  "cgm_07_budget_recovery_limits_to_stabilizers": {
+    "inputs": {
+      "telemetry_state": "breach (structured)",
+      "allowed_total_risk": "not given by the case; 100 used to isolate the telemetry ceiling",
+      "operators_transcribed": [
+        [
+          "Fixation",
+          20
+        ],
+        [
+          "Hold",
+          10
+        ],
+        [
+          "Boundary",
+          15
+        ],
+        [
+          "domain action",
+          50
+        ]
+      ]
+    },
+    "expected_by_case": "only stabilizers (Fixation 20, Hold 10, Boundary 15) permitted; domain actions above 50 frozen",
+    "computed": [
+      {
+        "operator": "Fixation",
+        "risk_weight": 20,
+        "active_before": [],
+        "verdict": "blocked_by_telemetry"
+      },
+      {
+        "operator": "Hold",
+        "risk_weight": 10,
+        "active_before": [],
+        "verdict": "blocked_by_telemetry"
+      },
+      {
+        "operator": "Boundary",
+        "risk_weight": 15,
+        "active_before": [],
+        "verdict": "blocked_by_telemetry"
+      },
+      {
+        "operator": "domain action",
+        "risk_weight": 50,
+        "active_before": [],
+        "verdict": "blocked_by_telemetry"
+      }
+    ],
+    "computed_with_zero_risk_pause": "admissible"
+  },
+  "pal_h01_partial_budget_reroutes_not_blocks": {
+    "inputs": {
+      "usable_budget_percent": "40 (from prose: 'Observer budget is 40% (partial, not zero)')"
+    },
+    "expected_by_case": "partial budget enables a cheaper route, not a total block",
+    "computed": {
+      "classify_budget_state(40)": "depleted",
+      "permitted_risk_zones": [
+        "conservation"
+      ]
+    }
+  },
+  "cgm_06_persistent_fault_candidate_detected": {
+    "inputs": {
+      "cycles_open": 4,
+      "threshold": 3
+    },
+    "computed": "no function in reference/python encodes the persistent-fault rule; not computable"
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "summary": {
+    "cases": 25,
+    "with_structured_telemetry_state": 2,
+    "with_structured_allowed_total_risk": 1,
+    "with_structured_operator_risk_weights": 0,
+    "with_percents_only_in_prose": 3,
+    "gate_computable_from_structured_fields": 0,
+    "gate_computable_with_driver_transcription": 3
+  },
+  "rows": [
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_01_advice_collapse_blocked",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_02_com_log_format_valid",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_03_risk_throttle_downgrade_applied",
+      "structured_telemetry_state": "Overheating",
+      "structured_allowed_total_risk": "30%",
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [
+        "80%",
+        "30%",
+        "10%",
+        "20%",
+        "80%",
+        "10%",
+        "20%"
+      ],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": true
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_04_reverse_first_applied",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_05_anti_noise_state_rejected",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_06_persistent_fault_candidate_detected",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {
+        "cycles_open": 4,
+        "threshold": 3
+      },
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_07_budget_recovery_limits_to_stabilizers",
+      "structured_telemetry_state": "Breach",
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [
+        "50%",
+        "20%",
+        "10%",
+        "15%"
+      ],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": true
+    },
+    {
+      "pack": "com_grammar",
+      "case_id": "cgm_08_legacy_as_engine_blocked",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_01_desire_pressure_admissible_route",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_02_problem_pressure_recovery_route",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_03_markov_bridge_intermediate_states",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_04_schrodinger_bridge_minimal_deformation",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_05_anti_collapse_advice_guard",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_06_looking_glass_chain",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_07_budget_constrained_routing",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/main_cases",
+      "case_id": "pal_08_leakage_pattern_invalidates_route",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h01_partial_budget_reroutes_not_blocks",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [
+        "40%"
+      ],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": true
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h02_relationship_unilateral_repair_leakage",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h03_coaching_disguised_as_recovery_routing",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h04_impossible_single_step_jump",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h05_schrodinger_preserves_prior_dynamics",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h06_health_recovery_looking_glass_chain",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h07_work_desire_pressure_budget_gate",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h08_problem_pressure_recovery_not_self_improvement",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    },
+    {
+      "pack": "adjustment_layer/holdout_cases",
+      "case_id": "pal_h09_symptom_closure_ignores_active_leakage",
+      "structured_telemetry_state": null,
+      "structured_allowed_total_risk": null,
+      "structured_operator_risk_weights": null,
+      "other_structured_numbers": {},
+      "percents_in_prose": [],
+      "gate_computable_from_structured_fields": false,
+      "gate_computable_with_driver_transcription": false
+    }
+  ]
+}
