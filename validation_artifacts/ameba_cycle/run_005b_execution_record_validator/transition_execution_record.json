@@ -51,7 +51,7 @@
       "identity_source": "claude_cli_modelUsage",
       "identity_independently_verified": false
     },
-    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); one native Workflow with one nomcp-haiku relay per stage",
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); coding stage run detached through the shim (Bash run_in_background, after the relay ceiling seen in run 005a); verdict stage through one native Workflow with one nomcp-haiku relay",
     "inputs": [
       {
         "ref": "validation_artifacts/ameba_cycle/run_005b_execution_record_validator/coding_packet.json",

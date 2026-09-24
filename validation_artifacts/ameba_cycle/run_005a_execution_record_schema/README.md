@@ -83,3 +83,25 @@ and are not summed with them. Money: unknown.
   "the required state exists" and "this execution led to it" are both
   checked by code; what it does not say is anything about Adjustment choosing
   a cheaper transition — that comparison is still to be run.
+
+## Corrections
+
+- correction_001 (2026-09-24, after the review of `26535dc`; see run 007):
+  `costs.measured` in `transition_execution_record.json` holds the closing
+  attempt only (38 turns, 21,688 output tokens, 90.34 s). The whole route from the same
+  receipt is 48 turns, 28,094 output tokens, 132.34 s of router wall, verifier 38.8 s (the three failed routes in `failed_route/` and the table in section 3 come on top and are not summed with them);
+  see `../route_costs_correction_001.json`. For comparing transitions the
+  whole route is the figure. The record is left as written: its schema has
+  no place for route totals (`CAP_CLOUD_HANDOFF.md` section 7).
+- correction_002 (same date): `execution.tool` said "one native Workflow with
+  one nomcp-haiku relay per stage"; this coding route ran detached through
+  the shim, only the verdict stage was relayed. Corrected in place; the
+  original wording is in commit `1db22cf`.
+- correction_003 (same date): `execution.inputs[0]` hashes the stored
+  `coding_packet.json` (LF, 8,271 bytes, `9b0f0bd6...`); the router hashed
+  the packet it was given, `tasks5a.json` with CRLF line endings (8,296
+  bytes, `08111685...`, the receipt's `inputs.packet.sha256`). Same text,
+  different bytes: the copy was normalised on copy and `.gitattributes`
+  would normalise it on staging anyway. The record is internally consistent
+  and not bound to the executed bytes; the binding rule prepared in run 007
+  refuses it, as intended. Left as written.

@@ -49,3 +49,17 @@ receipt and the record; money unknown.
   unknown revision on a copy of the example) exits non-zero and names each
   problem; the same copy passes JSON Schema. That is the boundary this run
   closes.
+
+## Corrections
+
+- correction_001 (2026-09-24, after the review of `26535dc`; see run 007):
+  `costs.measured` in `transition_execution_record.json` holds the closing
+  attempt only (48 turns, 40,578 output tokens, 177.84 s). The whole route from the same
+  receipt is 57 turns, 44,824 output tokens, 213.25 s of router wall, verifier 36.3 s;
+  see `../route_costs_correction_001.json`. For comparing transitions the
+  whole route is the figure. The record is left as written: its schema has
+  no place for route totals (`CAP_CLOUD_HANDOFF.md` section 7).
+- correction_002 (same date): `execution.tool` said "one native Workflow with
+  one nomcp-haiku relay per stage"; this coding route ran detached through
+  the shim, only the verdict stage was relayed. Corrected in place; the
+  original wording is in commit `1db22cf`.

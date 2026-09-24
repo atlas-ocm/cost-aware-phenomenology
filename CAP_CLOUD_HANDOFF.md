@@ -14,7 +14,7 @@ its hash is reported in the local Driver's final message, not here.
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
 | verified code revision | `8d23161` (execution record): full suite `981 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 (see §2.7). Earlier verified points: `bbbc26c` (936 passed, 2 skipped), `989a7e2` (941 passed, 2 skipped) |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, then the run-006 records commit |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, then the run-007 commit (review of `26535dc`: records corrected, binding step prepared) |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -139,6 +139,24 @@ input, and marks every record as not full admissibility. Full suite `1004 passed
 The prepared packet under `prepared/com_log_link/` is the one that ran. Record:
 `run_006_com_log_link/`.
 
+### 2.9 Run 007 — review of `26535dc`: what the validator binds, and corrections
+
+The review reported, and `run_007_record_binding_gap/` reproduces on the
+shipped example, that `validate_execution_record` accepts a record whose stored
+result says `exit=1` while the record says pass, a check made at another
+existing revision, a check command that differs from its criterion, and a stray
+text file as receipt with `provenance_established: true`. Cause: the validator
+resolves references, hashes, revisions and coverage and never reads a stored
+result. So the "binding" of §2.7 holds for the existence and identity of the
+referenced files, not yet for their content. The next bounded step is prepared
+and not executed (§7, item 0). Corrections made without code: `execution.tool`
+of the records of runs 005a, 005b and 006 (their coding routes ran detached;
+only the verdict stage was relayed); whole-route costs per run in
+`route_costs_correction_001.json` (the records hold the closing attempt only);
+run 005a's stored packet differs from the executed bytes by line endings
+(correction_003 there). All records at this commit still pass the validator as
+it is. No code changed in this commit; the full suite was not re-run for it.
+
 ## 3. Exact commands, dependencies, inputs and outputs
 
 Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
@@ -232,7 +250,19 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   run must produce; a numeric gate may be part of it, the binding comes first.
 - Open: which RiskToleranceFactor carrier is canonical: `observer_budget.md` +
   `MODE_RTF_RANGE` (0.5-0.7 / 0.7-0.85 / 0.85-0.95) or `spec/operator_alphabet.json`
-  `risk_tolerance_factors` (0.4 / 0.7 / 1.0). Not decided here.
+  `risk_tolerance_factors` (0.4 / 0.7 / 1.0). Recommendation received with the
+  review of `26535dc`: keep the docs + `MODE_RTF_RANGE` policy as canonical
+  (Conservative 0.5-0.7, Nominal 0.7-0.85, Expansion 0.85-0.95), align the
+  alphabet with it and name one source of the values; an engineering-policy
+  choice that keeps current behaviour, not a proof of the numbers. Not
+  executed: the alphabet change is a spec mutation for the ordinary coding
+  route, after the operator confirms.
+- Decided after the review of `26535dc` (run 007): costs of a transition are
+  the whole route (every attempt, baseline, checks, verifier), not the closing
+  attempt; the records keep the closing attempt until the schema has a place
+  for route totals, and `route_costs_correction_001.json` carries the whole
+  route per run meanwhile. A record that passes the validator is not, by that
+  fact alone, a record whose stored results support it, until §7 item 0 lands.
 - Rejected hypotheses: rename the checkout to `CAP` (hides the assumption);
   encode the whole five-item rule with invented inputs; treat one green
   trajectory as evidence of minimal cost.
@@ -257,9 +287,27 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   (stashes `33843e76`, `6e7b4e56` and the run-005 one, in the local worktree); the raw scratch receipts (copied
   into the run records); the Workflow transcripts; the 28 unpushed commits on
   the maintainer's `main`.
+- NoMCP: `d0d9b6c` on the NoMCP master is an in-flight state record of the
+  relay-ceiling facts, not a fix of the relay expectation; the transport
+  decision is still open there.
 
 ## 7. Next concrete unfinished step
 
+0. **Prepared and not executed: bind the execution record to its stored
+   results** (run 007). Packet `prepared/record_binding/coding_packet.json`;
+   oracle `run_007_record_binding_gap/probe_record_binding.py --expect-closed`
+   (exit 1 today, red for the named reason); declared checks: the oracle, the
+   validator and schema tests, run 006's record still `OK`. Four rules, each a
+   named problem: one `exit=` line in the stored result equal to `exit_code`;
+   `checks[].command` equal to the criterion's `check_command`;
+   `revision_checked` equal to the re-observed revision, which equals
+   `object.revision_after`; with `provenance_established`, a JSON receipt that
+   mentions the decision, the served model and every hashed input. Acceptance:
+   the four probe cases refused, the control still refused, the example and
+   run 006 still resolve, run 005a refused by rule 4 (documented, intended).
+   Follow-up after it lands: a schema field for whole-route costs. Route it as
+   every other change (a coder that is not its own verifier, an explicit
+   verifier, the driver adjudicating, an execution record).
 1. Reproduce on the cloud clone: the pytest command in §3 at `bbbc26c` or
    later must give `936 passed, 2 skipped`; record the clone's directory name
    and OS as an environment difference, not a defect.
@@ -275,7 +323,9 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    record (§2.7, runs 005a and 005b). Every further run must produce a
    `transition_execution_record.json` that passes
    `validate_execution_record.py --repo .`; a run without one is not a
-   verified transition, whatever its README says.
+   verified transition, whatever its README says. Passing the validator at
+   `26535dc` is not yet proof that the stored results support the record
+   (run 007, §2.9).
 4. Done in run 006 (§2.8): the COM-Log link. Its acceptance items 1–4 are the
    oracle; item 5 (a candidate through the whole chain to a verified
    postcondition) is the run's execution record. What is still missing: no real
@@ -302,8 +352,8 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
 
 ## 8. What is available from the cloud and what exists only locally
 
-Available on the branch: all code, tests, docs, schemas, examples, the two run
-records with verbatim receipts, the brief, this file.
+Available on the branch: all code, tests, docs, schemas, examples, the run
+records 001–007 with verbatim receipts, the prepared packets, the brief, this file.
 
 Local only: the 32 external Looking-Glass / Latent Cause cases
 (`F:/VibeCoding/Shard-Theory/Patch`); the NoMCP checkout (`F:/VibeCoding/Nomcp`)

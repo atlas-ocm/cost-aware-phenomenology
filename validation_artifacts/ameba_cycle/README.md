@@ -54,12 +54,19 @@ Runs:
 - [`run_006_com_log_link/`](./run_006_com_log_link/README.md) — the candidate
   step ↔ COM-Log link with risk-weight provenance (operator's item 2), executed
   from the packet kept under `prepared/com_log_link/`; execution record included.
+- [`run_007_record_binding_gap/`](./run_007_record_binding_gap/README.md) —
+  evidence-only run after the review of `26535dc`: the validator accepts four
+  records whose stored results contradict them (reproduced on the shipped
+  example); corrections to the records of runs 002–006 (`execution.tool`,
+  whole-route costs in `route_costs_correction_001.json`, run 005a packet
+  bytes); the binding step is prepared under `prepared/record_binding/`.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet
 run; see `CAP_CLOUD_HANDOFF.md`), and not proof that any CAP layer improved
 the outcome. One trajectory does not establish minimal cost. Costs are kept
-in their own units (tokens, turns, seconds) and are never summed; money is
+in their own units (tokens, turns, seconds) and are never summed across units (within a unit the whole route counts:
+`route_costs_correction_001.json`); money is
 unknown for subscription-served models. Model identity is what the executing
 CLI reported (`modelUsage`), not an independent probe.
 

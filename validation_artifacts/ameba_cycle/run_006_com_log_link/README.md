@@ -71,3 +71,17 @@ money unknown.
   run's execution record, produced with the format from run 005.
 - Still true: a numeric `admissible` through this link is not full
   admissibility; items 3–5 of the rule remain unchecked by code.
+
+## Corrections
+
+- correction_001 (2026-09-24, after the review of `26535dc`; see run 007):
+  `costs.measured` in `transition_execution_record.json` holds the closing
+  attempt only (31 turns, 16,842 output tokens, 92.72 s). The whole route from the same
+  receipt is 40 turns, 20,703 output tokens, 117.17 s of router wall, verifier 37.4 s;
+  see `../route_costs_correction_001.json`. For comparing transitions the
+  whole route is the figure. The record is left as written: its schema has
+  no place for route totals (`CAP_CLOUD_HANDOFF.md` section 7).
+- correction_002 (same date): `execution.tool` said "one native Workflow with
+  one nomcp-haiku relay per stage"; this coding route ran detached through
+  the shim, only the verdict stage was relayed. Corrected in place; the
+  original wording is in commit `9942901`.

@@ -1,0 +1,44 @@
+# run 007: readiness of the existing records for the prepared binding rules, at 26535dc (execution.tool of three records corrected in the working tree)
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_existing_records.py .
+== validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/transition_execution_record.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[1] c2: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[2] c3: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[3] c4: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [True, True]
+== validation_artifacts/ameba_cycle/run_004_breach_recovery_only/transition_execution_record.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[1] c2: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[2] c3: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[3] c4: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[4] c5: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [True, True]
+== validation_artifacts/ameba_cycle/run_005a_execution_record_schema/transition_execution_record.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[1] c2: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[2] c3: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[3] c4: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [False, True]
+== validation_artifacts/ameba_cycle/run_005b_execution_record_validator/transition_execution_record.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[1] c2: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[2] c3: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[3] c4: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[4] c5: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [True, True]
+== validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[1] c2: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[2] c3: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  checks[3] c4: command==criterion: True | revision_checked==observed: True | exit lines: ['exit=0'] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [True, True]
+== examples/transition_execution_record_example.json
+  object.revision_after == observation_after.revision_after: True
+  checks[0] c1: command==criterion: True | revision_checked==observed: True | exit lines: [] | exit_code: 0
+  receipt: json: True | contains decision: True | contains model_served: True | contains each input sha256: [False]
+exit=0

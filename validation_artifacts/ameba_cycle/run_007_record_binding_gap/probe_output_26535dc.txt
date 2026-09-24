@@ -1,0 +1,19 @@
+# run 007: validate_execution_record at 26535dc against five mutated copies of the shipped example (driver-run, no model calls)
+# revision: 26535dceba0fc1c00aec1b0c90d419c32af1d14a
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . <scratch_base>
+case=control_missing_result_file observed=REFUSED expected_when_bound=REFUSED problems=["checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt"]
+case=gap1_result_file_says_exit_1_record_says_pass observed=OK expected_when_bound=REFUSED problems=[]
+case=gap2_check_at_other_existing_revision observed=OK expected_when_bound=REFUSED problems=[]
+case=gap3_check_command_differs_from_criterion observed=OK expected_when_bound=REFUSED problems=[]
+case=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected_when_bound=REFUSED problems=[]
+probe_record_binding: observation mode, exit 0
+exit=0
+
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . <scratch_base> --expect-closed
+case=control_missing_result_file observed=REFUSED expected_when_bound=REFUSED problems=["checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt"]
+case=gap1_result_file_says_exit_1_record_says_pass observed=OK expected_when_bound=REFUSED problems=[]
+case=gap2_check_at_other_existing_revision observed=OK expected_when_bound=REFUSED problems=[]
+case=gap3_check_command_differs_from_criterion observed=OK expected_when_bound=REFUSED problems=[]
+case=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected_when_bound=REFUSED problems=[]
+probe_record_binding: at least one gap case accepted
+exit=1

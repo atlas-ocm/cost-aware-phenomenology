@@ -91,3 +91,13 @@ Contract sections in the two docs.
   existing test did. Telemetry gate and admissibility are now code and were
   exercised only by their own tests; nothing in this run used them to choose
   an action.
+
+## Corrections
+
+- correction_001 (2026-09-24, after the review of `26535dc`; see run 007):
+  `costs.measured` in `transition_execution_record.json` holds the closing
+  attempt only (24 turns, 11,670 output tokens, 51.99 s). The whole route from the same
+  receipt is 32 turns, 14,265 output tokens, 71.25 s of router wall, verifier 30.0 s;
+  see `../route_costs_correction_001.json`. For comparing transitions the
+  whole route is the figure. The record is left as written: its schema has
+  no place for route totals (`CAP_CLOUD_HANDOFF.md` section 7).

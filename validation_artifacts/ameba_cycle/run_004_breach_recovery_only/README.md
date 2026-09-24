@@ -84,3 +84,13 @@ Contract sections).
   binding of this executed transition to its object revision, executor call,
   re-observation and per-criterion check results as one machine-checkable
   record with resolvable references. That is the next step (run 005).
+
+## Corrections
+
+- correction_001 (2026-09-24, after the review of `26535dc`; see run 007):
+  `costs.measured` in `transition_execution_record.json` holds the closing
+  attempt only (55 turns, 25,094 output tokens, 131.53 s). The whole route from the same
+  receipt is 69 turns, 34,629 output tokens, 196.64 s of router wall, verifier 43.0 s;
+  see `../route_costs_correction_001.json`. For comparing transitions the
+  whole route is the figure. The record is left as written: its schema has
+  no place for route totals (`CAP_CLOUD_HANDOFF.md` section 7).

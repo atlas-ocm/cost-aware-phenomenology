@@ -1,0 +1,189 @@
+{
+  "correction_id": "route_costs_correction_001",
+  "date": "2026-09-24",
+  "reason": "Review of 26535dc: the execution records store the closing attempt's costs; the receipts hold every attempt and the router's total wall time. Whole-route figures are the ones to compare transitions on.",
+  "source": "nomcp_coding_receipt.json (first_attempt, fallback_attempt, total_wall_s) and nomcp_verdict_receipt.json (wall_s) of each run, verbatim",
+  "not_included": "driver time (packet, oracle, re-observation in a detached worktree, records); relay tokens where a Workflow relay was used (in the run READMEs where measured); money",
+  "runs": [
+    {
+      "run": "run_001_layout_fix",
+      "decision": "CHEAP_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 6,
+          "output_tokens": 666,
+          "wall_s": 4.77
+        }
+      ],
+      "route_total": {
+        "turns": 6,
+        "output_tokens": 666,
+        "router_wall_s": 6.78
+      },
+      "verifier_wall_s": 27.88,
+      "recorded_in_execution_record": null,
+      "money": "unknown"
+    },
+    {
+      "run": "run_002_telemetry_admissibility",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 8,
+          "output_tokens": 2595,
+          "wall_s": 15.89
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 24,
+          "output_tokens": 11670,
+          "wall_s": 51.99
+        }
+      ],
+      "route_total": {
+        "turns": 32,
+        "output_tokens": 14265,
+        "router_wall_s": 71.25
+      },
+      "verifier_wall_s": 29.97,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 11670,
+        "worker_turns": 24,
+        "worker_wall_s": 51.99,
+        "verifier_wall_s": 30.0,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    },
+    {
+      "run": "run_004_breach_recovery_only",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 14,
+          "output_tokens": 9535,
+          "wall_s": 57.44
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 55,
+          "output_tokens": 25094,
+          "wall_s": 131.53
+        }
+      ],
+      "route_total": {
+        "turns": 69,
+        "output_tokens": 34629,
+        "router_wall_s": 196.64
+      },
+      "verifier_wall_s": 43.03,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 25094,
+        "worker_turns": 55,
+        "worker_wall_s": 131.53,
+        "verifier_wall_s": 43.0,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    },
+    {
+      "run": "run_005a_execution_record_schema",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 10,
+          "output_tokens": 6406,
+          "wall_s": 34.94
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 38,
+          "output_tokens": 21688,
+          "wall_s": 90.34
+        }
+      ],
+      "route_total": {
+        "turns": 48,
+        "output_tokens": 28094,
+        "router_wall_s": 132.34
+      },
+      "verifier_wall_s": 38.83,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 21688,
+        "worker_turns": 38,
+        "worker_wall_s": 90.34,
+        "verifier_wall_s": 38.8,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    },
+    {
+      "run": "run_005b_execution_record_validator",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 9,
+          "output_tokens": 4246,
+          "wall_s": 22.44
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 48,
+          "output_tokens": 40578,
+          "wall_s": 177.84
+        }
+      ],
+      "route_total": {
+        "turns": 57,
+        "output_tokens": 44824,
+        "router_wall_s": 213.25
+      },
+      "verifier_wall_s": 36.3,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 40578,
+        "worker_turns": 48,
+        "worker_wall_s": 177.84,
+        "verifier_wall_s": 36.3,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    },
+    {
+      "run": "run_006_com_log_link",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 9,
+          "output_tokens": 3861,
+          "wall_s": 17.83
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 31,
+          "output_tokens": 16842,
+          "wall_s": 92.72
+        }
+      ],
+      "route_total": {
+        "turns": 40,
+        "output_tokens": 20703,
+        "router_wall_s": 117.17
+      },
+      "verifier_wall_s": 37.4,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 16842,
+        "worker_turns": 31,
+        "worker_wall_s": 92.72,
+        "verifier_wall_s": 37.4,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    }
+  ]
+}
