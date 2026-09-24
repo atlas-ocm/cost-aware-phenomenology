@@ -1,0 +1,149 @@
+{
+  "schema_version": "0.1",
+  "record_id": "exec_2026-09-24_run_006_com_log_link",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "1db22cf3501d8ef2cccbc89346d268b97d56db98",
+    "revision_after": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-24T19-41Z_com_log_link",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-24T19-40Z_com_log_link_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle for the COM-Log link (schema accepts an optional non-empty com_log_ref and still rejects unknown step keys; gate record fields; Breach stabilizer within budget admissible; Boundary at Breach blocked_recovery_only; over budget blocked; equality admits; every missing link or input gives not_computed with a reason; provenance kept and never upgraded; unknown source raises; Clean and Loaded paths; unknown operator raises) exits 0",
+        "check_command": "python -B validation_artifacts/ameba_cycle/run_006_com_log_link/oracle_link.py"
+      },
+      {
+        "id": "c2",
+        "statement": "test_candidate_gate.py, test_adjustment_layer_schema.py, test_schemas_valid.py and test_budget_calculus.py exit 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_candidate_gate.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_budget_calculus.py"
+      },
+      {
+        "id": "c3",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c4",
+        "statement": "changed files are exactly spec/adjustment_layer.schema.json and tests/test_adjustment_layer_schema.py (modified) plus cap/candidate_gate.py and tests/test_candidate_gate.py (new); the worked example unchanged",
+        "check_command": "git diff --stat 1db22cf ebe0ba0; git diff --diff-filter=M --name-only 1db22cf ebe0ba0"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); one native Workflow with one nomcp-haiku relay per stage",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/coding_packet.json",
+        "sha256": "2bd41a18f4d8e67a39bc5f5610edf606e8fa9636bc673103b10bcd6ad48c73f7"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/oracle_link.py",
+        "sha256": "c9890d9dfa8125f7952a112f0dac18b62d1cdbc4006336f4e844478d3902f66a"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-24T19:47:00Z",
+    "revision_after": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb",
+    "summary": "Re-observed in a detached worktree at ebe0ba0 (F:/VibeCoding/CAP-wt-tmp-006, removed afterwards): clean tree; oracle_link exits 0; gate, schema and budget tests pass; full suite 1004 passed, 2 skipped; diff 1db22cf..ebe0ba0 modifies the adjustment schema and its test module and adds two files; the worked example still validates"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/run_006_com_log_link/oracle_link.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c1_oracle.txt",
+      "revision_checked": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_candidate_gate.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_budget_calculus.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c2_gate_and_schema_tests.txt",
+      "revision_checked": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c3_full_suite.txt",
+      "revision_checked": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "git diff --stat 1db22cf ebe0ba0; git diff --diff-filter=M --name-only 1db22cf ebe0ba0",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c4_diff_scope.txt",
+      "revision_checked": "ebe0ba021259743b0b1d4ac9d9e9c176c1382adb"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "the declared pytest checks and the full suite exit 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c3_full_suite.txt"
+    },
+    {
+      "claim": "git shows the schema and its tests modified and only the two new files added",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/checks/c4_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected: the cheap tier closes a small task whose oracle it satisfied. Observed: gemma4:31b-cloud (9 turns, 17.8 s) produced a correct module but two of its own tests asserted the wrong behaviour, so the declared checks set the attempt aside; deepseek-v4.1-flash:cloud closed it (31 turns, 92.7 s). No CAP-level Adjustment; the router's policy applied; no oracle weakened; no code written by the driver."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_006_com_log_link/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 16842,
+      "worker_turns": 31,
+      "worker_wall_s": 92.72,
+      "verifier_wall_s": 37.4,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files",
+      "Provenance: the packet and the oracle are hashed inputs, the router receipt is referenced, the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs are the receipts' measured values for the closing attempt; money is unknown"
+    ]
+  },
+  "notes": "Run 006: the candidate step <-> COM-Log link with risk-weight provenance, the operator's item 2. A numeric pass through this link is still not full admissibility (items 3-5 unchecked)."
+}

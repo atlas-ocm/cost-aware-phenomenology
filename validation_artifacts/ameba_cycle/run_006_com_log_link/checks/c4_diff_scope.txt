@@ -1,0 +1,13 @@
+# check c4: diff scope 1db22cf..ebe0ba0
+$ git diff --stat 1db22cf ebe0ba0
+ reference/python/cap/candidate_gate.py             | 151 +++++++++++++++
+ .../python/tests/test_adjustment_layer_schema.py   |  14 ++
+ reference/python/tests/test_candidate_gate.py      | 204 +++++++++++++++++++++
+ spec/adjustment_layer.schema.json                  |   5 +
+ 4 files changed, 374 insertions(+)
+$ git diff --diff-filter=M --name-only 1db22cf ebe0ba0   (modified tracked files; expected: the schema and its test module only)
+reference/python/tests/test_adjustment_layer_schema.py
+spec/adjustment_layer.schema.json
+$ worked example against the changed schema:
+worked example: VALID
+exit=0

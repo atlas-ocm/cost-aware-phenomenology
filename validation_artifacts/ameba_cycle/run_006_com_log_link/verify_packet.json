@@ -1,0 +1,281 @@
+[
+ {
+  "id": "cap-com-log-link-04-verify",
+  "packet": {
+   "question": "Does this change add only an optional com_log_ref (string, minLength 1) to adjustment_step in spec/adjustment_layer.schema.json, a new module cap/candidate_gate.py whose gate_candidate_step(step, com_log, active_operator_risks, risk_weight_source) reads the gate inputs from the linked COM-Log record and the cycle state, records risk_weight_source and estimate_status without upgrading an assignment to a measurement, returns not_computed with a reason for any missing link or input, never returns admissible without every input, marks numeric_pass_is_full_admissibility False with the three unchecked items, and otherwise delegates to operator_admissibility with the lowercased telemetry state; plus tests; with no docs, examples, other spec files or other modules touched?",
+   "postcondition": {
+    "value": "The driver's oracle (evidence carrier oracle_link.py) exits 0; the three declared pytest checks exit 0; changed files are exactly spec/adjustment_layer.schema.json, reference/python/tests/test_adjustment_layer_schema.py and the two new files reference/python/cap/candidate_gate.py and reference/python/tests/test_candidate_gate.py; the worked example still validates; existing tests unchanged in meaning."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_link.py\", line 15, in <module>\n    from cap.candidate_gate import (  # noqa: E402\nModuleNotFoundError: No module named 'cap.candidate_gate'",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_link.py\", line 15, in <module>\n    from cap.candidate_gate import (  # noqa: E402\nModuleNotFoundError: No module named 'cap.candidate_gate'\n",
+      "stdout_chars": 0,
+      "stderr_chars": 310,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_candidate_gate.py",
+       "reference/python/tests/test_adjustment_layer_schema.py",
+       "reference/python/tests/test_schemas_valid.py"
+      ],
+      "exit": 4,
+      "ok": false,
+      "tail": "no tests ran in 0.00s\nERROR: file or directory not found: reference/python/tests/test_candidate_gate.py",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "\nno tests ran in 0.00s\n",
+      "stderr_tail": "ERROR: file or directory not found: reference/python/tests/test_candidate_gate.py\n\n",
+      "stdout_chars": 23,
+      "stderr_chars": 83,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_budget_calculus.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.18s",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.18s\n",
+      "stderr_tail": "",
+      "stdout_chars": 179,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 17.83,
+     "turns": 9,
+     "output_tokens": 3861,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_link: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_link: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 33,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_candidate_gate.py",
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "reference/python/tests/test_schemas_valid.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": " blocked_by_budget\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:58: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_candidate_gate.py::test_boundary_at_breach_admits\nFAILED reference/python/tests/test_candidate_gate.py::test_over_budget_at_breach_blocks\n2 failed, 56 passed in 1.06s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": ".FF.......................................................               [100%]\n================================== FAILURES ===================================\n_______________________ test_boundary_at_breach_admits ________________________\n\n    def test_boundary_at_breach_admits():\n        # Boundary 35, allowed 45, active [10] -> 45 <= 45.\n        step = {\"order\": 1, \"com_log_ref\": \"rec_123\"}\n        com_log = {\n            \"recommended_operator\": {\"operator\": \"Boundary\", \"risk_weight_percent\": 35},\n            \"telemetry_state\": \"Breach\",\n            \"allowed_total_risk_percent\": 45,\n        }\n        active = [10.0]\n        res = gate_candidate_step(step, com_log, active, \"engineering_default\")\n>       assert res[\"verdict\"] == \"admissible\"\nE       AssertionError: assert 'blocked_recovery_only' == 'admissible'\nE         \nE         - admissible\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:45: AssertionError\n______________________ test_over_budget_at_breach_blocks ______________________\n\n    def test_over_budget_at_breach_blocks():\n        # Boundary 36, allowed 45, active [10] -> 46 > 45.\n        step = {\"order\": 1, \"com_log_ref\": \"rec_123\"}\n        com_log = {\n            \"recommended_operator\": {\"operator\": \"Boundary\", \"risk_weight_percent\": 36},\n            \"telemetry_state\": \"Breach\",\n            \"allowed_total_risk_percent\": 45,\n        }\n        active = [10.0]\n        res = gate_candidate_step(step, com_log, active, \"engineering_default\")\n>       assert res[\"verdict\"] == \"blocked_by_budget\"\nE       AssertionError: assert 'blocked_recovery_only' == 'blocked_by_budget'\nE         \nE         - blocked_by_budget\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:58: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_candidate_gate.py::test_boundary_at_breach_admits\nFAILED reference/python/tests/test_candidate_gate.py::test_over_budget_at_breach_blocks\n2 failed, 56 passed in 1.06s\n",
+       "stderr_tail": "",
+       "stdout_chars": 2061,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.19s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.19s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 92.72,
+     "turns": 31,
+     "output_tokens": 16842,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_link: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_link: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 33,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_candidate_gate.py",
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "reference/python/tests/test_schemas_valid.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": ".....................................................................    [100%]\n69 passed in 0.91s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": ".....................................................................    [100%]\n69 passed in 0.91s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.20s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.20s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 4), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Linked CandidateTransition route steps to COM-Log records and implemented the numeric budget gate in `reference/python/cap/candidate_gate.py`.' -> postcondition False",
+     "step 6: cheap attempt set aside (9348ac67186af2608ec285981405eb76f03a1f5c)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered 'Added the optional `com_log_ref` to `$defs.adjustment_step` in spec/adjustment_layer.schema.json, created reference/python/cap/candidate_gate.py with RISK_WEIGHT_SOURCES, UNCHECKED_BY_NUMERIC_GATE and gate_candidate_step (reading gate inputs from the linked COM-Log + cycle state, recording source/estimate status, returning not_computed with a reason for missing inputs, otherwise delegating to operator_admissibility), added reference/python/tests/test_candidate_gate.py, and appended two com_log_ref tests to reference/python/tests/test_adjustment_layer_schema.py.' -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " reference/python/tests/test_adjustment_layer_schema.py | 14 ++++++++++++++\n spec/adjustment_layer.schema.json                      |  5 +++++\n 2 files changed, 19 insertions(+)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "reference/python/tests/test_adjustment_layer_schema.py\nspec/adjustment_layer.schema.json\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "reference/python/cap/candidate_gate.py\nreference/python/tests/test_candidate_gate.py\n"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/reference/python/tests/test_adjustment_layer_schema.py b/reference/python/tests/test_adjustment_layer_schema.py\nindex 695e8de..d8f57b6 100644\n--- a/reference/python/tests/test_adjustment_layer_schema.py\n+++ b/reference/python/tests/test_adjustment_layer_schema.py\n@@ -399,3 +399,17 @@ def test_hold_verdict_with_mode_hold_is_valid():\n     ]\n     errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n     assert not errors, [e.message for e in errors]\n+\n+\n+def test_route_step_with_com_log_ref_validates():\n+    case = _load_example()\n+    case[\"candidate\"][\"route\"][1][\"com_log_ref\"] = \"com_log:2026-09-24:step2\"\n+    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n+    assert not errors, [e.message for e in errors]\n+\n+\n+def test_route_step_with_empty_com_log_ref_is_rejected():\n+    case = _load_example()\n+    case[\"candidate\"][\"route\"][1][\"com_log_ref\"] = \"\"\n+    errors = list(_validator().iter_errors(case))\n+    assert errors, \"an empty com_log_ref must be rejected (minLength: 1)\"\ndiff --git a/spec/adjustment_layer.schema.json b/spec/adjustment_layer.schema.json\nindex 6706d46..6caf74e 100644\n--- a/spec/adjustment_layer.schema.json\n+++ b/spec/adjustment_layer.schema.json\n@@ -670,6 +670,11 @@\n         \"reason\": {\n           \"type\": \"string\",\n           \"minLength\": 1\n+        },\n+        \"com_log_ref\": {\n+          \"type\": \"string\",\n+          \"minLength\": 1,\n+          \"$comment\": \"Reference to the COM-Log record that carries this step's numeric gate inputs (operator, risk_weight_percent, telemetry_state, allowed_total_risk_percent).\"\n         }\n       }\n     },\n"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "\n--- new file reference/python/cap/candidate_gate.py ---\n\"\"\"Link a CandidateTransition route step to its numeric gate inputs.\n\nOperator decision, 2026-09-24: a CandidateTransition route step may be linked\nto one COM-Log record and to the current cycle state. The numeric gate's\ninputs already exist in the COM-Log (recommended_operator.operator,\nrecommended_operator.risk_weight_percent, telemetry_state,\nallowed_total_risk_percent); the active operators come from the cycle state.\nThe six risk axes and the five cost bands of the CandidateTransition are\ndifferent quantities from RiskWeight and are left untouched here: no\naveraging, maximum, or conversion of a unit-interval axis into a percent.\n\nThe assigned RiskWeight is an assignment, not a measurement: this module\nrecords the source and the estimate status, and writing a number in JSON\nnever upgrades it into an observation. Missing inputs never yield a positive\nresult, and a numeric pass is not full admissibility — the preconditions,\ncausal alignment with the split point, and reversibility under telemetry stay\nunchecked by this code.\n\nThe gate itself is delegated to\ncap.budget_calculus.operator_admissibility, whose contract is pinned by\n02_subsystems/operator_admissibility.md (The Admissibility Rule) and\n02_subsystems/telemetry_gating.md (the Risk Throttling table); the COM-Log\nrecord shape is pinned by spec/com_log_schema.json and the route step by\nspec/adjustment_layer.schema.json.\n\"\"\"\nfrom __future__ import annotations\n\nfrom typing import Any, Mapping, Sequence\n\nfrom .budget_calculus import operator_admissibility\n\n\n# How the assigned RiskWeight was obtained. An engineering default, a model\n# estimate and a human estimate are all assignments; only \"measured\" is an\n# observation. None of them may be silently relabeled.\nRISK_WEIGHT_SOURCES = (\n    \"engineering_default\",\n    \"model_estimate\",\n    \"human_estimate\",\n    \"measured\",\n)\n\n# What a numeric pass does NOT decide. These remain unchecked by this code.\nUNCHECKED_BY_NUMERIC_GATE = (\n    \"preconditions\",\n    \"causal_alignment_with_split_point\",\n    \"reversibility_under_telemetry\",\n)\n\n\ndef gate_candidate_step(\n    step: Mapping[str, Any],\n    com_log: Mapping[str, Any] | None,\n    active_operator_risks: Sequence[float] | None,\n    risk_weight_source: str | None,\n) -> dict[str, Any]:\n    \"\"\"Compute the numeric admissibility gate for one linked route step.\n\n    ``step`` is a CandidateTransition route step; its optional ``com_log_ref``\n    names the COM-Log record that carries the gate inputs. ``com_log`` is that\n    record, ``active_operator_risks`` the RiskWeights of the operators active\n    in the current cycle state, and ``risk_weight_source`` how the assigned\n    RiskWeight was obtained.\n\n    Returns a plain dict that always carries the inputs that were present,\n    plus provenance and the verdict. ``estimate_status`` is \"measured\" only\n    for the \"measured\" source, \"assigned\" for the other three known sources,\n    and \"unknown\" when no source was given. A source that is neither None nor\n    a member of RISK_WEIGHT_SOURCES raises ValueError. The verdict is\n    \"not_computed\" with a non-empty ``reason`` naming the missing item when the\n    link or any required input is absent; otherwise it is\n    operator_admissibility(operator, risk_weight_percent,\n    active_operator_risks, allowed_total_risk_percent,\n    telemetry_state.lower()), so an invalid present value (an unknown operator,\n    an out-of-range weight) raises ValueError rather than being reported as\n    not_computed. ``numeric_pass_is_full_admissibility`` is always False and\n    ``unchecked`` lists what the numeric gate does not decide.\n    \"\"\"\n    if risk_weight_source is not None and risk_weight_source not in RISK_WEIGHT_SOURCES:\n        raise ValueError(f\"unknown risk_weight_source: {risk_weight_source!r}\")\n\n    if risk_weight_source is None:\n        estimate_status = \"unknown\"\n    elif risk_weight_source == \"measured\":\n        estimate_status = \"measured\"\n    else:\n        estimate_status = \"assigned\"\n\n    com_log_ref = step.get(\"com_log_ref\")\n\n    # Carry whatever inputs are present, whether or not the full set is.\n    operator: Any = None\n    risk_weight_percent: Any = None\n    telemetry_state: Any = None\n    allowed_total_risk_percent: Any = None\n    if com_log is not None:\n        recommended_operator = com_log.get(\"recommended_operator\")\n        if isinstance(recommended_operator, Mapping):\n            operator = recommended_operator.get(\"operator\")\n            risk_weight_percent = recommended_operator.get(\"risk_weight_percent\")\n        telemetry_state = com_log.get(\"telemetry_state\")\n        allowed_total_risk_percent = com_log.get(\"allowed_total_risk_percent\")\n\n    missing: str | None = None\n    if com_log_ref is None:\n        missing = \"com_log_ref\"\n    elif com_log is None:\n        missing = \"com_log\"\n    elif operator is None:\n        missing = \"recommended_operator.operator\"\n    elif risk_weight_percent is None:\n        missing = \"recommended_operator.risk_weight_percent\"\n    elif telemetry_state is None:\n        missing = \"telemetry_state\"\n    elif allowed_total_risk_percent is None:\n        missing = \"allowed_total_risk_percent\"\n    elif active_operator_risks is None:\n        missing = \"active_operator_risks\"\n\n    if missing is not None:\n        verdict = \"not_computed\"\n        reason = missing\n    else:\n        verdict = operator_admissibility(\n            operator,\n            risk_weight_percent,\n            list(active_operator_risks),\n            allowed_total_risk_percent,\n            telemetry_state.lower(),\n        )\n        reason = \"\"\n\n    return {\n        \"step_order\": step[\"order\"],\n        \"com_log_ref\": com_log_ref,\n        \"operator\": operator,\n        \"risk_weight_percent\": risk_weight_percent,\n        \"telemetry_state\": telemetry_state,\n        \"allowed_total_risk_percent\": allowed_total_risk_percent,\n        \"active_operator_risks\": (\n            list(active_operator_risks) if active_operator_risks is not None else None\n        ),\n        \"risk_weight_source\": (\n            risk_weight_source if risk_weight_source is not None else \"unknown\"\n        ),\n        \"estimate_status\": estimate_status,\n        \"verdict\": verdict,\n        \"reason\": reason,\n        \"numeric_pass_is_full_admissibility\": False,\n        \"unchecked\": list(UNCHECKED_BY_NUMERIC_GATE),\n    }\n\n--- new file reference/python/tests/test_candidate_gate.py ---\n\"\"\"Tests for the CandidateTransition route-step to COM-Log gate link.\n\nCovers the operator decision of 2026-09-24 (cap/candidate_gate.py): a route\nstep linked to one COM-Log record and the current cycle state computes the\nnumeric admissibility gate through that link, records the RiskWeight's source\nand estimate status without upgrading an assignment to a measurement, returns\nnot_computed for any missing input, never returns admissible without every\ninput present, and marks a numeric pass as not full admissibility.\n\"\"\"\nfrom __future__ import annotations\n\nimport sys\nfrom pathlib import Path\n\nimport pytest\n\nsys.path.insert(0, str(Path(__file__).resolve().parent.parent))\n\nfrom cap.candidate_gate import (\n    RISK_WEIGHT_SOURCES,\n    UNCHECKED_BY_NUMERIC_GATE,\n    gate_candidate_step,\n)\n\n\ndef _step(**overrides):\n    step = {\n        \"order\": 2,\n        \"action\": \"apply the candidate patch\",\n        \"mutability\": \"candidate_patch\",\n        \"reversibility\": \"reversible\",\n        \"reason\": \"r\",\n        \"com_log_ref\": \"com_log:2026-09-24:step2\",\n    }\n    step.update(overrides)\n    return step\n\n\ndef _com_log(**overrides):\n    com = {\n        \"domain\": \"Work\",\n        \"node\": \"n\",\n        \"current_status\": [\"Open\"],\n        \"recommended_operator\": {\"operator\": \"Fixation\", \"risk_weight_percent\": 20},\n        \"target_status\": [\"Fixed\"],\n        \"next_physical_step\": \"s\",\n        \"telemetry_state\": \"Breach\",\n        \"allowed_total_risk_percent\": 45,\n        \"budget_gate\": \"Recovery-Only\",\n    }\n    com.update(overrides)\n    return com\n\n\ndef test_risk_weight_sources_are_the_four_named_ones():\n    assert set(RISK_WEIGHT_SOURCES) == {\n        \"engineering_default\",\n        \"model_estimate\",\n        \"human_estimate\",\n        \"measured\",\n    }\n\n\ndef test_linked_step_at_breach_is_admissible_with_provenance():\n    record = gate_candidate_step(_step(), _com_log(), [10], \"engineering_default\")\n    assert record[\"verdict\"] == \"admissible\"\n    assert record[\"step_order\"] == 2\n    assert record[\"com_log_ref\"] == \"com_log:2026-09-24:step2\"\n    assert record[\"operator\"] == \"Fixation\"\n    assert record[\"risk_weight_percent\"] == 20\n    assert record[\"telemetry_state\"] == \"Breach\"\n    assert record[\"allowed_total_risk_percent\"] == 45\n    assert record[\"active_operator_risks\"] == [10]\n    assert record[\"risk_weight_source\"] == \"engineering_default\"\n    assert record[\"estimate_status\"] == \"assigned\"\n    assert record[\"reason\"] == \"\"\n    assert record[\"numeric_pass_is_full_admissibility\"] is False\n    assert set(UNCHECKED_BY_NUMERIC_GATE) <= set(record[\"unchecked\"])\n    assert {\n        \"preconditions\",\n        \"causal_alignment_with_split_point\",\n        \"reversibility_under_telemetry\",\n    } <= set(record[\"unchecked\"])\n\n\ndef test_operator_outside_recovery_only_is_blocked_at_breach():\n    com = _com_log(recommended_operator={\"operator\": \"Boundary\", \"risk_weight_percent\": 20})\n    record = gate_candidate_step(_step(), com, [], \"engineering_default\")\n    assert record[\"verdict\"] == \"blocked_recovery_only\"\n\n\ndef test_over_budget_is_blocked_by_budget():\n    record = gate_candidate_step(_step(), _com_log(), [20, 10], \"engineering_default\")\n    assert record[\"verdict\"] == \"blocked_by_budget\"  # 20 + 30 = 50 > 45\n\n\ndef test_equality_admits():\n    record = gate_candidate_step(_step(), _com_log(), [20, 5], \"engineering_default\")\n    assert record[\"verdict\"] == \"admissible\"  # 20 + 25 = 45 == 45\n\n\ndef test_missing_com_log_ref_is_not_computed_with_reason():\n    step = {k: v for k, v in _step().items() if k != \"com_log_ref\"}\n    record = gate_candidate_step(step, _com_log(), [10], \"engineering_default\")\n    assert record[\"verdict\"] == \"not_computed\"\n    assert record[\"reason\"]\n    assert record[\"com_log_ref\"] is None\n\n\ndef test_none_com_log_is_not_computed_with_reason():\n    record = gate_candidate_step(_step(), None, [10], \"engineering_default\")\n    assert record[\"verdict\"] == \"not_computed\"\n    assert record[\"reason\"]\n\n\n@pytest.mark.parametrize(\n    \"mutate\",\n    [\n        lambda com: {k: v for k, v in com.items() if k != \"recommended_operator\"},\n        lambda com: dict(\n            com,\n            recommended_operator={\n                k: v\n                for k, v in com[\"recommended_operator\"].items()\n                if k != \"operator\"\n            },\n        ),\n        lambda com: dict(\n            com,\n            recommended_operator={\n                k: v\n                for k, v in com[\"recommended_operator\"].items()\n                if k != \"risk_weight_percent\"\n            },\n        ),\n        lambda com: {k: v for k, v in com.items() if k != \"telemetry_state\"},\n        lambda com: {k: v for k, v in com.items() if k != \"allowed_total_risk_percent\"},\n    ],\n)\ndef test_each_missing_com_log_field_is_not_computed_with_reason(mutate):\n    record = gate_candidate_step(_step(), mutate(_com_log()), [10], \"engineering_default\")\n    assert record[\"verdict\"] == \"not_computed\"\n    assert record[\"reason\"]\n\n\ndef test_missing_active_operator_risks_is_not_computed_with_reason():\n    record = gate_candidate_step(_step(), _com_log(), None, \"engineering_default\")\n    assert record[\"verdict\"] == \"not_computed\"\n    assert record[\"reason\"]\n    assert record[\"active_operator_risks\"] is None\n\n\ndef test_not_computed_record_still_carries_present_inputs():\n    record = gate_candidate_step(_step(), _com_log(), None, \"engineering_default\")\n    assert record[\"operator\"] == \"Fixation\"\n    assert record[\"risk_weight_percent\"] == 20\n    assert record[\"telemetry_state\"] == \"Breach\"\n    assert record[\"allowed_total_risk_percent\"] == 45\n\n\ndef test_measured_source_is_estimate_status_measured():\n    record = gate_candidate_step(_step(), _com_log(), [10], \"measured\")\n    assert record[\"estimate_status\"] == \"measured\"\n    assert record[\"risk_weight_source\"] == \"measured\"\n\n\ndef test_other_known_sources_are_assigned():\n    for source in (\"engineering_default\", \"model_estimate\", \"human_estimate\"):\n        record = gate_candidate_step(_step(), _com_log(), [10], source)\n        assert record[\"estimate_status\"] == \"assigned\", source\n\n\ndef test_none_source_is_unknown_and_unknown():\n    record = gate_candidate_step(_step(), _com_log(), [10], None)\n    assert record[\"risk_weight_source\"] == \"unknown\"\n    assert record[\"estimate_status\"] == \"unknown\"\n\n\ndef test_unknown_source_raises_value_error():\n    with pytest.raises(ValueError):\n        gate_candidate_step(_step(), _com_log(), [10], \"vibes\")\n\n\ndef test_clean_telemetry_through_the_link_is_admissible():\n    com = _com_log(telemetry_state=\"Clean\", budget_gate=\"Allowed\")\n    record = gate_candidate_step(_step(), com, [], \"model_estimate\")\n    assert record[\"verdict\"] == \"admissible\"\n    assert record[\"telemetry_state\"] == \"Clean\"\n\n\ndef test_inversion_at_loaded_is_blocked_by_telemetry():\n    com = _com_log(\n        telemetry_state=\"Loaded\",\n        budget_gate=\"Reduced\",\n        recommended_operator={\"operator\": \"Inversion\", \"risk_weight_percent\": 80},\n    )\n    record = gate_candidate_step(_step(), com, [], \"model_estimate\")\n    assert record[\"verdict\"] == \"blocked_by_telemetry\"\n\n\ndef test_unknown_operator_in_com_log_raises_value_error():\n    com = _com_log(recommended_operator={\"operator\": \"Teleport\", \"risk_weight_percent\": 20})\n    with pytest.raises(ValueError):\n        gate_candidate_step(_step(), com, [10], \"engineering_default\")\n"
+    },
+    {
+     "path": "oracle_link.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Ephemeral, packet-local oracle for cap-com-log-link-04 (driver-written, outside the tree).\n\nAssertions come from the operator's decision of 2026-09-24: link a candidate step to a COM-Log record and the\ncurrent cycle state; inputs for the numeric gate are the COM-Log fields (operator, risk_weight_percent,\ntelemetry_state, allowed_total_risk_percent); active operators come from the cycle state; the RiskWeight's\nsource and estimate status are recorded and never become a measurement by being written down; missing inputs\nnever yield a positive result; a numeric PASS is not full admissibility. Run from the repository root.\n\"\"\"\nimport copy\nimport json\nimport sys\n\nsys.path.insert(0, \"reference/python\")\nimport jsonschema  # noqa: E402\nfrom cap.candidate_gate import (  # noqa: E402\n    RISK_WEIGHT_SOURCES,\n    UNCHECKED_BY_NUMERIC_GATE,\n    gate_candidate_step,\n)\n\n# 1. schema: an optional com_log_ref on a route step; everything else unchanged\nschema = json.load(open(\"spec/adjustment_layer.schema.json\", encoding=\"utf-8\"))\nexample = json.load(open(\"examples/adjustment_candidate_transition_example.json\", encoding=\"utf-8-sig\"))\nV = jsonschema.Draft202012Validator(schema)\nassert not list(V.iter_errors(example)), \"worked example must still validate\"\nex_link = copy.deepcopy(example); ex_link[\"candidate\"][\"route\"][1][\"com_log_ref\"] = \"com_log:2026-09-24:step2\"\nassert not list(V.iter_errors(ex_link)), \"optional com_log_ref must be accepted\"\nex_bad = copy.deepcopy(example); ex_bad[\"candidate\"][\"route\"][1][\"extra\"] = \"x\"\nassert list(V.iter_errors(ex_bad)), \"additionalProperties must still be false on a step\"\nex_empty = copy.deepcopy(example); ex_empty[\"candidate\"][\"route\"][1][\"com_log_ref\"] = \"\"\nassert list(V.iter_errors(ex_empty)), \"an empty com_log_ref must be rejected\"\nassert \"com_log_ref\" not in schema[\"$defs\"][\"adjustment_step\"][\"required\"]\n\n# 2. the gate record on a linked step\nstep = {\"order\": 2, \"action\": \"apply the candidate patch\", \"mutability\": \"candidate_patch\",\n        \"reversibility\": \"reversible\", \"reason\": \"r\", \"com_log_ref\": \"com_log:2026-09-24:step2\"}\ncom = {\"domain\": \"Work\", \"node\": \"n\", \"current_status\": [\"Open\"],\n       \"recommended_operator\": {\"operator\": \"Fixation\", \"risk_weight_percent\": 20},\n       \"target_status\": [\"Fixed\"], \"next_physical_step\": \"s\",\n       \"telemetry_state\": \"Breach\", \"allowed_total_risk_percent\": 45, \"budget_gate\": \"Recovery-Only\"}\nassert set(RISK_WEIGHT_SOURCES) == {\"engineering_default\", \"model_estimate\", \"human_estimate\", \"measured\"}\nr = gate_candidate_step(step, com, [10], \"engineering_default\")\nassert r[\"verdict\"] == \"admissible\", r\nassert r[\"step_order\"] == 2 and r[\"com_log_ref\"] == \"com_log:2026-09-24:step2\"\nassert r[\"operator\"] == \"Fixation\" and r[\"risk_weight_percent\"] == 20\nassert r[\"telemetry_state\"] == \"Breach\" and r[\"allowed_total_risk_percent\"] == 45\nassert r[\"active_operator_risks\"] == [10]\nassert r[\"risk_weight_source\"] == \"engineering_default\" and r[\"estimate_status\"] == \"assigned\"\nassert r[\"numeric_pass_is_full_admissibility\"] is False\nassert set(UNCHECKED_BY_NUMERIC_GATE) <= set(r[\"unchecked\"])\nassert {\"preconditions\", \"causal_alignment_with_split_point\", \"reversibility_under_telemetry\"} <= set(r[\"unchecked\"])\n\n# 3. acceptance behaviours through the link\ncom_boundary = dict(com, recommended_operator={\"operator\": \"Boundary\", \"risk_weight_percent\": 20})\nassert gate_candidate_step(step, com_boundary, [], \"engineering_default\")[\"verdict\"] == \"blocked_recovery_only\"\nassert gate_candidate_step(step, com, [20, 10], \"engineering_default\")[\"verdict\"] == \"blocked_by_budget\"   # 50 > 45\nassert gate_candidate_step(step, com, [20, 5], \"engineering_default\")[\"verdict\"] == \"admissible\"          # 45 == 45\n\n# 4. missing inputs never give a positive result\nno_link = {k: v for k, v in step.items() if k != \"com_log_ref\"}\nassert gate_candidate_step(no_link, com, [10], \"engineering_default\")[\"verdict\"] == \"not_computed\"\nassert gate_candidate_step(step, None, [10], \"engineering_default\")[\"verdict\"] == \"not_computed\"\nfor missing in (\"allowed_total_risk_percent\", \"telemetry_state\", \"recommended_operator\"):\n    com_m = {k: v for k, v in com.items() if k != missing}\n    assert gate_candidate_step(step, com_m, [10], \"engineering_default\")[\"verdict\"] == \"not_computed\", missing\nassert gate_candidate_step(step, com, None, \"engineering_default\")[\"verdict\"] == \"not_computed\"\nnc = gate_candidate_step(step, None, [10], \"engineering_default\")\nassert nc[\"reason\"], \"a not_computed record names what was missing\"\n\n# 5. provenance is recorded, never upgraded\nassert gate_candidate_step(step, com, [10], \"measured\")[\"estimate_status\"] == \"measured\"\nassert gate_candidate_step(step, com, [10], \"model_estimate\")[\"estimate_status\"] == \"assigned\"\nunk = gate_candidate_step(step, com, [10], None)\nassert unk[\"risk_weight_source\"] == \"unknown\" and unk[\"estimate_status\"] == \"unknown\"\ntry:\n    gate_candidate_step(step, com, [10], \"vibes\")\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError(\"an unknown risk_weight_source must raise ValueError\")\n\n# 6. the non-Breach path through the link uses the same contract\ncom_clean = dict(com, telemetry_state=\"Clean\", budget_gate=\"Allowed\")\nassert gate_candidate_step(step, com_clean, [], \"model_estimate\")[\"verdict\"] == \"admissible\"\ncom_loaded = dict(com_clean, recommended_operator={\"operator\": \"Inversion\", \"risk_weight_percent\": 80}, telemetry_state=\"Loaded\")\nassert gate_candidate_step(step, com_loaded, [], \"model_estimate\")[\"verdict\"] == \"blocked_by_telemetry\"\n\n# 7. an invalid present value is refused, not reported as not_computed\ncom_bad = dict(com, recommended_operator={\"operator\": \"Teleport\", \"risk_weight_percent\": 20})\ntry:\n    gate_candidate_step(step, com_bad, [10], \"engineering_default\")\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError(\"unknown operator must raise ValueError\")\n\nprint(\"oracle_link: all assertions hold\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py\",\n  \"exit\": 0,\n  \"tail\": \"oracle_link: all assertions hold\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_candidate_gate.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_schemas_valid.py\",\n  \"exit\": 0,\n  \"tail\": \".....................................................................    [100%]\\n69 passed in 0.87s\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py\",\n  \"exit\": 0,\n  \"tail\": \"........................................................................ [ 79%]\\n...................                                                      [100%]\\n91 passed in 0.18s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

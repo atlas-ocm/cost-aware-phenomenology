@@ -1,0 +1,6 @@
+# check c2: gate, schema and budget tests at ebe0ba0 (/f/VibeCoding/CAP-wt-tmp-006)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests/test_candidate_gate.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_budget_calculus.py
+........................................................................ [ 90%]
+................                                                         [100%]
+160 passed in 1.04s
+exit=0

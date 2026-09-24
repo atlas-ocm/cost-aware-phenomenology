@@ -14,7 +14,7 @@ its hash is reported in the local Driver's final message, not here.
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
 | verified code revision | `8d23161` (execution record): full suite `981 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 (see §2.7). Earlier verified points: `bbbc26c` (936 passed, 2 skipped), `989a7e2` (941 passed, 2 skipped) |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then the records commit (runs 004 and 005, execution records for runs 002 and 004, the prepared COM-Log link packet, this update) |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, then the run-006 records commit |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -128,6 +128,16 @@ change itself: `run_005a_execution_record_schema/` and
 `run_005b_execution_record_validator/` (the unsplit task failed twice first: a
 relay-hosted route killed at the 600 s tool ceiling, then a detached route whose
 fallback hit its own 600 s wall; see the 005a README and `failed_route/`).
+
+### 2.8 `ebe0ba0` — candidate step ↔ COM-Log record, with risk-weight provenance (run 006)
+
+Operator's item 2 executed: `adjustment_step` gains an optional `com_log_ref`;
+`cap/candidate_gate.py` gates a linked step from the COM-Log record and the
+cycle state through `operator_admissibility`, keeps `risk_weight_source` /
+`estimate_status`, returns `not_computed` with a reason for any missing link or
+input, and marks every record as not full admissibility. Full suite `1004 passed, 2 skipped`.
+The prepared packet under `prepared/com_log_link/` is the one that ran. Record:
+`run_006_com_log_link/`.
 
 ## 3. Exact commands, dependencies, inputs and outputs
 
@@ -266,7 +276,12 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    `transition_execution_record.json` that passes
    `validate_execution_record.py --repo .`; a run without one is not a
    verified transition, whatever its README says.
-4. Next bounded coding step, prepared and not executed: the COM-Log link
+4. Done in run 006 (§2.8): the COM-Log link. Its acceptance items 1–4 are the
+   oracle; item 5 (a candidate through the whole chain to a verified
+   postcondition) is the run's execution record. What is still missing: no real
+   candidate step has a COM-Log record yet, so no real transition has been
+   numerically gated; the first will carry an engineering-assigned RiskWeight.
+   Superseded text kept for reference: the COM-Log link
    (`validation_artifacts/ameba_cycle/prepared/com_log_link/`: `coding_packet.json`
    is the task text and declared checks, `oracle_link.py` the postcondition,
    `verify_stage.py` the packet builder). Acceptance, from the operator: an

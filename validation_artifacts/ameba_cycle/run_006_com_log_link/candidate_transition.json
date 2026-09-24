@@ -1,0 +1,173 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-24T19-40Z_com_log_link_gap",
+    "observed_state": {
+      "id": "obs_no_link_between_step_and_com_log",
+      "summary": "A candidate step cannot name the COM-Log record that carries its gate inputs, and no function gates a step from such a record and the cycle state",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T19-40Z_com_log_link_gap#obs_adjustment_step_fields",
+        "mirror_frame:mirror_frame_2026-09-24T19-40Z_com_log_link_gap#obs_oracle_red"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_two_vocabularies_never_linked",
+      "hypothesis": "The CandidateTransition schema and the COM-Log format were written for different readers (adjustment routing vs. operator grammar) and were never joined; the operator resolved which side carries the numeric inputs",
+      "source": "human_report",
+      "confidence": 0.9,
+      "evidence_refs": [
+        "validation_artifacts/ameba_cycle/run_003_numeric_coverage/README.md#F6",
+        "operator decision of 2026-09-24"
+      ],
+      "uncertainty": [],
+      "status": "confirmed"
+    },
+    "desired_state": {
+      "id": "target_step_linked_and_gated_with_provenance",
+      "goal": "A route step may carry com_log_ref; gate_candidate_step(step, com_log, active_operator_risks, risk_weight_source) computes the numeric verdict from the linked record and the cycle state, records the risk weight's source and estimate status, returns not_computed with a reason for any missing input, and marks that a numeric pass is not full admissibility",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle (schema accepts an optional non-empty com_log_ref and still rejects unknown step keys; the gate record's fields; Breach stabilizer within budget admissible; Boundary at Breach blocked_recovery_only; over budget blocked_by_budget; equality admits; every missing link or input gives not_computed with a reason; provenance kept and never upgraded; unknown source raises; Clean and Loaded paths; unknown operator raises) exits 0",
+        "test_candidate_gate.py, test_adjustment_layer_schema.py and test_schemas_valid.py exit 0",
+        "test_budget_calculus.py exits 0",
+        "the full suite exits 0",
+        "changed files are exactly the adjustment schema, the adjustment schema tests, and the two new files cap/candidate_gate.py and tests/test_candidate_gate.py"
+      ],
+      "forbidden_outcomes": [
+        "any conversion of the [0,1] risk axes or cost bands into a RiskWeight",
+        "duplicating COM-Log fields on the candidate",
+        "an admissible verdict without every input present",
+        "an estimate recorded as a measurement"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure; the route runs detached (relay ceiling, see run 005a)",
+      "the driver does not edit code, tests or spec; the oracle stays outside the tree and is red on the baseline",
+      "the worked example of the adjustment layer must keep validating unchanged"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_candidate_axes_unchanged",
+        "level": "L1-C",
+        "status": "compatible"
+      },
+      {
+        "id": "anchor_com_log_is_gate_input_carrier",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-24T19-41Z_com_log_link",
+    "from_state": "candidate steps unlinked; no gate over a linked step; no risk-weight provenance",
+    "inferred_cause": "cause_two_vocabularies_never_linked",
+    "to_state": "optional com_log_ref on adjustment_step; cap.candidate_gate.gate_candidate_step with provenance and not_computed semantics; tests",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Prepared packet, oracle and verify stage (validation_artifacts/ameba_cycle/prepared/com_log_link/); oracle run on the clean tree; expect ModuleNotFoundError",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-com-log-link-04), detached, with three declared checks",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "One optional schema field and one small module; the gate and the inputs already exist"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model; driver adjudication on the diff and the full suite; checks re-run at the obtained revision; execution record",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; the execution record is required for every run since run 005"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_candidate_axes_unchanged",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.1,
+      "regression_risk": 0.15,
+      "loop_risk": 0.2,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "low",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the link commit on the research branch",
+        "rerun test_adjustment_layer_schema.py to confirm the previous count"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the declared pytest checks and the full suite exit 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git shows the schema and its tests modified and only the two new files added",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-24T19:41:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-24T19-41Z_com_log_link",
+    "reasons": [
+      "The decision is given; the change is a link plus a provenance record over existing pieces",
+      "loop_risk is the highest estimated axis after tonight's four one-detail misses of the cheap tier; the declared checks and the oracle guard it",
+      "Verifier and driver adjudication required; an execution record follows"
+    ],
+    "alternatives": [
+      "Map the [0,1] risk axes to a RiskWeight (rejected by the operator: different quantities)",
+      "Copy COM-Log fields onto the candidate (rejected by the operator: duplication)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 006, Adjustment step. Proposed as the route was launched, before its result was known."
+}

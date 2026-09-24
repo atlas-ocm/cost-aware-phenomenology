@@ -258,7 +258,9 @@ The trace carries:
   `reframe`, `route_switch`, `hold`;
 - `candidate.route` — bounded sequence of steps, each labelled
   `read_only` / `candidate_patch` / `requires_authorization` with a
-  reversibility tag;
+  reversibility tag; a step may carry `com_log_ref`, the COM-Log record that
+  holds its numeric gate inputs (operator, `risk_weight_percent`,
+  `telemetry_state`, `allowed_total_risk_percent`);
 - `candidate.risk` (6 axes) and `candidate.cost` (5 axes);
 - `candidate.rollback_plan` for mutating routes;
 - `candidate.expected_evidence_after_apply` — what evidence the
@@ -310,6 +312,22 @@ Verdict / mode consistency:
 - `route_requires_evidence` requires `new_evidence_refs` minItems:1;
 - `route_requires_reconcile` forces `mode` in
   `{reconcile, retcon, rollback, quarantine}`.
+
+## Numeric Gate Over a Linked Step
+
+The six risk axes of a candidate and RiskWeight are different quantities and
+are never converted into each other. When a route step carries `com_log_ref`,
+[`../reference/python/cap/candidate_gate.py`](../reference/python/cap/candidate_gate.py)
+computes the numeric verdict from that COM-Log record and the current cycle
+state (`gate_candidate_step(step, com_log, active_operator_risks,
+risk_weight_source)`), records the risk weight's `risk_weight_source` and
+`estimate_status` (an engineering or model assignment never becomes a
+measurement by being written down), returns `not_computed` with a reason
+whenever the link or any input is missing, and marks every record
+`numeric_pass_is_full_admissibility: false` with the three unchecked items
+(preconditions, causal alignment with the split point, reversibility under
+telemetry). The rule itself is `operator_admissibility` in
+[`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py).
 
 ## Execution Record
 

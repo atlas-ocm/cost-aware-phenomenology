@@ -1,0 +1,320 @@
+{
+  "task_id": "cap-com-log-link-04",
+  "variant": "coding",
+  "baseline": [
+    {
+      "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_link.py\", line 15, in <module>\n    from cap.candidate_gate import (  # noqa: E402\nModuleNotFoundError: No module named 'cap.candidate_gate'",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_link.py\", line 15, in <module>\n    from cap.candidate_gate import (  # noqa: E402\nModuleNotFoundError: No module named 'cap.candidate_gate'\n",
+      "stdout_chars": 0,
+      "stderr_chars": 310,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    },
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_candidate_gate.py",
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "reference/python/tests/test_schemas_valid.py"
+      ],
+      "exit": 4,
+      "ok": false,
+      "tail": "no tests ran in 0.00s\nERROR: file or directory not found: reference/python/tests/test_candidate_gate.py",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "\nno tests ran in 0.00s\n",
+      "stderr_tail": "ERROR: file or directory not found: reference/python/tests/test_candidate_gate.py\n\n",
+      "stdout_chars": 23,
+      "stderr_chars": 83,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    },
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.18s",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.18s\n",
+      "stderr_tail": "",
+      "stdout_chars": 179,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    }
+  ],
+  "first_attempt": {
+    "model": "gemma4:31b-cloud",
+    "answer": "Linked CandidateTransition route steps to COM-Log records and implemented the numeric budget gate in `reference/python/cap/candidate_gate.py`.",
+    "wall_s": 17.83,
+    "turns": 9,
+    "output_tokens": 3861,
+    "model_requested": "gemma4:31b-cloud",
+    "model_served": "gemma4:31b-cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "identity_source": "claude_cli_modelUsage",
+    "provider_source": "claude_cli_modelUsage",
+    "identity_independently_verified": false,
+    "postcondition": false,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "oracle_link: all assertions hold",
+        "check_index": 0,
+        "timed_out": false,
+        "stdout_tail": "oracle_link: all assertions hold\n",
+        "stderr_tail": "",
+        "stdout_chars": 33,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_candidate_gate.py",
+          "reference/python/tests/test_adjustment_layer_schema.py",
+          "reference/python/tests/test_schemas_valid.py"
+        ],
+        "exit": 1,
+        "ok": false,
+        "tail": " blocked_by_budget\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:58: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_candidate_gate.py::test_boundary_at_breach_admits\nFAILED reference/python/tests/test_candidate_gate.py::test_over_budget_at_breach_blocks\n2 failed, 56 passed in 1.06s",
+        "check_index": 1,
+        "timed_out": false,
+        "stdout_tail": ".FF.......................................................               [100%]\n================================== FAILURES ===================================\n_______________________ test_boundary_at_breach_admits ________________________\n\n    def test_boundary_at_breach_admits():\n        # Boundary 35, allowed 45, active [10] -> 45 <= 45.\n        step = {\"order\": 1, \"com_log_ref\": \"rec_123\"}\n        com_log = {\n            \"recommended_operator\": {\"operator\": \"Boundary\", \"risk_weight_percent\": 35},\n            \"telemetry_state\": \"Breach\",\n            \"allowed_total_risk_percent\": 45,\n        }\n        active = [10.0]\n        res = gate_candidate_step(step, com_log, active, \"engineering_default\")\n>       assert res[\"verdict\"] == \"admissible\"\nE       AssertionError: assert 'blocked_recovery_only' == 'admissible'\nE         \nE         - admissible\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:45: AssertionError\n______________________ test_over_budget_at_breach_blocks ______________________\n\n    def test_over_budget_at_breach_blocks():\n        # Boundary 36, allowed 45, active [10] -> 46 > 45.\n        step = {\"order\": 1, \"com_log_ref\": \"rec_123\"}\n        com_log = {\n            \"recommended_operator\": {\"operator\": \"Boundary\", \"risk_weight_percent\": 36},\n            \"telemetry_state\": \"Breach\",\n            \"allowed_total_risk_percent\": 45,\n        }\n        active = [10.0]\n        res = gate_candidate_step(step, com_log, active, \"engineering_default\")\n>       assert res[\"verdict\"] == \"blocked_by_budget\"\nE       AssertionError: assert 'blocked_recovery_only' == 'blocked_by_budget'\nE         \nE         - blocked_by_budget\nE         + blocked_recovery_only\n\nreference\\python\\tests\\test_candidate_gate.py:58: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_candidate_gate.py::test_boundary_at_breach_admits\nFAILED reference/python/tests/test_candidate_gate.py::test_over_budget_at_breach_blocks\n2 failed, 56 passed in 1.06s\n",
+        "stderr_tail": "",
+        "stdout_chars": 2061,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_budget_calculus.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.19s",
+        "check_index": 2,
+        "timed_out": false,
+        "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.19s\n",
+        "stderr_tail": "",
+        "stdout_chars": 179,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      }
+    ],
+    "worktree": {
+      "diffstat": "reference/python/tests/test_adjustment_layer_schema.py | 13 ++++++++++++-\n spec/adjustment_layer.schema.json                      |  5 +++++\n 2 files changed, 17 insertions(+), 1 deletion(-)",
+      "untracked": [
+        "reference/python/cap/candidate_gate.py",
+        "reference/python/tests/test_candidate_gate.py"
+      ],
+      "touched": [
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "spec/adjustment_layer.schema.json",
+        "reference/python/cap/candidate_gate.py",
+        "reference/python/tests/test_candidate_gate.py"
+      ]
+    },
+    "protected_touched": [],
+    "stash": "9348ac67186af2608ec285981405eb76f03a1f5c",
+    "prestate_restore": {
+      "removed": [
+        "reference/python/cap/__pycache__/candidate_gate.cpython-312.pyc",
+        "reference/python/tests/__pycache__/test_candidate_gate.cpython-312-pytest-9.0.0.pyc"
+      ],
+      "drifted": [
+        "reference/python/tests/__pycache__/test_adjustment_layer_schema.cpython-312-pytest-9.0.0.pyc"
+      ]
+    }
+  },
+  "seam_used": false,
+  "fallback_used": true,
+  "handoff": {
+    "keys": [
+      "failed_answer",
+      "postcondition",
+      "question"
+    ],
+    "bytes": 6815
+  },
+  "fallback_attempt": {
+    "model": "deepseek-v4.1-flash:cloud",
+    "answer": "Added the optional `com_log_ref` to `$defs.adjustment_step` in spec/adjustment_layer.schema.json, created reference/python/cap/candidate_gate.py with RISK_WEIGHT_SOURCES, UNCHECKED_BY_NUMERIC_GATE and gate_candidate_step (reading gate inputs from the linked COM-Log + cycle state, recording source/estimate status, returning not_computed with a reason for missing inputs, otherwise delegating to operator_admissibility), added reference/python/tests/test_candidate_gate.py, and appended two com_log_ref tests to reference/python/tests/test_adjustment_layer_schema.py.",
+    "wall_s": 92.72,
+    "turns": 31,
+    "output_tokens": 16842,
+    "model_requested": "deepseek-v4.1-flash:cloud",
+    "model_served": "deepseek-v4.1-flash:cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "identity_source": "claude_cli_modelUsage",
+    "provider_source": "claude_cli_modelUsage",
+    "identity_independently_verified": false,
+    "postcondition": true,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "oracle_link: all assertions hold",
+        "check_index": 0,
+        "timed_out": false,
+        "stdout_tail": "oracle_link: all assertions hold\n",
+        "stderr_tail": "",
+        "stdout_chars": 33,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_candidate_gate.py",
+          "reference/python/tests/test_adjustment_layer_schema.py",
+          "reference/python/tests/test_schemas_valid.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": ".....................................................................    [100%]\n69 passed in 0.91s",
+        "check_index": 1,
+        "timed_out": false,
+        "stdout_tail": ".....................................................................    [100%]\n69 passed in 0.91s\n",
+        "stderr_tail": "",
+        "stdout_chars": 99,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_budget_calculus.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.20s",
+        "check_index": 2,
+        "timed_out": false,
+        "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.20s\n",
+        "stderr_tail": "",
+        "stdout_chars": 179,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      }
+    ],
+    "worktree": {
+      "diffstat": "reference/python/tests/test_adjustment_layer_schema.py | 14 ++++++++++++++\n spec/adjustment_layer.schema.json                      |  5 +++++\n 2 files changed, 19 insertions(+)",
+      "untracked": [
+        "reference/python/cap/candidate_gate.py",
+        "reference/python/tests/test_candidate_gate.py"
+      ],
+      "touched": [
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "spec/adjustment_layer.schema.json",
+        "reference/python/cap/candidate_gate.py",
+        "reference/python/tests/test_candidate_gate.py"
+      ]
+    },
+    "protected_touched": []
+  },
+  "decision": "FALLBACK_PASS",
+  "final_answer": "Added the optional `com_log_ref` to `$defs.adjustment_step` in spec/adjustment_layer.schema.json, created reference/python/cap/candidate_gate.py with RISK_WEIGHT_SOURCES, UNCHECKED_BY_NUMERIC_GATE and gate_candidate_step (reading gate inputs from the linked COM-Log + cycle state, recording source/estimate status, returning not_computed with a reason for missing inputs, otherwise delegating to operator_admissibility), added reference/python/tests/test_candidate_gate.py, and appended two com_log_ref tests to reference/python/tests/test_adjustment_layer_schema.py.",
+  "final_postcondition": true,
+  "trail": [
+    "step 0: baseline [('python', 1), ('python', 4), ('python', 0)]",
+    "step 1-2: gemma4 answered 'Linked CandidateTransition route steps to COM-Log records and implemented the numeric budget gate in `reference/python/cap/candidate_gate.py`.' -> postcondition False",
+    "step 6: cheap attempt set aside (9348ac67186af2608ec285981405eb76f03a1f5c)",
+    "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+    "step 6: deepseek-v4.1-flash answered 'Added the optional `com_log_ref` to `$defs.adjustment_step` in spec/adjustment_layer.schema.json, created reference/python/cap/candidate_gate.py with RISK_WEIGHT_SOURCES, UNCHECKED_BY_NUMERIC_GATE and gate_candidate_step (reading gate inputs from the linked COM-Log + cycle state, recording source/estimate status, returning not_computed with a reason for missing inputs, otherwise delegating to operator_admissibility), added reference/python/tests/test_candidate_gate.py, and appended two com_log_ref tests to reference/python/tests/test_adjustment_layer_schema.py.' -> postcondition True"
+  ],
+  "run_id": "run-8c5955d7d885afc1cfec08538061f6b7",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\tasks4.json",
+      "size": 7120,
+      "sha256": "2bd41a18f4d8e67a39bc5f5610edf606e8fa9636bc673103b10bcd6ad48c73f7",
+      "saved": "inputs/2bd41a18f4d8e67a39bc5f5610edf606e8fa9636bc673103b10bcd6ad48c73f7"
+    },
+    "check_files": [
+      {
+        "declared": "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_link.py",
+        "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_link.py",
+        "size": 5884,
+        "sha256": "c9890d9dfa8125f7952a112f0dac18b62d1cdbc4006336f4e844478d3902f66a",
+        "saved": "inputs/c9890d9dfa8125f7952a112f0dac18b62d1cdbc4006336f4e844478d3902f66a"
+      }
+    ]
+  },
+  "run_receipt": "runs/run-8c5955d7d885afc1cfec08538061f6b7/cap-com-log-link-04.json",
+  "run_summary": "runs/run-8c5955d7d885afc1cfec08538061f6b7/summary.json",
+  "total_wall_s": 117.17
+}

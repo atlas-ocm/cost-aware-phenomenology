@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-24T19-40Z_com_log_link_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator (2026-09-24): the six risk axes of a CandidateTransition and RiskWeight are different quantities; keep the axes and the cost bands; no averaging, maximum or multiplication by 100",
+        "The gate's inputs already exist in COM-Log (operator, risk_weight_percent, telemetry_state, allowed_total_risk_percent, budget_gate); link a specific candidate step to a COM-Log record and to the current cycle state; active operators come from that state",
+        "For an assigned RiskWeight keep the source and the estimate status: an engineering assignment or a model estimate does not become a measurement by being written in JSON; if the necessary inputs are absent, the numeric gate is not computed",
+        "Change the CandidateTransition schema only where the link is missing, not to duplicate fields; a numeric pass is not full admissibility"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-24T19:40:00Z",
+          "claim": "HEAD after the records commit; tree clean; pushed",
+          "value": "1db22cf = origin/research/ameba-executable-cycle; full suite 981 passed, 2 skipped at 8d23161 (no code change since)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_adjustment_step_fields",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T19:40:00Z",
+          "claim": "spec/adjustment_layer.schema.json $defs.adjustment_step",
+          "value": "required order, action, mutability, reversibility, reason; additionalProperties false; no field references a COM-Log record",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_com_log_fields",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T19:40:00Z",
+          "claim": "spec/com_log_schema.json",
+          "value": "recommended_operator {operator enum, risk_weight_percent 10..90}, telemetry_state enum Clean/Loaded/Overheating/Breach, allowed_total_risk_percent 0..100, budget_gate enum incl. Recovery-Only; no provenance field for the risk weight",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_gate_api",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T19:40:00Z",
+          "claim": "cap.budget_calculus.operator_admissibility as landed in 989a7e2",
+          "value": "(operator, risk_weight, active_operator_risks, allowed_total_risk, telemetry_state) -> admissible | blocked_by_telemetry | blocked_by_budget | blocked_recovery_only | not_computed; lowercase telemetry states; None input -> not_computed",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T19:41:00Z",
+          "claim": "driver's oracle (outside the tree) run on the clean tree",
+          "value": "exit 1: ModuleNotFoundError: No module named 'cap.candidate_gate'",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_link_missing_only",
+          "claim": "The gate, its inputs and the candidate step all exist; only the link between a step and a COM-Log record, and a record of the risk weight's provenance, are missing",
+          "derived_from": ["obs_adjustment_step_fields", "obs_com_log_fields", "obs_gate_api"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_candidate_axes_unchanged", "anchor_com_log_is_gate_input_carrier"],
+      "policies": ["policy_missing_inputs_never_positive", "policy_estimates_never_become_measurements"],
+      "specs": ["spec/adjustment_layer.schema.json", "spec/com_log_schema.json"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-24T19:40:00Z",
+        "claim": "HEAD commit",
+        "value": "1db22cf",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-24T19:41:00Z",
+        "claim": "ephemeral oracle on the baseline",
+        "value": "exit 1, ModuleNotFoundError cap.candidate_gate",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "risk weight provenance for real code changes",
+        "reason": "no artifact yet assigns a RiskWeight to a code-change step; the first real linked candidate will carry an engineering assignment, not a measurement"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "spec/adjustment_layer.schema.json, reference/python/cap/",
+        "declared": "a candidate step is linked to the COM-Log record and cycle state that carry the gate's inputs, with the risk weight's provenance recorded",
+        "observed": "no link field; no gate function over a linked step",
+        "severity": "warning",
+        "reason": "Until linked, the gate cannot act on the cycle's own candidates; every candidate so far was gated by no numeric check"
+      }
+    ],
+    "created_at": "2026-09-24T19:41:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at 1db22cf",
+    "reasons": [
+      "The operator's decision names the link; the schema and the package do not have it",
+      "All inputs and the gate exist, so the change is a link and a provenance record, not a new mechanism"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "adjustment_step has no COM-Log reference; COM-Log carries the gate inputs; operator_admissibility has the operator-first signature; oracle red with ModuleNotFoundError on the clean tree"
+  },
+  "notes": "Run 006, Mirror step. Declared state is the operator's decision (source: user)."
+}
