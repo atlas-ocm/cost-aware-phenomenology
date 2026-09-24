@@ -28,3 +28,23 @@ def is_risk_in_typical_range(operator: str, risk_weight: int) -> bool:
         return False
     low, high = op["risk_weight_range_percent"]
     return low <= risk_weight <= high
+
+
+def budget_gate_permitted_operators(gate_name: str) -> frozenset[str]:
+    """Permitted operator names for a budget gate, sourced from the alphabet.
+
+    Reads the gate's explicit ``permitted_operators`` list from
+    spec/operator_alphabet.json. An unknown gate name, or an entry that
+    states its operators only in prose, is rejected: the set is never
+    guessed from the description.
+    """
+    alphabet = load_operator_alphabet()
+    for gate in alphabet["budget_gates"]:
+        if gate["name"] == gate_name:
+            permitted = gate.get("permitted_operators")
+            if not isinstance(permitted, list):
+                raise ValueError(
+                    f"budget gate {gate_name!r} has no permitted_operators list"
+                )
+            return frozenset(permitted)
+    raise ValueError(f"unknown budget gate: {gate_name!r}")

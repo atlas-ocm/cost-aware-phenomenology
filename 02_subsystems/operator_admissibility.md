@@ -136,16 +136,23 @@ This distinction matters. CAP does not control the observer; it controls itself.
 
 The numeric part of the admissibility rule (items 1 and 2 above) is encoded in
 [`../reference/python/cap/budget_calculus.py`](../reference/python/cap/budget_calculus.py)
-as `operator_admissibility(risk_weight, active_operator_risks,
+as `operator_admissibility(operator, risk_weight, active_operator_risks,
 allowed_total_risk, telemetry_state)`, exercised by
 [`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py):
 
-- the telemetry ceiling (`max_permitted_risk`, from
+- any missing input (`None`) returns `not_computed`; a missing input never
+  produces a positive result, and invalid present inputs raise `ValueError`;
+- at `breach` there is no numeric ceiling: an operator outside the
+  `Recovery-Only` gate of `spec/operator_alphabet.json` (Fixation, Hold,
+  Cleanup) returns `blocked_recovery_only` whatever its weight, and a
+  Recovery-Only operator must still fit the budget with the active operators;
+- otherwise the telemetry ceiling (`max_permitted_risk`, from
   [`telemetry_gating.md`](./telemetry_gating.md)) is checked first and returns
   `blocked_by_telemetry`;
 - then `total_risk(active + [candidate]) > allowed_total_risk` returns
   `blocked_by_budget`; equality admits, as in `is_cycle_admissible`;
-- otherwise the operator is `admissible` on the numeric checks.
+- otherwise the operator is `admissible` on the numeric checks. A numeric
+  `admissible` is not full admissibility: items 3–5 remain unchecked by code.
 - Items 3–5 (preconditions, causal alignment with the LikelySplitPoint,
   reversibility under the current telemetry) are **not** encoded: they need
   inputs that no current artifact supplies, so they remain the analyst's or
@@ -154,7 +161,10 @@ allowed_total_risk, telemetry_state)`, exercised by
   AllowedTotalRisk 60, Inversion 80 is `blocked_by_telemetry`, Fixation 25 and
   then Boundary 35 are `admissible`, and a further 50 is `blocked_by_budget`.
   The COM Grammar case `cgm_03` (Overheating, AllowedTotalRisk 30: Inversion 80
-  blocked, Hold 10 then Fixation 20 admissible) is the other.
+  blocked, Hold 10 then Fixation 20 admissible) and the Breach case `cgm_07`
+  (Recovery-Only: Fixation 20, Hold 10, Cleanup 15 admissible within the
+  budget; any other operator `blocked_recovery_only`) are the others; the
+  case numbers are example values.
 
 ## Where to Read Next
 

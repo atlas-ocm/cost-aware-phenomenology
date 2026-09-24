@@ -79,7 +79,7 @@ Risk throttling is the **automatic reduction of operator risk ceiling** as telem
 | Clean | 90% |
 | Loaded | 60% |
 | Overheating | 30% |
-| Breach | 0% (Pause only) |
+| Breach | no numeric ceiling — the cycle enters **Recovery-Only**: only the operators the alphabet lists for that budget gate (Fixation, Hold, Cleanup) may be considered, each within AllowedTotalRisk together with the active operators |
 
 When the system selects an operator and that operator's RiskWeight exceeds the permitted ceiling for the current TelemetryState, the system must:
 
@@ -116,7 +116,7 @@ When TelemetryState reaches Breach (often co-occurring with Critical budget), th
 5. Define recovery condition as a Pending node
 6. Resume in priority order when condition is met
 
-Critically: in Breach state, the framework permits **only stabilizers** (Pause, Fixation). It does not produce route forecasts and does not recommend new operators until telemetry recovers. The validation runs (see [`../03_validation/com_grammar.md`](../03_validation/com_grammar.md)) confirm that all three tested LLMs respect this constraint when given Breach-state inputs.
+Critically: in Breach state, the framework permits **only the Recovery-Only operators** (Fixation, Hold, Cleanup, as listed on the `Recovery-Only` budget gate in [`../spec/operator_alphabet.json`](../spec/operator_alphabet.json)), each still subject to the budget gate. It does not produce route forecasts and does not recommend new operators until telemetry recovers. The validation runs (see [`../03_validation/com_grammar.md`](../03_validation/com_grammar.md)) confirm that all three tested LLMs respect this constraint when given Breach-state inputs.
 
 ---
 
@@ -156,23 +156,30 @@ exercised by
 [`../reference/python/tests/test_budget_calculus.py`](../reference/python/tests/test_budget_calculus.py):
 
 - `TELEMETRY_MAX_RISK` declares the ceilings `clean 90`, `loaded 60`,
-  `overheating 30`, `breach 0`; `max_permitted_risk(telemetry_state)` reads
-  them and refuses an unknown state.
-- `operator_admissibility(risk_weight, active_operator_risks,
-  allowed_total_risk, telemetry_state)` applies this ceiling before the budget
-  gate and returns `blocked_by_telemetry`, `blocked_by_budget` or `admissible`;
-  the rule itself is specified in
-  [`operator_admissibility.md`](./operator_admissibility.md).
+  `overheating 30`; `max_permitted_risk(telemetry_state)` reads them, returns
+  `None` for `breach` (no numeric ceiling: `BREACH_BUDGET_GATE = "Recovery-Only"`
+  applies) and refuses an unknown state.
+- `recovery_only_operators()` reads the `permitted_operators` list of the
+  `Recovery-Only` budget gate from `spec/operator_alphabet.json` through
+  `operator_alphabet.budget_gate_permitted_operators`; the set is not
+  duplicated in code.
+- `operator_admissibility(operator, risk_weight, active_operator_risks,
+  allowed_total_risk, telemetry_state)` applies the ceiling before the budget
+  gate outside Breach, and at Breach admits only a Recovery-Only operator that
+  fits the budget together with the active operators; it returns
+  `blocked_by_telemetry`, `blocked_recovery_only`, `blocked_by_budget`,
+  `admissible`, or `not_computed` when any input is missing. The rule itself
+  is specified in [`operator_admissibility.md`](./operator_admissibility.md).
 - The ceilings are engineering defaults, not measurements: Claim 4 in
   [`../spec/falsifiability_status.json`](../spec/falsifiability_status.json)
   (telemetry signals correlate with operator failure rate) remains deferred.
-- Open question, found by executing the contract (run 003,
-  [`../validation_artifacts/ameba_cycle/run_003_numeric_coverage/`](../validation_artifacts/ameba_cycle/run_003_numeric_coverage/README.md)):
-  the table's Breach ceiling of 0% blocks Hold 10%, Boundary 15% and
-  Fixation 20%, while the Breach row above, the Budget Recovery paragraph
-  below and the validated case `cgm_07` permit exactly those stabilizers in
-  Breach. The code encodes the table as written; which reading is intended
-  is an open decision, not resolved here.
+- History: the table originally gave Breach a `0% (Pause only)` ceiling, which
+  executing the contract (run 003,
+  [`../validation_artifacts/ameba_cycle/run_003_numeric_coverage/`](../validation_artifacts/ameba_cycle/run_003_numeric_coverage/README.md))
+  showed to block the very stabilizers the Breach row, the Budget Recovery
+  paragraph and the validated case `cgm_07` (Fixation 20, Hold 10, Cleanup 15)
+  permit. The operator resolved it as Recovery-Only on 2026-09-24; the case's
+  numbers are example values, not universal weights.
 
 ## Where to Read Next
 

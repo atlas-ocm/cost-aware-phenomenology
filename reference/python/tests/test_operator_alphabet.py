@@ -4,9 +4,16 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from cap.operator_alphabet import get_operator, is_risk_in_typical_range, operator_names
+from cap.operator_alphabet import (
+    budget_gate_permitted_operators,
+    get_operator,
+    is_risk_in_typical_range,
+    operator_names,
+)
 
 
 def test_thirteen_operators():
@@ -37,3 +44,11 @@ def test_risk_in_range():
     assert is_risk_in_typical_range("Fixation", 15) is True
     assert is_risk_in_typical_range("Fixation", 80) is False
     assert is_risk_in_typical_range("Inversion", 75) is True
+
+
+def test_recovery_only_gate_permitted_operators():
+    assert budget_gate_permitted_operators("Recovery-Only") == frozenset(
+        {"Fixation", "Hold", "Cleanup"}
+    )
+    with pytest.raises(ValueError):
+        budget_gate_permitted_operators("Allowed")

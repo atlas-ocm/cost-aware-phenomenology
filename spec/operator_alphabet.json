@@ -243,7 +243,8 @@
     },
     {
       "name": "Recovery-Only",
-      "description": "Budget Recovery active; only Fixation, Hold, Cleanup permitted."
+      "description": "Budget Recovery active; only Fixation, Hold, Cleanup permitted.",
+      "permitted_operators": ["Fixation", "Hold", "Cleanup"]
     }
   ],
   "risk_tolerance_factors": {

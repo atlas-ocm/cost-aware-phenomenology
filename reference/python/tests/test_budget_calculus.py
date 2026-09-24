@@ -20,6 +20,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from cap.budget_calculus import (
+    BREACH_BUDGET_GATE,
     BUDGET_BANDS,
     MODE_PREFERRED_ZONE,
     MODE_RTF_RANGE,
@@ -37,8 +38,10 @@ from cap.budget_calculus import (
     mode_rtf_default,
     operator_admissibility,
     permitted_risk_zones_for_budget,
+    recovery_only_operators,
     total_risk,
 )
+from cap.operator_alphabet import budget_gate_permitted_operators
 
 
 # -- Risk-zone classification --
@@ -339,21 +342,37 @@ def test_telemetry_max_risk_matches_doc():
         "clean": 90,
         "loaded": 60,
         "overheating": 30,
-        "breach": 0,
     }
 
 
 @pytest.mark.parametrize(
     "state,ceiling",
-    [("clean", 90), ("loaded", 60), ("overheating", 30), ("breach", 0)],
+    [("clean", 90), ("loaded", 60), ("overheating", 30)],
 )
 def test_max_permitted_risk_matches_doc(state, ceiling):
     assert max_permitted_risk(state) == ceiling
 
 
+def test_max_permitted_risk_is_none_at_breach():
+    """Breach is not a numeric ceiling: it is the recovery transition."""
+    assert max_permitted_risk("breach") is None
+
+
 def test_max_permitted_risk_rejects_unknown_state():
     with pytest.raises(ValueError):
         max_permitted_risk("hypothetical")
+
+
+# -- Recovery-Only gate (Breach) --
+
+
+def test_recovery_only_operators_from_alphabet():
+    expected = frozenset({"Fixation", "Hold", "Cleanup"})
+    assert recovery_only_operators() == expected
+    assert BREACH_BUDGET_GATE == "Recovery-Only"
+    assert recovery_only_operators() == budget_gate_permitted_operators(
+        BREACH_BUDGET_GATE
+    )
 
 
 # -- Combined admissibility (operator_admissibility.md The Admissibility Rule) --
@@ -365,10 +384,14 @@ def test_cgm_03_risk_throttle_downgrade():
     AllowedTotalRisk of 30; a further 25 breaches the budget gate."""
     state = "overheating"
     allowed = 30.0
-    assert operator_admissibility(80, [], allowed, state) == "blocked_by_telemetry"
-    assert operator_admissibility(10, [], allowed, state) == "admissible"
-    assert operator_admissibility(20, [10], allowed, state) == "admissible"
-    assert operator_admissibility(25, [10, 20], allowed, state) == (
+    assert operator_admissibility("Inversion", 80, [], allowed, state) == (
+        "blocked_by_telemetry"
+    )
+    assert operator_admissibility("Hold", 10, [], allowed, state) == "admissible"
+    assert operator_admissibility("Fixation", 20, [10], allowed, state) == (
+        "admissible"
+    )
+    assert operator_admissibility("Boundary", 25, [10, 20], allowed, state) == (
         "blocked_by_budget"
     )
 
@@ -379,24 +402,57 @@ def test_operator_admissibility_worked_example():
     the budget; adding 50 on top exceeds it."""
     state = "loaded"
     allowed = 60.0
-    assert operator_admissibility(80, [], allowed, state) == "blocked_by_telemetry"
-    assert operator_admissibility(25, [], allowed, state) == "admissible"
-    assert operator_admissibility(35, [25], allowed, state) == "admissible"
-    assert operator_admissibility(50, [25, 35], allowed, state) == (
+    assert operator_admissibility("Inversion", 80, [], allowed, state) == (
+        "blocked_by_telemetry"
+    )
+    assert operator_admissibility("Boundary", 25, [], allowed, state) == (
+        "admissible"
+    )
+    assert operator_admissibility("Boundary", 35, [25], allowed, state) == (
+        "admissible"
+    )
+    assert operator_admissibility("Break", 50, [25, 35], allowed, state) == (
         "blocked_by_budget"
     )
 
 
-def test_breach_permits_only_zero_risk():
-    assert operator_admissibility(0, [], 100.0, "breach") == "admissible"
-    assert operator_admissibility(1, [], 100.0, "breach") == (
-        "blocked_by_telemetry"
+def test_breach_recovery_only_corrected_cgm_07():
+    """Corrected cgm_07: at Breach only the Recovery-Only stabilizers
+    (Fixation 20, Hold 10, Cleanup 15) are admissible while they fit the
+    budget; a permitted operator still has to fit AllowedTotalRisk."""
+    state = "breach"
+    assert operator_admissibility("Fixation", 20, [], 45.0, state) == "admissible"
+    assert operator_admissibility("Hold", 10, [20], 45.0, state) == "admissible"
+    assert operator_admissibility("Cleanup", 15, [20, 10], 45.0, state) == (
+        "admissible"
+    )
+    assert operator_admissibility("Cleanup", 15, [20, 10], 30.0, state) == (
+        "blocked_by_budget"
+    )
+
+
+def test_breach_blocks_non_recovery_operators_by_identity():
+    """At Breach the operator identity decides, not a numeric ceiling."""
+    state = "breach"
+    assert operator_admissibility("Boundary", 15, [], 45.0, state) == (
+        "blocked_recovery_only"
+    )
+    assert operator_admissibility("Inversion", 80, [], 45.0, state) == (
+        "blocked_recovery_only"
+    )
+
+
+def test_breach_zero_risk_still_needs_recovery_identity():
+    """No numeric ceiling at Breach means zero risk is not automatically
+    admissible: a non-recovery operator stays blocked_recovery_only."""
+    assert operator_admissibility("Boundary", 0, [], 45.0, "breach") == (
+        "blocked_recovery_only"
     )
 
 
 def test_telemetry_is_checked_before_budget():
     """Even with a generous budget, the telemetry ceiling blocks first."""
-    assert operator_admissibility(80, [], 100.0, "overheating") == (
+    assert operator_admissibility("Inversion", 80, [], 100.0, "overheating") == (
         "blocked_by_telemetry"
     )
 
@@ -404,16 +460,38 @@ def test_telemetry_is_checked_before_budget():
 def test_equality_at_ceiling_and_budget_is_admissible():
     """<= admits on both gates: risk_weight == ceiling and TotalRisk ==
     AllowedTotalRisk are both admissible."""
-    assert operator_admissibility(30, [], 100.0, "overheating") == "admissible"
-    assert operator_admissibility(10, [20], 30.0, "clean") == "admissible"
+    assert operator_admissibility("Boundary", 30, [], 100.0, "overheating") == (
+        "admissible"
+    )
+    assert operator_admissibility("Hold", 10, [20], 30.0, "clean") == "admissible"
+
+
+def test_operator_admissibility_not_computed_for_each_missing_input():
+    """A missing input never produces a positive result, before validation."""
+    base = {
+        "operator": "Fixation",
+        "risk_weight": 20,
+        "active_operator_risks": [],
+        "allowed_total_risk": 45.0,
+        "telemetry_state": "breach",
+    }
+    for key in base:
+        missing = dict(base)
+        missing[key] = None
+        assert operator_admissibility(**missing) == "not_computed", key
+    # Missing-ness wins over validation: an unknown state with a missing
+    # operator is not_computed, not a ValueError.
+    assert operator_admissibility(None, 20, [], 45.0, "nonsense") == "not_computed"
 
 
 def test_operator_admissibility_rejects_bad_inputs():
     with pytest.raises(ValueError):
-        operator_admissibility(-1, [], 100.0, "clean")
+        operator_admissibility("Hold", -1, [], 100.0, "clean")
     with pytest.raises(ValueError):
-        operator_admissibility(101, [], 100.0, "clean")
+        operator_admissibility("Hold", 101, [], 100.0, "clean")
     with pytest.raises(ValueError):
-        operator_admissibility(10, [], -1.0, "clean")
+        operator_admissibility("Hold", 10, [], -1.0, "clean")
     with pytest.raises(ValueError):
-        operator_admissibility(10, [], 100.0, "unknown_state")
+        operator_admissibility("Hold", 10, [], 100.0, "unknown_state")
+    with pytest.raises(ValueError):
+        operator_admissibility("NoSuchOperator", 10, [], 100.0, "clean")

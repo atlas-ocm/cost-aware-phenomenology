@@ -15,6 +15,8 @@ from __future__ import annotations
 
 from typing import Iterable, Literal, Sequence
 
+from .operator_alphabet import budget_gate_permitted_operators, operator_names
+
 
 RiskZone = Literal["conservation", "nominal", "expansion", "not_recommended"]
 BudgetState = Literal["full", "partial", "depleted", "critical"]
@@ -31,13 +33,17 @@ RISK_NOT_RECOMMENDED_THRESHOLD: int = 90
 
 
 # telemetry_gating.md Risk Throttling table: maximum permitted RiskWeight
-# per TelemetryState (percent).
+# per TelemetryState (percent). Breach is deliberately absent: it is not a
+# numeric ceiling but the transition into recovery, where the Recovery-Only
+# budget gate (spec/operator_alphabet.json) selects by operator identity.
 TELEMETRY_MAX_RISK: dict[str, int] = {
     "clean": 90,
     "loaded": 60,
     "overheating": 30,
-    "breach": 0,
 }
+
+# spec/operator_alphabet.json budget_gates entry that governs Breach.
+BREACH_BUDGET_GATE: str = "Recovery-Only"
 
 
 # observer_budget.md budget-state bands (percent).
@@ -150,13 +156,19 @@ def is_cycle_admissible(
     )
 
 
-def max_permitted_risk(telemetry_state: str) -> int:
+def max_permitted_risk(telemetry_state: str) -> int | None:
     """Maximum permitted RiskWeight (percent) for a TelemetryState.
 
     Encodes the Risk Throttling table in 02_subsystems/telemetry_gating.md:
-    Clean 90, Loaded 60, Overheating 30, Breach 0 (Pause only). An unknown
-    state has no ceiling to look up and is rejected rather than defaulted.
+    Clean 90, Loaded 60, Overheating 30. Breach has no numeric ceiling and
+    returns None: 02_subsystems/operator_admissibility.md and the
+    Budget Recovery Protocol make Breach the transition into recovery, where
+    the Recovery-Only budget gate (spec/operator_alphabet.json) decides by
+    operator identity rather than by a risk threshold. An unknown state has
+    no ceiling to look up and is rejected rather than defaulted.
     """
+    if telemetry_state == "breach":
+        return None
     try:
         return TELEMETRY_MAX_RISK[telemetry_state]
     except (KeyError, TypeError):
@@ -165,31 +177,75 @@ def max_permitted_risk(telemetry_state: str) -> int:
         ) from None
 
 
+def recovery_only_operators() -> frozenset[str]:
+    """Operators permitted by the Breach budget gate, from the alphabet.
+
+    Sourced from spec/operator_alphabet.json's Recovery-Only gate rather than
+    restated here, so the permitted set has a single authority.
+    """
+    return budget_gate_permitted_operators(BREACH_BUDGET_GATE)
+
+
 def operator_admissibility(
-    risk_weight: float,
-    active_operator_risks: Sequence[float],
-    allowed_total_risk: float,
-    telemetry_state: str,
+    operator: str | None,
+    risk_weight: float | None,
+    active_operator_risks: Sequence[float] | None,
+    allowed_total_risk: float | None,
+    telemetry_state: str | None,
 ) -> str:
-    """Combined telemetry-and-budget gate for a candidate operator.
+    """Combined operator-identity, telemetry-and-budget gate.
 
     Encodes "The Admissibility Rule" in 02_subsystems/operator_admissibility.md
-    (the numeric part): first the risk throttle, then the budget gate. Both
-    use <= admits, > blocks, exactly like is_cycle_admissible.
+    (the numeric part) together with the Breach decision: which operator is
+    proposed, not only how heavy it is. Both numeric gates use <= admits,
+    > blocks, exactly like is_cycle_admissible.
+
+    Missing inputs never produce a positive result: if any of the five inputs
+    is None the verdict is "not_computed", before any validation.
+
+    At telemetry_state "breach" there is no numeric ceiling (see
+    max_permitted_risk). The operator identity decides first: an operator
+    outside recovery_only_operators() is "blocked_recovery_only" even at risk
+    0. A permitted operator must still fit the actual budget:
+
+    - operator not in recovery_only_operators() -> "blocked_recovery_only"
+    - total_risk(active + [risk_weight]) > allowed_total_risk
+      -> "blocked_by_budget"
+    - otherwise -> "admissible"
+
+    Otherwise (clean/loaded/overheating): the risk throttle runs first, then
+    the same budget gate:
 
     - risk_weight > max_permitted_risk(telemetry_state) -> "blocked_by_telemetry"
     - total_risk(active + [risk_weight]) > allowed_total_risk
       -> "blocked_by_budget"
     - otherwise -> "admissible"
     """
+    if (
+        operator is None
+        or risk_weight is None
+        or active_operator_risks is None
+        or allowed_total_risk is None
+        or telemetry_state is None
+    ):
+        return "not_computed"
+    if operator not in operator_names():
+        raise ValueError(f"unknown operator: {operator!r}")
     if not (0 <= risk_weight <= 100):
         raise ValueError(f"risk_weight must be in [0, 100], got {risk_weight}")
     if allowed_total_risk < 0:
         raise ValueError(
             f"allowed_total_risk must be non-negative, got {allowed_total_risk}"
         )
-    if risk_weight > max_permitted_risk(telemetry_state):
-        return "blocked_by_telemetry"
+    if telemetry_state not in ("clean", "loaded", "overheating", "breach"):
+        raise ValueError(f"unknown telemetry_state: {telemetry_state!r}")
+    if telemetry_state == "breach":
+        if operator not in recovery_only_operators():
+            return "blocked_recovery_only"
+    else:
+        ceiling = max_permitted_risk(telemetry_state)
+        if ceiling is not None and risk_weight > ceiling:
+            return "blocked_by_telemetry"
     proposed = list(active_operator_risks) + [risk_weight]
     if total_risk(proposed) > allowed_total_risk:
         return "blocked_by_budget"
