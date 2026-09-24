@@ -218,9 +218,14 @@ a provider deadline on its first call), checks re-run at `71a0248` / `fa10bfd`.
 Route: A 55 turns, 39,217 output tokens, 315.9 s; B 52 / 32,351 / 307.1 s;
 driver authoring A about 2 min, B about 7 min. H1 (fewer attempts) not
 supported; the token and wall difference is within what one pair cannot
-separate from noise; H0 not rejected. Both cheap attempts failed on a detail
-of the oracle's construction that neither packet described (the driver's
-oracle, not the packet). Path B's script landed by a rule chosen after the
+separate from noise; H0 not rejected. Both cheap attempts failed the oracle's first case (the
+plain rebuild) on resolving `checks[].result_ref` (A invented the check-file
+names, B joined the ref onto the run directory) and its fourth case (a
+construction detail of the oracle); packet A said nothing about `result_ref`,
+packet B named it and called record paths repo-relative without saying that
+`result_ref` resolves against the repo root. Corrected on 2026-09-25 after the
+NoMCP session's reading of the receipts (run 010 README, correction_001); the
+first wording named c4 only and called the miss packet-independent. Path B's script landed by a rule chosen after the
 results (lower whole-route cost among the accepted). Path A has no execution
 record: the record schema presupposes a Mirror Frame and a candidate. Record
 and comparison: `run_010_adjustment_comparison/`.

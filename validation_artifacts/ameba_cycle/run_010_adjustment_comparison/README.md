@@ -97,3 +97,29 @@ Not a rate, not an ablation, not proof that any CAP layer improved the
 outcome. It is the first comparison with a baseline path fixed beforehand,
 the same required postcondition, and the same full-cost method, recorded so
 that the next pairs can be added to it rather than argued from.
+
+## Corrections
+
+- correction_001 (2026-09-25 01:40, after the NoMCP session read both receipts
+  at `52667eb`): the cheap-tier cells of the table in section 3, the fifth
+  axis in section 4 and the third bullet of section 5 say the cheap attempts
+  failed the oracle's case c4 only and call the miss packet-independent. The
+  receipts (`path_A/nomcp_coding_receipt.json`, `path_B/nomcp_coding_receipt.json`,
+  `first_attempt.checks[0].stdout_tail`) show both attempts failing **c1, the
+  plain in-repo rebuild**, as well as c4: A ignored `checks[].result_ref` and
+  invented `<run_dir>/checks/<criterion_id>.txt` ("Missing check result file:
+  ...checks/c1.txt"); B took `result_ref` but joined it onto the run directory
+  instead of the repo root (a doubled path). c1 alone would have set both
+  attempts aside. So the miss is a cheap-tier miss on resolving `result_ref`,
+  on which packet A says nothing and packet B names the field and calls record
+  paths repo-relative without saying explicitly that `result_ref` resolves
+  against the repo root. c4 does depend on the oracle's construction (the
+  base copy lacks the inputs outside the run directory), but it is not what
+  decided the set-asides. The claim "the driver's oracle, not the worker" is
+  withdrawn. Cause of the error: the driver read the first four `case=` lines
+  of the receipt's truncated `tail` field, whose beginning (the c1 line) was
+  cut; the untruncated `stdout_tail` field holds all four cases. The original
+  text is kept above; the path B record's divergence sentence is corrected in
+  `path_B/transition_execution_record_corrected_001.json` (built from
+  `path_B/record_spec_corrected_001.json` with the landed builder script); the
+  original record stays as written.
