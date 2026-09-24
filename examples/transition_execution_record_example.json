@@ -1,0 +1,93 @@
+{
+  "schema_version": "0.1",
+  "record_id": "transition_execution_record_example_2026-05-18T13_00_00",
+  "object": {
+    "kind": "repo",
+    "identifier": "f:/VibeCoding/Shard-Theory",
+    "revision_before": "e65b9af4b28d3c97950c667448a32c24adc44a0e",
+    "revision_after": "602fa63a42ac51b66af3f8d4157b1f1d9ceead8a"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_example_transition",
+    "candidate_ref": "examples/adjustment_candidate_transition_example.json",
+    "mirror_frame_before_id": "mirror_frame_example_before",
+    "mirror_frame_before_ref": "examples/mirror_frame_example.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "The candidate's regression test suite passes after the change.",
+        "check_command": "python -m pytest -q reference/python/tests/test_example.py"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "executor",
+      "model_requested": "example-model-requested",
+      "model_served": "example-model-served",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "pytest",
+    "inputs": [
+      {
+        "ref": "examples/adjustment_candidate_transition_example.json",
+        "sha256": "76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5"
+      }
+    ],
+    "decision": "apply_candidate",
+    "attempts": 1,
+    "receipt_ref": "examples/transition_execution_record/executor_receipt.json",
+    "started_at": "2026-05-18T13:00:00.000Z",
+    "finished_at": "2026-05-18T13:00:05.000Z"
+  },
+  "observation_after": {
+    "observed_at": "2026-05-18T13:00:06.000Z",
+    "revision_after": "602fa63a42ac51b66af3f8d4157b1f1d9ceead8a",
+    "summary": "Re-observed the object after the candidate was applied.",
+    "mirror_frame_after_ref": "examples/mirror_frame_example.json"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -m pytest -q reference/python/tests/test_example.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "examples/transition_execution_record/check_result_c1.txt",
+      "revision_checked": "602fa63a42ac51b66af3f8d4157b1f1d9ceead8a"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "The candidate's regression test suite passes after the change.",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "examples/transition_execution_record/check_result_c1.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "examples/adjustment_candidate_transition_example.json",
+    "measured": {
+      "worker_output_tokens": 1234,
+      "worker_turns": 3,
+      "worker_wall_s": 42.5,
+      "verifier_wall_s": 12.0,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Criterion c1 passed at the re-observed revision."
+    ]
+  },
+  "notes": "Worked example of an executed-transition record: a pre-defined postcondition with one criterion, one hashed input, a stored receipt, and a passing check at the re-observed revision."
+}

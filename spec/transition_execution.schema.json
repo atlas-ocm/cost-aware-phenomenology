@@ -1,0 +1,563 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cap:schema:transition-execution:v0.1",
+  "title": "CAP Transition Execution Record",
+  "description": "Schema for an EXECUTED-transition record. A transition is bound across four steps: before - the observed state, the object revision, the candidate, and a postcondition that was defined before execution; during - the actor, the tool, the hashed inputs, and the stored receipt; after - re-observation of the object and per-criterion checks that carry result references; feedback - divergence between expectation and observation plus measured costs kept apart from estimates.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_id",
+    "object",
+    "candidate",
+    "postcondition",
+    "execution",
+    "observation_after",
+    "checks",
+    "expected_evidence_results",
+    "divergence",
+    "costs",
+    "verdict"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "object": {
+      "$ref": "#/$defs/object"
+    },
+    "candidate": {
+      "$ref": "#/$defs/candidate"
+    },
+    "postcondition": {
+      "$ref": "#/$defs/postcondition"
+    },
+    "execution": {
+      "$ref": "#/$defs/execution"
+    },
+    "observation_after": {
+      "$ref": "#/$defs/observation_after"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "expected_evidence_results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/expected_evidence_result"
+      }
+    },
+    "divergence": {
+      "$ref": "#/$defs/divergence"
+    },
+    "costs": {
+      "$ref": "#/$defs/costs"
+    },
+    "verdict": {
+      "$ref": "#/$defs/verdict"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "postcondition_met=true requires every check to have status 'pass'.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "postcondition_met": {
+                "const": true
+              }
+            },
+            "required": [
+              "postcondition_met"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "checks": {
+            "items": {
+              "properties": {
+                "status": {
+                  "const": "pass"
+                }
+              },
+              "required": [
+                "status"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "$comment": "provenance_established=true requires a stored receipt_ref and at least one hashed input.",
+      "if": {
+        "properties": {
+          "verdict": {
+            "properties": {
+              "provenance_established": {
+                "const": true
+              }
+            },
+            "required": [
+              "provenance_established"
+            ]
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "execution": {
+            "required": [
+              "receipt_ref"
+            ],
+            "properties": {
+              "inputs": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "object": {
+      "type": "object",
+      "required": [
+        "kind",
+        "identifier",
+        "revision_before",
+        "revision_after"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "repo",
+            "file",
+            "runtime",
+            "memory_store",
+            "other"
+          ]
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "revision_before": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision_after": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "required": [
+        "candidate_id",
+        "candidate_ref",
+        "mirror_frame_before_id",
+        "mirror_frame_before_ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidate_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mirror_frame_before_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mirror_frame_before_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "postcondition": {
+      "type": "object",
+      "required": [
+        "defined_before_execution",
+        "criteria"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "defined_before_execution": {
+          "const": true
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "statement",
+              "check_command"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "check_command": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "required": [
+        "actor",
+        "tool",
+        "inputs",
+        "decision",
+        "attempts"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "type": "object",
+          "required": [
+            "role",
+            "model_requested",
+            "model_served",
+            "identity_source",
+            "identity_independently_verified"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "role": {
+              "type": "string"
+            },
+            "model_requested": {
+              "type": "string"
+            },
+            "model_served": {
+              "type": "string"
+            },
+            "identity_source": {
+              "type": "string"
+            },
+            "identity_independently_verified": {
+              "type": "boolean"
+            }
+          }
+        },
+        "tool": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "ref",
+              "sha256"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        },
+        "decision": {
+          "type": "string"
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "receipt_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        }
+      }
+    },
+    "observation_after": {
+      "type": "object",
+      "required": [
+        "observed_at",
+        "revision_after",
+        "summary"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "observed_at": {
+          "type": "string"
+        },
+        "revision_after": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mirror_frame_after_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": [
+        "criterion_id",
+        "command",
+        "exit_code",
+        "status",
+        "result_ref",
+        "revision_checked"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "fail",
+            "not_run"
+          ]
+        },
+        "result_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision_checked": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "A check reported as pass must have exit_code 0.",
+          "if": {
+            "properties": {
+              "status": {
+                "const": "pass"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "exit_code": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "expected_evidence_result": {
+      "type": "object",
+      "required": [
+        "claim",
+        "kind",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "claim": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "test_result",
+            "log",
+            "diff",
+            "file_reference",
+            "external_source",
+            "human_statement",
+            "runtime_observation",
+            "prior_anchor"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "observed",
+            "not_observed",
+            "not_checked"
+          ]
+        },
+        "result_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "divergence": {
+      "type": "object",
+      "required": [
+        "expected_vs_observed",
+        "adjustment_ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "expected_vs_observed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "adjustment_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "costs": {
+      "type": "object",
+      "required": [
+        "estimated_ref",
+        "measured"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "estimated_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "measured": {
+          "type": "object",
+          "required": [
+            "worker_output_tokens",
+            "worker_turns",
+            "worker_wall_s",
+            "verifier_wall_s",
+            "money"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "worker_output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "worker_turns": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "worker_wall_s": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "verifier_wall_s": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "money": {
+              "oneOf": [
+                {
+                  "const": "unknown"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": [
+        "postcondition_met",
+        "provenance_established",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "postcondition_met": {
+          "type": "boolean"
+        },
+        "provenance_established": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

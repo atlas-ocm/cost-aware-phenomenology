@@ -1,0 +1,6 @@
+{
+  "run_id": "run_example_transition_001",
+  "decision": "apply_candidate",
+  "model_requested": "example-model-requested",
+  "model_served": "example-model-served"
+}
