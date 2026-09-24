@@ -1,0 +1,200 @@
+{
+  "task_id": "cap-record-binding-05",
+  "variant": "coding",
+  "baseline": [
+    {
+      "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+        ".",
+        "F:/VibeCoding/cap-probe-base",
+        "--expect-closed"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "mand_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\ncase=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\nprobe_record_binding: at least one expectation fails",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]\ncase=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=[\"checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt\"]\ncase=gap1_result_file_says_exit_1_record_says_pass observed=OK expected=REFUSE[checks[0].exit_code] holds=False problems=[]\ncase=gap2_check_at_other_existing_revision observed=OK expected=REFUSE[checks[0].revision_checked] holds=False problems=[]\ncase=gap3_check_command_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\ncase=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\nprobe_record_binding: at least one expectation fails\n",
+      "stderr_tail": "",
+      "stdout_chars": 1155,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    },
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................                                 [100%]\n40 passed in 1.83s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.83s\n",
+      "stderr_tail": "",
+      "stdout_chars": 99,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    },
+    {
+      "cmd": [
+        "python",
+        "reference/python/scripts/validate_execution_record.py",
+        "validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json",
+        "--repo",
+        "."
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "OK",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "OK\n",
+      "stderr_tail": "",
+      "stdout_chars": 3,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    }
+  ],
+  "first_attempt": {
+    "model": "gemma4:31b-cloud",
+    "answer": "Bound the executed-transition record to its stored carriers by implementing four new binding rules in reference/python/cap/execution_record.py (exit line, command, revision, and receipt fields), updating the examples and tests.",
+    "wall_s": 58.49,
+    "turns": 12,
+    "output_tokens": 9315,
+    "model_requested": "gemma4:31b-cloud",
+    "model_served": "gemma4:31b-cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "identity_source": "claude_cli_modelUsage",
+    "provider_source": "claude_cli_modelUsage",
+    "identity_independently_verified": false,
+    "postcondition": true,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+          ".",
+          "F:/VibeCoding/cap-probe-base",
+          "--expect-closed"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "t_ref] holds=True problems=[\"execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION\", \"execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model\", \"execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\"]\nprobe_record_binding: every expectation holds",
+        "check_index": 0,
+        "timed_out": false,
+        "stdout_tail": "case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]\ncase=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=[\"checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt\"]\ncase=gap1_result_file_says_exit_1_record_says_pass observed=REFUSED expected=REFUSE[checks[0].exit_code] holds=True problems=[\"checks[0].exit_code: recorded 0, stored result says 1\"]\ncase=gap2_check_at_other_existing_revision observed=REFUSED expected=REFUSE[checks[0].revision_checked] holds=True problems=[\"checks[0].revision_checked: e65b9af4 is not the re-observed revision 602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"]\ncase=gap3_check_command_differs_from_criterion observed=REFUSED expected=REFUSE[checks[0].command] holds=True problems=[\"checks[0].command: differs from criterion c1 check_command\"]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=[\"execution.receipt_ref: not a JSON object: examples/transition_execution_record/stray_notes.txt\"]\ncase=gap5_right_words_in_wrong_receipt_fields observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=[\"execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION\", \"execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model\", \"execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\"]\nprobe_record_binding: every expectation holds\n",
+        "stderr_tail": "",
+        "stdout_chars": 1815,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_execution_record_validator.py",
+          "reference/python/tests/test_transition_execution_schema.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "...............................................                          [100%]\n47 passed in 4.55s",
+        "check_index": 1,
+        "timed_out": false,
+        "stdout_tail": "...............................................                          [100%]\n47 passed in 4.55s\n",
+        "stderr_tail": "",
+        "stdout_chars": 99,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "reference/python/scripts/validate_execution_record.py",
+          "validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json",
+          "--repo",
+          "."
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "OK",
+        "check_index": 2,
+        "timed_out": false,
+        "stdout_tail": "OK\n",
+        "stderr_tail": "",
+        "stdout_chars": 3,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      }
+    ],
+    "worktree": {
+      "diffstat": ".../check_result_c1.txt                            |   3 +-\n .../executor_receipt.json                          |  15 ++-\n reference/python/cap/execution_record.py           | 145 +++++++++++++++++++++\n .../tests/test_execution_record_validator.py       |  80 ++++++++++++\n 4 files changed, 239 insertions(+), 4 deletions(-)",
+      "untracked": [],
+      "touched": [
+        "examples/transition_execution_record/check_result_c1.txt",
+        "examples/transition_execution_record/executor_receipt.json",
+        "reference/python/cap/execution_record.py",
+        "reference/python/tests/test_execution_record_validator.py"
+      ]
+    },
+    "protected_touched": []
+  },
+  "seam_used": false,
+  "fallback_used": false,
+  "handoff": null,
+  "decision": "CHEAP_PASS",
+  "final_answer": "Bound the executed-transition record to its stored carriers by implementing four new binding rules in reference/python/cap/execution_record.py (exit line, command, revision, and receipt fields), updating the examples and tests.",
+  "final_postcondition": true,
+  "trail": [
+    "step 0: baseline [('python', 1), ('python', 0), ('python', 0)]",
+    "step 1-2: gemma4 answered 'Bound the executed-transition record to its stored carriers by implementing four new binding rules in reference/python/cap/execution_record.py (exit line, command, revision, and receipt fields), updating the examples and tests.' -> postcondition True",
+    "step 3: postcondition met, stop"
+  ],
+  "run_id": "run-1146da0cb462823c3b0aeadf91a0d33d",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\run_008\\tasks8.json",
+      "size": 8469,
+      "sha256": "c904d388a9d7c7ba0280dff1b6d783b13b7a47b993ec0a8e997127c24bf362e7",
+      "saved": "inputs/c904d388a9d7c7ba0280dff1b6d783b13b7a47b993ec0a8e997127c24bf362e7"
+    },
+    "check_files": [
+      {
+        "declared": "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+        "source": "F:\\VibeCoding\\CAP-wt-ameba-cycle\\validation_artifacts\\ameba_cycle\\run_007_record_binding_gap\\probe_record_binding.py",
+        "size": 6970,
+        "sha256": "2c9053f9ca91a6d60d83e3ad72b5accd9d82354aab49be13a435a12d7a559fca",
+        "saved": "inputs/2c9053f9ca91a6d60d83e3ad72b5accd9d82354aab49be13a435a12d7a559fca"
+      }
+    ]
+  },
+  "run_receipt": "runs/run-1146da0cb462823c3b0aeadf91a0d33d/cap-record-binding-05.json",
+  "run_summary": "runs/run-1146da0cb462823c3b0aeadf91a0d33d/summary.json",
+  "total_wall_s": 71.31
+}

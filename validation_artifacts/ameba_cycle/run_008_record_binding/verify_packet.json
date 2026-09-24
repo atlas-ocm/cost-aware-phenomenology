@@ -1,0 +1,201 @@
+[
+ {
+  "id": "cap-record-binding-05-verify",
+  "packet": {
+   "question": "Task cap-record-binding-05 on F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle, base 5a5e2e9): did the worker bind the executed-transition record validator (reference/python/cap/execution_record.py, validate_execution_record) to the stored carriers with exactly the four rules of the packet, and nothing looser? Rule 1: every resolvable checks[i].result_ref file holds exactly one line exit=<int> equal to checks[i].exit_code. Rule 2: checks[i].command equals the check_command of the criterion it names. Rule 3, only when repo_dir is given: object.revision_after, observation_after.revision_after and every checks[i].revision_checked resolve through git (rev-parse --verify <rev>^{commit}) to one commit, so a short and a full SHA of one commit are one object. Rule 4, when provenance_established is true and receipt_ref resolves: the receipt is a JSON object whose top-level decision equals execution.decision, whose closing attempt's model_served (fallback_attempt when fallback_used, else first_attempt) equals execution.actor.model_served, and whose inputs.packet.sha256 / inputs.check_files[].sha256 contain every execution.inputs[].sha256; text anywhere else in the receipt counts for nothing. Each rule yields its own named problem string; every existing check and problem string is unchanged; the two example stand-ins (check_result_c1.txt gets exit=0; executor_receipt.json rewritten into the router's shape) are updated; tests were added per rule plus the positive controls; the schema, the run records under validation_artifacts/, docs and the probe file are untouched. Judge from the diff, the new tests, the oracle text and the rechecks in the evidence. Missing evidence is UNDECIDABLE, not ACCEPT.",
+   "postcondition": {
+    "value": "All three declared checks exit 0 on the current tree: (1) the driver's oracle validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py with --expect-closed, meaning every expectation holds: the unmodified example, a router-shaped receipt whose fields match, and a short SHA of the same commit are accepted, the missing-file control is refused, and the five gap cases (stored exit=1 under a passing check; check at another existing revision; command differing from the criterion; stray text file as receipt; right words in wrong receipt fields) are each refused with the named problem (checks[0].exit_code, checks[0].revision_checked, checks[0].command, execution.receipt_ref, execution.receipt_ref); (2) python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py; (3) python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json --repo . prints OK. Changed files are exactly reference/python/cap/execution_record.py, reference/python/tests/test_execution_record_validator.py, examples/transition_execution_record/check_result_c1.txt and examples/transition_execution_record/executor_receipt.json; no other file is changed or added; the probe file is byte-identical to its committed version; no rule accepts text outside the named receipt fields; revisions are compared after git resolution, not by string equality."
+   },
+   "reported": {
+    "decision": "CHEAP_PASS",
+    "fallback_used": false,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+       ".",
+       "F:/VibeCoding/cap-probe-base",
+       "--expect-closed"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "mand_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\ncase=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\nprobe_record_binding: at least one expectation fails",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]\ncase=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=[\"checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt\"]\ncase=gap1_result_file_says_exit_1_record_says_pass observed=OK expected=REFUSE[checks[0].exit_code] holds=False problems=[]\ncase=gap2_check_at_other_existing_revision observed=OK expected=REFUSE[checks[0].revision_checked] holds=False problems=[]\ncase=gap3_check_command_differs_from_criterion observed=OK expected=REFUSE[checks[0].command] holds=False problems=[]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\ncase=gap5_right_words_in_wrong_receipt_fields observed=OK expected=REFUSE[execution.receipt_ref] holds=False problems=[]\nprobe_record_binding: at least one expectation fails\n",
+      "stderr_tail": "",
+      "stdout_chars": 1155,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_execution_record_validator.py",
+       "reference/python/tests/test_transition_execution_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................                                 [100%]\n40 passed in 1.83s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "........................................                                 [100%]\n40 passed in 1.83s\n",
+      "stderr_tail": "",
+      "stdout_chars": 99,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "reference/python/scripts/validate_execution_record.py",
+       "validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json",
+       "--repo",
+       "."
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "OK",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "OK\n",
+      "stderr_tail": "",
+      "stdout_chars": 3,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 58.49,
+     "turns": 12,
+     "output_tokens": 9315,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+        ".",
+        "F:/VibeCoding/cap-probe-base",
+        "--expect-closed"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "t_ref] holds=True problems=[\"execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION\", \"execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model\", \"execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\"]\nprobe_record_binding: every expectation holds",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]\ncase=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=[\"checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt\"]\ncase=gap1_result_file_says_exit_1_record_says_pass observed=REFUSED expected=REFUSE[checks[0].exit_code] holds=True problems=[\"checks[0].exit_code: recorded 0, stored result says 1\"]\ncase=gap2_check_at_other_existing_revision observed=REFUSED expected=REFUSE[checks[0].revision_checked] holds=True problems=[\"checks[0].revision_checked: e65b9af4 is not the re-observed revision 602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"]\ncase=gap3_check_command_differs_from_criterion observed=REFUSED expected=REFUSE[checks[0].command] holds=True problems=[\"checks[0].command: differs from criterion c1 check_command\"]\ncase=gap4_stray_text_file_as_receipt_provenance_true observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=[\"execution.receipt_ref: not a JSON object: examples/transition_execution_record/stray_notes.txt\"]\ncase=gap5_right_words_in_wrong_receipt_fields observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=[\"execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION\", \"execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model\", \"execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\"]\nprobe_record_binding: every expectation holds\n",
+       "stderr_tail": "",
+       "stdout_chars": 1815,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "...............................................                          [100%]\n47 passed in 4.55s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "...............................................                          [100%]\n47 passed in 4.55s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "reference/python/scripts/validate_execution_record.py",
+        "validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json",
+        "--repo",
+        "."
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "OK",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "OK\n",
+       "stderr_tail": "",
+       "stdout_chars": 3,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": null,
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 0), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Bound the executed-transition record to its stored carriers by implementing four new binding rules in reference/python/cap/execution_record.py (exit line, command, revision, and receipt fields), updating the examples and tests.' -> postcondition True",
+     "step 3: postcondition met, stop"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " .../check_result_c1.txt                            |   3 +-\n .../executor_receipt.json                          |  15 ++-\n reference/python/cap/execution_record.py           | 145 +++++++++++++++++++++\n .../tests/test_execution_record_validator.py       |  80 ++++++++++++\n 4 files changed, 239 insertions(+), 4 deletions(-)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "examples/transition_execution_record/check_result_c1.txt\nexamples/transition_execution_record/executor_receipt.json\nreference/python/cap/execution_record.py\nreference/python/tests/test_execution_record_validator.py\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "(none)"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/examples/transition_execution_record/check_result_c1.txt b/examples/transition_execution_record/check_result_c1.txt\nindex fad7b84..15d2f5e 100644\n--- a/examples/transition_execution_record/check_result_c1.txt\n+++ b/examples/transition_execution_record/check_result_c1.txt\n@@ -3,4 +3,5 @@ collected 1 item\n \n reference/python/tests/test_example.py .                                 [100%]\n \n-1 passed\n\\ No newline at end of file\n+1 passed\n+exit=0\n\\ No newline at end of file\ndiff --git a/examples/transition_execution_record/executor_receipt.json b/examples/transition_execution_record/executor_receipt.json\nindex e39ce74..3ad1c06 100644\n--- a/examples/transition_execution_record/executor_receipt.json\n+++ b/examples/transition_execution_record/executor_receipt.json\n@@ -1,6 +1,15 @@\n {\n   \"run_id\": \"run_example_transition_001\",\n   \"decision\": \"apply_candidate\",\n-  \"model_requested\": \"example-model-requested\",\n-  \"model_served\": \"example-model-served\"\n-}\n+  \"fallback_used\": false,\n+  \"first_attempt\": {\n+    \"model_requested\": \"example-model-requested\",\n+    \"model_served\": \"example-model-served\"\n+  },\n+  \"inputs\": {\n+    \"packet\": {\n+      \"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"\n+    },\n+    \"check_files\": []\n+  }\n+}\n\\ No newline at end of file\ndiff --git a/reference/python/cap/execution_record.py b/reference/python/cap/execution_record.py\nindex 2c71eb3..76d7858 100644\n--- a/reference/python/cap/execution_record.py\n+++ b/reference/python/cap/execution_record.py\n@@ -27,6 +27,7 @@ rather than collapsed into a single verdict.\n from __future__ import annotations\n \n import hashlib\n+import json\n import subprocess\n from pathlib import Path\n from typing import Any\n@@ -69,6 +70,22 @@ def _revision_exists(repo_dir: Path, revision: str) -> bool:\n     return completed.returncode == 0\n \n \n+def _resolve_revision(repo_dir: Path, revision: str) -> str | None:\n+    \"\"\"Returns the full SHA of the revision, or None if it does not resolve.\"\"\"\n+    if not _revision_exists(repo_dir, revision):\n+        return None\n+    try:\n+        completed = subprocess.run(\n+            [\"git\", \"-C\", str(repo_dir), \"rev-parse\", revision],\n+            capture_output=True,\n+            text=True,\n+            encoding=\"utf-8\",\n+        )\n+        return completed.stdout.strip()\n+    except (OSError, subprocess.SubprocessError):\n+        return None\n+\n+\n def validate_execution_record(\n     record: dict, base_dir: Path, repo_dir: Path | None = None\n ) -> list[str]:\n@@ -96,6 +113,19 @@ def validate_execution_record(\n     when verdict.postcondition_met is true every criterion must have at least\n     one check with status \"pass\".\n \n+    Additionally, four binding rules ensure the record matches its stored carriers:\n+    1. exit line: check results must contain a single exit= line matching the\n+       recorded exit_code.\n+    2. command: the check command must match the criterion's check_command.\n+    3. revision: every checked revision must resolve and match the re-observed\n+       and object revisions.\n+    4. receipt fields: when provenance is established, the receipt must be a\n+       JSON object with matching decision, served model, and input hashes.\n+\n+    A passing record now means the named links between the record and its\n+    stored carriers are checked; full provenance of the execution is not\n+    established by this.\n+\n     Returns a list of problem strings, empty when the record is sound. It never\n     raises on a bad record: a non-dict, empty or garbled record yields problems.\n     \"\"\"\n@@ -227,4 +257,119 @@ def validate_execution_record(\n                     \"has no passing check\"\n                 )\n \n+    # -- binding rules --\n+\n+    # 1. exit line\n+    for index, entry in enumerate(checks):\n+        entry_map = _mapping(entry)\n+        ref = entry_map.get(\"result_ref\")\n+        if not _non_empty_str(ref):\n+            continue\n+        target = base / ref\n+        if not target.is_file():\n+            continue\n+        try:\n+            lines = target.read_text(encoding=\"utf-8\").splitlines()\n+            exit_lines = [l for l in lines if l.startswith(\"exit=\")]\n+            if len(exit_lines) != 1:\n+                problems.append(f\"checks[{index}].result_ref: no single exit= line in {ref}\")\n+                continue\n+\n+            import re\n+            match = re.match(r\"^exit=(-?\\d+)$\", exit_lines[0])\n+            if not match:\n+                problems.append(f\"checks[{index}].result_ref: no single exit= line in {ref}\")\n+                continue\n+\n+            stored_exit = int(match.group(1))\n+            recorded_exit = entry_map.get(\"exit_code\")\n+            if recorded_exit is not None and stored_exit != recorded_exit:\n+                problems.append(f\"checks[{index}].exit_code: recorded {recorded_exit}, stored result says {stored_exit}\")\n+        except (OSError, ValueError):\n+            continue\n+\n+    # 2. command\n+    criteria_map = {\n+        _mapping(c).get(\"id\"): _mapping(c).get(\"check_command\")\n+        for c in _sequence(_mapping(record.get(\"postcondition\")).get(\"criteria\"))\n+    }\n+    for index, entry in enumerate(checks):\n+        entry_map = _mapping(entry)\n+        cid = entry_map.get(\"criterion_id\")\n+        cmd = entry_map.get(\"command\")\n+        if _non_empty_str(cid) and _non_empty_str(cmd):\n+            expected_cmd = criteria_map.get(cid)\n+            if expected_cmd != cmd:\n+                problems.append(f\"checks[{index}].command: differs from criterion {cid} check_command\")\n+\n+    # 3. revision\n+    if repo_dir is not None:\n+        obj = _mapping(record.get(\"object\"))\n+        obs = _mapping(observation_after)\n+\n+        rev_obj = _resolve_revision(repo_dir, obj.get(\"revision_after\", \"\"))\n+        rev_obs = _resolve_revision(repo_dir, obs.get(\"revision_after\", \"\"))\n+\n+        if rev_obs and rev_obj and rev_obs != rev_obj:\n+            problems.append(f\"observation_after.revision_after: {obs.get('revision_after')} is not object.revision_after {obj.get('revision_after')}\")\n+\n+        for index, entry in enumerate(checks):\n+            entry_map = _mapping(entry)\n+            rev_checked = entry_map.get(\"revision_checked\")\n+            if not _non_empty_str(rev_checked):\n+                continue\n+            resolved_checked = _resolve_revision(repo_dir, rev_checked)\n+            if resolved_checked:\n+                if rev_obs and resolved_checked != rev_obs:\n+                    problems.append(f\"checks[{index}].revision_checked: {rev_checked} is not the re-observed revision {obs.get('revision_after')}\")\n+\n+    # 4. receipt fields\n+    verdict = _mapping(record.get(\"verdict\"))\n+    if verdict.get(\"provenance_established\") is True:\n+        receipt_ref = execution.get(\"receipt_ref\")\n+        if _non_empty_str(receipt_ref):\n+            target = base / receipt_ref\n+            if target.is_file():\n+                try:\n+                    receipt = json.loads(target.read_text(encoding=\"utf-8\"))\n+                    if not isinstance(receipt, dict):\n+                        problems.append(f\"execution.receipt_ref: not a JSON object: {receipt_ref}\")\n+                    else:\n+                        # (a) decision\n+                        rec_decision = receipt.get(\"decision\")\n+                        if rec_decision is None:\n+                            problems.append(\"execution.receipt_ref: receipt lacks decision\")\n+                        elif rec_decision != execution.get(\"decision\"):\n+                            problems.append(f\"execution.receipt_ref: decision {execution.get('decision')} is not the receipt decision {rec_decision}\")\n+\n+                        # (b) model_served\n+                        fallback_used = receipt.get(\"fallback_used\")\n+                        if not isinstance(fallback_used, bool):\n+                            problems.append(\"execution.receipt_ref: receipt lacks fallback_used\")\n+                        else:\n+                            attempt = \"fallback_attempt\" if fallback_used else \"first_attempt\"\n+                            attempt_map = _mapping(receipt.get(attempt))\n+                            rec_model = attempt_map.get(\"model_served\")\n+                            if rec_model is None:\n+                                problems.append(f\"execution.receipt_ref: receipt lacks {attempt}.model_served\")\n+                            elif rec_model != _mapping(execution.get(\"actor\")).get(\"model_served\"):\n+                                problems.append(f\"execution.receipt_ref: model_served {_mapping(execution.get('actor')).get('model_served')} is not the receipt served model {rec_model}\")\n+\n+                        # (c) inputs\n+                        rec_inputs = _mapping(receipt.get(\"inputs\"))\n+                        if not rec_inputs:\n+                            problems.append(\"execution.receipt_ref: receipt lacks inputs\")\n+                        else:\n+                            packet_sha = _mapping(rec_inputs.get(\"packet\")).get(\"sha256\")\n+                            check_shas = [_mapping(f).get(\"sha256\") for f in _sequence(rec_inputs.get(\"check_files\"))]\n+                            allowed_shas = {packet_sha} | {s for s in check_shas if s}\n+\n+                            for index, entry in enumerate(inputs):\n+                                entry_map = _mapping(entry)\n+                                sha = entry_map.get(\"sha256\")\n+                                if _non_empty_str(sha) and sha not in allowed_shas:\n+                                    problems.append(f\"execution.receipt_ref: input {sha} is not among the receipt inputs\")\n+                except (json.JSONDecodeError, OSError):\n+                    problems.append(f\"execution.receipt_ref: not a JSON object: {receipt_ref}\")\n+\n     return problems\ndiff --git a/reference/python/tests/test_execution_record_validator.py b/reference/python/tests/test_execution_record_validator.py\nindex 43ea26f..b3470de 100644\n--- a/reference/python/tests/test_execution_record_validator.py\n+++ b/reference/python/tests/test_execution_record_validator.py\n@@ -185,6 +185,86 @@ def test_check_naming_unknown_criterion_is_named():\n     assert _named(problems, \"unknown\") and _named(problems, \"c9\"), problems\n \n \n+# -- binding: record matches its stored carriers --\n+\n+\n+def test_stored_exit_mismatch_is_named(tmp_path):\n+    record = _load_example()\n+    res_file = tmp_path / \"res.txt\"\n+    res_file.write_text(\"exit=1\", encoding=\"utf-8\")\n+    record[\"checks\"][0][\"result_ref\"] = str(res_file.relative_to(ROOT)) if res_file.is_relative_to(ROOT) else str(res_file)\n+    # Force base_dir to tmp_path for this test to resolve the ref\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert _named(problems, \"exit_code: recorded 0, stored result says 1\"), problems\n+\n+\n+def test_command_mismatch_is_named():\n+    record = _load_example()\n+    record[\"checks\"][0][\"command\"] = \"echo 'wrong command'\"\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"command: differs from criterion c1 check_command\"), problems\n+\n+\n+def test_revision_checked_mismatch_is_named():\n+    record = _load_example()\n+    # Root is e65b9af4... we use a different valid commit from the example\n+    record[\"checks\"][0][\"revision_checked\"] = \"e65b9af4b28d3c97950c667448a32c24adc44a0e\"\n+    # Example record observation_after.revision_after is 602fa63a...\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"revision_checked\"), problems\n+\n+\n+def test_non_json_receipt_is_named(tmp_path):\n+    record = _load_example()\n+    rec_file = tmp_path / \"receipt.txt\"\n+    rec_file.write_text(\"not json\", encoding=\"utf-8\")\n+    record[\"execution\"][\"receipt_ref\"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert _named(problems, \"receipt_ref: not a JSON object\"), problems\n+\n+\n+def test_receipt_field_mismatch_is_named(tmp_path):\n+    record = _load_example()\n+    rec_file = tmp_path / \"receipt.json\"\n+    # Decision, model, and packet sha differ; record values are hidden in 'notes'\n+    receipt = {\n+        \"decision\": \"wrong_decision\",\n+        \"fallback_used\": False,\n+        \"first_attempt\": {\"model_served\": \"wrong-model\"},\n+        \"inputs\": {\"packet\": {\"sha256\": \"wrong-sha\"}, \"check_files\": []},\n+        \"notes\": \"The record values are here: apply_candidate, example-model-served, 76f0fdb...\"\n+    }\n+    rec_file.write_text(json.dumps(receipt), encoding=\"utf-8\")\n+    record[\"execution\"][\"receipt_ref\"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert _named(problems, \"decision apply_candidate is not the receipt decision wrong_decision\"), problems\n+    assert _named(problems, \"model_served example-model-served is not the receipt served model wrong-model\"), problems\n+    assert _named(problems, \"input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\"), problems\n+\n+\n+def test_short_sha_revision_checked_resolves():\n+    record = _load_example()\n+    # 602fa63a is the short SHA of the revision in the example\n+    record[\"checks\"][0][\"revision_checked\"] = \"602fa63a\"\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert not _named(problems, \"revision_checked\"), problems\n+\n+\n+def test_matching_router_receipt_resolves(tmp_path):\n+    record = _load_example()\n+    rec_file = tmp_path / \"receipt.json\"\n+    receipt = {\n+        \"decision\": \"apply_candidate\",\n+        \"fallback_used\": False,\n+        \"first_attempt\": {\"model_served\": \"example-model-served\"},\n+        \"inputs\": {\"packet\": {\"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"}, \"check_files\": []}\n+    }\n+    rec_file.write_text(json.dumps(receipt), encoding=\"utf-8\")\n+    record[\"execution\"][\"receipt_ref\"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert not _named(problems, \"receipt_ref\"), problems\n+\n+\n # -- bad records are reported, never raised --\n \n \n"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "(none)"
+    },
+    {
+     "path": "probe_record_binding.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Oracle and probe for the execution-record binding step (driver-written, deterministic, no model calls).\n\nusage: python probe_record_binding.py <repo_root> <scratch_base> [--expect-closed]\n\nBuilds <scratch_base> (outside the tree) with copies of every file the shipped example record references,\nthen validates the unmodified example and mutated copies of it against that base, with revisions resolved\nin <repo_root>. Every case carries an expectation: ACCEPT (no problem at all) or REFUSE with a named\nanchor that at least one problem string must contain, so a refusal for the wrong reason does not count.\nObservation mode (default) prints what the validator does and exits 0. With --expect-closed the script\nexits 0 only when every expectation holds; at 26535dc / 2731484 it exits 1 because the gap cases are\naccepted, so it is red on the baseline for the named reason.\n\nWhat a green run means: the named links between the record and its stored carriers are checked (the\nexit line of a stored result, the criterion's command, the re-observed revision, specific fields of the\nreceipt). It does not establish full provenance of the execution.\n\nRevision 2 (after the review of 2731484): named defects per case, three positive controls (unmodified\nexample; a receipt in the router's shape whose fields match; a short SHA of the same commit), and the\ncase \"right words in wrong receipt fields\", which a text-containment rule would wrongly accept.\n\"\"\"\nimport copy\nimport json\nimport pathlib\nimport shutil\nimport sys\n\nrepo = pathlib.Path(sys.argv[1]).resolve()\nbase = pathlib.Path(sys.argv[2]).resolve()\nexpect_closed = \"--expect-closed\" in sys.argv\nsys.path.insert(0, str(repo / \"reference\" / \"python\"))\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nEXAMPLE = \"examples/transition_execution_record_example.json\"\nOTHER_EXISTING_REVISION = \"e65b9af4\"  # origin/main base of the research branch; exists, is not revision_after\nexample = json.loads((repo / EXAMPLE).read_text(encoding=\"utf-8-sig\"))\n\n\ndef refs(rec):\n    out = [rec[\"candidate\"][\"candidate_ref\"], rec[\"candidate\"][\"mirror_frame_before_ref\"], rec[\"costs\"][\"estimated_ref\"]]\n    if rec[\"observation_after\"].get(\"mirror_frame_after_ref\"):\n        out.append(rec[\"observation_after\"][\"mirror_frame_after_ref\"])\n    if rec[\"execution\"].get(\"receipt_ref\"):\n        out.append(rec[\"execution\"][\"receipt_ref\"])\n    out += [i[\"ref\"] for i in rec[\"execution\"][\"inputs\"]]\n    out += [c[\"result_ref\"] for c in rec[\"checks\"]]\n    out += [e[\"result_ref\"] for e in rec[\"expected_evidence_results\"] if e.get(\"result_ref\")]\n    return out\n\n\nif base.exists():\n    shutil.rmtree(base)\nfor rel in sorted(set(refs(example))):\n    dst = base / rel\n    dst.parent.mkdir(parents=True, exist_ok=True)\n    shutil.copyfile(repo / rel, dst)\n\n\ndef put(rel, data):\n    target = base / rel\n    target.parent.mkdir(parents=True, exist_ok=True)\n    target.write_bytes(data)\n    return rel\n\n\nex = example[\"execution\"]\ndecision, model_served, input_sha = ex[\"decision\"], ex[\"actor\"][\"model_served\"], ex[\"inputs\"][0][\"sha256\"]\nrevision_after = example[\"observation_after\"][\"revision_after\"]\n\n\ndef router_receipt(dec, served, packet_sha, notes=\"\"):\n    \"\"\"A receipt in the shape the NoMCP router writes: the fields rule 4 reads, and nothing else counts.\"\"\"\n    body = {\n        \"task_id\": \"example\", \"variant\": \"coding\", \"decision\": dec, \"fallback_used\": False,\n        \"first_attempt\": {\"model_requested\": served, \"model_served\": served, \"turns\": 1, \"output_tokens\": 1, \"wall_s\": 1.0},\n        \"inputs\": {\"packet\": {\"sha256\": packet_sha, \"size\": 1}, \"check_files\": []},\n        \"notes\": notes,\n    }\n    return json.dumps(body, indent=2).encode(\"utf-8\") + b\"\\n\"\n\n\nfailed_result = put(\"examples/transition_execution_record/check_result_c1_failed.txt\",\n                    b\"cmd=python -m pytest -q reference/python/tests/test_example.py\\nexit=1\\n1 failed\\n\")\nstray = put(\"examples/transition_execution_record/stray_notes.txt\",\n            b\"not a receipt: no decision, no input hash, no model identity\\n\")\nmatching = put(\"examples/transition_execution_record/receipt_router_matching.json\",\n               router_receipt(decision, model_served, input_sha))\nwrong_fields = put(\"examples/transition_execution_record/receipt_words_in_wrong_fields.json\",\n                   router_receipt(\"EXCEPTION\", \"some-other-model\", \"0\" * 64,\n                                  notes=f\"decision {decision}; served {model_served}; input {input_sha}\"))\n\nACCEPT = \"ACCEPT\"\ncases = []\n\n\ndef case(label, mutate, expectation):\n    rec = copy.deepcopy(example)\n    mutate(rec)\n    cases.append((label, rec, expectation))\n\n\ncase(\"positive_unmodified_example\", lambda r: None, ACCEPT)\n\n\ndef _matching(r):\n    r[\"execution\"][\"receipt_ref\"] = matching\n    r[\"verdict\"][\"provenance_established\"] = True\n\n\ncase(\"positive_router_shaped_receipt_fields_match\", _matching, ACCEPT)\ncase(\"positive_short_sha_of_the_same_commit\",\n     lambda r: r[\"checks\"][0].__setitem__(\"revision_checked\", revision_after[:7]), ACCEPT)\ncase(\"control_missing_result_file\",\n     lambda r: r[\"checks\"][0].__setitem__(\"result_ref\", \"examples/transition_execution_record/no_such_result.txt\"),\n     (\"REFUSE\", \"reference not found\"))\ncase(\"gap1_result_file_says_exit_1_record_says_pass\",\n     lambda r: r[\"checks\"][0].__setitem__(\"result_ref\", failed_result), (\"REFUSE\", \"checks[0].exit_code\"))\ncase(\"gap2_check_at_other_existing_revision\",\n     lambda r: r[\"checks\"][0].__setitem__(\"revision_checked\", OTHER_EXISTING_REVISION),\n     (\"REFUSE\", \"checks[0].revision_checked\"))\ncase(\"gap3_check_command_differs_from_criterion\",\n     lambda r: r[\"checks\"][0].__setitem__(\"command\", \"echo not-the-criterion-command\"),\n     (\"REFUSE\", \"checks[0].command\"))\n\n\ndef _stray(r):\n    r[\"execution\"][\"receipt_ref\"] = stray\n    r[\"verdict\"][\"provenance_established\"] = True\n\n\ncase(\"gap4_stray_text_file_as_receipt_provenance_true\", _stray, (\"REFUSE\", \"execution.receipt_ref\"))\n\n\ndef _wrong_fields(r):\n    r[\"execution\"][\"receipt_ref\"] = wrong_fields\n    r[\"verdict\"][\"provenance_established\"] = True\n\n\ncase(\"gap5_right_words_in_wrong_receipt_fields\", _wrong_fields, (\"REFUSE\", \"execution.receipt_ref\"))\n\nall_hold = True\nfor label, record, expectation in cases:\n    problems = validate_execution_record(record, base, repo)\n    observed = \"REFUSED\" if problems else \"OK\"\n    if expectation == ACCEPT:\n        holds = not problems\n        expected = \"ACCEPT\"\n    else:\n        anchor = expectation[1]\n        holds = any(anchor in problem for problem in problems)\n        expected = f\"REFUSE[{anchor}]\"\n    all_hold = all_hold and holds\n    print(f\"case={label} observed={observed} expected={expected} holds={holds} problems={json.dumps(problems, ensure_ascii=True)}\")\n\nif expect_closed:\n    print(\"probe_record_binding: \" + (\"every expectation holds\" if all_hold else \"at least one expectation fails\"))\n    sys.exit(0 if all_hold else 1)\nprint(\"probe_record_binding: observation mode, exit 0\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . F:/VibeCoding/cap-probe-base --expect-closed\",\n  \"exit\": 0,\n  \"tail\": \"blems=[\\\"execution.receipt_ref: not a JSON object: examples/transition_execution_record/stray_notes.txt\\\"]\\ncase=gap5_right_words_in_wrong_receipt_fields observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=[\\\"execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION\\\", \\\"execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model\\\", \\\"execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs\\\"]\\nprobe_record_binding: every expectation holds\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"...............................................                          [100%]\\n47 passed in 4.75s\"\n },\n {\n  \"cmd\": \"python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json --repo .\",\n  \"exit\": 0,\n  \"tail\": \"OK\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

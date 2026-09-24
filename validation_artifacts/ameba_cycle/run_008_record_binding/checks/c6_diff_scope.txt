@@ -1,0 +1,12 @@
+# check c6_diff_scope: diff scope, re-run by the driver at fc87e62ea055a6ea54303abe03a5b2b40871d9cb in a detached worktree (/f/VibeCoding/CAP-wt-tmp-008)
+$ git diff --stat 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb; git diff --name-only 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb
+ .../check_result_c1.txt                            |   3 +-
+ .../executor_receipt.json                          |  15 ++-
+ reference/python/cap/execution_record.py           | 145 +++++++++++++++++++++
+ .../tests/test_execution_record_validator.py       |  80 ++++++++++++
+ 4 files changed, 239 insertions(+), 4 deletions(-)
+examples/transition_execution_record/check_result_c1.txt
+examples/transition_execution_record/executor_receipt.json
+reference/python/cap/execution_record.py
+reference/python/tests/test_execution_record_validator.py
+exit=0

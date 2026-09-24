@@ -184,6 +184,26 @@
         "money": "unknown"
       },
       "money": "unknown"
+    },
+    {
+      "run": "run_008_record_binding",
+      "decision": "CHEAP_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 12,
+          "output_tokens": 9315,
+          "wall_s": 58.49
+        }
+      ],
+      "route_total": {
+        "turns": 12,
+        "output_tokens": 9315,
+        "router_wall_s": 71.31
+      },
+      "verifier_wall_s": 19.75,
+      "recorded_in_execution_record": null,
+      "money": "unknown"
     }
   ]
 }

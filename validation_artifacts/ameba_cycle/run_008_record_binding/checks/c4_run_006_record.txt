@@ -1,0 +1,4 @@
+# check c4_run_006_record: run 006 record resolves under the new rules, re-run by the driver at fc87e62ea055a6ea54303abe03a5b2b40871d9cb in a detached worktree (/f/VibeCoding/CAP-wt-tmp-008)
+$ python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json --repo .
+OK
+exit=0

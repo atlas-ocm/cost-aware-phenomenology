@@ -1,0 +1,173 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-25T00-25Z_record_binding_gap",
+    "observed_state": {
+      "id": "obs_validator_accepts_contradicted_records",
+      "summary": "validate_execution_record accepts records whose stored results contradict them; five gap cases of the revision-2 oracle are accepted at 5a5e2e9",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-25T00-25Z_record_binding_gap#obs_validator_rules",
+        "mirror_frame:mirror_frame_2026-09-25T00-25Z_record_binding_gap#obs_oracle_red"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_validator_resolves_but_never_compares",
+      "hypothesis": "The validator was written to resolve references, hashes, revisions and coverage; comparing the record's claims with the content of the resolved files was never part of it",
+      "source": "human_report",
+      "confidence": 1.0,
+      "evidence_refs": [
+        "validation_artifacts/ameba_cycle/run_007_record_binding_gap/README.md#1",
+        "review of 26535dc and of 2731484"
+      ],
+      "uncertainty": [],
+      "status": "confirmed"
+    },
+    "desired_state": {
+      "id": "target_record_bound_to_stored_carriers",
+      "goal": "validate_execution_record refuses, each with its named problem, a stored result whose exit= line differs from exit_code, a check command that differs from its criterion, a check revision that does not resolve to the re-observed commit, and a receipt whose specific fields (decision, closing attempt's model_served, input hashes) do not match; the shipped example is updated and still resolves; a green oracle means the named links are checked, not full provenance",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle probe_record_binding.py --expect-closed exits 0 (every expectation holds: four positives and controls accepted, five gap cases refused with their named problems)",
+        "test_execution_record_validator.py and test_transition_execution_schema.py exit 0",
+        "validate_execution_record.py on run 006's record prints OK",
+        "the full suite exits 0",
+        "validate_execution_record.py on the original run 005a record names execution.receipt_ref input mismatch (negative control), and a corrected run 005a record referencing coding_packet.executed.08111685.json prints OK",
+        "changed files are exactly cap/execution_record.py, tests/test_execution_record_validator.py, examples/transition_execution_record/check_result_c1.txt and examples/transition_execution_record/executor_receipt.json; the probe unchanged"
+      ],
+      "forbidden_outcomes": [
+        "a binding rule that accepts text found outside the named receipt fields",
+        "string equality of revisions when git resolution is available",
+        "any change to the schema, the run records or the probe",
+        "weakening an existing check or problem string"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure; the route runs through the installed path B relay inside one native Workflow",
+      "the driver does not edit code, tests or examples; the oracle is committed in the tree, declared by hash, and is red on the baseline",
+      "the old run 005a record is not edited; a corrected record is a separate file"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_record_binds_stored_carriers",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-25T00-26Z_record_binding",
+    "from_state": "validator resolves references, hashes, revisions and coverage only; five gap cases accepted",
+    "inferred_cause": "cause_validator_resolves_but_never_compares",
+    "to_state": "four binding rules in cap.execution_record with named problems; example stand-ins updated; tests per rule; oracle green",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Oracle (revision 2) run on the clean tree at 5a5e2e9: exit 1, five gap cases accepted, four expectations hold (baseline_oracle.txt)",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-record-binding-05) through the installed path B: one native Workflow, one nomcp-haiku relay that launches the route and waits for its own run; three declared checks",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Four comparisons over existing carriers plus an example update; the operator asked for the ordinary task to observe path B on real work"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model (second relay); driver adjudication on the diff and the full suite; checks re-run at the obtained revision in a detached worktree; execution record for this run built under the new rules; corrected record for run 005a as a separate file",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; every run since 005 needs an execution record; the old 005a record stays as the negative control"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_record_binds_stored_carriers",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.15,
+      "loop_risk": 0.25,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "medium",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the binding commit on the research branch",
+        "rerun test_execution_record_validator.py to confirm the previous count (40 with the schema tests)"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the declared pytest checks and the full suite exit 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "run 006's record prints OK; the original run 005a record is refused on execution.receipt_ref; a corrected 005a record prints OK",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git shows exactly the validator, its test module and the two example stand-ins modified",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-25T00:26:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-25T00-26Z_record_binding",
+    "reasons": [
+      "The step is ordered and its acceptance is fixed by the reviewer and the oracle; the change is comparisons over carriers that already exist",
+      "loop_risk is the highest estimated axis (0.25): five one-detail misses of the cheap tier tonight and a mid-size validator task; the declared checks and the named-problem oracle guard it",
+      "Verifier and driver adjudication required; an execution record under the new rules follows"
+    ],
+    "alternatives": [
+      "Driver edits the validator directly (rejected: orchestrator write boundary; the NoMCP path is available)",
+      "Skip the binding and go to whole-route costs first (rejected: the reviewer's order; costs without a bound record would be unbound too)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 008, Adjustment step. Proposed before the route was launched, before its result was known."
+}

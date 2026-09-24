@@ -1,0 +1,182 @@
+{
+  "schema_version": "0.1",
+  "record_id": "exec_2026-09-25_run_008_record_binding",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f",
+    "revision_after": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-25T00-26Z_record_binding",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-25T00-25Z_record_binding_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle (revision 2) with --expect-closed exits 0: the unmodified example, a router-shaped receipt whose fields match and a short SHA of the same commit are accepted; the missing-file control and the five gap cases are refused, each with its named problem",
+        "check_command": "python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . F:/VibeCoding/cap-probe-base --expect-closed"
+      },
+      {
+        "id": "c2",
+        "statement": "test_execution_record_validator.py and test_transition_execution_schema.py exit 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py"
+      },
+      {
+        "id": "c3",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c4",
+        "statement": "run 006's record resolves under the new rules",
+        "check_command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json --repo ."
+      },
+      {
+        "id": "c5",
+        "statement": "the original run 005a record is refused naming its stored input hash (negative control of rule 4c)",
+        "check_command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_005a_execution_record_schema/transition_execution_record.json --repo . | grep -c \"execution.receipt_ref: input 9b0f0bd6\""
+      },
+      {
+        "id": "c6",
+        "statement": "changed files are exactly cap/execution_record.py, tests/test_execution_record_validator.py and the two example stand-ins; the probe unchanged",
+        "check_command": "git diff --stat 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb; git diff --name-only 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "cheap_coder",
+      "model_requested": "gemma4:31b-cloud",
+      "model_served": "gemma4:31b-cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama) inside one native Workflow with one nomcp-haiku relay per stage; the path B relay text was installed (launch, then nomcp.py wait for the own run if the harness backgrounds it); this launch completed in the foreground in 71 s, so no wait call occurred",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_008_record_binding/coding_packet.json",
+        "sha256": "c904d388a9d7c7ba0280dff1b6d783b13b7a47b993ec0a8e997127c24bf362e7"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py",
+        "sha256": "2c9053f9ca91a6d60d83e3ad72b5accd9d82354aab49be13a435a12d7a559fca"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/nomcp_coding_receipt.json",
+    "decision": "CHEAP_PASS",
+    "attempts": 1
+  },
+  "observation_after": {
+    "observed_at": "2026-09-25T00:32:00Z",
+    "revision_after": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb",
+    "summary": "Re-observed in a detached worktree at fc87e62 (F:/VibeCoding/CAP-wt-tmp-008, removed afterwards): clean tree; the oracle exits 0 with every expectation holding; validator and schema tests 47 passed; full suite 1011 passed, 2 skipped; run 006's record prints OK; the original run 005a record is refused naming input 9b0f0bd6...; the diff 5a5e2e9..fc87e62 touches exactly the validator, its test module and the two example stand-ins"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . F:/VibeCoding/cap-probe-base --expect-closed",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c1_oracle.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c2_validator_and_schema_tests.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c3_full_suite.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_006_com_log_link/transition_execution_record.json --repo .",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c4_run_006_record.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    },
+    {
+      "criterion_id": "c5",
+      "command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_005a_execution_record_schema/transition_execution_record.json --repo . | grep -c \"execution.receipt_ref: input 9b0f0bd6\"",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c5_run_005a_negative_control.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    },
+    {
+      "criterion_id": "c6",
+      "command": "git diff --stat 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb; git diff --name-only 5a5e2e93f74b2780c5bb0c5060cbce795b5a4a7f fc87e62ea055a6ea54303abe03a5b2b40871d9cb",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c6_diff_scope.txt",
+      "revision_checked": "fc87e62ea055a6ea54303abe03a5b2b40871d9cb"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "the declared pytest checks and the full suite exit 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c3_full_suite.txt"
+    },
+    {
+      "claim": "run 006's record prints OK; the original run 005a record is refused on execution.receipt_ref; a corrected 005a record prints OK",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c5_run_005a_negative_control.txt"
+    },
+    {
+      "claim": "git shows exactly the validator, its test module and the two example stand-ins modified",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/checks/c6_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected (candidate, loop_risk 0.25 the highest axis): a cheap-tier miss on one detail and a fallback. Observed: the cheap tier closed the task on its first attempt (CHEAP_PASS: gemma4:31b-cloud, 12 turns, 9,315 output tokens, 58.5 s), the first cheap close since run 001; no CAP-level Adjustment; no oracle weakened; no code written by the driver.",
+      "Expected: the path B relay could be exercised on real work. Observed: the launch completed in the foreground (71.3 s of router wall) inside the relay's 600 s ceiling, so no backgrounding and no wait call occurred; the transport observation is limited to the installed relay text handling one foreground launch, which does not confirm the wait mechanism."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_008_record_binding/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 9315,
+      "worker_turns": 12,
+      "worker_wall_s": 58.49,
+      "verifier_wall_s": 19.7,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files that carry the exit line the new rule 1 reads",
+      "Provenance: the packet and the probe are the hashed inputs and their hashes are the ones in the router receipt (inputs.packet.sha256, inputs.check_files[0].sha256); the receipt's decision and the served model of the closing attempt are the record's; the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs are the receipt's measured values for the closing attempt (the only attempt); the whole route is in route_costs_correction_001.json; money is unknown"
+    ]
+  },
+  "notes": "Run 008: the execution record bound to its stored carriers (four rules). This record is the first built under those rules: its checks carry exit= lines, its commands equal the criteria, its revisions resolve to one commit and its receipt fields match by value."
+}

@@ -60,6 +60,12 @@ Runs:
   example); corrections to the records of runs 002–006 (`execution.tool`,
   whole-route costs in `route_costs_correction_001.json`, run 005a packet
   bytes); the binding step is prepared under `prepared/record_binding/`.
+- [`run_008_record_binding/`](./run_008_record_binding/README.md) — the
+  execution record bound to its stored carriers (four rules), executed from
+  the packet prepared in run 007 through the installed NoMCP path B relay;
+  cheap tier closed it (`CHEAP_PASS`); commit `fc87e62`; the first record
+  built under the new rules; a corrected record for run 005a added beside
+  its original, which stays as the negative control.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet

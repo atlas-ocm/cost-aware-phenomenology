@@ -117,3 +117,9 @@ and are not summed with them. Money: unknown.
   permanent refusal of this run; a corrected record that references the
   stored executed bytes may pass and would be a separate file, with this
   correction history kept here.
+- correction_005 (2026-09-25, with run 008): the corrected record
+  `transition_execution_record_corrected_001.json` exists beside the original;
+  it differs only in `execution.inputs[0]` (the stored executed bytes, sha256
+  `08111685...`), its record id and its reasons/notes, and it resolves under the
+  validator at `fc87e62`. The original record is refused there naming input
+  `9b0f0bd6...`, and is kept as the negative control.

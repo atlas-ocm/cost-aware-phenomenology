@@ -13,8 +13,8 @@ its hash is reported in the local Driver's final message, not here.
 | base | `origin/main` = `e65b9af4b28d3c97950c667448a32c24adc44a0e` — identical to the revision the architect read; `git fetch --prune` confirmed no newer remote commit |
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
-| verified code revision | `8d23161` (execution record): full suite `981 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 (see §2.7). Earlier verified points: `bbbc26c` (936 passed, 2 skipped), `989a7e2` (941 passed, 2 skipped) |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, then the run-007 commit (review of `26535dc`: records corrected, binding step prepared) |
+| verified code revision | `fc87e62` (record binding, run 008): full suite `1011 passed, 2 skipped`, six criteria re-run in a detached worktree (§2.10). Earlier verified points: `bbbc26c` (936), `989a7e2` (941), `8d23161` (981; `scripts/check_repo.ps1` exit 0), `ebe0ba0` (1004); always 2 skipped |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, `2731484` run 007, `8bc15b5` run 007 revision 2, `68914ff` executed bytes of run 005a, `5a5e2e9` handoff wording, `fc87e62` feat(cap) record binding (run 008), then the run-008 records commit |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -157,6 +157,30 @@ run 005a's stored packet differs from the executed bytes by line endings
 (correction_003 there). All records at this commit still pass the validator as
 it is. No code changed in this commit; the full suite was not re-run for it.
 
+### 2.10 `fc87e62` — the execution record bound to its stored carriers (run 008)
+
+The packet prepared in run 007 (revision 2) executed as written through the
+installed NoMCP path B relay inside one native Workflow. `validate_execution_record`
+gains four binding rules, each a named problem: one `exit=` line in a stored
+result equal to `exit_code`; `checks[].command` equal to the criterion's
+`check_command`; the checked, re-observed and object revisions resolving
+through `git rev-parse` to one commit (with `--repo` only); with
+`provenance_established`, the receipt's `decision`, closing-attempt
+`model_served` and `inputs.packet` / `inputs.check_files` hashes matching
+by value, nothing else counting. Example stand-ins updated; seven tests
+added; existing checks and strings unchanged. Statuses, kept apart: route
+`CHEAP_PASS` (gemma4:31b-cloud, 12 turns, 9,315 output tokens, 58.5 s; the
+first cheap close since run 001); verdict `ACCEPT` by `deepseek_v41_flash`;
+checks c1–c6 re-run at `fc87e62` in a detached worktree, all exit 0; driver
+acceptance on the diff; transport: the launch finished in the foreground
+(71 s), so the path B wait mechanism was not exercised. Consequences: the
+original run 005a record is refused on its stored input hash (negative
+control, intended) and a corrected record referencing the stored executed
+bytes resolves beside it; runs 002, 004, 005b, 006 and the example resolve.
+Record: `run_008_record_binding/`, the first built under the new rules.
+A passing record now means the named links between the record and its
+stored carriers are checked; full provenance is still not established.
+
 ## 3. Exact commands, dependencies, inputs and outputs
 
 Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
@@ -165,7 +189,7 @@ Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
 ```bash
 # unit tests (the only test command; works on any OS)
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider reference/python/tests
-# expected on a standalone clone, per revision: bbbc26c 936 passed; 989a7e2 941; 8d23161 981; ebe0ba0 and every later commit (no code change since) 1004; always 2 skipped
+# expected on a standalone clone, per revision: bbbc26c 936 passed; 989a7e2 941; 8d23161 981; ebe0ba0 1004; fc87e62 and every later commit 1011; always 2 skipped
 
 # the remaining steps of scripts/check_repo.ps1, as plain Python (the .ps1 needs PowerShell)
 python -m compileall -q reference/python
@@ -296,12 +320,14 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   installed; the integration of the installed components was checked in
   `claude -p` with fake executors. Work on an ordinary task in the local app
   is not yet confirmed (a snapshot-speedup task was proposed for that check;
-  CAP does not need to wait for it).
+  CAP does not need to wait for it). Run 008 (§2.10) went through the
+  installed relay text; its launch finished in the foreground (71 s), so the
+  wait mechanism was not exercised and that status stands.
 
 ## 7. Next concrete unfinished step
 
-0. **Prepared and not executed: bind the execution record to its stored
-   results** (run 007). Packet `prepared/record_binding/coding_packet.json`;
+0. **Done in run 008 (`fc87e62`, §2.10): the execution record bound to its
+   stored results.** Prepared in run 007 and executed as written. Packet `prepared/record_binding/coding_packet.json`;
    oracle `run_007_record_binding_gap/probe_record_binding.py --expect-closed`
    (exit 1 today, red for the named reason); declared checks: the oracle, the
    validator and schema tests, run 006's record still `OK`. Four rules, each a
@@ -327,12 +353,16 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    may pass and is a separate file). A green run means the named
    links between the record and its stored carriers are checked; it does not
    establish full provenance of the execution.
-   Follow-up after it lands: a schema field for whole-route costs. Route it as
+   Landed as prepared; every acceptance item observed (checks c1–c6 of run
+   008; the corrected run 005a record resolves, the original is refused).
+   Next bounded step, not yet prepared: whole-route costs in the record — a
+   schema field bound to the receipt's per-attempt values and `total_wall_s`
+   (the closing attempt's figures never stand in for the route). Route it as
    every other change (a coder that is not its own verifier, an explicit
    verifier, the driver adjudicating, an execution record).
 1. Reproduce on the cloud clone: the pytest command in §3 must give, per
-   revision: `bbbc26c` 936 passed, `989a7e2` 941, `8d23161` 981, `ebe0ba0` and
-   every later commit (no code change since) 1004, always 2 skipped; record the clone's directory name
+   revision: `bbbc26c` 936 passed, `989a7e2` 941, `8d23161` 981, `ebe0ba0`
+   1004, `fc87e62` and every later commit 1011, always 2 skipped; record the clone's directory name
    and OS as an environment difference, not a defect.
 2. Fix the baseline path before any comparison (brief §6). Proposed and not
    yet run: for the next bounded change on this repository, run it twice from
@@ -346,9 +376,9 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    record (§2.7, runs 005a and 005b). Every further run must produce a
    `transition_execution_record.json` that passes
    `validate_execution_record.py --repo .`; a run without one is not a
-   verified transition, whatever its README says. Passing the validator at
-   `26535dc` is not yet proof that the stored results support the record
-   (run 007, §2.9).
+   verified transition, whatever its README says. Since `fc87e62` a passing record also has its stored results agreeing
+   with it on the named links (run 008, §2.10); full provenance of the
+   execution is still not established.
 4. Done in run 006 (§2.8): the COM-Log link. Its acceptance items 1–4 are the
    oracle; item 5 (a candidate through the whole chain to a verified
    postcondition) is the run's execution record. What is still missing: no real
@@ -379,7 +409,7 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
 ## 8. What is available from the cloud and what exists only locally
 
 Available on the branch: all code, tests, docs, schemas, examples, the run
-records 001–007 with verbatim receipts, the prepared packets, the brief, this file.
+records 001–008 with verbatim receipts, the prepared packets, the brief, this file.
 
 Local only: the 32 external Looking-Glass / Latent Cause cases
 (`F:/VibeCoding/Shard-Theory/Patch`); the NoMCP checkout (`F:/VibeCoding/Nomcp`)

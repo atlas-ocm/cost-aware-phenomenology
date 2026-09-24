@@ -1,0 +1,13 @@
+# check c1_oracle: the driver oracle (revision 2) with --expect-closed, re-run by the driver at fc87e62ea055a6ea54303abe03a5b2b40871d9cb in a detached worktree (/f/VibeCoding/CAP-wt-tmp-008)
+$ python -B validation_artifacts/ameba_cycle/run_007_record_binding_gap/probe_record_binding.py . F:/VibeCoding/cap-probe-base --expect-closed
+case=positive_unmodified_example observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_router_shaped_receipt_fields_match observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_short_sha_of_the_same_commit observed=OK expected=ACCEPT holds=True problems=[]
+case=control_missing_result_file observed=REFUSED expected=REFUSE[reference not found] holds=True problems=["checks[0].result_ref: reference not found: examples/transition_execution_record/no_such_result.txt"]
+case=gap1_result_file_says_exit_1_record_says_pass observed=REFUSED expected=REFUSE[checks[0].exit_code] holds=True problems=["checks[0].exit_code: recorded 0, stored result says 1"]
+case=gap2_check_at_other_existing_revision observed=REFUSED expected=REFUSE[checks[0].revision_checked] holds=True problems=["checks[0].revision_checked: e65b9af4 is not the re-observed revision 602fa63a42ac51b66af3f8d4157b1f1d9ceead8a"]
+case=gap3_check_command_differs_from_criterion observed=REFUSED expected=REFUSE[checks[0].command] holds=True problems=["checks[0].command: differs from criterion c1 check_command"]
+case=gap4_stray_text_file_as_receipt_provenance_true observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=["execution.receipt_ref: not a JSON object: examples/transition_execution_record/stray_notes.txt"]
+case=gap5_right_words_in_wrong_receipt_fields observed=REFUSED expected=REFUSE[execution.receipt_ref] holds=True problems=["execution.receipt_ref: decision apply_candidate is not the receipt decision EXCEPTION", "execution.receipt_ref: model_served example-model-served is not the receipt served model some-other-model", "execution.receipt_ref: input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs"]
+probe_record_binding: every expectation holds
+exit=0

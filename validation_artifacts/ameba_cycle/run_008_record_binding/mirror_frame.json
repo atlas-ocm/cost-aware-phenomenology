@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-25T00-25Z_record_binding_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator (2026-09-25 00:xx): continue locally until 04:00; execute the prepared packet prepared/record_binding/ with the oracle of revision 2; the old run 005a record stays a negative control and a corrected separate record referencing the stored executed bytes may pass",
+        "Run the ordinary coding task through the installed NoMCP path B (relay launches the route and waits for its own run); keep the statuses of the route, the checks and the acceptance separately",
+        "After each accepted step publish a checkpoint and update the handoff; RTF is a separate question and does not block this queue"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-25T00:20:00Z",
+          "claim": "HEAD; tree; remote",
+          "value": "5a5e2e9 = origin/research/ameba-executable-cycle; tree clean; full suite 1004 passed, 2 skipped at ebe0ba0 and no code change since",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_validator_rules",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:20:00Z",
+          "claim": "reference/python/cap/execution_record.py as landed in 8d23161",
+          "value": "validate_execution_record resolves references, re-derives input hashes, resolves revisions with git cat-file, checks criterion coverage; it never opens a stored result, never compares checks[].command with the criterion, never compares revision_checked with the re-observed revision, never reads the receipt",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-25T00:24:00Z",
+          "claim": "probe_record_binding.py --expect-closed on the clean tree at 5a5e2e9",
+          "value": "exit 1: four expectations hold (unmodified example, router-shaped matching receipt, short SHA, missing-file control), five gap cases accepted (exit=1 result, other revision, other command, stray receipt, right words in wrong fields)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_receipt_shape",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:20:00Z",
+          "claim": "validation_artifacts/ameba_cycle/run_006_com_log_link/nomcp_coding_receipt.json",
+          "value": "top-level decision and fallback_used; first_attempt and fallback_attempt each with model_served; inputs.packet.sha256; inputs.check_files[].sha256",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_relay_path_b",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:20:00Z",
+          "claim": "~/.claude/agents/nomcp-haiku.md and ~/.claude/nomcp/nomcp.py",
+          "value": "the relay may call `nomcp.py wait <output_file> <tasks.json> <out_dir>` for its own launch while NOT_FINAL and stop on COLLECTED/BROKEN/UNKNOWN; the shim has the wait verb; per the NoMCP report the integration was checked in claude -p with fake executors and not yet on an ordinary task in the app",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_binding_missing_only",
+          "claim": "The schema, the reference-resolving validator, the stored results with exit= lines and the router receipts with the needed fields all exist; only the comparison of the record's claims with those carriers is missing",
+          "derived_from": ["obs_validator_rules", "obs_oracle_red", "obs_receipt_shape"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_record_binds_stored_carriers"],
+      "policies": ["policy_named_problem_per_rule", "policy_no_text_containment", "policy_green_means_named_links_not_full_provenance"],
+      "specs": ["spec/transition_execution.schema.json"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-25T00:20:00Z",
+        "claim": "HEAD commit",
+        "value": "5a5e2e9",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-25T00:24:00Z",
+        "claim": "oracle on the baseline",
+        "value": "exit 1, five gap cases accepted",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "NoMCP path B on an ordinary task",
+        "reason": "installed and checked with fake executors; this run is the first observation on a real coding task in the app"
+      },
+      {
+        "path": "cheap tier on a validator task",
+        "reason": "five one-detail misses tonight; whether a mid-size validator change closes at the cheap tier is unknown"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "reference/python/cap/execution_record.py",
+        "declared": "a record that passes the validator has its stored results agreeing with it on the named links",
+        "observed": "the validator accepts a stored exit=1 under a passing check, a check at another existing revision, a command that differs from its criterion, a stray file or a wrong-fields receipt as provenance",
+        "severity": "warning",
+        "reason": "Until bound, \"passed the validator\" cannot be read as \"the stored results support the record\""
+      }
+    ],
+    "created_at": "2026-09-25T00:25:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at 5a5e2e9",
+    "reasons": [
+      "The review named the gap and the operator ordered the step; the validator at 8d23161 does not compare claims with carriers",
+      "Every carrier and the receipt fields exist, so the change is four comparisons and an example update, not a new mechanism"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "validator source: no content comparison; oracle red with five accepted gap cases at 5a5e2e9; router receipt carries decision, model_served per attempt and input hashes"
+  },
+  "notes": "Run 008, Mirror step. Declared state is the operator's instruction of 2026-09-25 (source: user)."
+}

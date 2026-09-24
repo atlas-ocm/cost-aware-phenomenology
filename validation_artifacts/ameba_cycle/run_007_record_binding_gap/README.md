@@ -80,7 +80,8 @@ Nothing about whether Adjustment chooses a cheaper transition. It says that
 "the record passed the validator" meant, until now, "its references, hashes,
 revisions and coverage resolve", not "its stored results support it". The
 binding step is prepared under `../prepared/record_binding/` (packet, oracle =
-this run's probe with `--expect-closed`, declared checks) and not executed.
+this run's probe with `--expect-closed`, declared checks); executed as run
+008 (`fc87e62`), where the oracle exits 0 with every expectation holding.
 
 ## 4a. Revision 2 of the packet and the oracle (after the review of `2731484`)
 
