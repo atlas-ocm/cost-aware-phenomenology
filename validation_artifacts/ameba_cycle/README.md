@@ -22,7 +22,8 @@ Each run directory holds:
 | `verify_packet.json` | a deterministic packet builder (no model) | — |
 | `nomcp_verdict_receipt.json` | the NoMCP verifier runner, verbatim | — |
 | `README.md` | the driver: the five items the brief asks to keep, plus costs and the Adjustment | — |
-| `transition_execution_record.json` | the driver, from the artifacts above and the checks re-run at the obtained revision | `spec/transition_execution.schema.json` + `scripts/validate_execution_record.py --repo .` |
+| `transition_execution_record.json` | the driver, from the artifacts above and the checks re-run at the obtained revision (0.2 from run 009 on: `costs.route` from the receipt) | `spec/transition_execution.schema.json` + `scripts/validate_execution_record.py --repo .` |
+| `record_spec.json` (from run 009) | the driver: the non-derivable fields of the record (criteria, check mapping, observation, divergence, verdict reasons) | consumed by the record builder |
 | `checks/*.txt` | the driver: outputs of each criterion's check at the obtained revision, in a detached worktree | referenced by the record |
 
 No new schema was introduced: execution and verdict receipts are kept as the
@@ -66,6 +67,12 @@ Runs:
   cheap tier closed it (`CHEAP_PASS`); commit `fc87e62`; the first record
   built under the new rules; a corrected record for run 005a added beside
   its original, which stays as the negative control.
+- [`run_009_route_costs/`](./run_009_route_costs/README.md) — whole-route
+  costs in the record bound to the receipt (schema 0.2, rules 5 and 6);
+  fallback closed it after a cheap-tier set-aside; first verdict `OBJECT` on
+  a stray worker file, second `ACCEPT` after one recorded driver
+  intervention; path B exercised (background launch, eight waits); commit
+  `5b84998`; the first 0.2 record, with its `record_spec.json`.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet

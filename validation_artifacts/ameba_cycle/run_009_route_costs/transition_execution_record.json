@@ -1,0 +1,191 @@
+{
+  "schema_version": "0.2",
+  "record_id": "exec_2026-09-25_run_009_route_costs",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "c0c8cba809b304682f593b2719a356ace4687c23",
+    "revision_after": "5b84998620674f96af2d7d286a354b640f7d79c7"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-25T00-36Z_route_costs",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-25T00-35Z_route_costs_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle on real receipts with --expect-closed exits 0: the unchanged 0.1 record of run 008, a 0.2 copy with the route from its receipt and a 0.2 copy of run 006 with both attempts are accepted; a 0.2 record without route, a turns total off by one, an attempt field differing from the receipt, the router wall replaced by the closing attempt, a dropped set-aside attempt and measured figures that are not the closing attempt are each refused with the named problem",
+        "check_command": "python -B validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py . --expect-closed"
+      },
+      {
+        "id": "c2",
+        "statement": "test_execution_record_validator.py and test_transition_execution_schema.py exit 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py"
+      },
+      {
+        "id": "c3",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c4",
+        "statement": "run 008's 0.1 record without route still resolves",
+        "check_command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json --repo ."
+      },
+      {
+        "id": "c5",
+        "statement": "changed files are exactly the schema, cap/execution_record.py, the two test modules and the two example files; the probe and the run records unchanged",
+        "check_command": "git diff --stat c0c8cba809b304682f593b2719a356ace4687c23 5b84998620674f96af2d7d286a354b640f7d79c7; git diff --name-only c0c8cba809b304682f593b2719a356ace4687c23 5b84998620674f96af2d7d286a354b640f7d79c7"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama) inside one native Workflow with one nomcp-haiku relay per stage, path B exercised: the relay launched the route with run_in_background and called nomcp.py wait eight times (NOT_FINAL) until COLLECTED; a first launch 90 s earlier was killed by the harness when the relay read the output file instead of waiting (no worker change reached the tree)",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_009_route_costs/coding_packet.json",
+        "sha256": "eb2b21744facedca796e59a0a31a275b3b0f6a351eedcd813b5a13ca62da528b"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py",
+        "sha256": "88f88f2d3c50b7293c25cb2dc91a85b418ae3396915ba0a68602a82f7cc45a47"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-25T00:54:00Z",
+    "revision_after": "5b84998620674f96af2d7d286a354b640f7d79c7",
+    "summary": "Re-observed in a detached worktree at 5b84998 (F:/VibeCoding/CAP-wt-tmp-009, removed afterwards; 62 s): clean tree; the oracle exits 0 with every expectation holding; validator and schema tests 58 passed; full suite 1022 passed, 2 skipped; run 008's 0.1 record prints OK; the diff c0c8cba..5b84998 touches exactly the schema, the validator, the two test modules and the two example files"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py . --expect-closed",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt",
+      "revision_checked": "5b84998620674f96af2d7d286a354b640f7d79c7"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c2_validator_and_schema_tests.txt",
+      "revision_checked": "5b84998620674f96af2d7d286a354b640f7d79c7"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c3_full_suite.txt",
+      "revision_checked": "5b84998620674f96af2d7d286a354b640f7d79c7"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json --repo .",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c4_run_008_record_v01.txt",
+      "revision_checked": "5b84998620674f96af2d7d286a354b640f7d79c7"
+    },
+    {
+      "criterion_id": "c5",
+      "command": "git diff --stat c0c8cba809b304682f593b2719a356ace4687c23 5b84998620674f96af2d7d286a354b640f7d79c7; git diff --name-only c0c8cba809b304682f593b2719a356ace4687c23 5b84998620674f96af2d7d286a354b640f7d79c7",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c5_diff_scope.txt",
+      "revision_checked": "5b84998620674f96af2d7d286a354b640f7d79c7"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "the declared pytest checks and the full suite exit 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c3_full_suite.txt"
+    },
+    {
+      "claim": "run 008's 0.1 record still prints OK",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c4_run_008_record_v01.txt"
+    },
+    {
+      "claim": "git shows exactly the schema, the validator, the two test modules and the two example files modified",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c5_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected (candidate, loop_risk 0.2): a cheap close was possible after run 008. Observed: the cheap tier's implementation satisfied the oracle but its own tests failed (declared checks 0/1/0), so the router set it aside (stash f55b2863) and the fallback closed the task (deepseek-v4.1-flash:cloud, 52 turns, 43,932 output tokens, 321.0 s). Whole route: 76 turns, 59,053 output tokens, 422.59 s of router wall; the closing attempt alone would understate it by 24 turns, 15,121 tokens and 101.6 s.",
+      "Expected: an observation of path B on real work. Observed: the first launch (Workflow wf_a8a8268c, 28.9 s) was killed by the harness because the relay read the output file with cat instead of calling the wait command and then ended its turn; the router had only announced its run (state: tree_check done, baseline in progress) and no worker change reached the tree. The second launch (wf_eae63803, 578 s) went as installed: background launch, eight wait calls printing NOT_FINAL, then COLLECTED with the run bound. Path B is exercised on an ordinary task.",
+      "Expected: one verdict. Observed: the first verdict (glm53_flash, 101.1 s) was OBJECT because the fallback worker left an empty untracked .run_checks.sh it could not delete and said so in its answer; the driver removed that file (driver_intervention.txt), re-ran the declared checks, and a second verdict on the cleaned tree (glm53_flash, 98.5 s) was ACCEPT. Both verdict receipts are kept."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_009_route_costs/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 43932,
+      "worker_turns": 52,
+      "worker_wall_s": 320.97,
+      "verifier_wall_s": 98.3,
+      "money": "unknown"
+    },
+    "route": {
+      "attempts": [
+        {
+          "role": "cheap_coder",
+          "model_served": "gemma4:31b-cloud",
+          "turns": 24,
+          "output_tokens": 15121,
+          "wall_s": 65.0
+        },
+        {
+          "role": "fallback_coder",
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 52,
+          "output_tokens": 43932,
+          "wall_s": 320.97
+        }
+      ],
+      "turns_total": 76,
+      "output_tokens_total": 59053,
+      "router_wall_s": 422.59
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files that carry the exit line rule 1 reads",
+      "Provenance: the packet and the probe are the hashed inputs and their hashes are the ones in the router receipt; the receipt's decision, the served model of the closing attempt, every attempt's figures and the router's total wall are the record's (rules 4-6); the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs: costs.route is the whole route from the receipt (both attempts, the set-aside one included) and costs.measured the closing attempt; verifier wall is the second verdict's; the first verdict, the killed first launch, the Workflow relays and the driver's time are in the README; money is unknown"
+    ]
+  },
+  "notes": "Run 009: the record carries whole-route costs bound to the receipt (schema 0.2, rules 5 and 6). This is the first 0.2 record. One driver intervention on the tree (a stray empty file removed) and one relay deviation on the first launch are recorded, not hidden."
+}

@@ -1,0 +1,173 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-25T00-35Z_route_costs_gap",
+    "observed_state": {
+      "id": "obs_record_states_closing_attempt_only",
+      "summary": "A record can state the closing attempt's costs only; the whole-route figures live in the receipts and in an unbound correction file; one of nine oracle expectations holds at c0c8cba",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-25T00-35Z_route_costs_gap#obs_schema_costs",
+        "mirror_frame:mirror_frame_2026-09-25T00-35Z_route_costs_gap#obs_oracle_red"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_record_designed_around_the_closing_attempt",
+      "hypothesis": "The record format and the driver's builder took the closing attempt as the cost of the transition; set-aside attempts, baseline and checks were never given a place, and the review of 26535dc named it",
+      "source": "human_report",
+      "confidence": 1.0,
+      "evidence_refs": [
+        "validation_artifacts/ameba_cycle/route_costs_correction_001.json",
+        "review of 26535dc"
+      ],
+      "uncertainty": [],
+      "status": "confirmed"
+    },
+    "desired_state": {
+      "id": "target_record_carries_whole_route_costs_bound_to_receipt",
+      "goal": "A 0.2 record must carry costs.route (every attempt in order with model_served/turns/output_tokens/wall_s, the totals and the router's total wall) and the validator refuses, each with a named problem, a route that differs from the receipt in any attempt, total or wall, a set-aside attempt dropped from the list, and closing-attempt figures in costs.measured that are not the receipt's; 0.1 records keep resolving; the example is a 0.2 record",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle probe_route_costs.py --expect-closed exits 0 (nine expectations: three positives accepted, six contradictions refused with their named problems)",
+        "test_execution_record_validator.py and test_transition_execution_schema.py exit 0",
+        "validate_execution_record.py on run 008's 0.1 record prints OK",
+        "the full suite exits 0",
+        "changed files are exactly the schema, cap/execution_record.py, the two test modules and the two example files; the probe and the run records unchanged",
+        "this run's own record is the first 0.2 record, built by the driver from the receipt, and resolves"
+      ],
+      "forbidden_outcomes": [
+        "the closing attempt's figures standing in for the route anywhere",
+        "a required route field that invalidates the historical 0.1 records",
+        "any change to the run records or the probe",
+        "weakening an existing check, test or problem string"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure; the route runs through the installed path B relay: background launch, then nomcp.py wait for the own run while NOT_FINAL",
+      "the driver does not edit code, tests, schema or examples; the oracle is committed and declared by hash, red on the baseline",
+      "historical records stay 0.1; corrections are separate files"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_costs_are_the_whole_route",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-25T00-36Z_route_costs",
+    "from_state": "record states the closing attempt only; costs unbound; correction file outside the record",
+    "inferred_cause": "cause_record_designed_around_the_closing_attempt",
+    "to_state": "schema 0.2 with costs.route required; validator rules 5 (route = receipt attempts and totals) and 6 (measured = receipt closing attempt); example at 0.2; tests; oracle green",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Oracle on the clean tree at c0c8cba: exit 1, one of nine expectations holds (run_009 baseline_oracle.txt)",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-route-costs-06) through the installed path B: one native Workflow, one nomcp-haiku relay that launches the route in the background and waits for its own run with nomcp.py wait while NOT_FINAL; three declared checks",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "A schema field, two comparison rules, an example update and tests; the background launch is what lets an ordinary task exercise the wait mechanism"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model (second relay); driver adjudication on the diff and the full suite; checks re-run at the obtained revision in a detached worktree; this run's record built as the first 0.2 record with the route from its own receipt",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; every run needs an execution record, now with whole-route costs"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_costs_are_the_whole_route",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.15,
+      "loop_risk": 0.2,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "medium",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the route-costs commit on the research branch",
+        "rerun the two test modules to confirm the previous counts (47 with the schema tests)"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the declared pytest checks and the full suite exit 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "run 008's 0.1 record still prints OK",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git shows exactly the schema, the validator, the two test modules and the two example files modified",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-25T00:36:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-25T00-36Z_route_costs",
+    "reasons": [
+      "The step is ordered and its acceptance is fixed by the oracle on real receipts; the figures already exist in every receipt",
+      "loop_risk 0.2: run 008 closed at the cheap tier, but this task touches six files including the schema and two test modules; the declared checks and the named-problem oracle guard it",
+      "Verifier and driver adjudication required; the first 0.2 record follows"
+    ],
+    "alternatives": [
+      "Keep whole-route costs only in the correction file (rejected: unbound, and the closing attempt would keep standing in inside the record)",
+      "Make route required for every schema version (rejected: the historical 0.1 records would all fail; corrections are separate files, not rewrites)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 009, Adjustment step. Proposed before the route was launched, before its result was known."
+}

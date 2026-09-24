@@ -202,6 +202,38 @@
         "router_wall_s": 71.31
       },
       "verifier_wall_s": 19.75,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 9315,
+        "worker_turns": 12,
+        "worker_wall_s": 58.49,
+        "verifier_wall_s": 19.7,
+        "money": "unknown"
+      },
+      "money": "unknown"
+    },
+    {
+      "run": "run_009_route_costs",
+      "decision": "FALLBACK_PASS",
+      "attempts": [
+        {
+          "model_served": "gemma4:31b-cloud",
+          "turns": 24,
+          "output_tokens": 15121,
+          "wall_s": 65.0
+        },
+        {
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 52,
+          "output_tokens": 43932,
+          "wall_s": 320.97
+        }
+      ],
+      "route_total": {
+        "turns": 76,
+        "output_tokens": 59053,
+        "router_wall_s": 422.59
+      },
+      "verifier_wall_s": 98.33,
       "recorded_in_execution_record": null,
       "money": "unknown"
     }

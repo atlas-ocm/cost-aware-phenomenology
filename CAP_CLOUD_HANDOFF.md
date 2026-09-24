@@ -13,8 +13,8 @@ its hash is reported in the local Driver's final message, not here.
 | base | `origin/main` = `e65b9af4b28d3c97950c667448a32c24adc44a0e` — identical to the revision the architect read; `git fetch --prune` confirmed no newer remote commit |
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
-| verified code revision | `fc87e62` (record binding, run 008): full suite `1011 passed, 2 skipped`, six criteria re-run in a detached worktree (§2.10). Earlier verified points: `bbbc26c` (936), `989a7e2` (941), `8d23161` (981; `scripts/check_repo.ps1` exit 0), `ebe0ba0` (1004); always 2 skipped |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, `2731484` run 007, `8bc15b5` run 007 revision 2, `68914ff` executed bytes of run 005a, `5a5e2e9` handoff wording, `fc87e62` feat(cap) record binding (run 008), then the run-008 records commit |
+| verified code revision | `5b84998` (whole-route costs, run 009): full suite `1022 passed, 2 skipped`, five criteria re-run in a detached worktree (§2.11). Earlier verified points: `bbbc26c` (936), `989a7e2` (941), `8d23161` (981; `scripts/check_repo.ps1` exit 0), `ebe0ba0` (1004), `fc87e62` (1011); always 2 skipped |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, `2731484` run 007, `8bc15b5` run 007 revision 2, `68914ff` executed bytes of run 005a, `5a5e2e9` handoff wording, `fc87e62` feat(cap) record binding (run 008), `78a8598` run-008 records, `c0c8cba` prepared route-costs packet, `5b84998` feat(spec,cap) whole-route costs (run 009), then the run-009 records commit |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -181,6 +181,27 @@ Record: `run_008_record_binding/`, the first built under the new rules.
 A passing record now means the named links between the record and its
 stored carriers are checked; full provenance is still not established.
 
+### 2.11 `5b84998` — the record carries whole-route costs bound to the receipt (run 009)
+
+Schema 0.2: `schema_version` enum 0.1/0.2; optional `costs.route` (every attempt
+in order with role, `model_served`, turns, output tokens, wall; `turns_total`;
+`output_tokens_total`; `router_wall_s`), required when the version is 0.2.
+Validator rules 5 and 6, each a named problem: `costs.route` must equal the
+receipt's attempts (`first_attempt`, plus `fallback_attempt` when
+`fallback_used`), their sums and `total_wall_s`; `costs.measured` must equal the
+receipt's closing attempt. The closing attempt never stands in for the route.
+Historical 0.1 records keep resolving; the example is a 0.2 record; eleven
+tests added. Statuses, kept apart: route `FALLBACK_PASS` (gemma4 set aside on
+its own tests; deepseek-v4.1-flash closed it; whole route 76 turns, 59,053
+output tokens, 422.6 s against the closing attempt's 52 / 43,932 / 321.0);
+verdict: first `OBJECT` by `glm53_flash` on a stray empty file the worker left,
+removed by the driver (one recorded intervention), second `ACCEPT` on the
+cleaned tree; checks c1–c5 re-run at `5b84998`, all exit 0; transport: path B
+exercised (background launch, eight `wait` calls, `COLLECTED`) on the second
+launch, the first killed by a relay deviation (it read the output file instead
+of waiting). Record: `run_009_route_costs/`, the first 0.2 record, with its
+`record_spec.json` committed so a repository script can rebuild it (§7 item 2).
+
 ## 3. Exact commands, dependencies, inputs and outputs
 
 Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
@@ -189,7 +210,7 @@ Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
 ```bash
 # unit tests (the only test command; works on any OS)
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider reference/python/tests
-# expected on a standalone clone, per revision: bbbc26c 936 passed; 989a7e2 941; 8d23161 981; ebe0ba0 1004; fc87e62 and every later commit 1011; always 2 skipped
+# expected on a standalone clone, per revision: bbbc26c 936 passed; 989a7e2 941; 8d23161 981; ebe0ba0 1004; fc87e62 1011; 5b84998 and every later commit 1022; always 2 skipped
 
 # the remaining steps of scripts/check_repo.ps1, as plain Python (the .ps1 needs PowerShell)
 python -m compileall -q reference/python
@@ -322,7 +343,11 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   is not yet confirmed (a snapshot-speedup task was proposed for that check;
   CAP does not need to wait for it). Run 008 (§2.10) went through the
   installed relay text; its launch finished in the foreground (71 s), so the
-  wait mechanism was not exercised and that status stands.
+  wait mechanism was not exercised. Run 009 (§2.11) exercised it: background
+  launch, eight `nomcp.py wait` calls, `COLLECTED`, receipt bound; the first
+  launch of that run was killed because the relay read the output file instead
+  of waiting (a prompt-wording class, reported to the NoMCP window). The status
+  wording is the NoMCP session's to update on this evidence.
 
 ## 7. Next concrete unfinished step
 
@@ -355,14 +380,11 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    establish full provenance of the execution.
    Landed as prepared; every acceptance item observed (checks c1–c6 of run
    008; the corrected run 005a record resolves, the original is refused).
-   Next bounded step, not yet prepared: whole-route costs in the record — a
-   schema field bound to the receipt's per-attempt values and `total_wall_s`
-   (the closing attempt's figures never stand in for the route). Route it as
-   every other change (a coder that is not its own verifier, an explicit
-   verifier, the driver adjudicating, an execution record).
+   Whole-route costs: done in run 009 (`5b84998`, §2.11); every record from
+   run 009 on is a 0.2 record whose `costs.route` is bound to its receipt.
 1. Reproduce on the cloud clone: the pytest command in §3 must give, per
    revision: `bbbc26c` 936 passed, `989a7e2` 941, `8d23161` 981, `ebe0ba0`
-   1004, `fc87e62` and every later commit 1011, always 2 skipped; record the clone's directory name
+   1004, `fc87e62` 1011, `5b84998` and every later commit 1022, always 2 skipped; record the clone's directory name
    and OS as an environment difference, not a defect.
 2. Fix the baseline path before any comparison (brief §6). Proposed and not
    yet run: for the next bounded change on this repository, run it twice from
@@ -409,7 +431,7 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
 ## 8. What is available from the cloud and what exists only locally
 
 Available on the branch: all code, tests, docs, schemas, examples, the run
-records 001–008 with verbatim receipts, the prepared packets, the brief, this file.
+records 001–009 with verbatim receipts, the prepared packets, the brief, this file.
 
 Local only: the 32 external Looking-Glass / Latent Cause cases
 (`F:/VibeCoding/Shard-Theory/Patch`); the NoMCP checkout (`F:/VibeCoding/Nomcp`)

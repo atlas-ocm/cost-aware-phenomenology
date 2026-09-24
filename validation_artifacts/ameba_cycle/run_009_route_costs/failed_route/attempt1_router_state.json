@@ -1,0 +1,29 @@
+{
+  "record": "in_flight_state",
+  "run_id": "run-050eb235477dd44eb427edafe14e241e",
+  "task_id": "cap-route-costs-06",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\run_009\\tasks9.json",
+      "size": 8225,
+      "sha256": "eb2b21744facedca796e59a0a31a275b3b0f6a351eedcd813b5a13ca62da528b",
+      "saved": "inputs/eb2b21744facedca796e59a0a31a275b3b0f6a351eedcd813b5a13ca62da528b"
+    },
+    "check_files": [
+      {
+        "declared": "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py",
+        "source": "F:\\VibeCoding\\CAP-wt-ameba-cycle\\validation_artifacts\\ameba_cycle\\prepared\\route_costs\\probe_route_costs.py",
+        "size": 5410,
+        "sha256": "88f88f2d3c50b7293c25cb2dc91a85b418ae3396915ba0a68602a82f7cc45a47",
+        "saved": "inputs/88f88f2d3c50b7293c25cb2dc91a85b418ae3396915ba0a68602a82f7cc45a47"
+      }
+    ]
+  },
+  "run_receipt": "runs/run-050eb235477dd44eb427edafe14e241e/cap-route-costs-06.json",
+  "last_completed_stage": "tree_check",
+  "in_progress_stage": "baseline",
+  "attempt": null,
+  "postconditions": {},
+  "stash": null,
+  "updated_at": "2026-09-24T21:37:13Z"
+}

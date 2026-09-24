@@ -1,0 +1,278 @@
+[
+ {
+  "id": "cap-route-costs-06-verify",
+  "packet": {
+   "question": "Task cap-route-costs-06 on F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle): did the worker make the executed-transition record carry the costs of the whole route bound to the router receipt, exactly as the packet specifies, and nothing looser? Schema: schema_version enum [\"0.1\", \"0.2\"]; optional costs.route (attempts[] with role/model_served/turns/output_tokens/wall_s, turns_total, output_tokens_total, router_wall_s; additionalProperties false); a third allOf entry making costs.route required when schema_version is \"0.2\"; everything else unchanged. Validator: rule 5, when costs.route is present and the receipt resolves as a JSON object, compares the attempts list length with the receipt's attempts (first_attempt plus fallback_attempt when fallback_used), each attempt's model_served/turns/output_tokens/wall_s with the receipt, turns_total and output_tokens_total with the sums over the receipt attempts, and router_wall_s with the receipt's total_wall_s, each mismatch a named problem; rule 6 compares costs.measured worker_turns/worker_output_tokens/worker_wall_s with the receipt's closing attempt; existing checks and problem strings unchanged. Examples updated to 0.2 with a route block and a receipt that carries the attempt figures and total_wall_s. Tests added per case in both test modules, existing tests unchanged. Docs, other modules, the run records and the probe untouched. Judge from the diff, the new tests, the oracle text and the rechecks in the evidence. Missing evidence is UNDECIDABLE, not ACCEPT.",
+   "postcondition": {
+    "value": "All three declared checks exit 0 on the current tree: (1) the driver's oracle validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py with --expect-closed, meaning every expectation holds: the unchanged 0.1 record of run 008, a 0.2 copy of it with the route derived from its receipt, and a 0.2 copy of run 006's record with both attempts from its receipt are accepted; a 0.2 record without route is refused naming route; turns_total off by one, an attempt's output_tokens differing from the receipt, router_wall_s replaced by the closing attempt's wall, the set-aside attempt dropped from the list, and measured.worker_turns differing from the closing attempt are each refused with the named problem (costs.route.turns_total, costs.route.attempts[0].output_tokens, costs.route.router_wall_s, costs.route.attempts, costs.measured.worker_turns); (2) python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py; (3) python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json --repo . prints OK, so a 0.1 record without route still resolves. Changed files are exactly spec/transition_execution.schema.json, reference/python/cap/execution_record.py, reference/python/tests/test_execution_record_validator.py, reference/python/tests/test_transition_execution_schema.py, examples/transition_execution_record_example.json and examples/transition_execution_record/executor_receipt.json; no other file is changed or added; the probe file is byte-identical to its committed version; numbers are compared as numbers; no existing test or problem string weakened."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py",
+       ".",
+       "--expect-closed"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "ropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=OK expected=REFUSE[costs.measured.worker_turns] holds=False problems=[]\nprobe_route_costs: at least one expectation fails",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "case=positive_run_008_record_v0_1_unchanged observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_run_008_v0_2_route_from_receipt observed=REFUSED expected=ACCEPT holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=positive_run_006_v0_2_two_attempts_from_receipt observed=REFUSED expected=ACCEPT holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap1_v0_2_record_without_route observed=REFUSED expected=REFUSE[route] holds=False problems=[\"schema_version: '0.1' was expected\"]\ncase=gap2_turns_total_off_by_one observed=REFUSED expected=REFUSE[costs.route.turns_total] holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap3_attempt_output_tokens_differ_from_receipt observed=REFUSED expected=REFUSE[costs.route.attempts[0].output_tokens] holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap4_router_wall_replaced_by_closing_attempt observed=REFUSED expected=REFUSE[costs.route.router_wall_s] holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap5_set_aside_attempt_dropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=False problems=[\"schema_version: '0.1' was expected\", \"costs: Additional properties are not allowed ('route' was unexpected)\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=OK expected=REFUSE[costs.measured.worker_turns] holds=False problems=[]\nprobe_route_costs: at least one expectation fails\n",
+      "stderr_tail": "",
+      "stdout_chars": 1816,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_execution_record_validator.py",
+       "reference/python/tests/test_transition_execution_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "...............................................                          [100%]\n47 passed in 5.02s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "...............................................                          [100%]\n47 passed in 5.02s\n",
+      "stderr_tail": "",
+      "stdout_chars": 99,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "reference/python/scripts/validate_execution_record.py",
+       "validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json",
+       "--repo",
+       "."
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "OK",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "OK\n",
+      "stderr_tail": "",
+      "stdout_chars": 3,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 65.0,
+     "turns": 24,
+     "output_tokens": 15121,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py",
+        ".",
+        "--expect-closed"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "ns_total: recorded 31, receipt attempts sum to 40\", \"costs.route.output_tokens_total: recorded 16842, receipt attempts sum to 20703\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=REFUSED expected=REFUSE[costs.measured.worker_turns] holds=True problems=[\"costs.measured.worker_turns: recorded 13, receipt closing attempt says 12\"]\nprobe_route_costs: every expectation holds",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "case=positive_run_008_record_v0_1_unchanged observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_run_008_v0_2_route_from_receipt observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_run_006_v0_2_two_attempts_from_receipt observed=OK expected=ACCEPT holds=True problems=[]\ncase=gap1_v0_2_record_without_route observed=REFUSED expected=REFUSE[route] holds=True problems=[\"costs: 'route' is a required property\"]\ncase=gap2_turns_total_off_by_one observed=REFUSED expected=REFUSE[costs.route.turns_total] holds=True problems=[\"costs.route.turns_total: recorded 13, receipt attempts sum to 12\"]\ncase=gap3_attempt_output_tokens_differ_from_receipt observed=REFUSED expected=REFUSE[costs.route.attempts[0].output_tokens] holds=True problems=[\"costs.route.attempts[0].output_tokens: recorded 9314, receipt says 9315\"]\ncase=gap4_router_wall_replaced_by_closing_attempt observed=REFUSED expected=REFUSE[costs.route.router_wall_s] holds=True problems=[\"costs.route.router_wall_s: recorded 58.49, receipt says 71.31\"]\ncase=gap5_set_aside_attempt_dropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=True problems=[\"costs.route.attempts: 1 listed, receipt has 2\", \"costs.route.turns_total: recorded 31, receipt attempts sum to 40\", \"costs.route.output_tokens_total: recorded 16842, receipt attempts sum to 20703\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=REFUSED expected=REFUSE[costs.measured.worker_turns] holds=True problems=[\"costs.measured.worker_turns: recorded 13, receipt closing attempt says 12\"]\nprobe_route_costs: every expectation holds\n",
+       "stderr_tail": "",
+       "stdout_chars": 1619,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": "     ^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable 'receipt_ref' where it is not associated with a value\n\nreference\\python\\cap\\execution_record.py:424: UnboundLocalError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_execution_record_validator.py::test_empty_record_yields_problems\n1 failed, 55 passed in 5.95s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "                       entry_map = _mapping(entry)\n                                    sha = entry_map.get(\"sha256\")\n                                    if _non_empty_str(sha) and sha not in allowed_shas:\n                                        problems.append(f\"execution.receipt_ref: input {sha} is not among the receipt inputs\")\n                    except (json.JSONDecodeError, OSError):\n                        problems.append(f\"execution.receipt_ref: not a JSON object: {receipt_ref}\")\n    \n        # 5. route costs\n        route = _mapping(costs.get(\"route\"))\n        if route and _non_empty_str(receipt_ref):\n            target = base / receipt_ref\n            if target.is_file():\n                try:\n                    receipt = json.loads(target.read_text(encoding=\"utf-8\"))\n                    if isinstance(receipt, dict):\n                        receipt_attempts = [_mapping(receipt.get(\"first_attempt\"))]\n                        if receipt.get(\"fallback_used\") is True:\n                            receipt_attempts.append(_mapping(receipt.get(\"fallback_attempt\")))\n    \n                        rec_attempts = _sequence(route.get(\"attempts\"))\n                        if len(rec_attempts) != len(receipt_attempts):\n                            problems.append(f\"costs.route.attempts: {len(rec_attempts)} listed, receipt has {len(receipt_attempts)}\")\n                        else:\n                            for i, (rec_att, rec_receipt_att) in enumerate(zip(rec_attempts, receipt_attempts)):\n                                for field in (\"model_served\", \"turns\", \"output_tokens\", \"wall_s\"):\n                                    rec_val = _mapping(rec_att).get(field)\n                                    rec_receipt_val = _mapping(rec_receipt_att).get(field)\n                                    if rec_receipt_val is None:\n                                        problems.append(f\"costs.route: receipt lacks attempts[{i}].{field}\")\n                                    elif rec_val != rec_receipt_val:\n                                        problems.append(f\"costs.route.attempts[{i}].{field}: recorded {rec_val}, receipt says {rec_receipt_val}\")\n    \n                        rec_turns_total = route.get(\"turns_total\")\n                        receipt_turns_sum = sum(_mapping(a).get(\"turns\", 0) for a in receipt_attempts)\n                        if rec_turns_total != receipt_turns_sum:\n                            problems.append(f\"costs.route.turns_total: recorded {rec_turns_total}, receipt attempts sum to {receipt_turns_sum}\")\n    \n                        rec_tokens_total = route.get(\"output_tokens_total\")\n                        receipt_tokens_sum = sum(_mapping(a).get(\"output_tokens\", 0) for a in receipt_attempts)\n                        if rec_tokens_total != receipt_tokens_sum:\n                            problems.append(f\"costs.route.output_tokens_total: recorded {rec_tokens_total}, receipt attempts sum to {receipt_tokens_sum}\")\n    \n                        rec_wall_s = route.get(\"router_wall_s\")\n                        receipt_wall_s = receipt.get(\"total_wall_s\")\n                        if receipt_wall_s is None:\n                            problems.append(\"costs.route: receipt lacks total_wall_s\")\n                        elif rec_wall_s != receipt_wall_s:\n                            problems.append(f\"costs.route.router_wall_s: recorded {rec_wall_s}, receipt says {receipt_wall_s}\")\n                except (json.JSONDecodeError, OSError):\n                    pass\n    \n        # 6. closing attempt\n>       if _non_empty_str(receipt_ref):\n                          ^^^^^^^^^^^\nE       UnboundLocalError: cannot access local variable 'receipt_ref' where it is not associated with a value\n\nreference\\python\\cap\\execution_record.py:424: UnboundLocalError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_execution_record_validator.py::test_empty_record_yields_problems\n1 failed, 55 passed in 5.95s\n",
+       "stderr_tail": "",
+       "stdout_chars": 19429,
+       "stderr_chars": 0,
+       "stdout_truncated": true,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "reference/python/scripts/validate_execution_record.py",
+        "validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json",
+        "--repo",
+        "."
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "OK",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "OK\n",
+       "stderr_tail": "",
+       "stdout_chars": 3,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 320.97,
+     "turns": 52,
+     "output_tokens": 43932,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py",
+        ".",
+        "--expect-closed"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "ns_total: recorded 31, receipt attempts sum to 40\", \"costs.route.output_tokens_total: recorded 16842, receipt attempts sum to 20703\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=REFUSED expected=REFUSE[costs.measured.worker_turns] holds=True problems=[\"costs.measured.worker_turns: recorded 13, receipt closing attempt says 12\"]\nprobe_route_costs: every expectation holds",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "case=positive_run_008_record_v0_1_unchanged observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_run_008_v0_2_route_from_receipt observed=OK expected=ACCEPT holds=True problems=[]\ncase=positive_run_006_v0_2_two_attempts_from_receipt observed=OK expected=ACCEPT holds=True problems=[]\ncase=gap1_v0_2_record_without_route observed=REFUSED expected=REFUSE[route] holds=True problems=[\"costs: 'route' is a required property\"]\ncase=gap2_turns_total_off_by_one observed=REFUSED expected=REFUSE[costs.route.turns_total] holds=True problems=[\"costs.route.turns_total: recorded 13, receipt attempts sum to 12\"]\ncase=gap3_attempt_output_tokens_differ_from_receipt observed=REFUSED expected=REFUSE[costs.route.attempts[0].output_tokens] holds=True problems=[\"costs.route.attempts[0].output_tokens: recorded 9314, receipt says 9315\"]\ncase=gap4_router_wall_replaced_by_closing_attempt observed=REFUSED expected=REFUSE[costs.route.router_wall_s] holds=True problems=[\"costs.route.router_wall_s: recorded 58.49, receipt says 71.31\"]\ncase=gap5_set_aside_attempt_dropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=True problems=[\"costs.route.attempts: 1 listed, receipt has 2\", \"costs.route.turns_total: recorded 31, receipt attempts sum to 40\", \"costs.route.output_tokens_total: recorded 16842, receipt attempts sum to 20703\"]\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=REFUSED expected=REFUSE[costs.measured.worker_turns] holds=True problems=[\"costs.measured.worker_turns: recorded 13, receipt closing attempt says 12\"]\nprobe_route_costs: every expectation holds\n",
+       "stderr_tail": "",
+       "stdout_chars": 1619,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..........................................................               [100%]\n58 passed in 6.70s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "..........................................................               [100%]\n58 passed in 6.70s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "reference/python/scripts/validate_execution_record.py",
+        "validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json",
+        "--repo",
+        "."
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "OK",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "OK\n",
+       "stderr_tail": "",
+       "stdout_chars": 3,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 0), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Added whole-route cost binding and closing attempt verification to the executed-transition record schema and validator.' -> postcondition False",
+     "step 6: cheap attempt set aside (f55b28638f76f28f9c6c4d53a6ba8d2a283769f0)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered 'Added optional whole-route `costs.route` to the executed-transition schema (schema_version enum 0.1/0.2 plus a 0.2-requires-route allOf entry), added binding rules 5 (route vs. every receipt attempt, totals, router wall) and 6 (measured vs. closing attempt) to cap/execution_record.py with a matching docstring paragraph, updated the example record/receipt to 0.2 with matching route costs, and added the specified negative/positive tests; note a 0-byte untracked `.run_checks.sh` was created and could not be deleted (no shell/delete tool) — remove it.' -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " .../executor_receipt.json                          |   8 +-\n examples/transition_execution_record_example.json  |  22 +++-\n reference/python/cap/execution_record.py           | 114 +++++++++++++++++++\n .../tests/test_execution_record_validator.py       | 126 +++++++++++++++++++++\n .../tests/test_transition_execution_schema.py      |  38 +++++++\n spec/transition_execution.schema.json              |  85 +++++++++++++-\n 6 files changed, 386 insertions(+), 7 deletions(-)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "examples/transition_execution_record/executor_receipt.json\nexamples/transition_execution_record_example.json\nreference/python/cap/execution_record.py\nreference/python/tests/test_execution_record_validator.py\nreference/python/tests/test_transition_execution_schema.py\nspec/transition_execution.schema.json\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "(none)"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/examples/transition_execution_record/executor_receipt.json b/examples/transition_execution_record/executor_receipt.json\nindex 3ad1c06..04fc2bf 100644\n--- a/examples/transition_execution_record/executor_receipt.json\n+++ b/examples/transition_execution_record/executor_receipt.json\n@@ -4,12 +4,16 @@\n   \"fallback_used\": false,\n   \"first_attempt\": {\n     \"model_requested\": \"example-model-requested\",\n-    \"model_served\": \"example-model-served\"\n+    \"model_served\": \"example-model-served\",\n+    \"turns\": 1,\n+    \"output_tokens\": 1,\n+    \"wall_s\": 5.0\n   },\n   \"inputs\": {\n     \"packet\": {\n       \"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"\n     },\n     \"check_files\": []\n-  }\n+  },\n+  \"total_wall_s\": 5.0\n }\n\\ No newline at end of file\ndiff --git a/examples/transition_execution_record_example.json b/examples/transition_execution_record_example.json\nindex 84c4613..839b477 100644\n--- a/examples/transition_execution_record_example.json\n+++ b/examples/transition_execution_record_example.json\n@@ -1,5 +1,5 @@\n {\n-  \"schema_version\": \"0.1\",\n+  \"schema_version\": \"0.2\",\n   \"record_id\": \"transition_execution_record_example_2026-05-18T13_00_00\",\n   \"object\": {\n     \"kind\": \"repo\",\n@@ -75,11 +75,25 @@\n   \"costs\": {\n     \"estimated_ref\": \"examples/adjustment_candidate_transition_example.json\",\n     \"measured\": {\n-      \"worker_output_tokens\": 1234,\n-      \"worker_turns\": 3,\n-      \"worker_wall_s\": 42.5,\n+      \"worker_output_tokens\": 1,\n+      \"worker_turns\": 1,\n+      \"worker_wall_s\": 5.0,\n       \"verifier_wall_s\": 12.0,\n       \"money\": \"unknown\"\n+    },\n+    \"route\": {\n+      \"attempts\": [\n+        {\n+          \"role\": \"cheap_coder\",\n+          \"model_served\": \"example-model-served\",\n+          \"turns\": 1,\n+          \"output_tokens\": 1,\n+          \"wall_s\": 5.0\n+        }\n+      ],\n+      \"turns_total\": 1,\n+      \"output_tokens_total\": 1,\n+      \"router_wall_s\": 5.0\n     }\n   },\n   \"verdict\": {\ndiff --git a/reference/python/cap/execution_record.py b/reference/python/cap/execution_record.py\nindex 76d7858..7604049 100644\n--- a/reference/python/cap/execution_record.py\n+++ b/reference/python/cap/execution_record.py\n@@ -122,6 +122,13 @@ def validate_execution_record(\n     4. receipt fields: when provenance is established, the receipt must be a\n        JSON object with matching decision, served model, and input hashes.\n \n+    Rules 5 and 6 bind the reported costs to the same router receipt. Rule 5\n+    binds costs.route to every attempt the receipt records, set-aside ones\n+    included: the attempts in order, their turn and output-token totals, and\n+    the router's total wall time. Rule 6 binds costs.measured to the figures of\n+    the closing attempt. Whole-route costs are the receipt's figures for every\n+    attempt; money, driver time and relay tokens are not bound by either rule.\n+\n     A passing record now means the named links between the record and its\n     stored carriers are checked; full provenance of the execution is not\n     established by this.\n@@ -372,4 +379,111 @@ def validate_execution_record(\n                 except (json.JSONDecodeError, OSError):\n                     problems.append(f\"execution.receipt_ref: not a JSON object: {receipt_ref}\")\n \n+    # 5 and 6 both read the record's stored router receipt, whichever schema\n+    # version the record carries; neither applies when the ref does not resolve\n+    # to a JSON object (rule 4 already reports that when provenance is claimed).\n+    receipt_doc: Any = None\n+    stored_receipt_ref = execution.get(\"receipt_ref\")\n+    if _non_empty_str(stored_receipt_ref):\n+        stored_target = base / stored_receipt_ref\n+        if stored_target.is_file():\n+            try:\n+                loaded = json.loads(stored_target.read_text(encoding=\"utf-8\"))\n+            except (json.JSONDecodeError, OSError):\n+                loaded = None\n+            if isinstance(loaded, dict):\n+                receipt_doc = loaded\n+\n+    # 5. route costs: every attempt the receipt records, set-aside ones included\n+    route_value = costs.get(\"route\")\n+    if isinstance(route_value, dict) and receipt_doc is not None:\n+        route = route_value\n+        attempt_names = [\"first_attempt\"]\n+        if receipt_doc.get(\"fallback_used\") is True:\n+            attempt_names.append(\"fallback_attempt\")\n+\n+        receipt_attempts: list[dict[str, Any]] = []\n+        absent_attempts: set[str] = set()\n+        for name in attempt_names:\n+            attempt = receipt_doc.get(name)\n+            if isinstance(attempt, dict):\n+                receipt_attempts.append(attempt)\n+            else:\n+                receipt_attempts.append({})\n+                absent_attempts.add(name)\n+                problems.append(f\"costs.route: receipt lacks {name}\")\n+\n+        listed = _sequence(route.get(\"attempts\"))\n+        if len(listed) != len(receipt_attempts):\n+            problems.append(\n+                f\"costs.route.attempts: {len(listed)} listed, receipt has \"\n+                f\"{len(receipt_attempts)}\"\n+            )\n+        else:\n+            for index, name in enumerate(attempt_names):\n+                if name in absent_attempts:\n+                    continue\n+                entry_map = _mapping(listed[index])\n+                attempt = receipt_attempts[index]\n+                for field in (\"model_served\", \"turns\", \"output_tokens\", \"wall_s\"):\n+                    if field not in attempt:\n+                        problems.append(f\"costs.route: receipt lacks {name}.{field}\")\n+                    elif entry_map.get(field) != attempt.get(field):\n+                        problems.append(\n+                            f\"costs.route.attempts[{index}].{field}: recorded \"\n+                            f\"{entry_map.get(field)}, receipt says {attempt.get(field)}\"\n+                        )\n+\n+        def _attempt_sum(field: str) -> Any:\n+            total: Any = 0\n+            for attempt in receipt_attempts:\n+                value = attempt.get(field)\n+                if isinstance(value, bool) or not isinstance(value, (int, float)):\n+                    return None\n+                total += value\n+            return total\n+\n+        turns_sum = _attempt_sum(\"turns\")\n+        if turns_sum is not None and route.get(\"turns_total\") != turns_sum:\n+            problems.append(\n+                f\"costs.route.turns_total: recorded {route.get('turns_total')}, \"\n+                f\"receipt attempts sum to {turns_sum}\"\n+            )\n+        tokens_sum = _attempt_sum(\"output_tokens\")\n+        if tokens_sum is not None and route.get(\"output_tokens_total\") != tokens_sum:\n+            problems.append(\n+                f\"costs.route.output_tokens_total: recorded \"\n+                f\"{route.get('output_tokens_total')}, receipt attempts sum to {tokens_sum}\"\n+            )\n+        if \"total_wall_s\" not in receipt_doc:\n+            problems.append(\"costs.route: receipt lacks total_wall_s\")\n+        elif route.get(\"router_wall_s\") != receipt_doc.get(\"total_wall_s\"):\n+            problems.append(\n+                f\"costs.route.router_wall_s: recorded {route.get('router_wall_s')}, \"\n+                f\"receipt says {receipt_doc.get('total_wall_s')}\"\n+            )\n+\n+    # 6. closing attempt: measured figures must be the receipt's closing attempt\n+    if receipt_doc is not None:\n+        closing_name = (\n+            \"fallback_attempt\"\n+            if receipt_doc.get(\"fallback_used\") is True\n+            else \"first_attempt\"\n+        )\n+        closing = _mapping(receipt_doc.get(closing_name))\n+        measured = _mapping(costs.get(\"measured\"))\n+        for record_field, receipt_field in (\n+            (\"worker_turns\", \"turns\"),\n+            (\"worker_output_tokens\", \"output_tokens\"),\n+            (\"worker_wall_s\", \"wall_s\"),\n+        ):\n+            recorded = measured.get(record_field)\n+            if recorded is None:\n+                continue\n+            if recorded != closing.get(receipt_field):\n+                problems.append(\n+                    f\"costs.measured.{record_field}: recorded {recorded}, receipt \"\n+                    f\"closing attempt says {closing.get(receipt_field)}\"\n+                )\n+\n     return problems\ndiff --git a/reference/python/tests/test_execution_record_validator.py b/reference/python/tests/test_execution_record_validator.py\nindex b3470de..d6afbab 100644\n--- a/reference/python/tests/test_execution_record_validator.py\n+++ b/reference/python/tests/test_execution_record_validator.py\n@@ -265,6 +265,132 @@ def test_matching_router_receipt_resolves(tmp_path):\n     assert not _named(problems, \"receipt_ref\"), problems\n \n \n+# -- whole-route costs: rules 5 and 6 --\n+\n+\n+def _receipt_in(tmp_path: Path, receipt: dict) -> str:\n+    rec_file = tmp_path / \"receipt.json\"\n+    rec_file.write_text(json.dumps(receipt), encoding=\"utf-8\")\n+    return str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)\n+\n+\n+def test_v0_2_record_without_route_is_refused():\n+    record = _load_example()\n+    del record[\"costs\"][\"route\"]\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"route\"), problems\n+\n+\n+def test_route_turns_total_off_by_one_is_named():\n+    record = _load_example()\n+    record[\"costs\"][\"route\"][\"turns_total\"] += 1\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"costs.route.turns_total\"), problems\n+\n+\n+def test_route_attempt_field_differing_from_receipt_is_named():\n+    record = _load_example()\n+    record[\"costs\"][\"route\"][\"attempts\"][0][\"output_tokens\"] += 1\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"costs.route.attempts[0].output_tokens\"), problems\n+\n+\n+def test_route_router_wall_replaced_by_closing_attempt_is_named(tmp_path):\n+    record = _load_example()\n+    receipt = {\n+        \"decision\": \"apply_candidate\",\n+        \"fallback_used\": False,\n+        \"first_attempt\": {\n+            \"model_served\": \"example-model-served\",\n+            \"turns\": 1,\n+            \"output_tokens\": 1,\n+            \"wall_s\": 5.0,\n+        },\n+        \"inputs\": {\n+            \"packet\": {\n+                \"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"\n+            },\n+            \"check_files\": [],\n+        },\n+        \"total_wall_s\": 12.0,\n+    }\n+    record[\"execution\"][\"receipt_ref\"] = _receipt_in(tmp_path, receipt)\n+    # the closing attempt's wall time standing in for the router's total\n+    record[\"costs\"][\"route\"][\"router_wall_s\"] = record[\"costs\"][\"route\"][\"attempts\"][0][\n+        \"wall_s\"\n+    ]\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert _named(problems, \"costs.route.router_wall_s\"), problems\n+\n+\n+def test_route_dropping_a_set_aside_attempt_is_named(tmp_path):\n+    record = _load_example()\n+    receipt = {\n+        \"decision\": \"apply_candidate\",\n+        \"fallback_used\": True,\n+        \"first_attempt\": {\n+            \"model_served\": \"cheap-model-served\",\n+            \"turns\": 2,\n+            \"output_tokens\": 20,\n+            \"wall_s\": 3.0,\n+        },\n+        \"fallback_attempt\": {\n+            \"model_served\": \"example-model-served\",\n+            \"turns\": 4,\n+            \"output_tokens\": 40,\n+            \"wall_s\": 6.0,\n+        },\n+        \"inputs\": {\n+            \"packet\": {\n+                \"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"\n+            },\n+            \"check_files\": [],\n+        },\n+        \"total_wall_s\": 9.0,\n+    }\n+    record[\"execution\"][\"receipt_ref\"] = _receipt_in(tmp_path, receipt)\n+    # the closing (fallback) attempt alone, with the set-aside cheap attempt dropped\n+    record[\"costs\"][\"route\"] = {\n+        \"attempts\": [\n+            {\n+                \"role\": \"fallback_coder\",\n+                \"model_served\": \"example-model-served\",\n+                \"turns\": 4,\n+                \"output_tokens\": 40,\n+                \"wall_s\": 6.0,\n+            }\n+        ],\n+        \"turns_total\": 4,\n+        \"output_tokens_total\": 40,\n+        \"router_wall_s\": 9.0,\n+    }\n+    record[\"costs\"][\"measured\"][\"worker_turns\"] = 4\n+    record[\"costs\"][\"measured\"][\"worker_output_tokens\"] = 40\n+    record[\"costs\"][\"measured\"][\"worker_wall_s\"] = 6.0\n+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)\n+    assert _named(problems, \"costs.route.attempts\"), problems\n+\n+\n+def test_measured_worker_turns_not_the_closing_attempt_is_named():\n+    record = _load_example()\n+    record[\"costs\"][\"measured\"][\"worker_turns\"] += 1\n+    problems = _problems(record, repo_dir=ROOT)\n+    assert _named(problems, \"costs.measured.worker_turns\"), problems\n+\n+\n+def test_v0_2_example_with_route_resolves_with_repo():\n+    record = _load_example()\n+    assert record[\"schema_version\"] == \"0.2\"\n+    assert _problems(record, repo_dir=ROOT) == []\n+\n+\n+def test_v0_1_record_without_route_still_resolves():\n+    record = _load_example()\n+    record[\"schema_version\"] = \"0.1\"\n+    del record[\"costs\"][\"route\"]\n+    assert _problems(record, repo_dir=ROOT) == []\n+\n+\n # -- bad records are reported, never raised --\n \n \ndiff --git a/reference/python/tests/test_transition_execution_schema.py b/reference/python/tests/test_transition_execution_schema.py\nindex 0c120a7..4e3990a 100644\n--- a/reference/python/tests/test_transition_execution_schema.py\n+++ b/reference/python/tests/test_transition_execution_schema.py\n@@ -185,3 +185,41 @@ def test_unresolvable_candidate_ref_still_passes_schema():\n     case[\"candidate\"][\"candidate_ref\"] = \"examples/does_not_exist_candidate.json\"\n     errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n     assert not errors, [e.message for e in errors]\n+\n+\n+# -- 0.2: whole-route costs --\n+\n+\n+def test_v0_2_record_without_route_rejected():\n+    case = _load_example()\n+    del case[\"costs\"][\"route\"]\n+    errors = list(_validator().iter_errors(case))\n+    assert errors, \"a 0.2 record must carry costs.route\"\n+\n+\n+def test_v0_2_record_with_well_formed_route_is_valid():\n+    case = _load_example()\n+    case[\"schema_version\"] = \"0.2\"\n+    case[\"costs\"][\"route\"] = {\n+        \"attempts\": [\n+            {\n+                \"role\": \"cheap_coder\",\n+                \"model_served\": \"example-model-served\",\n+                \"turns\": 1,\n+                \"output_tokens\": 1,\n+                \"wall_s\": 5.0,\n+            }\n+        ],\n+        \"turns_total\": 1,\n+        \"output_tokens_total\": 1,\n+        \"router_wall_s\": 5.0,\n+    }\n+    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n+    assert not errors, [e.message for e in errors]\n+\n+\n+def test_route_attempt_with_unknown_role_rejected():\n+    case = _load_example()\n+    case[\"costs\"][\"route\"][\"attempts\"][0][\"role\"] = \"driver\"\n+    errors = list(_validator().iter_errors(case))\n+    assert errors, \"role enum is cheap_coder / fallback_coder\"\ndiff --git a/spec/transition_execution.schema.json b/spec/transition_execution.schema.json\nindex 9e18251..4117230 100644\n--- a/spec/transition_execution.schema.json\n+++ b/spec/transition_execution.schema.json\n@@ -21,7 +21,10 @@\n   \"additionalProperties\": false,\n   \"properties\": {\n     \"schema_version\": {\n-      \"const\": \"0.1\"\n+      \"enum\": [\n+        \"0.1\",\n+        \"0.2\"\n+      ]\n     },\n     \"record_id\": {\n       \"type\": \"string\",\n@@ -138,6 +141,28 @@\n           }\n         }\n       }\n+    },\n+    {\n+      \"$comment\": \"A 0.2 record must carry the whole-route costs.\",\n+      \"if\": {\n+        \"properties\": {\n+          \"schema_version\": {\n+            \"const\": \"0.2\"\n+          }\n+        },\n+        \"required\": [\n+          \"schema_version\"\n+        ]\n+      },\n+      \"then\": {\n+        \"properties\": {\n+          \"costs\": {\n+            \"required\": [\n+              \"route\"\n+            ]\n+          }\n+        }\n+      }\n     }\n   ],\n   \"$defs\": {\n@@ -532,6 +557,64 @@\n               ]\n             }\n           }\n+        },\n+        \"route\": {\n+          \"type\": \"object\",\n+          \"required\": [\n+            \"attempts\",\n+            \"turns_total\",\n+            \"output_tokens_total\",\n+            \"router_wall_s\"\n+          ],\n+          \"additionalProperties\": false,\n+          \"properties\": {\n+            \"attempts\": {\n+              \"type\": \"array\",\n+              \"minItems\": 1,\n+              \"items\": {\n+                \"type\": \"object\",\n+                \"required\": [\n+                  \"role\",\n+                  \"model_served\",\n+                  \"turns\",\n+                  \"output_tokens\",\n+                  \"wall_s\"\n+                ],\n+                \"additionalProperties\": false,\n+                \"properties\": {\n+                  \"role\": {\n+                    \"type\": \"string\",\n+                    \"enum\": [\n+                      \"cheap_coder\",\n+                      \"fallback_coder\"\n+                    ]\n+                  },\n+                  \"model_served\": {\n+                    \"type\": \"string\"\n+                  },\n+                  \"turns\": {\n+                    \"type\": \"integer\"\n+                  },\n+                  \"output_tokens\": {\n+                    \"type\": \"integer\"\n+                  },\n+                  \"wall_s\": {\n+                    \"type\": \"number\"\n+                  }\n+                }\n+              }\n+            },\n+            \"turns_total\": {\n+              \"type\": \"integer\"\n+            },\n+            \"output_tokens_total\": {\n+              \"type\": \"integer\"\n+            },\n+            \"router_wall_s\": {\n+              \"type\": \"number\"\n+            }\n+          },\n+          \"$comment\": \"Costs of the whole route as the router receipt records them: every attempt in order (set-aside ones included) and the router's total wall time. The closing attempt's figures in costs.measured never stand in for the route.\"\n         }\n       }\n     },\n"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "(none)"
+    },
+    {
+     "path": "probe_route_costs.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Oracle and probe for the whole-route costs step (driver-written, deterministic, no model calls).\n\nusage: python probe_route_costs.py <repo_root> [--expect-closed]\n\nUses two committed records and their verbatim router receipts as they are in the tree: run 008 (one\nattempt) and run 006 (a set-aside cheap attempt and a closing fallback attempt). Builds in memory\nschema-version-0.2 copies of those records with a `costs.route` block derived from the receipts, plus\nmutated copies whose route costs contradict the receipts, and validates each against the repository with\nrevisions resolved. Every case carries an expectation: ACCEPT (no problem at all) or REFUSE with a named\nanchor that at least one problem string must contain. Observation mode (default) exits 0. With\n--expect-closed the script exits 0 only when every expectation holds; on the code before the step the\n0.2 positives are refused by the schema (schema_version is the const \"0.1\") and the cost contradictions\nare accepted, so it is red on the baseline for the named reason.\n\nWhat a green run means: the costs written in a record are the costs the router receipt recorded, for\nevery attempt of the route and for its total wall time; the closing attempt's figures never stand in\nfor the route. Nothing about money, driver time or relay tokens is bound by this.\n\"\"\"\nimport copy\nimport json\nimport pathlib\nimport sys\n\nrepo = pathlib.Path(sys.argv[1]).resolve()\nexpect_closed = \"--expect-closed\" in sys.argv\nsys.path.insert(0, str(repo / \"reference\" / \"python\"))\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nRUN_008 = \"validation_artifacts/ameba_cycle/run_008_record_binding\"\nRUN_006 = \"validation_artifacts/ameba_cycle/run_006_com_log_link\"\n\n\ndef load(rel):\n    return json.loads((repo / rel).read_text(encoding=\"utf-8-sig\"))\n\n\nrec8, rcp8 = load(f\"{RUN_008}/transition_execution_record.json\"), load(f\"{RUN_008}/nomcp_coding_receipt.json\")\nrec6, rcp6 = load(f\"{RUN_006}/transition_execution_record.json\"), load(f\"{RUN_006}/nomcp_coding_receipt.json\")\n\n\ndef route_from(receipt):\n    \"\"\"The route block exactly as the receipt records it: every attempt in order, then the totals.\"\"\"\n    attempts = [(\"cheap_coder\", receipt[\"first_attempt\"])]\n    if receipt.get(\"fallback_used\"):\n        attempts.append((\"fallback_coder\", receipt[\"fallback_attempt\"]))\n    listed = [{\"role\": role, \"model_served\": a[\"model_served\"], \"turns\": a[\"turns\"],\n               \"output_tokens\": a[\"output_tokens\"], \"wall_s\": a[\"wall_s\"]} for role, a in attempts]\n    return {\"attempts\": listed,\n            \"turns_total\": sum(a[\"turns\"] for a in listed),\n            \"output_tokens_total\": sum(a[\"output_tokens\"] for a in listed),\n            \"router_wall_s\": receipt[\"total_wall_s\"]}\n\n\ndef upgraded(record, receipt):\n    r = copy.deepcopy(record)\n    r[\"schema_version\"] = \"0.2\"\n    r[\"costs\"][\"route\"] = route_from(receipt)\n    return r\n\n\nACCEPT = \"ACCEPT\"\ncases = []\n\n\ndef case(label, record, expectation):\n    cases.append((label, record, expectation))\n\n\ncase(\"positive_run_008_record_v0_1_unchanged\", copy.deepcopy(rec8), ACCEPT)\ncase(\"positive_run_008_v0_2_route_from_receipt\", upgraded(rec8, rcp8), ACCEPT)\ncase(\"positive_run_006_v0_2_two_attempts_from_receipt\", upgraded(rec6, rcp6), ACCEPT)\n\nr = copy.deepcopy(rec8)\nr[\"schema_version\"] = \"0.2\"\ncase(\"gap1_v0_2_record_without_route\", r, (\"REFUSE\", \"route\"))\n\nr = upgraded(rec8, rcp8)\nr[\"costs\"][\"route\"][\"turns_total\"] += 1\ncase(\"gap2_turns_total_off_by_one\", r, (\"REFUSE\", \"costs.route.turns_total\"))\n\nr = upgraded(rec8, rcp8)\nr[\"costs\"][\"route\"][\"attempts\"][0][\"output_tokens\"] -= 1\ncase(\"gap3_attempt_output_tokens_differ_from_receipt\", r, (\"REFUSE\", \"costs.route.attempts[0].output_tokens\"))\n\nr = upgraded(rec8, rcp8)\nr[\"costs\"][\"route\"][\"router_wall_s\"] = r[\"costs\"][\"route\"][\"attempts\"][0][\"wall_s\"]  # the closing attempt standing in for the route\ncase(\"gap4_router_wall_replaced_by_closing_attempt\", r, (\"REFUSE\", \"costs.route.router_wall_s\"))\n\nr = upgraded(rec6, rcp6)\nr[\"costs\"][\"route\"][\"attempts\"] = r[\"costs\"][\"route\"][\"attempts\"][1:]  # the set-aside cheap attempt dropped\nr[\"costs\"][\"route\"][\"turns_total\"] = r[\"costs\"][\"route\"][\"attempts\"][0][\"turns\"]\nr[\"costs\"][\"route\"][\"output_tokens_total\"] = r[\"costs\"][\"route\"][\"attempts\"][0][\"output_tokens\"]\ncase(\"gap5_set_aside_attempt_dropped_from_route\", r, (\"REFUSE\", \"costs.route.attempts\"))\n\nr = copy.deepcopy(rec8)\nr[\"costs\"][\"measured\"][\"worker_turns\"] += 1  # a v0.1 record whose closing-attempt figures are not the receipt's\ncase(\"gap6_measured_worker_turns_not_the_receipt_closing_attempt\", r, (\"REFUSE\", \"costs.measured.worker_turns\"))\n\nall_hold = True\nfor label, record, expectation in cases:\n    problems = validate_execution_record(record, repo, repo)\n    observed = \"REFUSED\" if problems else \"OK\"\n    if expectation == ACCEPT:\n        holds = not problems\n        expected = \"ACCEPT\"\n    else:\n        anchor = expectation[1]\n        holds = any(anchor in problem for problem in problems)\n        expected = f\"REFUSE[{anchor}]\"\n    all_hold = all_hold and holds\n    print(f\"case={label} observed={observed} expected={expected} holds={holds} problems={json.dumps(problems, ensure_ascii=True)}\")\n\nif expect_closed:\n    print(\"probe_route_costs: \" + (\"every expectation holds\" if all_hold else \"at least one expectation fails\"))\n    sys.exit(0 if all_hold else 1)\nprint(\"probe_route_costs: observation mode, exit 0\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B F:/VibeCoding/CAP-wt-ameba-cycle/validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py . --expect-closed\",\n  \"exit\": 0,\n  \"tail\": \"ays 71.31\\\"]\\ncase=gap5_set_aside_attempt_dropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=True problems=[\\\"costs.route.attempts: 1 listed, receipt has 2\\\", \\\"costs.route.turns_total: recorded 31, receipt attempts sum to 40\\\", \\\"costs.route.output_tokens_total: recorded 16842, receipt attempts sum to 20703\\\"]\\ncase=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=REFUSED expected=REFUSE[costs.measured.worker_turns] holds=True problems=[\\\"costs.measured.worker_turns: recorded 13, receipt closing attempt says 12\\\"]\\nprobe_route_costs: every expectation holds\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"..........................................................               [100%]\\n58 passed in 5.84s\"\n },\n {\n  \"cmd\": \"python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_008_record_binding/transition_execution_record.json --repo .\",\n  \"exit\": 0,\n  \"tail\": \"OK\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

@@ -1,0 +1,13 @@
+# step 2 baseline: probe_route_costs.py --expect-closed on the clean tree at 78a8598df4ea1ee8be59501fa157b50eb87046f0
+$ python -B validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py . --expect-closed
+case=positive_run_008_record_v0_1_unchanged observed=OK expected=ACCEPT holds=True problems=[]
+case=positive_run_008_v0_2_route_from_receipt observed=REFUSED expected=ACCEPT holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=positive_run_006_v0_2_two_attempts_from_receipt observed=REFUSED expected=ACCEPT holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=gap1_v0_2_record_without_route observed=REFUSED expected=REFUSE[route] holds=False problems=["schema_version: '0.1' was expected"]
+case=gap2_turns_total_off_by_one observed=REFUSED expected=REFUSE[costs.route.turns_total] holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=gap3_attempt_output_tokens_differ_from_receipt observed=REFUSED expected=REFUSE[costs.route.attempts[0].output_tokens] holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=gap4_router_wall_replaced_by_closing_attempt observed=REFUSED expected=REFUSE[costs.route.router_wall_s] holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=gap5_set_aside_attempt_dropped_from_route observed=REFUSED expected=REFUSE[costs.route.attempts] holds=False problems=["schema_version: '0.1' was expected", "costs: Additional properties are not allowed ('route' was unexpected)"]
+case=gap6_measured_worker_turns_not_the_receipt_closing_attempt observed=OK expected=REFUSE[costs.measured.worker_turns] holds=False problems=[]
+probe_route_costs: at least one expectation fails
+exit=1

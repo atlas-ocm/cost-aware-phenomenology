@@ -1,0 +1,150 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-25T00-35Z_route_costs_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator (2026-09-25, step 2 of the queue): after the binding step is accepted, account for the whole route including failed attempts and checks, building on route_costs_correction_001.json; never substitute the full cost with the closing executor's cost",
+        "Run the ordinary coding task through the installed NoMCP path B; per the NoMCP session the installed Implement text launches nomcp.py coding with run_in_background and then always goes through nomcp.py wait, which is what confirms path B on an ordinary task",
+        "Keep the statuses of the route, the checks and the acceptance separately; publish a checkpoint and update the handoff after acceptance"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-25T00:34:00Z",
+          "claim": "HEAD; tree; remote",
+          "value": "c0c8cba = origin/research/ameba-executable-cycle (prepared packet and oracle); tree clean; full suite 1011 passed, 2 skipped at fc87e62 and no code change since",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_schema_costs",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:34:00Z",
+          "claim": "spec/transition_execution.schema.json costs",
+          "value": "schema_version is the const 0.1; costs.measured holds worker_output_tokens, worker_turns, worker_wall_s, verifier_wall_s, money with additionalProperties false; no place for per-attempt or route-total figures",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_receipt_costs",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:34:00Z",
+          "claim": "router receipts of runs 002-008",
+          "value": "each carries first_attempt and, when fallback_used, fallback_attempt with turns, output_tokens, wall_s, plus total_wall_s; run 006: 9+31 turns, 3,861+16,842 output tokens, total_wall_s 117.17 against the closing attempt's 92.72; run 008: one attempt, 12 turns, 9,315 tokens, 58.49 s, total_wall_s 71.31",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_correction_json",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T00:34:00Z",
+          "claim": "validation_artifacts/ameba_cycle/route_costs_correction_001.json",
+          "value": "whole-route figures for seven runs, derived by a driver script from the receipts; not read or bound by the validator; the records themselves carry the closing attempt only",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-25T00:34:00Z",
+          "claim": "probe_route_costs.py --expect-closed on the clean tree at 78a8598 (code fc87e62)",
+          "value": "exit 1: one of nine expectations holds (the unchanged 0.1 record); the 0.2 positives are refused by the schema (schema_version 0.1 was expected; route unexpected under costs); the measured-vs-closing-attempt contradiction is accepted",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_costs_unbound",
+          "claim": "The whole-route figures exist in every receipt and in the correction file, but no record can carry them and nothing checks that a record's costs are the receipt's; the closing attempt is the only cost a record can state",
+          "derived_from": ["obs_schema_costs", "obs_receipt_costs", "obs_correction_json", "obs_oracle_red"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_costs_are_the_whole_route"],
+      "policies": ["policy_closing_attempt_never_stands_in", "policy_costs_bound_to_receipt"],
+      "specs": ["spec/transition_execution.schema.json"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-25T00:34:00Z",
+        "claim": "HEAD commit",
+        "value": "c0c8cba",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-25T00:34:00Z",
+        "claim": "oracle on the baseline",
+        "value": "exit 1, one of nine expectations holds",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "NoMCP path B wait on a background launch",
+        "reason": "run 008 launched in the foreground and never reached the wait; this run launches in the background and is the first that can exercise nomcp.py wait on real work"
+      },
+      {
+        "path": "cheap tier on a six-file schema + validator + tests + examples task",
+        "reason": "run 008 (four files) closed at the cheap tier; the last schema-plus-validator task (005a/005b) needed the fallback and a split"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "spec/transition_execution.schema.json, reference/python/cap/execution_record.py",
+        "declared": "a record states the cost of the whole route, bound to the receipt, and the closing attempt never stands in for it",
+        "observed": "a record can state the closing attempt only; the correction file is unbound",
+        "severity": "warning",
+        "reason": "Until bound, a comparison of transitions on cost would compare closing attempts, not routes"
+      }
+    ],
+    "created_at": "2026-09-25T00:35:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at c0c8cba",
+    "reasons": [
+      "The operator's step 2 names the whole route; the schema has no place for it and the validator does not bind costs",
+      "Every figure exists in the receipts, so the change is a schema field, two comparison rules and an example update, not a new mechanism"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "schema costs.measured closing-attempt only; receipts carry per-attempt figures and total_wall_s; oracle red with the 0.2 positives refused by the const and the measured contradiction accepted"
+  },
+  "notes": "Run 009, Mirror step. Declared state is the operator's step 2 and the NoMCP session's description of the installed path B text (source: user)."
+}
