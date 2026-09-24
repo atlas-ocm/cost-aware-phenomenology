@@ -22,11 +22,10 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-CAP_ROOT = REPO_ROOT / "CAP"
-SCHEMA_PATH = CAP_ROOT / "spec" / "latent_cause_reconstruction.schema.json"
-EXAMPLE_PATH = CAP_ROOT / "examples" / "latent_cause_reconstruction_case_example.json"
-CASES_DIR = REPO_ROOT / "Patch" / "latent_cause_reconstruction_cases"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SCHEMA_PATH = REPO_ROOT / "spec" / "latent_cause_reconstruction.schema.json"
+EXAMPLE_PATH = REPO_ROOT / "examples" / "latent_cause_reconstruction_case_example.json"
+CASES_DIR = REPO_ROOT.parent / "Patch" / "latent_cause_reconstruction_cases"
 
 
 def _load_schema():

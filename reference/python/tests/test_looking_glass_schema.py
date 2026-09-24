@@ -21,12 +21,11 @@ from pathlib import Path
 import jsonschema
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-CAP_ROOT = REPO_ROOT / "CAP"
-SCHEMA_PATH = CAP_ROOT / "spec" / "looking_glass.schema.json"
-EXAMPLE_PATH = CAP_ROOT / "examples" / "looking_glass_case_example.json"
-MAIN_CASES_DIR = REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_cases"
-HOLDOUT_CASES_DIR = REPO_ROOT / "Patch" / "adjoint_looking_glass_layer_holdout_cases"
+REPO_ROOT = Path(__file__).resolve().parents[3]
+SCHEMA_PATH = REPO_ROOT / "spec" / "looking_glass.schema.json"
+EXAMPLE_PATH = REPO_ROOT / "examples" / "looking_glass_case_example.json"
+MAIN_CASES_DIR = REPO_ROOT.parent / "Patch" / "adjoint_looking_glass_layer_cases"
+HOLDOUT_CASES_DIR = REPO_ROOT.parent / "Patch" / "adjoint_looking_glass_layer_holdout_cases"
 
 
 def _load_schema():
