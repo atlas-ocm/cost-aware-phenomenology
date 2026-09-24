@@ -27,6 +27,7 @@ rather than collapsed into a single verdict.
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -69,6 +70,22 @@ def _revision_exists(repo_dir: Path, revision: str) -> bool:
     return completed.returncode == 0
 
 
+def _resolve_revision(repo_dir: Path, revision: str) -> str | None:
+    """Returns the full SHA of the revision, or None if it does not resolve."""
+    if not _revision_exists(repo_dir, revision):
+        return None
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(repo_dir), "rev-parse", revision],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+        )
+        return completed.stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
 def validate_execution_record(
     record: dict, base_dir: Path, repo_dir: Path | None = None
 ) -> list[str]:
@@ -95,6 +112,19 @@ def validate_execution_record(
     checks[].criterion_id must name a criterion of postcondition.criteria, and
     when verdict.postcondition_met is true every criterion must have at least
     one check with status "pass".
+
+    Additionally, four binding rules ensure the record matches its stored carriers:
+    1. exit line: check results must contain a single exit= line matching the
+       recorded exit_code.
+    2. command: the check command must match the criterion's check_command.
+    3. revision: every checked revision must resolve and match the re-observed
+       and object revisions.
+    4. receipt fields: when provenance is established, the receipt must be a
+       JSON object with matching decision, served model, and input hashes.
+
+    A passing record now means the named links between the record and its
+    stored carriers are checked; full provenance of the execution is not
+    established by this.
 
     Returns a list of problem strings, empty when the record is sound. It never
     raises on a bad record: a non-dict, empty or garbled record yields problems.
@@ -226,5 +256,120 @@ def validate_execution_record(
                     f"verdict.postcondition_met: uncovered criterion {criterion_id} "
                     "has no passing check"
                 )
+
+    # -- binding rules --
+
+    # 1. exit line
+    for index, entry in enumerate(checks):
+        entry_map = _mapping(entry)
+        ref = entry_map.get("result_ref")
+        if not _non_empty_str(ref):
+            continue
+        target = base / ref
+        if not target.is_file():
+            continue
+        try:
+            lines = target.read_text(encoding="utf-8").splitlines()
+            exit_lines = [l for l in lines if l.startswith("exit=")]
+            if len(exit_lines) != 1:
+                problems.append(f"checks[{index}].result_ref: no single exit= line in {ref}")
+                continue
+
+            import re
+            match = re.match(r"^exit=(-?\d+)$", exit_lines[0])
+            if not match:
+                problems.append(f"checks[{index}].result_ref: no single exit= line in {ref}")
+                continue
+
+            stored_exit = int(match.group(1))
+            recorded_exit = entry_map.get("exit_code")
+            if recorded_exit is not None and stored_exit != recorded_exit:
+                problems.append(f"checks[{index}].exit_code: recorded {recorded_exit}, stored result says {stored_exit}")
+        except (OSError, ValueError):
+            continue
+
+    # 2. command
+    criteria_map = {
+        _mapping(c).get("id"): _mapping(c).get("check_command")
+        for c in _sequence(_mapping(record.get("postcondition")).get("criteria"))
+    }
+    for index, entry in enumerate(checks):
+        entry_map = _mapping(entry)
+        cid = entry_map.get("criterion_id")
+        cmd = entry_map.get("command")
+        if _non_empty_str(cid) and _non_empty_str(cmd):
+            expected_cmd = criteria_map.get(cid)
+            if expected_cmd != cmd:
+                problems.append(f"checks[{index}].command: differs from criterion {cid} check_command")
+
+    # 3. revision
+    if repo_dir is not None:
+        obj = _mapping(record.get("object"))
+        obs = _mapping(observation_after)
+
+        rev_obj = _resolve_revision(repo_dir, obj.get("revision_after", ""))
+        rev_obs = _resolve_revision(repo_dir, obs.get("revision_after", ""))
+
+        if rev_obs and rev_obj and rev_obs != rev_obj:
+            problems.append(f"observation_after.revision_after: {obs.get('revision_after')} is not object.revision_after {obj.get('revision_after')}")
+
+        for index, entry in enumerate(checks):
+            entry_map = _mapping(entry)
+            rev_checked = entry_map.get("revision_checked")
+            if not _non_empty_str(rev_checked):
+                continue
+            resolved_checked = _resolve_revision(repo_dir, rev_checked)
+            if resolved_checked:
+                if rev_obs and resolved_checked != rev_obs:
+                    problems.append(f"checks[{index}].revision_checked: {rev_checked} is not the re-observed revision {obs.get('revision_after')}")
+
+    # 4. receipt fields
+    verdict = _mapping(record.get("verdict"))
+    if verdict.get("provenance_established") is True:
+        receipt_ref = execution.get("receipt_ref")
+        if _non_empty_str(receipt_ref):
+            target = base / receipt_ref
+            if target.is_file():
+                try:
+                    receipt = json.loads(target.read_text(encoding="utf-8"))
+                    if not isinstance(receipt, dict):
+                        problems.append(f"execution.receipt_ref: not a JSON object: {receipt_ref}")
+                    else:
+                        # (a) decision
+                        rec_decision = receipt.get("decision")
+                        if rec_decision is None:
+                            problems.append("execution.receipt_ref: receipt lacks decision")
+                        elif rec_decision != execution.get("decision"):
+                            problems.append(f"execution.receipt_ref: decision {execution.get('decision')} is not the receipt decision {rec_decision}")
+
+                        # (b) model_served
+                        fallback_used = receipt.get("fallback_used")
+                        if not isinstance(fallback_used, bool):
+                            problems.append("execution.receipt_ref: receipt lacks fallback_used")
+                        else:
+                            attempt = "fallback_attempt" if fallback_used else "first_attempt"
+                            attempt_map = _mapping(receipt.get(attempt))
+                            rec_model = attempt_map.get("model_served")
+                            if rec_model is None:
+                                problems.append(f"execution.receipt_ref: receipt lacks {attempt}.model_served")
+                            elif rec_model != _mapping(execution.get("actor")).get("model_served"):
+                                problems.append(f"execution.receipt_ref: model_served {_mapping(execution.get('actor')).get('model_served')} is not the receipt served model {rec_model}")
+
+                        # (c) inputs
+                        rec_inputs = _mapping(receipt.get("inputs"))
+                        if not rec_inputs:
+                            problems.append("execution.receipt_ref: receipt lacks inputs")
+                        else:
+                            packet_sha = _mapping(rec_inputs.get("packet")).get("sha256")
+                            check_shas = [_mapping(f).get("sha256") for f in _sequence(rec_inputs.get("check_files"))]
+                            allowed_shas = {packet_sha} | {s for s in check_shas if s}
+
+                            for index, entry in enumerate(inputs):
+                                entry_map = _mapping(entry)
+                                sha = entry_map.get("sha256")
+                                if _non_empty_str(sha) and sha not in allowed_shas:
+                                    problems.append(f"execution.receipt_ref: input {sha} is not among the receipt inputs")
+                except (json.JSONDecodeError, OSError):
+                    problems.append(f"execution.receipt_ref: not a JSON object: {receipt_ref}")
 
     return problems

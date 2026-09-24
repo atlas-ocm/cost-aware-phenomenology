@@ -185,6 +185,86 @@ def test_check_naming_unknown_criterion_is_named():
     assert _named(problems, "unknown") and _named(problems, "c9"), problems
 
 
+# -- binding: record matches its stored carriers --
+
+
+def test_stored_exit_mismatch_is_named(tmp_path):
+    record = _load_example()
+    res_file = tmp_path / "res.txt"
+    res_file.write_text("exit=1", encoding="utf-8")
+    record["checks"][0]["result_ref"] = str(res_file.relative_to(ROOT)) if res_file.is_relative_to(ROOT) else str(res_file)
+    # Force base_dir to tmp_path for this test to resolve the ref
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert _named(problems, "exit_code: recorded 0, stored result says 1"), problems
+
+
+def test_command_mismatch_is_named():
+    record = _load_example()
+    record["checks"][0]["command"] = "echo 'wrong command'"
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "command: differs from criterion c1 check_command"), problems
+
+
+def test_revision_checked_mismatch_is_named():
+    record = _load_example()
+    # Root is e65b9af4... we use a different valid commit from the example
+    record["checks"][0]["revision_checked"] = "e65b9af4b28d3c97950c667448a32c24adc44a0e"
+    # Example record observation_after.revision_after is 602fa63a...
+    problems = _problems(record, repo_dir=ROOT)
+    assert _named(problems, "revision_checked"), problems
+
+
+def test_non_json_receipt_is_named(tmp_path):
+    record = _load_example()
+    rec_file = tmp_path / "receipt.txt"
+    rec_file.write_text("not json", encoding="utf-8")
+    record["execution"]["receipt_ref"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert _named(problems, "receipt_ref: not a JSON object"), problems
+
+
+def test_receipt_field_mismatch_is_named(tmp_path):
+    record = _load_example()
+    rec_file = tmp_path / "receipt.json"
+    # Decision, model, and packet sha differ; record values are hidden in 'notes'
+    receipt = {
+        "decision": "wrong_decision",
+        "fallback_used": False,
+        "first_attempt": {"model_served": "wrong-model"},
+        "inputs": {"packet": {"sha256": "wrong-sha"}, "check_files": []},
+        "notes": "The record values are here: apply_candidate, example-model-served, 76f0fdb..."
+    }
+    rec_file.write_text(json.dumps(receipt), encoding="utf-8")
+    record["execution"]["receipt_ref"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert _named(problems, "decision apply_candidate is not the receipt decision wrong_decision"), problems
+    assert _named(problems, "model_served example-model-served is not the receipt served model wrong-model"), problems
+    assert _named(problems, "input 76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5 is not among the receipt inputs"), problems
+
+
+def test_short_sha_revision_checked_resolves():
+    record = _load_example()
+    # 602fa63a is the short SHA of the revision in the example
+    record["checks"][0]["revision_checked"] = "602fa63a"
+    problems = _problems(record, repo_dir=ROOT)
+    assert not _named(problems, "revision_checked"), problems
+
+
+def test_matching_router_receipt_resolves(tmp_path):
+    record = _load_example()
+    rec_file = tmp_path / "receipt.json"
+    receipt = {
+        "decision": "apply_candidate",
+        "fallback_used": False,
+        "first_attempt": {"model_served": "example-model-served"},
+        "inputs": {"packet": {"sha256": "76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5"}, "check_files": []}
+    }
+    rec_file.write_text(json.dumps(receipt), encoding="utf-8")
+    record["execution"]["receipt_ref"] = str(rec_file.relative_to(ROOT)) if rec_file.is_relative_to(ROOT) else str(rec_file)
+    problems = validate_execution_record(record, base_dir=tmp_path, repo_dir=ROOT)
+    assert not _named(problems, "receipt_ref"), problems
+
+
 # -- bad records are reported, never raised --
 
 

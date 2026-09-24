@@ -4,3 +4,4 @@ collected 1 item
 reference/python/tests/test_example.py .                                 [100%]
 
 1 passed
+exit=0

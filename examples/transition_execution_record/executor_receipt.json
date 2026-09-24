@@ -1,6 +1,15 @@
 {
   "run_id": "run_example_transition_001",
   "decision": "apply_candidate",
-  "model_requested": "example-model-requested",
-  "model_served": "example-model-served"
+  "fallback_used": false,
+  "first_attempt": {
+    "model_requested": "example-model-requested",
+    "model_served": "example-model-served"
+  },
+  "inputs": {
+    "packet": {
+      "sha256": "76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5"
+    },
+    "check_files": []
+  }
 }
