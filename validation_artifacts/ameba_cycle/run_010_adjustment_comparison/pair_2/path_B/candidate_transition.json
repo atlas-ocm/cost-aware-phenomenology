@@ -1,0 +1,163 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-25T01-00Z_record_builder_gap",
+    "observed_state": {
+      "id": "obs_no_builder_on_the_branch",
+      "summary": "No repository script builds an execution record; every record so far came from the driver's scratch scripts; the derivation of each field was read off run 009's committed record; the oracle is red because the script is missing",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-25T01-00Z_record_builder_gap#obs_no_builder_in_repo",
+        "mirror_frame:mirror_frame_2026-09-25T01-00Z_record_builder_gap#obs_record_derivation",
+        "mirror_frame:mirror_frame_2026-09-25T01-00Z_record_builder_gap#obs_oracle_red"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_builder_grew_in_scratch",
+      "hypothesis": "The builder grew in the driver's scratchpad run by run (v1 to v3) and was never moved onto the branch because each run needed it immediately",
+      "source": "human_report",
+      "confidence": 1.0,
+      "evidence_refs": ["validation_artifacts/ameba_cycle/README.md"],
+      "uncertainty": [],
+      "status": "confirmed"
+    },
+    "desired_state": {
+      "id": "target_builder_on_the_branch",
+      "goal": "reference/python/scripts/build_execution_record.py builds the schema-0.2 record from a run directory and a record spec exactly as run 009's record was built, validates it against the repository and exits 0 only when valid, 2 naming the file on a malformed stored result",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle probe_build_record.py --expect-closed exits 0 (rebuilt record equals the committed run 009 record as JSON, validates, exit-2 case named)",
+        "the full suite exits 0",
+        "exactly one file added, reference/python/scripts/build_execution_record.py; nothing else changed"
+      ],
+      "forbidden_outcomes": [
+        "any other file changed or added",
+        "run 009 values hardcoded instead of derived from the artifacts and the spec",
+        "the closing attempt standing in for costs.route",
+        "a record written without validating it"
+      ]
+    },
+    "constraints": [
+      "both paths run the same NoMCP mode-1 route (cheap_coder first, fallback on a measured failure) through the path B relay, each in its own worktree from the same commit, A before B; B is not informed by A",
+      "the driver does not edit code; the oracle is committed and declared by hash, red on the baseline",
+      "the full-cost method is fixed in the design before either route runs"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_records_reproducible_from_artifacts",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-25T01-03Z_record_builder_path_b",
+    "from_state": "no builder on the branch; the derivation lives in scratch",
+    "inferred_cause": "cause_builder_grew_in_scratch",
+    "to_state": "one repository script transcribing the observed derivation; oracle green",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Oracle on the clean tree: exit 1, the script does not exist (baseline_oracle.txt)",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route packet B (cap-build-record-B) through NoMCP mode 1 via the path B relay in worktree F:/VibeCoding/CAP-wt-cmp-B, after path A finished in worktree A; packet B = packet A plus the observed environment of the Mirror Frame and these forbidden outcomes",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "The derivation is observed, not designed; giving it to the worker is what the Adjustment path adds"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model; driver adjudication on the diff; checks re-run at the obtained revision; a 0.2 record for each path; comparison README on the five axes",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; two records and a comparison, no declaration of usefulness from one pair"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_records_reproducible_from_artifacts",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.05,
+      "loop_risk": 0.15,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "low",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "low"
+    },
+    "rollback_plan": {
+      "steps": [
+        "delete the one added file or revert the commit on the research branch"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the full suite exits 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git shows exactly one file added",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-25T01:03:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-25T01-03Z_record_builder_path_b",
+    "reasons": [
+      "The derivation was read off the committed record and every input is on the branch; the change is a transcription",
+      "loop_risk 0.15: a single-file script; the risk is one field derived differently, which the whole-record equality catches",
+      "Verifier and driver adjudication required; the comparison record follows"
+    ],
+    "alternatives": [
+      "Commit the driver's scratch builder as is (rejected: it is driver-authored code and would bypass the route; also the comparison needs a routed change)",
+      "Give the worker no derivation and let it read the record (that is path A, run for the comparison, not rejected)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 010, Adjustment step of path B. Proposed before either path was launched."
+}

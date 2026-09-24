@@ -76,8 +76,10 @@ Runs:
 - [`run_010_adjustment_comparison/`](./run_010_adjustment_comparison/README.md) —
   the same change routed twice from `7bc4780`: path A (executor route alone)
   and path B (Mirror Frame + candidate informed packet); both reached the
-  postcondition after one cheap set-aside each; one pair, a probe; path B's
-  builder script landed on the branch; results on `cmp/run-010-path-A|B`.
+  postcondition after one cheap set-aside each; two pairs (the second with the
+  same packets), B cheaper on every route unit both times, magnitude within the
+  within-path swing; path B's pair-1 script landed on the branch; results on
+  `cmp/run-010-path-A|B` and `cmp/run-010-pair2-path-A|B`.
 
 What these records are not: they are not benchmark evidence, not a
 comparison that establishes anything (one pair was run as a probe in run 010;

@@ -1,0 +1,6 @@
+# check c3_diff_scope (path B): diff scope: exactly one file added, re-run by the driver at c72c820e8447d1dfc7f541c6a2951cb90680748d in a detached worktree (/f/VibeCoding/CAP-wt-tmp-010B)
+$ git diff --stat 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=A 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=M 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d
+ reference/python/scripts/build_execution_record.py | 233 +++++++++++++++++++++
+ 1 file changed, 233 insertions(+)
+reference/python/scripts/build_execution_record.py
+exit=0

@@ -1,0 +1,69 @@
+{
+  "path": "A",
+  "task_id": "cap-build-record-A",
+  "decision": "FALLBACK_PASS",
+  "final_postcondition": true,
+  "baseline_checks_exit": [
+    1,
+    0
+  ],
+  "attempts": [
+    {
+      "role": "cheap_coder",
+      "model_served": "gemma4:31b-cloud",
+      "turns": 6,
+      "output_tokens": 2204,
+      "wall_s": 13.73,
+      "postcondition": false,
+      "checks_exit": [
+        1,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    {
+      "role": "fallback_coder",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "turns": 45,
+      "output_tokens": 30692,
+      "wall_s": 135.26,
+      "postcondition": true,
+      "checks_exit": [
+        0,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    }
+  ],
+  "set_aside_attempts": 1,
+  "route_total": {
+    "turns": 51,
+    "output_tokens": 32896,
+    "router_wall_s": 305.84
+  },
+  "closing_attempt": {
+    "turns": 45,
+    "output_tokens": 30692,
+    "wall_s": 135.26
+  },
+  "verifier": {
+    "model": "glm-5.3-flash:cloud",
+    "verdict": "ACCEPT",
+    "wall_s": 109.01374506950378,
+    "issues": []
+  },
+  "workflow": {
+    "wall_s": 1041.5,
+    "relay_tokens": 47123
+  },
+  "driver": {
+    "authoring_wall_s": 0.0,
+    "reobservation_wall_s": 53.0
+  },
+  "worker_final_answer": "Added reference/python/scripts/build_execution_record.py: it derives a schema-0.2 executed-transition record from a run directory plus record spec, validates it via cap.execution_record.validate_execution_record(base_dir=repo_root, repo_dir=repo_root), writes it to --out, and exits 0/1/2 per the declared contract (0 built+valid+written, 1 printing validator problems, 2 naming a missing artifact or a check result lacking exactly one exit= line\u2014checked before hashing so the probe's truncated-copy case names c1_oracle.txt).",
+  "money": "unknown"
+}

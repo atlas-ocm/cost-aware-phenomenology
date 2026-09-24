@@ -98,6 +98,55 @@ outcome. It is the first comparison with a baseline path fixed beforehand,
 the same required postcondition, and the same full-cost method, recorded so
 that the next pairs can be added to it rather than argued from.
 
+## 8. Pair 2 — same base, same packets, same oracle, run again (01:33–01:52)
+
+Both worktrees recreated at `7bc4780`; the same Workflow script; nothing
+reused from pair 1 but the packets and the oracle; no driver authoring.
+Results on `cmp/run-010-pair2-path-A` (`6a92c5f`) and `cmp/run-010-pair2-path-B`
+(`c72c820`); records under `pair_2/`. Receipts read from the untruncated
+`stdout_tail` (`pair_2/receipt_cases_pair2.txt`; pair 1 re-read the same way in
+`receipt_cases_pair1.txt`).
+
+| | path A | path B |
+|---|---|---|
+| cheap_coder `gemma4:31b-cloud` | 6 turns, 2,204 tokens, 13.73 s; c1 failed: the record it built had unresolved references and revisions (literal `unknown`, a run-dir-relative packet ref; seven validator problems); c4 failed; set aside | 5 turns, 2,147 tokens, 18.33 s; c1 failed: schema problems (unexpected keys; `costs.route` written as a list of attempts instead of the object); c4 failed (`FileNotFoundError`); set aside |
+| fallback_coder `deepseek-v4.1-flash:cloud` | 45 turns, 30,692 tokens, 135.26 s; `FALLBACK_PASS` | 27 turns, 22,172 tokens, 94.0 s; `FALLBACK_PASS` |
+| whole route (receipt) | 51 turns, 32,896 tokens, 305.84 s | 32 turns, 24,319 tokens, 267.49 s |
+| verifier `glm53_flash` | `ACCEPT`, 109.0 s | `ACCEPT`, 164.6 s |
+| checks re-run at the revision | c1–c3 exit 0 at `6a92c5f`; 53 s | c1–c3 exit 0 at `c72c820`; 54 s |
+| result | 261 lines | 233 lines |
+| execution record | none (as in pair 1) | `pair_2/path_B/transition_execution_record.json`, built with the landed builder script |
+
+Workflow: 1041.5 s wall, 47,123 relay tokens, 17 tool uses (2 launches, 13
+waits, 2 verify stages); model-pin check in `pair_2/model_pin.txt`.
+
+### Across the two pairs
+
+| route unit | pair 1 A | pair 1 B | pair 2 A | pair 2 B |
+|---|---|---|---|---|
+| turns | 55 | 52 | 51 | 32 |
+| output tokens | 39,217 | 32,351 | 32,896 | 24,319 |
+| router wall s | 315.9 | 307.1 | 305.8 | 267.5 |
+| cheap set-asides | 1 | 1 | 1 | 1 |
+| fallback turns | 49 | 47 | 45 | 27 |
+
+- Direction: path B cheaper than path A in both pairs on all three route
+  units, and its fallback needed fewer turns both times.
+- Magnitude: the within-path swing between pairs (A 39,217 → 32,896 tokens;
+  B 32,351 → 24,319) is as large as the pair-1 difference between paths
+  (6,866) and comparable to the pair-2 one (8,577). Two pairs give a
+  consistent direction, not an established effect; H1 on attempts stays
+  unsupported (four routes, four cheap set-asides).
+- The cheap tier missed the oracle's first case in all four attempts, each
+  time differently (pair 1: `result_ref` resolution; pair 2: unresolved refs
+  and revisions from misread spec fields in A, wrong shape of `costs.route`
+  and extra keys in B). The informed packet did not prevent cheap-tier
+  misses; what it plausibly bought is a shorter fallback (47 and 27 turns
+  against 49 and 45). Plausible, not established.
+- Verifier walls (109.0 s and 164.6 s here; 35.0 s and 21.8 s in pair 1 after a
+  482 s deadline) vary more than the routes and say nothing about the paths.
+- Nothing from pair 2 is landed; the landed script remains pair 1's path B.
+
 ## Corrections
 
 - correction_001 (2026-09-25 01:40, after the NoMCP session read both receipts

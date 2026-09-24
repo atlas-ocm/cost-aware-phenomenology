@@ -228,7 +228,13 @@ NoMCP session's reading of the receipts (run 010 README, correction_001); the
 first wording named c4 only and called the miss packet-independent. Path B's script landed by a rule chosen after the
 results (lower whole-route cost among the accepted). Path A has no execution
 record: the record schema presupposes a Mirror Frame and a candidate. Record
-and comparison: `run_010_adjustment_comparison/`.
+and comparison: `run_010_adjustment_comparison/`. A second pair from the same
+base with the same packets (01:33–01:52; results on `cmp/run-010-pair2-path-A|B`,
+records under `pair_2/`): route A 51 turns / 32,896 output tokens / 305.8 s, B
+32 / 24,319 / 267.5 s; both cheap attempts set aside again, for different reasons
+than in pair 1. Across the two pairs B is cheaper than A on every route unit, and
+the within-path swing between pairs is as large as the between-path difference:
+a consistent direction, not an established effect.
 
 ## 3. Exact commands, dependencies, inputs and outputs
 
@@ -425,7 +431,10 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    Result of the one pair: both paths reached the postcondition after one
    cheap set-aside each; B's route was cheaper by 3 turns, 6,866 output
    tokens and 8.8 s, at about five more minutes of driver authoring; one pair
-   does not separate that from noise.
+   does not separate that from noise. Pair 2 (same packets, no new authoring):
+   B cheaper again on every route unit (32 / 24,319 / 267.5 s against
+   51 / 32,896 / 305.8 s), four cheap set-asides in four routes; direction
+   consistent over two pairs, magnitude within the within-path swing.
 3. Done: Breach = Recovery-Only (`989a7e2`, run 004) and the executed-transition
    record (§2.7, runs 005a and 005b). Every further run must produce a
    `transition_execution_record.json` that passes

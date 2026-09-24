@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.2",
+  "record_id": "exec_2026-09-25_run_010_pair2_record_builder_path_B",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch cmp/run-010-pair2-path-B from research/ameba-executable-cycle at 7bc4780 (executed in the local worktree F:/VibeCoding/CAP-wt-cmp-B, recreated at the same base for pair 2)",
+    "revision_before": "7bc47802e38c6036e463c3428ef8f4b51bc34e5e",
+    "revision_after": "c72c820e8447d1dfc7f541c6a2951cb90680748d"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-25T01-03Z_record_builder_path_b",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-25T01-00Z_record_builder_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the shared oracle with --expect-closed exits 0: the script rebuilds run 009's record identically (JSON equality), the rebuilt record validates against the repository, and the exit-2 case names the malformed result file",
+        "check_command": "python -B validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py . --expect-closed"
+      },
+      {
+        "id": "c2",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c3",
+        "statement": "exactly one file added, reference/python/scripts/build_execution_record.py; nothing modified",
+        "check_command": "git diff --stat 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=A 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=M 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama) inside one native Workflow (four relays for the two paths) with one nomcp-haiku relay per stage; path B transport: background launch, five wait calls (NOT_FINAL), then COLLECTED; second pair of the comparison, same packets and oracle as pair 1, run after path A of this pair in its own worktree",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/coding_packet.json",
+        "sha256": "293a46925182c997f90fc1665fc94a222efe79b994ba04bd1711292780cf8c14"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+        "sha256": "5ba1253b6dfaf2644e9c9e421f0ae594ae08a42988e454aae9da413247a8ddd5"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-25T01:52:00Z",
+    "revision_after": "c72c820e8447d1dfc7f541c6a2951cb90680748d",
+    "summary": "Re-observed in a detached worktree at c72c820 (F:/VibeCoding/CAP-wt-tmp-010B, removed afterwards; 54 s): clean tree; the oracle exits 0 with all four cases holding; full suite 1022 passed, 2 skipped; the diff 7bc4780..c72c820 adds exactly reference/python/scripts/build_execution_record.py (233 lines) and modifies nothing"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py . --expect-closed",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c1_oracle.txt",
+      "revision_checked": "c72c820e8447d1dfc7f541c6a2951cb90680748d"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c2_full_suite.txt",
+      "revision_checked": "c72c820e8447d1dfc7f541c6a2951cb90680748d"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "git diff --stat 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=A 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d; git diff --name-only --diff-filter=M 7bc47802e38c6036e463c3428ef8f4b51bc34e5e c72c820e8447d1dfc7f541c6a2951cb90680748d",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c3_diff_scope.txt",
+      "revision_checked": "c72c820e8447d1dfc7f541c6a2951cb90680748d"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "the full suite exits 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c2_full_suite.txt"
+    },
+    {
+      "claim": "git shows exactly one file added",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/checks/c3_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected (candidate of pair 1, loop_risk 0.15): with the derivation given, a cheap close. Observed (read from first_attempt.checks[0].stdout_tail, untruncated): the cheap tier's script failed the oracle's first case with schema problems (unexpected keys under the record; costs.route written as a list of attempts instead of the object with attempts, totals and router wall) and its fourth case (FileNotFoundError on the second spec input under the scratch base), and was set aside; the fallback closed it (deepseek-v4.1-flash:cloud, 27 turns, 22,172 output tokens, 94.0 s). Path A's cheap attempt of this pair failed the first case with unresolved references and revisions (it wrote literal unknown values and a run-dir-relative packet ref, so the validator named seven problems) and the fourth case likewise. Different reasons from pair 1 (result_ref resolution); the cheap tier missed in every one of the four attempts of the two pairs.",
+      "Comparison across the two pairs (same base, same packets, same oracle): path B's route was cheaper than path A's in both pairs on turns, output tokens and router wall (pair 1: 52/32,351/307.1 against 55/39,217/315.9; pair 2: 32/24,319/267.5 against 51/32,896/305.8), and its fallback needed fewer turns (47 and 27 against 49 and 45). The within-path swing between pairs (A 39,217 to 32,896 tokens; B 32,351 to 24,319) is as large as the pair-1 difference between paths, so with two pairs the direction is consistent and the magnitude is not established. Attempts: one cheap set-aside in all four routes; the informed packet did not prevent cheap-tier misses, which differed in kind each time."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_010_adjustment_comparison/pair_2/path_B/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 22172,
+      "worker_turns": 27,
+      "worker_wall_s": 94.0,
+      "verifier_wall_s": 164.6,
+      "money": "unknown"
+    },
+    "route": {
+      "attempts": [
+        {
+          "role": "cheap_coder",
+          "model_served": "gemma4:31b-cloud",
+          "turns": 5,
+          "output_tokens": 2147,
+          "wall_s": 18.33
+        },
+        {
+          "role": "fallback_coder",
+          "model_served": "deepseek-v4.1-flash:cloud",
+          "turns": 27,
+          "output_tokens": 22172,
+          "wall_s": 94.0
+        }
+      ],
+      "turns_total": 32,
+      "output_tokens_total": 24319,
+      "router_wall_s": 267.49
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files that carry the exit line",
+      "Provenance: the packet and the probe are the hashed inputs and their hashes are the ones in the router receipt; the receipt's decision, closing-attempt model, every attempt's figures and the router's total wall are the record's (rules 4-6)",
+      "Costs: costs.route is the whole route from the receipt (both attempts); the verifier wall is the one verdict; Workflow relays and the driver's re-observation time are in the README and path_costs.json; no driver authoring for this pair (packets reused); money is unknown"
+    ]
+  },
+  "notes": "Run 010, pair 2, path B. Built with the landed reference/python/scripts/build_execution_record.py (path B's pair-1 result), which is the first use of the landed script on a new record. Path A of this pair has no execution record for the reason given in the pair-1 record. Nothing from pair 2 is landed; both results stay on their branches."
+}

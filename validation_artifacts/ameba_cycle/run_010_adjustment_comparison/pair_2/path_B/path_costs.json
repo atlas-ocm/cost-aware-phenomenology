@@ -1,0 +1,69 @@
+{
+  "path": "B",
+  "task_id": "cap-build-record-B",
+  "decision": "FALLBACK_PASS",
+  "final_postcondition": true,
+  "baseline_checks_exit": [
+    1,
+    0
+  ],
+  "attempts": [
+    {
+      "role": "cheap_coder",
+      "model_served": "gemma4:31b-cloud",
+      "turns": 5,
+      "output_tokens": 2147,
+      "wall_s": 18.33,
+      "postcondition": false,
+      "checks_exit": [
+        1,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    {
+      "role": "fallback_coder",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "turns": 27,
+      "output_tokens": 22172,
+      "wall_s": 94.0,
+      "postcondition": true,
+      "checks_exit": [
+        0,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    }
+  ],
+  "set_aside_attempts": 1,
+  "route_total": {
+    "turns": 32,
+    "output_tokens": 24319,
+    "router_wall_s": 267.49
+  },
+  "closing_attempt": {
+    "turns": 27,
+    "output_tokens": 22172,
+    "wall_s": 94.0
+  },
+  "verifier": {
+    "model": "glm-5.3-flash:cloud",
+    "verdict": "ACCEPT",
+    "wall_s": 164.56916308403015,
+    "issues": []
+  },
+  "workflow": {
+    "wall_s": 1041.5,
+    "relay_tokens": 47123
+  },
+  "driver": {
+    "authoring_wall_s": 0.0,
+    "reobservation_wall_s": 54.0
+  },
+  "worker_final_answer": "Added reference/python/scripts/build_execution_record.py, which rebuilds the schema-0.2 executed-transition record from a run directory and record spec (every value derived, costs.route over all receipt attempts and costs.measured from the closing attempt), validates it via cap.execution_record.validate_execution_record(record, repo_root, repo_root), writes it as utf-8 JSON, and exits 0/1/2 for success/validator problems/malformed exit= line or missing artifact.",
+  "money": "unknown"
+}

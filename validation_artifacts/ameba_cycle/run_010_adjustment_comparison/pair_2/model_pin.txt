@@ -1,0 +1,6 @@
+PHASE          LABEL                    EXPECTED   ACTUAL                       VERDICT
+Verify A       verify A: cap-build-record-A -> admitted verifier (NoMCP mode 2) haiku      claude-haiku-4-5-20251001    OK
+Implement B    implement B: cap-build-record-B -> Gemma4 (NoMCP mode 1) haiku      claude-haiku-4-5-20251001    OK
+Implement A    implement A: cap-build-record-A -> Gemma4 (NoMCP mode 1) haiku      claude-haiku-4-5-20251001    OK
+Verify B       verify B: cap-build-record-B -> admitted verifier (NoMCP mode 2) haiku      claude-haiku-4-5-20251001    OK
+agents 4, ok 4, fail 0, unknown 0

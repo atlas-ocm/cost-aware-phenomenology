@@ -1,0 +1,34 @@
+== pair 1 path A: decision FALLBACK_PASS fallback_used True total_wall_s 315.91
+  first_attempt: gemma4:31b-cloud turns 6 tokens 2714 wall 15.19 postcondition False
+    check[0] exit 1 stdout_chars 732 truncated False
+      case=c1_build holds=False detail={"exit": 2, "stdout_tail": "Missing check result file: F:\\VibeCoding\\CAP-wt-cmp-A\\validation_artifacts\\ameba_cycle\\run_009_route_costs\\checks\\c1.txt\n", "stderr_tail": ""}
+      case=c2_equality holds=False detail={"reason": "nothing built"}
+      case=c3_validity holds=False detail={"reason": "nothing built"}
+      case=c4_exit_line_named holds=False detail={"exit": 1, "names_file": false, "stdout_tail": "", "stderr_tail": "\\\\VibeCoding\\\\CAP-wt-cmp-A\\\\validation_artifacts\\\\ameba_cycle\\\\run_009_route_costs\\\\record_spec.json' is not in the subpath of 'C:\\\\Users\\\\ATLAS\\\\AppData\\\\Local\\\\Temp\\\\cap-probe-build-q2ydy3f7\\\\base'\n"}
+      probe_build_record: at least one expectation fails
+    check[1] exit 0 stdout_chars 1233 truncated False
+  fallback_attempt: deepseek-v4.1-flash:cloud turns 49 tokens 36503 wall 134.67 postcondition True
+    check[0] exit 0 stdout_chars 556 truncated False
+      case=c1_build holds=True detail={"exit": 0, "stdout_tail": "wrote C:\\Users\\ATLAS\\AppData\\Local\\Temp\\cap-probe-build-sqj02erg\\rebuilt.json\n", "stderr_tail": ""}
+      case=c2_equality holds=True detail={"equal": true, "differing_top_level_keys": []}
+      case=c3_validity holds=True detail={"problems": []}
+      case=c4_exit_line_named holds=True detail={"exit": 2, "names_file": true, "stdout_tail": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt: no single exit= line\n", "stderr_tail": ""}
+      probe_build_record: every expectation holds
+    check[1] exit 0 stdout_chars 1233 truncated False
+== pair 1 path B: decision FALLBACK_PASS fallback_used True total_wall_s 307.14
+  first_attempt: gemma4:31b-cloud turns 5 tokens 2142 wall 9.69 postcondition False
+    check[0] exit 1 stdout_chars 784 truncated False
+      case=c1_build holds=False detail={"exit": 2, "stdout_tail": "Missing artifact: F:\\VibeCoding\\CAP-wt-cmp-B\\validation_artifacts\\ameba_cycle\\run_009_route_costs\\validation_artifacts\\ameba_cycle\\run_009_route_costs\\checks\\c1_oracle.txt\n", "stderr_tail": ""}
+      case=c2_equality holds=False detail={"reason": "nothing built"}
+      case=c3_validity holds=False detail={"reason": "nothing built"}
+      case=c4_exit_line_named holds=False detail={"exit": 1, "names_file": false, "stdout_tail": "", "stderr_tail": "undError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\ATLAS\\\\AppData\\\\Local\\\\Temp\\\\cap-probe-build-q4jcj5nc\\\\base\\\\validation_artifacts\\\\ameba_cycle\\\\prepared\\\\route_costs\\\\probe_route_costs.py'\n"}
+      probe_build_record: at least one expectation fails
+    check[1] exit 0 stdout_chars 1233 truncated False
+  fallback_attempt: deepseek-v4.1-flash:cloud turns 47 tokens 30209 wall 127.75 postcondition True
+    check[0] exit 0 stdout_chars 650 truncated False
+      case=c1_build holds=True detail={"exit": 0, "stdout_tail": "wrote C:\\Users\\ATLAS\\AppData\\Local\\Temp\\cap-probe-build-7gokjhac\\rebuilt.json\n", "stderr_tail": ""}
+      case=c2_equality holds=True detail={"equal": true, "differing_top_level_keys": []}
+      case=c3_validity holds=True detail={"problems": []}
+      case=c4_exit_line_named holds=True detail={"exit": 2, "names_file": true, "stdout_tail": "missing artifact: validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py\nno single exit= line: validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt\n", "stderr_tail": ""}
+      probe_build_record: every expectation holds
+    check[1] exit 0 stdout_chars 1233 truncated False
