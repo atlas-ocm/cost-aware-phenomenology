@@ -1,0 +1,238 @@
+{
+  "task_id": "cap-build-record-B",
+  "variant": "coding",
+  "baseline": [
+    {
+      "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-cmp-B/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+        ".",
+        "--expect-closed"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "cript does not exist\", \"path\": \"F:\\\\VibeCoding\\\\CAP-wt-cmp-B\\\\reference\\\\python\\\\scripts\\\\build_execution_record.py\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"reason\": \"script missing or no c1 result in the run copy\"}\nprobe_build_record: at least one expectation fails",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "case=c1_build holds=False detail={\"reason\": \"script does not exist\", \"path\": \"F:\\\\VibeCoding\\\\CAP-wt-cmp-B\\\\reference\\\\python\\\\scripts\\\\build_execution_record.py\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"reason\": \"script missing or no c1 result in the run copy\"}\nprobe_build_record: at least one expectation fails\n",
+      "stderr_tail": "",
+      "stdout_chars": 447,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    },
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 55.12s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 55.12s\n",
+      "stderr_tail": "",
+      "stdout_chars": 1233,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+    }
+  ],
+  "first_attempt": {
+    "model": "gemma4:31b-cloud",
+    "answer": "Added reference/python/scripts/build_execution_record.py to build and validate schema-0.2 executed-transition records from run artifacts.",
+    "wall_s": 9.69,
+    "turns": 5,
+    "output_tokens": 2142,
+    "model_requested": "gemma4:31b-cloud",
+    "model_served": "gemma4:31b-cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "identity_source": "claude_cli_modelUsage",
+    "provider_source": "claude_cli_modelUsage",
+    "identity_independently_verified": false,
+    "postcondition": false,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "F:/VibeCoding/CAP-wt-cmp-B/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+          ".",
+          "--expect-closed"
+        ],
+        "exit": 1,
+        "ok": false,
+        "tail": "ng built\"}\ncase=c4_exit_line_named holds=False detail={\"exit\": 1, \"names_file\": false, \"stdout_tail\": \"\", \"stderr_tail\": \"undError: [Errno 2] No such file or directory: 'C:\\\\\\\\Users\\\\\\\\ATLAS\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\cap-probe-build-q4jcj5nc\\\\\\\\base\\\\\\\\validation_artifacts\\\\\\\\ameba_cycle\\\\\\\\prepared\\\\\\\\route_costs\\\\\\\\probe_route_costs.py'\\n\"}\nprobe_build_record: at least one expectation fails",
+        "check_index": 0,
+        "timed_out": false,
+        "stdout_tail": "case=c1_build holds=False detail={\"exit\": 2, \"stdout_tail\": \"Missing artifact: F:\\\\VibeCoding\\\\CAP-wt-cmp-B\\\\validation_artifacts\\\\ameba_cycle\\\\run_009_route_costs\\\\validation_artifacts\\\\ameba_cycle\\\\run_009_route_costs\\\\checks\\\\c1_oracle.txt\\n\", \"stderr_tail\": \"\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"exit\": 1, \"names_file\": false, \"stdout_tail\": \"\", \"stderr_tail\": \"undError: [Errno 2] No such file or directory: 'C:\\\\\\\\Users\\\\\\\\ATLAS\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\cap-probe-build-q4jcj5nc\\\\\\\\base\\\\\\\\validation_artifacts\\\\\\\\ameba_cycle\\\\\\\\prepared\\\\\\\\route_costs\\\\\\\\probe_route_costs.py'\\n\"}\nprobe_build_record: at least one expectation fails\n",
+        "stderr_tail": "",
+        "stdout_chars": 784,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 50.87s",
+        "check_index": 1,
+        "timed_out": false,
+        "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 50.87s\n",
+        "stderr_tail": "",
+        "stdout_chars": 1233,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      }
+    ],
+    "worktree": {
+      "diffstat": "",
+      "untracked": [
+        "reference/python/scripts/build_execution_record.py"
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    "protected_touched": [],
+    "stash": "55b13e38843105005e4b98348c6d77953c6e6880",
+    "prestate_restore": {
+      "removed": [],
+      "drifted": []
+    }
+  },
+  "seam_used": false,
+  "fallback_used": true,
+  "handoff": {
+    "keys": [
+      "failed_answer",
+      "postcondition",
+      "question"
+    ],
+    "bytes": 6299
+  },
+  "fallback_attempt": {
+    "model": "deepseek-v4.1-flash:cloud",
+    "answer": "Added reference/python/scripts/build_execution_record.py, which transcribes run 009's record from the run directory + record spec (receipt closing attempt for actor/measured, all receipt attempts in receipt order for costs.route, hashed spec inputs, exit codes read from checks/*.txt), validates it with validate_execution_record(record, repo_root, repo_root) before writing (JSON indent=2, trailing newline), and exits 0 / 1 (problems printed) / 2 (file named: missing artifact or no single exit= line); only that one file was added.",
+    "wall_s": 127.75,
+    "turns": 47,
+    "output_tokens": 30209,
+    "model_requested": "deepseek-v4.1-flash:cloud",
+    "model_served": "deepseek-v4.1-flash:cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "identity_source": "claude_cli_modelUsage",
+    "provider_source": "claude_cli_modelUsage",
+    "identity_independently_verified": false,
+    "postcondition": true,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "F:/VibeCoding/CAP-wt-cmp-B/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+          ".",
+          "--expect-closed"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "}\ncase=c3_validity holds=True detail={\"problems\": []}\ncase=c4_exit_line_named holds=True detail={\"exit\": 2, \"names_file\": true, \"stdout_tail\": \"missing artifact: validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py\\nno single exit= line: validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt\\n\", \"stderr_tail\": \"\"}\nprobe_build_record: every expectation holds",
+        "check_index": 0,
+        "timed_out": false,
+        "stdout_tail": "case=c1_build holds=True detail={\"exit\": 0, \"stdout_tail\": \"wrote C:\\\\Users\\\\ATLAS\\\\AppData\\\\Local\\\\Temp\\\\cap-probe-build-7gokjhac\\\\rebuilt.json\\n\", \"stderr_tail\": \"\"}\ncase=c2_equality holds=True detail={\"equal\": true, \"differing_top_level_keys\": []}\ncase=c3_validity holds=True detail={\"problems\": []}\ncase=c4_exit_line_named holds=True detail={\"exit\": 2, \"names_file\": true, \"stdout_tail\": \"missing artifact: validation_artifacts/ameba_cycle/prepared/route_costs/probe_route_costs.py\\nno single exit= line: validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt\\n\", \"stderr_tail\": \"\"}\nprobe_build_record: every expectation holds\n",
+        "stderr_tail": "",
+        "stdout_chars": 650,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 55.17s",
+        "check_index": 1,
+        "timed_out": false,
+        "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 55.17s\n",
+        "stderr_tail": "",
+        "stdout_chars": 1233,
+        "stderr_chars": 0,
+        "stdout_truncated": false,
+        "stderr_truncated": false,
+        "tail_limit_chars": 4000
+      }
+    ],
+    "worktree": {
+      "diffstat": "",
+      "untracked": [
+        "reference/python/scripts/build_execution_record.py"
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    "protected_touched": []
+  },
+  "decision": "FALLBACK_PASS",
+  "final_answer": "Added reference/python/scripts/build_execution_record.py, which transcribes run 009's record from the run directory + record spec (receipt closing attempt for actor/measured, all receipt attempts in receipt order for costs.route, hashed spec inputs, exit codes read from checks/*.txt), validates it with validate_execution_record(record, repo_root, repo_root) before writing (JSON indent=2, trailing newline), and exits 0 / 1 (problems printed) / 2 (file named: missing artifact or no single exit= line); only that one file was added.",
+  "final_postcondition": true,
+  "trail": [
+    "step 0: baseline [('python', 1), ('python', 0)]",
+    "step 1-2: gemma4 answered 'Added reference/python/scripts/build_execution_record.py to build and validate schema-0.2 executed-transition records from run artifacts.' -> postcondition False",
+    "step 6: cheap attempt set aside (55b13e38843105005e4b98348c6d77953c6e6880)",
+    "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+    "step 6: deepseek-v4.1-flash answered \"Added reference/python/scripts/build_execution_record.py, which transcribes run 009's record from the run directory + record spec (receipt closing attempt for actor/measured, all receipt attempts in receipt order for costs.route, hashed spec inputs, exit codes read from checks/*.txt), validates it with validate_execution_record(record, repo_root, repo_root) before writing (JSON indent=2, trailing newline), and exits 0 / 1 (problems printed) / 2 (file named: missing artifact or no single exit= line); only that one file was added.\" -> postcondition True"
+  ],
+  "run_id": "run-22eeae8e4041e8ccd3523ec5b28e5496",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\run_010\\tasks_B.json",
+      "size": 6543,
+      "sha256": "293a46925182c997f90fc1665fc94a222efe79b994ba04bd1711292780cf8c14",
+      "saved": "inputs/293a46925182c997f90fc1665fc94a222efe79b994ba04bd1711292780cf8c14"
+    },
+    "check_files": [
+      {
+        "declared": "F:/VibeCoding/CAP-wt-cmp-B/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+        "source": "F:\\VibeCoding\\CAP-wt-cmp-B\\validation_artifacts\\ameba_cycle\\prepared\\adjustment_comparison\\probe_build_record.py",
+        "size": 4578,
+        "sha256": "5ba1253b6dfaf2644e9c9e421f0ae594ae08a42988e454aae9da413247a8ddd5",
+        "saved": "inputs/5ba1253b6dfaf2644e9c9e421f0ae594ae08a42988e454aae9da413247a8ddd5"
+      }
+    ]
+  },
+  "run_receipt": "runs/run-22eeae8e4041e8ccd3523ec5b28e5496/cap-build-record-B.json",
+  "run_summary": "runs/run-22eeae8e4041e8ccd3523ec5b28e5496/summary.json",
+  "total_wall_s": 307.14
+}

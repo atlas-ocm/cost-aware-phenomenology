@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-25T01-00Z_record_builder_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator (2026-09-25, step 3 of the queue): compare Adjustment with a baseline path fixed beforehand, on the same required postcondition, with the full-cost method fixed beforehand",
+        "Reviewer: one successfully executed task with Adjustment shows only the cost of that execution; the baseline path and the identical postcondition must be fixed before the comparison",
+        "Design of run 010 (prepared/adjustment_comparison/README.md): path A = executor route alone with packet A; path B = this Mirror Frame, a CandidateTransition and packet B informed by them; same oracle, same checks, same commit, own worktrees; A first"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-25T01:00:00Z",
+          "claim": "HEAD; tree; remote",
+          "value": "844bcca = origin/research/ameba-executable-cycle; tree clean; full suite 1022 passed, 2 skipped at 5b84998 and no code change since",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_no_builder_in_repo",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T01:00:00Z",
+          "claim": "reference/python/scripts/",
+          "value": "holds validate_execution_record.py (argparse CLI; sys.path.insert(0, parent of the scripts dir) then from cap.execution_record import validate_execution_record; CAP_ROOT = parents[3]) and no builder; every execution record so far was built by the driver's scratch scripts (make_execution_record v1-v3), which are not on the branch",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_run_009_artifacts",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T01:00:00Z",
+          "claim": "validation_artifacts/ameba_cycle/run_009_route_costs/",
+          "value": "mirror_frame.json (frame.id), candidate_transition.json (candidate.id), coding_packet.json, nomcp_coding_receipt.json (decision, fallback_used, first_attempt and fallback_attempt each with model_requested, model_served, turns, output_tokens, wall_s; total_wall_s; inputs.packet.sha256; inputs.check_files[].sha256), nomcp_verdict_receipt.json (wall_s), checks/c1..c5 text files each ending with one line exit=<int>, record_spec.json, transition_execution_record.json (schema_version 0.2)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_spec_keys",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T01:00:00Z",
+          "claim": "record_spec.json keys",
+          "value": "record_id, object_identifier, revision_before, revision_after, tool, inputs (repo-relative refs), criteria (id, statement, check_command), checks (criterion_id, result_ref), observed_after_at, observation_summary, expected_evidence_results, divergence (list of strings), adjustment_ref, verdict_reasons, notes",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_record_derivation",
+          "source": "filesystem",
+          "observed_at": "2026-09-25T01:00:00Z",
+          "claim": "how each field of run 009's record derives from the artifacts and the spec (read from the record, the receipt and the spec side by side)",
+          "value": "schema_version 0.2; object {kind repo, identifier, revision_before, revision_after} from the spec; candidate {candidate_id = candidate_transition.json candidate.id, candidate_ref = <run_dir>/candidate_transition.json, mirror_frame_before_id = mirror_frame.json frame.id, mirror_frame_before_ref = <run_dir>/mirror_frame.json}; postcondition {defined_before_execution true, criteria = spec.criteria}; execution {actor {role fallback_coder if receipt.fallback_used else cheap_coder, model_requested and model_served of the closing attempt (fallback_attempt if fallback_used else first_attempt), identity_source claude_cli_modelUsage, identity_independently_verified false}, tool = spec.tool, inputs = [{ref, sha256 of the file bytes} for each spec.inputs ref], receipt_ref = <run_dir>/nomcp_coding_receipt.json, decision = receipt.decision, attempts = number of receipt attempts (1 or 2)}; observation_after {observed_at = spec.observed_after_at, revision_after = spec.revision_after, summary = spec.observation_summary}; checks = for each spec.checks entry {criterion_id, command = the check_command of that criterion, exit_code = the integer of the single exit= line of the result file, status pass if 0 else fail, result_ref, revision_checked = spec.revision_after}; expected_evidence_results = spec.expected_evidence_results; divergence {expected_vs_observed = spec.divergence, adjustment_ref = spec.adjustment_ref}; costs {estimated_ref = <run_dir>/candidate_transition.json, measured {worker_output_tokens, worker_turns, worker_wall_s of the closing attempt, verifier_wall_s = round(verdict receipt wall_s, 1), money unknown}, route {attempts = [{role cheap_coder, model_served, turns, output_tokens, wall_s of first_attempt}, plus the fallback_coder entry when fallback_used], turns_total and output_tokens_total = sums over those, router_wall_s = receipt.total_wall_s}}; verdict {postcondition_met = every check passes, provenance_established true, reasons = spec.verdict_reasons}; notes = spec.notes; written with json.dump indent 2, ensure_ascii False, trailing newline, utf-8",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-25T01:02:00Z",
+          "claim": "probe_build_record.py --expect-closed on the clean tree",
+          "value": "exit 1: c1 fails because reference/python/scripts/build_execution_record.py does not exist; c2-c4 fail for the same reason",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_builder_is_a_transcription",
+          "claim": "The script is a transcription of one fixed derivation over files that already exist; nothing has to be designed, and the one place a worker can go wrong is a field derived differently from the committed record (the oracle compares the whole record)",
+          "derived_from": ["obs_record_derivation", "obs_run_009_artifacts", "obs_spec_keys"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_records_reproducible_from_artifacts"],
+      "policies": ["policy_same_postcondition_for_both_paths", "policy_no_learning_from_path_a"],
+      "specs": ["spec/transition_execution.schema.json"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-25T01:00:00Z",
+        "claim": "HEAD commit",
+        "value": "844bcca",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-25T01:02:00Z",
+        "claim": "oracle on the baseline",
+        "value": "exit 1, the script does not exist",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "whether packet quality decides the tier",
+        "reason": "two cheap closes (008, and 009 on the oracle alone) came on fully specified packets; this pair is the first designed test of that, and one pair is a probe"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "reference/python/scripts/build_execution_record.py",
+        "declared": "a driver on any machine can build a record from a run directory and a spec",
+        "observed": "only this session's scratch scripts can",
+        "severity": "warning",
+        "reason": "The cloud continuation would have to reinvent the derivation"
+      }
+    ],
+    "created_at": "2026-09-25T01:02:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at 844bcca",
+    "reasons": [
+      "The derivation exists only in scratch scripts; the branch cannot rebuild its own records",
+      "Every input of the derivation is on the branch, so the change is one script transcribing an observed derivation"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "no builder under reference/python/scripts; run 009 artifacts and spec carry every input; the derivation of each record field was read off the committed record; the oracle is red because the script is missing"
+  },
+  "notes": "Run 010, Mirror step of path B. Path A has no Mirror step by design; this frame informs packet B only."
+}

@@ -234,7 +234,13 @@
         "router_wall_s": 422.59
       },
       "verifier_wall_s": 98.33,
-      "recorded_in_execution_record": null,
+      "recorded_in_execution_record": {
+        "worker_output_tokens": 43932,
+        "worker_turns": 52,
+        "worker_wall_s": 320.97,
+        "verifier_wall_s": 98.3,
+        "money": "unknown"
+      },
       "money": "unknown"
     }
   ]

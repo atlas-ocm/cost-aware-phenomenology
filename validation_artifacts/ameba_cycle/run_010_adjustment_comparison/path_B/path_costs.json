@@ -1,0 +1,69 @@
+{
+  "path": "B",
+  "task_id": "cap-build-record-B",
+  "decision": "FALLBACK_PASS",
+  "final_postcondition": true,
+  "baseline_checks_exit": [
+    1,
+    0
+  ],
+  "attempts": [
+    {
+      "role": "cheap_coder",
+      "model_served": "gemma4:31b-cloud",
+      "turns": 5,
+      "output_tokens": 2142,
+      "wall_s": 9.69,
+      "postcondition": false,
+      "checks_exit": [
+        1,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    {
+      "role": "fallback_coder",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "turns": 47,
+      "output_tokens": 30209,
+      "wall_s": 127.75,
+      "postcondition": true,
+      "checks_exit": [
+        0,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    }
+  ],
+  "set_aside_attempts": 1,
+  "route_total": {
+    "turns": 52,
+    "output_tokens": 32351,
+    "router_wall_s": 307.14
+  },
+  "closing_attempt": {
+    "turns": 47,
+    "output_tokens": 30209,
+    "wall_s": 127.75
+  },
+  "verifier": {
+    "model": "glm-5.3-flash:cloud",
+    "verdict": "ACCEPT",
+    "wall_s": 21.843754053115845,
+    "issues": []
+  },
+  "workflow": {
+    "wall_s": 1338.3,
+    "relay_tokens": 47127
+  },
+  "driver": {
+    "authoring_wall_s": 420.0,
+    "reobservation_wall_s": 51.0
+  },
+  "worker_final_answer": "Added reference/python/scripts/build_execution_record.py, which transcribes run 009's record from the run directory + record spec (receipt closing attempt for actor/measured, all receipt attempts in receipt order for costs.route, hashed spec inputs, exit codes read from checks/*.txt), validates it with validate_execution_record(record, repo_root, repo_root) before writing (JSON indent=2, trailing newline), and exits 0 / 1 (problems printed) / 2 (file named: missing artifact or no single exit= line); only that one file was added.",
+  "money": "unknown"
+}

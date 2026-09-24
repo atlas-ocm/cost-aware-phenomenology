@@ -13,8 +13,8 @@ its hash is reported in the local Driver's final message, not here.
 | base | `origin/main` = `e65b9af4b28d3c97950c667448a32c24adc44a0e` — identical to the revision the architect read; `git fetch --prune` confirmed no newer remote commit |
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
-| verified code revision | `5b84998` (whole-route costs, run 009): full suite `1022 passed, 2 skipped`, five criteria re-run in a detached worktree (§2.11). Earlier verified points: `bbbc26c` (936), `989a7e2` (941), `8d23161` (981; `scripts/check_repo.ps1` exit 0), `ebe0ba0` (1004), `fc87e62` (1011); always 2 skipped |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, `2731484` run 007, `8bc15b5` run 007 revision 2, `68914ff` executed bytes of run 005a, `5a5e2e9` handoff wording, `fc87e62` feat(cap) record binding (run 008), `78a8598` run-008 records, `c0c8cba` prepared route-costs packet, `5b84998` feat(spec,cap) whole-route costs (run 009), then the run-009 records commit |
+| verified code revision | `5b84998` (whole-route costs, run 009): full suite `1022 passed, 2 skipped`, five criteria re-run in a detached worktree (§2.11); the run-010 commit adds only `reference/python/scripts/build_execution_record.py` (path B's result, oracle green at that commit, suite unchanged). Earlier verified points: `bbbc26c` (936), `989a7e2` (941), `8d23161` (981; `scripts/check_repo.ps1` exit 0), `ebe0ba0` (1004), `fc87e62` (1011); always 2 skipped |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then `1db22cf` records (runs 004, 005a, 005b; execution records for 002/004/005a/005b; the prepared COM-Log link packet), `ebe0ba0` feat(cap) COM-Log link, `9942901` run-006 records, `26535dc` handoff wording, `2731484` run 007, `8bc15b5` run 007 revision 2, `68914ff` executed bytes of run 005a, `5a5e2e9` handoff wording, `fc87e62` feat(cap) record binding (run 008), `78a8598` run-008 records, `c0c8cba` prepared route-costs packet, `5b84998` feat(spec,cap) whole-route costs (run 009), `844bcca` run-009 records, `7bc4780` prepared comparison, then the run-010 commit (records, the landed builder script); comparison results on branches `cmp/run-010-path-A` (`71a0248`) and `cmp/run-010-path-B` (`fa10bfd`) |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -202,6 +202,29 @@ launch, the first killed by a relay deviation (it read the output file instead
 of waiting). Record: `run_009_route_costs/`, the first 0.2 record, with its
 `record_spec.json` committed so a repository script can rebuild it (§7 item 2).
 
+### 2.12 Run 010 — Adjustment against a fixed baseline path: one pair, a probe
+
+The same bounded change (a repository script that rebuilds run 009's record
+from its artifacts and `record_spec.json`) was routed twice from `7bc4780`
+through the same NoMCP mode-1 route inside one Workflow of four relays: path
+A with a packet that states goal, CLI, inputs, exit codes and checks (no
+Mirror Frame, no candidate), path B with the same packet plus the observed
+derivation from a Mirror Frame and the forbidden outcomes of a
+CandidateTransition; same oracle, same checks, own worktrees, A first, B not
+informed by A; design, cost method and hypotheses fixed beforehand
+(`prepared/adjustment_comparison/README.md`). Both paths: cheap tier set
+aside on the oracle's fourth case, fallback closed, verifier `ACCEPT` (A after
+a provider deadline on its first call), checks re-run at `71a0248` / `fa10bfd`.
+Route: A 55 turns, 39,217 output tokens, 315.9 s; B 52 / 32,351 / 307.1 s;
+driver authoring A about 2 min, B about 7 min. H1 (fewer attempts) not
+supported; the token and wall difference is within what one pair cannot
+separate from noise; H0 not rejected. Both cheap attempts failed on a detail
+of the oracle's construction that neither packet described (the driver's
+oracle, not the packet). Path B's script landed by a rule chosen after the
+results (lower whole-route cost among the accepted). Path A has no execution
+record: the record schema presupposes a Mirror Frame and a candidate. Record
+and comparison: `run_010_adjustment_comparison/`.
+
 ## 3. Exact commands, dependencies, inputs and outputs
 
 Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
@@ -386,14 +409,18 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    revision: `bbbc26c` 936 passed, `989a7e2` 941, `8d23161` 981, `ebe0ba0`
    1004, `fc87e62` 1011, `5b84998` and every later commit 1022, always 2 skipped; record the clone's directory name
    and OS as an environment difference, not a defect.
-2. Fix the baseline path before any comparison (brief §6). Proposed and not
-   yet run: for the next bounded change on this repository, run it twice from
+2. Baseline path fixed and run once (run 010, §2.12; design in
+   `prepared/adjustment_comparison/README.md`). As proposed: for one bounded change on this repository, run it twice from
    the same commit — (a) the executor route alone (packet, checks, verdict,
    driver) and (b) the same route preceded by a Mirror Frame and a
    CandidateTransition — and compare on the brief's five axes (postcondition
    met and constraints violated; unverified completion claims; interventions,
    retries, regressions, rollbacks; time and tokens in their own units; new
    evidence produced). Two runs of one change is a probe, not a result.
+   Result of the one pair: both paths reached the postcondition after one
+   cheap set-aside each; B's route was cheaper by 3 turns, 6,866 output
+   tokens and 8.8 s, at about five more minutes of driver authoring; one pair
+   does not separate that from noise.
 3. Done: Breach = Recovery-Only (`989a7e2`, run 004) and the executed-transition
    record (§2.7, runs 005a and 005b). Every further run must produce a
    `transition_execution_record.json` that passes
@@ -424,6 +451,14 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    beforehand: one successfully executed task with Adjustment shows only the
    cost of that execution, not a reduction of the full cost of reaching the
    postcondition.
+   Status after run 010: not established either way from one pair (item 2).
+   Next: more pairs, on tasks where the two packets differ in exactly what
+   the cheap tier tends to miss, with the driver's authoring time measured;
+   and a decision on the path-A record problem (the record schema presupposes
+   a Mirror Frame and a candidate, so a baseline path cannot be recorded as a
+   verified transition; run 010 records path A as receipts, checks and a cost
+   summary). The builder script from run 010 lets any driver build 0.2
+   records: `python reference/python/scripts/build_execution_record.py . <run_dir> <run_dir>/record_spec.json --out <path>`.
 6. Still open from data: whether Adjustment's route-level BudgetGate
    (`adjustment_dynamics.md` §Budget Gate) should be code, or whether the
    per-operator gate is sufficient.
@@ -431,7 +466,8 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
 ## 8. What is available from the cloud and what exists only locally
 
 Available on the branch: all code, tests, docs, schemas, examples, the run
-records 001–009 with verbatim receipts, the prepared packets, the brief, this file.
+records 001–010 with verbatim receipts, the prepared packets, the comparison
+branches `cmp/run-010-path-A` and `cmp/run-010-path-B`, the brief, this file.
 
 Local only: the 32 external Looking-Glass / Latent Cause cases
 (`F:/VibeCoding/Shard-Theory/Patch`); the NoMCP checkout (`F:/VibeCoding/Nomcp`)

@@ -1,0 +1,212 @@
+[
+ {
+  "id": "cap-build-record-A-verify",
+  "packet": {
+   "question": "Task: add reference/python/scripts/build_execution_record.py, a repository script that builds a schema-0.2 executed-transition record from a recorded run directory and a record spec, validates it with cap.execution_record.validate_execution_record (base_dir and repo_dir both the repository root) and writes it to the path given by --out; CLI exactly: build_execution_record.py <repo_root> <run_dir_rel> <spec_json> --out <path>; exit 0 only when built and valid, exit 1 with the problems printed when the validator returned some, exit 2 naming the file when a stored check result does not hold exactly one exit= line or a required artifact is missing. Did the worker do exactly that and nothing else: one new file, no other file changed, the committed record of run 009 rebuilt identically from its artifacts and record_spec.json (the oracle checks JSON equality, validity and the exit-2 case), the full suite green? Judge from the diff, the new file's content, the oracle text and the rechecks in the evidence. Missing evidence is UNDECIDABLE, not ACCEPT.",
+   "postcondition": {
+    "value": "Both declared checks exit 0 on the current tree: (1) the driver's oracle validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py with --expect-closed, meaning: the script rebuilds run 009's record into a scratch file and exits 0; the rebuilt record equals the committed validation_artifacts/ameba_cycle/run_009_route_costs/transition_execution_record.json as JSON; validate_execution_record returns no problem for it against the repository; on a copy of the run directory whose c1 result lost its exit= line the script exits 2 and names that file; (2) python -m pytest -q -p no:cacheprovider reference/python/tests. Exactly one file is added, reference/python/scripts/build_execution_record.py; no other file is changed or added; the oracle file is byte-identical to its committed version."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+       ".",
+       "--expect-closed"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "cript does not exist\", \"path\": \"F:\\\\VibeCoding\\\\CAP-wt-cmp-A\\\\reference\\\\python\\\\scripts\\\\build_execution_record.py\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"reason\": \"script missing or no c1 result in the run copy\"}\nprobe_build_record: at least one expectation fails",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "case=c1_build holds=False detail={\"reason\": \"script does not exist\", \"path\": \"F:\\\\VibeCoding\\\\CAP-wt-cmp-A\\\\reference\\\\python\\\\scripts\\\\build_execution_record.py\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"reason\": \"script missing or no c1 result in the run copy\"}\nprobe_build_record: at least one expectation fails\n",
+      "stderr_tail": "",
+      "stdout_chars": 447,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 54.73s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 54.73s\n",
+      "stderr_tail": "",
+      "stdout_chars": 1233,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 15.19,
+     "turns": 6,
+     "output_tokens": 2714,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+        ".",
+        "--expect-closed"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": " built\"}\ncase=c4_exit_line_named holds=False detail={\"exit\": 1, \"names_file\": false, \"stdout_tail\": \"\", \"stderr_tail\": \"\\\\\\\\VibeCoding\\\\\\\\CAP-wt-cmp-A\\\\\\\\validation_artifacts\\\\\\\\ameba_cycle\\\\\\\\run_009_route_costs\\\\\\\\record_spec.json' is not in the subpath of 'C:\\\\\\\\Users\\\\\\\\ATLAS\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\cap-probe-build-q2ydy3f7\\\\\\\\base'\\n\"}\nprobe_build_record: at least one expectation fails",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "case=c1_build holds=False detail={\"exit\": 2, \"stdout_tail\": \"Missing check result file: F:\\\\VibeCoding\\\\CAP-wt-cmp-A\\\\validation_artifacts\\\\ameba_cycle\\\\run_009_route_costs\\\\checks\\\\c1.txt\\n\", \"stderr_tail\": \"\"}\ncase=c2_equality holds=False detail={\"reason\": \"nothing built\"}\ncase=c3_validity holds=False detail={\"reason\": \"nothing built\"}\ncase=c4_exit_line_named holds=False detail={\"exit\": 1, \"names_file\": false, \"stdout_tail\": \"\", \"stderr_tail\": \"\\\\\\\\VibeCoding\\\\\\\\CAP-wt-cmp-A\\\\\\\\validation_artifacts\\\\\\\\ameba_cycle\\\\\\\\run_009_route_costs\\\\\\\\record_spec.json' is not in the subpath of 'C:\\\\\\\\Users\\\\\\\\ATLAS\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\cap-probe-build-q2ydy3f7\\\\\\\\base'\\n\"}\nprobe_build_record: at least one expectation fails\n",
+       "stderr_tail": "",
+       "stdout_chars": 732,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 51.96s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 51.96s\n",
+       "stderr_tail": "",
+       "stdout_chars": 1233,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 134.67,
+     "turns": 49,
+     "output_tokens": 36503,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py",
+        ".",
+        "--expect-closed"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "r_tail\": \"\"}\ncase=c2_equality holds=True detail={\"equal\": true, \"differing_top_level_keys\": []}\ncase=c3_validity holds=True detail={\"problems\": []}\ncase=c4_exit_line_named holds=True detail={\"exit\": 2, \"names_file\": true, \"stdout_tail\": \"validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt: no single exit= line\\n\", \"stderr_tail\": \"\"}\nprobe_build_record: every expectation holds",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "case=c1_build holds=True detail={\"exit\": 0, \"stdout_tail\": \"wrote C:\\\\Users\\\\ATLAS\\\\AppData\\\\Local\\\\Temp\\\\cap-probe-build-sqj02erg\\\\rebuilt.json\\n\", \"stderr_tail\": \"\"}\ncase=c2_equality holds=True detail={\"equal\": true, \"differing_top_level_keys\": []}\ncase=c3_validity holds=True detail={\"problems\": []}\ncase=c4_exit_line_named holds=True detail={\"exit\": 2, \"names_file\": true, \"stdout_tail\": \"validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt: no single exit= line\\n\", \"stderr_tail\": \"\"}\nprobe_build_record: every expectation holds\n",
+       "stderr_tail": "",
+       "stdout_chars": 556,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..............................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 52.61s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n........................................................................ [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n..............................................................s......... [ 77%]\n.......s................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n................                                                         [100%]\n1022 passed, 2 skipped in 52.61s\n",
+       "stderr_tail": "",
+       "stdout_chars": 1233,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Added repository script reference/python/scripts/build_execution_record.py to build and validate schema-0.2 executed-transition records from run artifacts.' -> postcondition False",
+     "step 6: cheap attempt set aside (4adc65cb698e9174878a74efe4e543bc1d95e359)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered \"Added reference/python/scripts/build_execution_record.py: a repo-root/run-dir/spec CLI that derives the schema-0.2 record (object, candidate from mirror_frame/candidate_transition, postcondition, execution actor/inputs/receipt/decision/attempts, observation_after, per-criterion checks read from the single exit= line, costs.measured from the closing attempt plus round(verdict wall_s,1), costs.route from every receipt attempt with totals and total_wall_s, verdict and notes), writes it as json.dump(indent=2, ensure_ascii=False)+newline, then validates via cap.execution_record.validate_execution_record(base_dir=repo_root, repo_dir=repo_root); exits 0 on success, 1 printing problems, 2 naming the file on a missing artifact or a check result without exactly one exit= line (checked before hashing/validating so the oracle's truncated-result case is caught).\" -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": "(empty)"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "(empty)"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "reference/python/scripts/build_execution_record.py\n"
+    },
+    {
+     "path": "git diff",
+     "content": "(empty)"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "\n--- new file reference/python/scripts/build_execution_record.py ---\n#!/usr/bin/env python3\n\"\"\"Build a schema-0.2 executed-transition record from a recorded run directory.\n\nUsage:\n\n    python build_execution_record.py <repo_root> <run_dir_rel> <spec_json> --out <path>\n\nThe record is derived from the run directory's stored artifacts (its Mirror\nFrame, the candidate transition, the router coding receipt, the verifier\nverdict receipt and the stored check results) and the record spec the driver\nused. The built record is validated against <repo_root> by\ncap.execution_record.validate_execution_record.\n\nExit 0 means the record was built and the validator returned no problem; 1\nmeans the validator returned problems (printed one per line); 2 means a stored\ncheck result did not hold exactly one exit= line, or a required artifact is\nmissing (the file is named).\n\"\"\"\nfrom __future__ import annotations\n\nimport argparse\nimport hashlib\nimport json\nimport re\nimport sys\nfrom pathlib import Path\n\n# Make cap module importable when running as script\nsys.path.insert(0, str(Path(__file__).resolve().parent.parent))\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nRUN_FILES = (\n    \"mirror_frame.json\",\n    \"candidate_transition.json\",\n    \"nomcp_coding_receipt.json\",\n    \"nomcp_verdict_receipt.json\",\n)\nEXIT_RE = re.compile(r\"^exit=(-?\\d+)$\")\n\n\ndef _load_json(path: Path):\n    return json.loads(path.read_text(encoding=\"utf-8-sig\"))\n\n\ndef _report_and_exit(ref: str, reason: str) -> int:\n    \"\"\"Name the file and return the exit code for an unusable artifact.\"\"\"\n    print(f\"{ref}: {reason}\")\n    return 2\n\n\ndef _read_exit_code(path: Path):\n    \"\"\"The integer of the single exit= line, or None when there is not exactly one.\"\"\"\n    lines = path.read_text(encoding=\"utf-8-sig\").splitlines()\n    exit_lines = [line for line in lines if line.startswith(\"exit=\")]\n    if len(exit_lines) != 1:\n        return None\n    match = EXIT_RE.match(exit_lines[0])\n    if not match:\n        return None\n    return int(match.group(1))\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser(\n        description=\"Build an executed-transition record from a run directory.\",\n    )\n    parser.add_argument(\"repo_root\", help=\"Repository root the record is validated against\")\n    parser.add_argument(\"run_dir_rel\", help=\"Run directory, relative to the repository root\")\n    parser.add_argument(\"spec_json\", help=\"Record spec the driver used\")\n    parser.add_argument(\"--out\", required=True, help=\"Path the built record is written to\")\n    args = parser.parse_args()\n\n    repo_root = Path(args.repo_root).resolve()\n    run_dir_rel = args.run_dir_rel\n    run_dir = repo_root / run_dir_rel\n\n    spec_arg = Path(args.spec_json)\n    if spec_arg.is_absolute():\n        spec_path = spec_arg\n    else:\n        spec_path = repo_root / spec_arg\n        if not spec_path.is_file():\n            spec_path = Path.cwd() / spec_arg\n    if not spec_path.is_file():\n        return _report_and_exit(str(spec_arg), \"record spec not found\")\n    try:\n        spec = _load_json(spec_path)\n    except (OSError, ValueError) as exc:\n        return _report_and_exit(str(spec_path), f\"cannot read record spec: {exc}\")\n\n    # required run-directory artifacts\n    for name in RUN_FILES:\n        if not (run_dir / name).is_file():\n            return _report_and_exit(f\"{run_dir_rel}/{name}\", \"required artifact not found\")\n\n    candidate_transition = _load_json(run_dir / \"candidate_transition.json\")\n    mirror_frame = _load_json(run_dir / \"mirror_frame.json\")\n    receipt = _load_json(run_dir / \"nomcp_coding_receipt.json\")\n    verdict_receipt = _load_json(run_dir / \"nomcp_verdict_receipt.json\")\n\n    # checks: every stored result must hold exactly one exit= line\n    criteria_map = {c.get(\"id\"): c.get(\"check_command\") for c in spec[\"criteria\"]}\n    checks = []\n    for item in spec[\"checks\"]:\n        ref = item[\"result_ref\"]\n        target = repo_root / ref\n        if not target.is_file():\n            return _report_and_exit(ref, \"required artifact not found\")\n        exit_code = _read_exit_code(target)\n        if exit_code is None:\n            return _report_and_exit(ref, \"no single exit= line\")\n        checks.append(\n            {\n                \"criterion_id\": item[\"criterion_id\"],\n                \"command\": criteria_map.get(item[\"criterion_id\"]),\n                \"exit_code\": exit_code,\n                \"status\": \"pass\" if exit_code == 0 else \"fail\",\n                \"result_ref\": ref,\n                \"revision_checked\": spec[\"revision_after\"],\n            }\n        )\n\n    # hashed inputs: the sha256 of each named file's bytes\n    inputs = []\n    for ref in spec[\"inputs\"]:\n        target = repo_root / ref\n        if not target.is_file():\n            return _report_and_exit(ref, \"required artifact not found\")\n        inputs.append(\n            {\"ref\": ref, \"sha256\": hashlib.sha256(target.read_bytes()).hexdigest()}\n        )\n\n    fallback_used = receipt.get(\"fallback_used\") is True\n    attempt_names = [\"first_attempt\"] + ([\"fallback_attempt\"] if fallback_used else [])\n    closing = receipt[\"fallback_attempt\"] if fallback_used else receipt[\"first_attempt\"]\n\n    route_attempts = []\n    for name in attempt_names:\n        attempt = receipt[name]\n        route_attempts.append(\n            {\n                \"role\": \"fallback_coder\" if name == \"fallback_attempt\" else \"cheap_coder\",\n                \"model_served\": attempt.get(\"model_served\"),\n                \"turns\": attempt.get(\"turns\"),\n                \"output_tokens\": attempt.get(\"output_tokens\"),\n                \"wall_s\": attempt.get(\"wall_s\"),\n            }\n        )\n\n    record = {\n        \"schema_version\": \"0.2\",\n        \"record_id\": spec[\"record_id\"],\n        \"object\": {\n            \"kind\": \"repo\",\n            \"identifier\": spec[\"object_identifier\"],\n            \"revision_before\": spec[\"revision_before\"],\n            \"revision_after\": spec[\"revision_after\"],\n        },\n        \"candidate\": {\n            \"candidate_id\": candidate_transition[\"candidate\"][\"id\"],\n            \"candidate_ref\": f\"{run_dir_rel}/candidate_transition.json\",\n            \"mirror_frame_before_id\": mirror_frame[\"frame\"][\"id\"],\n            \"mirror_frame_before_ref\": f\"{run_dir_rel}/mirror_frame.json\",\n        },\n        \"postcondition\": {\n            \"defined_before_execution\": True,\n            \"criteria\": spec[\"criteria\"],\n        },\n        \"execution\": {\n            \"actor\": {\n                \"role\": \"fallback_coder\" if fallback_used else \"cheap_coder\",\n                \"model_requested\": closing.get(\"model_requested\"),\n                \"model_served\": closing.get(\"model_served\"),\n                \"identity_source\": \"claude_cli_modelUsage\",\n                \"identity_independently_verified\": False,\n            },\n            \"tool\": spec[\"tool\"],\n            \"inputs\": inputs,\n            \"receipt_ref\": f\"{run_dir_rel}/nomcp_coding_receipt.json\",\n            \"decision\": receipt.get(\"decision\"),\n            \"attempts\": len(attempt_names),\n        },\n        \"observation_after\": {\n            \"observed_at\": spec[\"observed_after_at\"],\n            \"revision_after\": spec[\"revision_after\"],\n            \"summary\": spec[\"observation_summary\"],\n        },\n        \"checks\": checks,\n        \"expected_evidence_results\": spec[\"expected_evidence_results\"],\n        \"divergence\": {\n            \"expected_vs_observed\": spec[\"divergence\"],\n            \"adjustment_ref\": spec[\"adjustment_ref\"],\n        },\n        \"costs\": {\n            \"estimated_ref\": f\"{run_dir_rel}/candidate_transition.json\",\n            \"measured\": {\n                \"worker_output_tokens\": closing.get(\"output_tokens\"),\n                \"worker_turns\": closing.get(\"turns\"),\n                \"worker_wall_s\": closing.get(\"wall_s\"),\n                \"verifier_wall_s\": round(verdict_receipt.get(\"wall_s\"), 1),\n                \"money\": \"unknown\",\n            },\n            \"route\": {\n                \"attempts\": route_attempts,\n                \"turns_total\": sum(a[\"turns\"] for a in route_attempts),\n                \"output_tokens_total\": sum(a[\"output_tokens\"] for a in route_attempts),\n                \"router_wall_s\": receipt.get(\"total_wall_s\"),\n            },\n        },\n        \"verdict\": {\n            \"postcondition_met\": all(c[\"status\"] == \"pass\" for c in checks),\n            \"provenance_established\": True,\n            \"reasons\": spec[\"verdict_reasons\"],\n        },\n        \"notes\": spec[\"notes\"],\n    }\n\n    out_path = Path(args.out)\n    out_path.parent.mkdir(parents=True, exist_ok=True)\n    with out_path.open(\"w\", encoding=\"utf-8\", newline=\"\\n\") as handle:\n        json.dump(record, handle, indent=2, ensure_ascii=False)\n        handle.write(\"\\n\")\n\n    problems = validate_execution_record(record, repo_root, repo_root)\n    if problems:\n        for problem in problems:\n            print(problem)\n        return 1\n    print(f\"wrote {out_path}\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n"
+    },
+    {
+     "path": "probe_build_record.py (the driver's oracle, committed and declared by hash)",
+     "content": "\"\"\"Oracle for the record-builder script (driver-written, deterministic, no model calls). The same oracle is the\npostcondition of both paths of the Adjustment comparison (run 010).\n\nusage: python probe_build_record.py <repo_root> [--expect-closed]\n\nExpects reference/python/scripts/build_execution_record.py with the CLI\n    build_execution_record.py <repo_root> <run_dir_rel> <spec_json> --out <path>\nthat builds a schema-0.2 executed-transition record from a run directory and a record spec, validates it\nagainst <repo_root> (references, hashes, git revisions, coverage and the binding rules) and exits 0 only\nwhen it built the record and the validator returned no problem; exit 2, naming the file, when a stored\ncheck result does not hold exactly one exit= line or a required artifact is missing.\n\nCases (each an expectation; --expect-closed exits 0 only when all hold; on the baseline the script does not\nexist, so the first case fails for that named reason):\n  c1 build:        the script rebuilds run 009's record into a scratch file and exits 0;\n  c2 equality:     the rebuilt record equals the committed run 009 record as JSON (key order irrelevant);\n  c3 validity:     validate_execution_record(rebuilt, repo_root, repo_root) returns no problem;\n  c4 exit line:    on a copy of the run directory whose c1 result file lost its exit= line, the script exits 2\n                   and names that file.\n\"\"\"\nimport json\nimport pathlib\nimport shutil\nimport subprocess\nimport sys\nimport tempfile\n\nrepo = pathlib.Path(sys.argv[1]).resolve()\nexpect_closed = \"--expect-closed\" in sys.argv\nsys.path.insert(0, str(repo / \"reference\" / \"python\"))\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nSCRIPT = repo / \"reference\" / \"python\" / \"scripts\" / \"build_execution_record.py\"\nRUN = \"validation_artifacts/ameba_cycle/run_009_route_costs\"\nSPEC = f\"{RUN}/record_spec.json\"\nCOMMITTED = repo / RUN / \"transition_execution_record.json\"\nscratch = pathlib.Path(tempfile.mkdtemp(prefix=\"cap-probe-build-\"))\nresults = []\n\n\ndef report(label, holds, detail):\n    results.append(holds)\n    print(f\"case={label} holds={holds} detail={json.dumps(detail, ensure_ascii=True)[:400]}\")\n\n\ndef run(args, cwd):\n    return subprocess.run([sys.executable, \"-B\", str(SCRIPT), *args], cwd=str(cwd), capture_output=True,\n                          text=True, encoding=\"utf-8\", errors=\"replace\")\n\n\nout = scratch / \"rebuilt.json\"\nif not SCRIPT.is_file():\n    report(\"c1_build\", False, {\"reason\": \"script does not exist\", \"path\": str(SCRIPT)})\n    rebuilt = None\nelse:\n    p = run([str(repo), RUN, SPEC, \"--out\", str(out)], repo)\n    ok = p.returncode == 0 and out.is_file()\n    report(\"c1_build\", ok, {\"exit\": p.returncode, \"stdout_tail\": p.stdout[-300:], \"stderr_tail\": p.stderr[-300:]})\n    rebuilt = json.loads(out.read_text(encoding=\"utf-8-sig\")) if ok else None\n\nif rebuilt is None:\n    report(\"c2_equality\", False, {\"reason\": \"nothing built\"})\n    report(\"c3_validity\", False, {\"reason\": \"nothing built\"})\nelse:\n    committed = json.loads(COMMITTED.read_text(encoding=\"utf-8-sig\"))\n    report(\"c2_equality\", rebuilt == committed, {\"equal\": rebuilt == committed,\n           \"differing_top_level_keys\": [k for k in set(rebuilt) | set(committed) if rebuilt.get(k) != committed.get(k)]})\n    problems = validate_execution_record(rebuilt, repo, repo)\n    report(\"c3_validity\", not problems, {\"problems\": problems[:5]})\n\n# c4: a copy of the run directory under a scratch base whose c1 result lost its exit= line\nbase = scratch / \"base\"\ndst = base / RUN\nshutil.copytree(repo / RUN, dst)\nc1 = next((f for f in sorted((dst / \"checks\").glob(\"c1*.txt\"))), None)\nif SCRIPT.is_file() and c1 is not None:\n    text = c1.read_text(encoding=\"utf-8\", errors=\"replace\")\n    c1.write_text(\"\\n\".join(line for line in text.splitlines() if not line.startswith(\"exit=\")) + \"\\n\", encoding=\"utf-8\")\n    p = run([str(base), RUN, SPEC, \"--out\", str(scratch / \"rebuilt_bad.json\")], repo)\n    named = c1.name in (p.stdout + p.stderr)\n    report(\"c4_exit_line_named\", p.returncode == 2 and named,\n           {\"exit\": p.returncode, \"names_file\": named, \"stdout_tail\": p.stdout[-200:], \"stderr_tail\": p.stderr[-200:]})\nelse:\n    report(\"c4_exit_line_named\", False, {\"reason\": \"script missing or no c1 result in the run copy\"})\n\nshutil.rmtree(scratch, ignore_errors=True)\nall_hold = all(results)\nif expect_closed:\n    print(\"probe_build_record: \" + (\"every expectation holds\" if all_hold else \"at least one expectation fails\"))\n    sys.exit(0 if all_hold else 1)\nprint(\"probe_build_record: observation mode, exit 0\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py . --expect-closed\",\n  \"exit\": 0,\n  \"tail\": \"case=c1_build holds=True detail={\\\"exit\\\": 0, \\\"stdout_tail\\\": \\\"wrote C:\\\\\\\\Users\\\\\\\\ATLAS\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\cap-probe-build-meklrzcq\\\\\\\\rebuilt.json\\\\n\\\", \\\"stderr_tail\\\": \\\"\\\"}\\ncase=c2_equality holds=True detail={\\\"equal\\\": true, \\\"differing_top_level_keys\\\": []}\\ncase=c3_validity holds=True detail={\\\"problems\\\": []}\\ncase=c4_exit_line_named holds=True detail={\\\"exit\\\": 2, \\\"names_file\\\": true, \\\"stdout_tail\\\": \\\"validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt: no single exit= line\\\\n\\\", \\\"stderr_tail\\\": \\\"\\\"}\\nprobe_build_record: every expectation holds\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests\",\n  \"exit\": 0,\n  \"tail\": \" [ 56%]\\n........................................................................ [ 63%]\\n........................................................................ [ 70%]\\n..............................................................s......... [ 77%]\\n.......s................................................................ [ 84%]\\n........................................................................ [ 91%]\\n........................................................................ [ 98%]\\n................                                                         [100%]\\n1022 passed, 2 skipped in 52.14s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

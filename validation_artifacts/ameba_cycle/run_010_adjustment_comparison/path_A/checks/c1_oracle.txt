@@ -1,0 +1,8 @@
+# check c1_oracle (path A): the shared oracle with --expect-closed, re-run by the driver at 71a02488db1d7c4bb29e101a4a0e5c0e76b6ff83 in a detached worktree (/f/VibeCoding/CAP-wt-tmp-010A)
+$ python -B validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py . --expect-closed
+case=c1_build holds=True detail={"exit": 0, "stdout_tail": "wrote C:\\Users\\ATLAS\\AppData\\Local\\Temp\\cap-probe-build-8u6gudcx\\rebuilt.json\n", "stderr_tail": ""}
+case=c2_equality holds=True detail={"equal": true, "differing_top_level_keys": []}
+case=c3_validity holds=True detail={"problems": []}
+case=c4_exit_line_named holds=True detail={"exit": 2, "names_file": true, "stdout_tail": "validation_artifacts/ameba_cycle/run_009_route_costs/checks/c1_oracle.txt: no single exit= line\n", "stderr_tail": ""}
+probe_build_record: every expectation holds
+exit=0

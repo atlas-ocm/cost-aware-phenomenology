@@ -1,0 +1,8 @@
+# run 010 baseline: probe_build_record.py --expect-closed on the clean tree at 844bccaa22e25122a4c5c4772ac19e50fcc05124
+$ python -B validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py . --expect-closed
+case=c1_build holds=False detail={"reason": "script does not exist", "path": "F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference\\python\\scripts\\build_execution_record.py"}
+case=c2_equality holds=False detail={"reason": "nothing built"}
+case=c3_validity holds=False detail={"reason": "nothing built"}
+case=c4_exit_line_named holds=False detail={"reason": "script missing or no c1 result in the run copy"}
+probe_build_record: at least one expectation fails
+exit=1

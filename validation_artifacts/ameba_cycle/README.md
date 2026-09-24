@@ -73,10 +73,15 @@ Runs:
   a stray worker file, second `ACCEPT` after one recorded driver
   intervention; path B exercised (background launch, eight waits); commit
   `5b84998`; the first 0.2 record, with its `record_spec.json`.
+- [`run_010_adjustment_comparison/`](./run_010_adjustment_comparison/README.md) —
+  the same change routed twice from `7bc4780`: path A (executor route alone)
+  and path B (Mirror Frame + candidate informed packet); both reached the
+  postcondition after one cheap set-aside each; one pair, a probe; path B's
+  builder script landed on the branch; results on `cmp/run-010-path-A|B`.
 
 What these records are not: they are not benchmark evidence, not a
-comparison against a baseline path (that comparison is defined but not yet
-run; see `CAP_CLOUD_HANDOFF.md`), and not proof that any CAP layer improved
+comparison that establishes anything (one pair was run as a probe in run 010;
+see `CAP_CLOUD_HANDOFF.md` §2.12), and not proof that any CAP layer improved
 the outcome. One trajectory does not establish minimal cost. Costs are kept
 in their own units (tokens, turns, seconds) and are never summed across units (within a unit the whole route counts:
 `route_costs_correction_001.json`); money is

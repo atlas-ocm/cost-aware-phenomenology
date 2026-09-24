@@ -1,0 +1,69 @@
+{
+  "path": "A",
+  "task_id": "cap-build-record-A",
+  "decision": "FALLBACK_PASS",
+  "final_postcondition": true,
+  "baseline_checks_exit": [
+    1,
+    0
+  ],
+  "attempts": [
+    {
+      "role": "cheap_coder",
+      "model_served": "gemma4:31b-cloud",
+      "turns": 6,
+      "output_tokens": 2714,
+      "wall_s": 15.19,
+      "postcondition": false,
+      "checks_exit": [
+        1,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    },
+    {
+      "role": "fallback_coder",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "turns": 49,
+      "output_tokens": 36503,
+      "wall_s": 134.67,
+      "postcondition": true,
+      "checks_exit": [
+        0,
+        0
+      ],
+      "touched": [
+        "reference/python/scripts/build_execution_record.py"
+      ]
+    }
+  ],
+  "set_aside_attempts": 1,
+  "route_total": {
+    "turns": 55,
+    "output_tokens": 39217,
+    "router_wall_s": 315.91
+  },
+  "closing_attempt": {
+    "turns": 49,
+    "output_tokens": 36503,
+    "wall_s": 134.67
+  },
+  "verifier": {
+    "model": "glm-5.3-flash:cloud",
+    "verdict": "ACCEPT",
+    "wall_s": 34.991966009140015,
+    "issues": []
+  },
+  "workflow": {
+    "wall_s": 1338.3,
+    "relay_tokens": 47127
+  },
+  "driver": {
+    "authoring_wall_s": 120.0,
+    "reobservation_wall_s": 52.0
+  },
+  "worker_final_answer": "Added reference/python/scripts/build_execution_record.py: a repo-root/run-dir/spec CLI that derives the schema-0.2 record (object, candidate from mirror_frame/candidate_transition, postcondition, execution actor/inputs/receipt/decision/attempts, observation_after, per-criterion checks read from the single exit= line, costs.measured from the closing attempt plus round(verdict wall_s,1), costs.route from every receipt attempt with totals and total_wall_s, verdict and notes), writes it as json.dump(indent=2, ensure_ascii=False)+newline, then validates via cap.execution_record.validate_execution_record(base_dir=repo_root, repo_dir=repo_root); exits 0 on success, 1 printing problems, 2 naming the file on a missing artifact or a check result without exactly one exit= line (checked before hashing/validating so the oracle's truncated-result case is caught).",
+  "money": "unknown"
+}
