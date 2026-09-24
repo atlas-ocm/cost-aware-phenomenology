@@ -1,0 +1,21 @@
+[
+  {
+    "task_id": "cap-build-record-A",
+    "variant": "coding",
+    "repo": "F:/VibeCoding/CAP-wt-cmp-A",
+    "question": "Add a repository script reference/python/scripts/build_execution_record.py that builds a schema-0.2 executed-transition record (spec/transition_execution.schema.json) from a recorded run directory and a record spec, validates it with cap.execution_record.validate_execution_record against the repository, and writes it to a file.\n\nCLI, exactly: python reference/python/scripts/build_execution_record.py <repo_root> <run_dir_rel> <spec_json> --out <path>. Exit 0 only when the record was built and the validator (base_dir=<repo_root>, repo_dir=<repo_root>) returned no problem; exit 1 with the problems printed when it returned some; exit 2 naming the file when a stored check result does not hold exactly one exit= line or a required artifact is missing.\n\nEnvironment: the current working directory is the repository root. The run directory validation_artifacts/ameba_cycle/run_009_route_costs holds mirror_frame.json, candidate_transition.json, coding_packet.json, nomcp_coding_receipt.json, nomcp_verdict_receipt.json, checks/*.txt, record_spec.json (the spec the driver used) and transition_execution_record.json (the record the driver built from them). The script must rebuild exactly that record from those inputs. The existing scripts in reference/python/scripts/ show how the package is imported (sys.path insert of the parent directory).\n\nDo not change any other file; add only the script.\n\nDone means all declared checks exit 0 from the repository root: the driver's oracle named in the declared checks with --expect-closed (do not modify it; today it exits 1 because the script does not exist), and python -m pytest -q -p no:cacheprovider reference/python/tests.",
+    "checks": [
+      {
+        "cmd": ["python", "-B", "F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py", ".", "--expect-closed"],
+        "timeout": 180
+      },
+      {
+        "cmd": ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "reference/python/tests"],
+        "timeout": 400
+      }
+    ],
+    "check_files": ["F:/VibeCoding/CAP-wt-cmp-A/validation_artifacts/ameba_cycle/prepared/adjustment_comparison/probe_build_record.py"],
+    "seam": null,
+    "expect": {}
+  }
+]
