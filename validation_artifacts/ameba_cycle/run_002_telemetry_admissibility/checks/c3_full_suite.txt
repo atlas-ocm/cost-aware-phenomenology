@@ -1,0 +1,6 @@
+# check c3: full suite at bbbc26c (/f/VibeCoding/CAP-wt-tmp-bbbc26c)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests
+........................................................................ [ 99%]
+..                                                                       [100%]
+936 passed, 2 skipped in 43.24s
+exit=0

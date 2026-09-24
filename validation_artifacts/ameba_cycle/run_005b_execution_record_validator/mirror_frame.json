@@ -1,0 +1,147 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-24T18-47Z_execution_binding_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator (2026-09-24): CAP describes provenance and expected postconditions, but on the explored path their check is not closed for a concrete executed transition",
+        "Operator probe without models: a copy of the Release Gate example with unresolvable references and a supports_claims pointing at a missing claim still passes JSON Schema with verdict pass; a Mirror Frame passes without any evidence_ref",
+        "The next end-to-end step must bind: observed B and object revision; chosen candidate and pre-defined postcondition; who/tool/inputs executed and the stored result; re-observation of the same object and per-criterion checks with references to actual results; divergence fed back; measured costs apart from estimates",
+        "Postcondition answers 'does the required state exist now?'; provenance answers 'which execution led to it?'; a matching end state alone is insufficient for both"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-24T18:48:00Z",
+          "claim": "HEAD after the Recovery-Only commit; tree clean; pushed",
+          "value": "989a7e2 = origin/research/ameba-executable-cycle",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_release_gate_schema",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:43:00Z",
+          "claim": "spec/release_gate.schema.json root required and definitions",
+          "value": "required schema_version, candidate, policy, result; $defs include evidence_ref, verifier_verdict, release_gate_result; no definition binds a result to an object revision, an executor call or a resolvable check output",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_mirror_evidence_optional",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:43:00Z",
+          "claim": "spec/mirror_layer.schema.json observed_state.facts items",
+          "value": "required id, source, observed_at, claim, value, confidence, freshness, mutability; evidence_refs optional; no resolvability check exists anywhere in reference/python",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_run_records_prose_only",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:43:00Z",
+          "claim": "validation_artifacts/ameba_cycle/run_00[124]",
+          "value": "each run keeps Mirror Frame, CandidateTransition, packets and verbatim receipts, and a README that states the checks in prose; nothing machine-checkable links the candidate id, the receipt, the object revisions and the check outputs",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T18:47:00Z",
+          "claim": "driver's oracle (outside the tree) run the router's way on the clean tree",
+          "value": "exit 1: ModuleNotFoundError: No module named 'cap.execution_record'; test_transition_execution_schema.py does not exist (pytest exit 4); the adjustment and mirror schema tests pass (75 passed)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_binding_missing_not_wrong",
+          "claim": "The existing schemas describe expectations and verdicts; none binds an executed transition to a revision, an executor call and resolvable check results, and no code resolves references; the gap is missing binding, not wrong code",
+          "derived_from": ["obs_release_gate_schema", "obs_mirror_evidence_optional", "obs_run_records_prose_only"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_verified_transition_has_resolvable_record"],
+      "policies": ["policy_pass_requires_resolved_evidence", "policy_estimates_never_become_measurements"],
+      "specs": ["spec/release_gate.schema.json", "spec/mirror_layer.schema.json", "spec/adjustment_layer.schema.json"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-24T18:48:00Z",
+        "claim": "HEAD commit",
+        "value": "989a7e2",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-24T18:47:00Z",
+        "claim": "ephemeral oracle on the baseline",
+        "value": "exit 1, ModuleNotFoundError cap.execution_record",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "shallow clones",
+        "reason": "the validator resolves git revisions; a shallow clone that lacks the referenced commits will report them as unresolvable, which is an environment difference to diagnose, not a defect of the record"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "spec/, reference/python/cap/",
+        "declared": "an executed transition is bound to its object revision, executor call and resolvable check results",
+        "observed": "expectations and verdicts only; references unchecked",
+        "severity": "blocking",
+        "reason": "Without the binding, a model could learn to describe transitions convincingly whose success nobody established"
+      }
+    ],
+    "created_at": "2026-09-24T18:48:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at 989a7e2",
+    "reasons": [
+      "The operator's probe reproduces the gap on the repository's own example without any model",
+      "No existing schema or code closes it; the binding is missing, so an additive record and a resolving validator are the minimal route"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "release gate and mirror schemas accept unresolvable or absent evidence references; no resolver in reference/python; oracle red with ModuleNotFoundError on the clean tree"
+  },
+  "notes": "Run 005, Mirror step. Declared state is the operator's analysis and probe (source: user); observed facts are from the schemas, the run records and the oracle run."
+}

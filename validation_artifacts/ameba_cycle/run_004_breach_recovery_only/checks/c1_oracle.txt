@@ -1,0 +1,4 @@
+# check c1: the packet oracle, re-run by the driver at 989a7e2 in a detached worktree (/f/VibeCoding/CAP-wt-tmp-989a7e2)
+$ python -B validation_artifacts/ameba_cycle/run_004_breach_recovery_only/oracle_recovery.py
+oracle_recovery: all assertions hold
+exit=0

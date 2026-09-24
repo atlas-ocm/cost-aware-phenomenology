@@ -1,0 +1,10 @@
+# check c4: diff scope 989a7e2..336af16
+$ git diff --stat 989a7e2 336af16
+ .../check_result_c1.txt                            |   6 +
+ .../executor_receipt.json                          |   6 +
+ examples/transition_execution_record_example.json  |  93 ++++
+ .../tests/test_transition_execution_schema.py      | 187 +++++++
+ spec/transition_execution.schema.json              | 563 +++++++++++++++++++++
+ 5 files changed, 855 insertions(+)
+$ git diff --diff-filter=M --name-only 989a7e2 336af16   (modified tracked files; expected: none)
+exit=0

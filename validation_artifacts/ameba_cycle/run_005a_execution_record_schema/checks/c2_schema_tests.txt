@@ -1,0 +1,6 @@
+# check c2: schema tests at 336af16 (/f/VibeCoding/CAP-wt-tmp-336af16)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests/test_transition_execution_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_mirror_layer_schema.py
+........................................................................ [ 74%]
+.........................                                                [100%]
+97 passed in 1.08s
+exit=0

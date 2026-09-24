@@ -1,0 +1,281 @@
+[
+ {
+  "id": "cap-execution-record-05b-verify",
+  "packet": {
+   "question": "Does this change add exactly three new files and nothing else: reference/python/cap/execution_record.py whose validate_execution_record(record, base_dir, repo_dir=None) returns problem strings (never raises), validates against the schema loaded as load_schema('transition_execution.schema'), resolves every *_ref and inputs[].ref to an existing file under base_dir, checks each input's sha256 against the file bytes, resolves object.revision_before, object.revision_after, observation_after.revision_after and every checks[].revision_checked with git cat-file -e <rev>^{commit} when repo_dir is given and skips them when it is None, rejects checks naming unknown criteria and, when postcondition_met is true, criteria without a passing check; reference/python/scripts/validate_execution_record.py (CLI: OK / one problem per line, exit 0 iff none, exit 2 on an unreadable record); and reference/python/tests/test_execution_record_validator.py covering the listed cases; with the schema, the example, the stand-in files and every existing test untouched, no helper scripts left in the tree, and the declared checks passing on the current tree?",
+   "postcondition": {
+    "value": "The driver's oracle (evidence carrier oracle_c2.py: the example is sound with and without the git check; unresolvable candidate_ref, receipt_ref, result_ref and input ref are each named; a wrong sha256 is named; unknown revisions are named with a repo and ignored without; uncovered and unknown criteria are named; schema violations and an empty record yield problems instead of exceptions; the CLI exits 0 printing OK on the example and non-zero naming candidate_ref on a broken copy) exits 0; the two declared pytest checks exit 0; git shows only the three new files; no tracked file is modified and no other file exists in the tree."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c2.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c2.py\", line 11, in <module>\n    from cap.execution_record import validate_execution_record  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'cap.execution_record'",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c2.py\", line 11, in <module>\n    from cap.execution_record import validate_execution_record  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'cap.execution_record'\n",
+      "stdout_chars": 0,
+      "stderr_chars": 399,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_execution_record_validator.py",
+       "reference/python/tests/test_transition_execution_schema.py"
+      ],
+      "exit": 4,
+      "ok": false,
+      "tail": "no tests ran in 0.00s\nERROR: file or directory not found: reference/python/tests/test_execution_record_validator.py",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "\nno tests ran in 0.00s\n",
+      "stderr_tail": "ERROR: file or directory not found: reference/python/tests/test_execution_record_validator.py\n\n",
+      "stdout_chars": 23,
+      "stderr_chars": 95,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_schemas_valid.py",
+       "reference/python/tests/test_adjustment_layer_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "..............................................                           [100%]\n46 passed in 0.82s",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "..............................................                           [100%]\n46 passed in 0.82s\n",
+      "stderr_tail": "",
+      "stdout_chars": 99,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 22.44,
+     "turns": 9,
+     "output_tokens": 4246,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c2.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": "\\scratchpad\\oracle_c2.py\", line 61, in <module>\n    assert r.returncode == 0, r.stdout + r.stderr\n           ^^^^^^^^^^^^^^^^^\nAssertionError: Traceback (most recent call last):\n  File \"F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference\\python\\scripts\\validate_execution_record.py\", line 9, in <module>\n    from cap.execution_record import validate_execution_record\nModuleNotFoundError: No module named 'cap'",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "",
+       "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c2.py\", line 61, in <module>\n    assert r.returncode == 0, r.stdout + r.stderr\n           ^^^^^^^^^^^^^^^^^\nAssertionError: Traceback (most recent call last):\n  File \"F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference\\python\\scripts\\validate_execution_record.py\", line 9, in <module>\n    from cap.execution_record import validate_execution_record\nModuleNotFoundError: No module named 'cap'\n\n",
+       "stdout_chars": 0,
+       "stderr_chars": 553,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": ".dule>\\n    from cap.execution_record import validate_execution_record\\nModuleNotFoundError: No module named \\'cap\\'\\n').returncode\n\nreference\\python\\tests\\test_execution_record_validator.py:125: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_execution_record_validator.py::test_cli - ...\n1 failed, 26 passed in 0.47s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "......F....................                                              [100%]\n================================== FAILURES ===================================\n__________________________________ test_cli ___________________________________\n\ntmp_path = WindowsPath('C:/Users/ATLAS/AppData/Local/Temp/pytest-of-ATLAS/pytest-9101/test_cli0')\n\n    def test_cli(tmp_path):\n        import subprocess\n    \n        example_path = ROOT / \"examples/transition_execution_record_example.json\"\n    \n        # Success case\n        res = subprocess.run(\n            [\"python\", \"reference/python/scripts/validate_execution_record.py\", str(example_path), \"--repo\", \".\"],\n            cwd=ROOT,\n            capture_output=True,\n            text=True\n        )\n>       assert res.returncode == 0\nE       AssertionError: assert 1 == 0\nE        +  where 1 = CompletedProcess(args=['python', 'reference/python/scripts/validate_execution_record.py', 'F:\\\\VibeCoding\\\\CAP-wt-ameb...dule>\\n    from cap.execution_record import validate_execution_record\\nModuleNotFoundError: No module named \\'cap\\'\\n').returncode\n\nreference\\python\\tests\\test_execution_record_validator.py:125: AssertionError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_execution_record_validator.py::test_cli - ...\n1 failed, 26 passed in 0.47s\n",
+       "stderr_tail": "",
+       "stdout_chars": 1357,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_schemas_valid.py",
+        "reference/python/tests/test_adjustment_layer_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..............................................                           [100%]\n46 passed in 0.82s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "..............................................                           [100%]\n46 passed in 0.82s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 177.84,
+     "turns": 48,
+     "output_tokens": 40578,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c2.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_c2: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_c2: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 31,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_execution_record_validator.py",
+        "reference/python/tests/test_transition_execution_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................                                 [100%]\n40 passed in 1.92s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "........................................                                 [100%]\n40 passed in 1.92s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_schemas_valid.py",
+        "reference/python/tests/test_adjustment_layer_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..............................................                           [100%]\n46 passed in 0.88s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "..............................................                           [100%]\n46 passed in 0.88s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 4), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Added the `validate_execution_record` validator, its CLI script, and comprehensive tests.' -> postcondition False",
+     "step 6: cheap attempt set aside (964c037711429e446fe54ad779c9a66b245975dc)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered 'Added reference/python/cap/execution_record.py (validate_execution_record: schema + reference resolution + sha256 re-derivation + git revision resolution + criterion/criterion-coverage checks, never raising on a bad record), its CLI reference/python/scripts/validate_execution_record.py, and reference/python/tests/test_execution_record_validator.py; no other files touched.' -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": "(empty)"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "(empty)"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "reference/python/cap/execution_record.py\nreference/python/scripts/validate_execution_record.py\nreference/python/tests/test_execution_record_validator.py\n"
+    },
+    {
+     "path": "git diff",
+     "content": "(empty)"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "\n--- new file reference/python/cap/execution_record.py ---\n\"\"\"Resolution validator for the CAP executed-transition record.\n\nThe schema (spec/transition_execution.schema.json) constrains the SHAPE of an\nexecuted-transition record; it cannot see the repository. This module closes\nthat gap: it resolves every reference the record points at, re-derives every\ninput hash, resolves every git revision, and checks criterion coverage, so a\nrecord that merely looks complete is reported as incomplete.\n\nThe record binds four steps:\n\n- before: the observed state, the object revision, the candidate, and the\n  postcondition, which was defined before execution;\n- during: the actor, the tool, the hashed inputs, and the stored receipt;\n- after: re-observation of the object plus per-criterion checks that carry\n  result references;\n- feedback: divergence between expectation and observation, with measured\n  costs kept apart from estimates.\n\nTwo questions are separated deliberately. \"Does the required state exist\nnow?\" is answered from the after step: the checks are run against the\nre-observed revision, and verdict.postcondition_met requires every criterion\nto have a passing check. \"Which execution led to it?\" is answered from the\nduring step: the actor identity, the hashed inputs, and the stored receipt. A\nrecord may answer one and not the other, so the two are reported independently\nrather than collapsed into a single verdict.\n\"\"\"\nfrom __future__ import annotations\n\nimport hashlib\nimport subprocess\nfrom pathlib import Path\nfrom typing import Any\n\nimport jsonschema\n\nfrom .schemas import load_schema\n\nSCHEMA_NAME = \"transition_execution.schema\"\n\n\ndef _mapping(value: Any) -> dict[str, Any]:\n    \"\"\"The value as a mapping, or an empty mapping when it is not one.\"\"\"\n    return value if isinstance(value, dict) else {}\n\n\ndef _sequence(value: Any) -> list[Any]:\n    \"\"\"The value as a list, or an empty list when it is not one.\"\"\"\n    return value if isinstance(value, list) else []\n\n\ndef _non_empty_str(value: Any) -> bool:\n    return isinstance(value, str) and bool(value)\n\n\ndef _revision_exists(repo_dir: Path, revision: str) -> bool:\n    \"\"\"True when `revision` resolves to a commit in `repo_dir`.\n\n    Resolution is delegated to git itself, so short hashes, tags and refs are\n    accepted exactly as git accepts them, and an unknown revision is a\n    non-zero exit rather than an exception.\n    \"\"\"\n    try:\n        completed = subprocess.run(\n            [\"git\", \"-C\", str(repo_dir), \"cat-file\", \"-e\", f\"{revision}^{{commit}}\"],\n            capture_output=True,\n        )\n    except OSError:\n        return False\n    return completed.returncode == 0\n\n\ndef validate_execution_record(\n    record: dict, base_dir: Path, repo_dir: Path | None = None\n) -> list[str]:\n    \"\"\"Validate an executed-transition record against its schema and the repository.\n\n    The record binds four steps (before / during / after / feedback) and\n    separates two questions: does the required state exist now, and which\n    execution led to it. This function resolves both against the repository:\n\n    1. schema: the record is validated against\n       spec/transition_execution.schema.json, one problem per schema error;\n    2. references: candidate_ref, mirror_frame_before_ref,\n       mirror_frame_after_ref, receipt_ref, estimated_ref, checks[].result_ref,\n       expected_evidence_results[].result_ref and execution.inputs[].ref must\n       each name an existing file under base_dir;\n    3. hashes: every execution.inputs[] sha256 must equal the sha256 of the\n       bytes of the file its ref names;\n    4. revisions: object.revision_before, object.revision_after,\n       observation_after.revision_after and every checks[].revision_checked\n       must resolve to a commit in repo_dir. Revisions are not checked when\n       repo_dir is None.\n\n    Two coverage rules the schema cannot express are enforced as well: every\n    checks[].criterion_id must name a criterion of postcondition.criteria, and\n    when verdict.postcondition_met is true every criterion must have at least\n    one check with status \"pass\".\n\n    Returns a list of problem strings, empty when the record is sound. It never\n    raises on a bad record: a non-dict, empty or garbled record yields problems.\n    \"\"\"\n    problems: list[str] = []\n\n    validator = jsonschema.Draft202012Validator(load_schema(SCHEMA_NAME))\n    try:\n        schema_errors = list(validator.iter_errors(record))\n    except Exception as exc:  # pragma: no cover - defensive, jsonschema is stable\n        problems.append(f\"record: schema validation failed: {exc}\")\n        schema_errors = []\n    for error in schema_errors:\n        path = \".\".join(str(part) for part in error.absolute_path)\n        problems.append(f\"{path}: {error.message}\" if path else error.message)\n\n    if not isinstance(record, dict):\n        # Only the schema can say anything about a non-object instance.\n        return problems\n\n    base = Path(base_dir)\n\n    candidate = _mapping(record.get(\"candidate\"))\n    observation_after = _mapping(record.get(\"observation_after\"))\n    execution = _mapping(record.get(\"execution\"))\n    costs = _mapping(record.get(\"costs\"))\n    checks = _sequence(record.get(\"checks\"))\n    inputs = _sequence(execution.get(\"inputs\"))\n\n    # -- references: every ref must name an existing file under base_dir --\n    references: list[tuple[str, str]] = []\n    for key in (\"candidate_ref\", \"mirror_frame_before_ref\"):\n        value = candidate.get(key)\n        if _non_empty_str(value):\n            references.append((f\"candidate.{key}\", value))\n    value = observation_after.get(\"mirror_frame_after_ref\")\n    if _non_empty_str(value):\n        references.append((\"observation_after.mirror_frame_after_ref\", value))\n    value = execution.get(\"receipt_ref\")\n    if _non_empty_str(value):\n        references.append((\"execution.receipt_ref\", value))\n    value = costs.get(\"estimated_ref\")\n    if _non_empty_str(value):\n        references.append((\"costs.estimated_ref\", value))\n    for index, entry in enumerate(inputs):\n        value = _mapping(entry).get(\"ref\")\n        if _non_empty_str(value):\n            references.append((f\"execution.inputs[{index}].ref\", value))\n    for index, entry in enumerate(checks):\n        value = _mapping(entry).get(\"result_ref\")\n        if _non_empty_str(value):\n            references.append((f\"checks[{index}].result_ref\", value))\n    for index, entry in enumerate(_sequence(record.get(\"expected_evidence_results\"))):\n        value = _mapping(entry).get(\"result_ref\")\n        if _non_empty_str(value):\n            references.append((f\"expected_evidence_results[{index}].result_ref\", value))\n\n    for label, ref in references:\n        if not (base / ref).is_file():\n            problems.append(f\"{label}: reference not found: {ref}\")\n\n    # -- hashes: sha256 must match the bytes of the file the ref names --\n    for index, entry in enumerate(inputs):\n        entry_map = _mapping(entry)\n        ref = entry_map.get(\"ref\")\n        recorded = entry_map.get(\"sha256\")\n        if not _non_empty_str(ref) or not isinstance(recorded, str):\n            continue\n        target = base / ref\n        if not target.is_file():\n            # Already reported as an unresolved reference; there is nothing\n            # to hash.\n            continue\n        try:\n            digest = hashlib.sha256(target.read_bytes()).hexdigest()\n        except OSError as exc:\n            problems.append(\n                f\"execution.inputs[{index}].sha256: unreadable input {ref}: {exc}\"\n            )\n            continue\n        if recorded != digest:\n            problems.append(\n                f\"execution.inputs[{index}].sha256: mismatch for {ref}: \"\n                f\"recorded {recorded}, computed {digest}\"\n            )\n\n    # -- revisions: each revision must resolve to a commit in repo_dir --\n    if repo_dir is not None:\n        revisions: list[tuple[str, str]] = []\n        obj = _mapping(record.get(\"object\"))\n        for key in (\"revision_before\", \"revision_after\"):\n            value = obj.get(key)\n            if _non_empty_str(value):\n                revisions.append((f\"object.{key}\", value))\n        value = observation_after.get(\"revision_after\")\n        if _non_empty_str(value):\n            revisions.append((\"observation_after.revision_after\", value))\n        for index, entry in enumerate(checks):\n            value = _mapping(entry).get(\"revision_checked\")\n            if _non_empty_str(value):\n                revisions.append((f\"checks[{index}].revision_checked\", value))\n\n        for label, revision in revisions:\n            if not _revision_exists(repo_dir, revision):\n                problems.append(f\"{label}: unresolved revision: {revision}\")\n\n    # -- coverage: checks name real criteria, and a met postcondition is covered --\n    criterion_ids: list[str] = []\n    for entry in _sequence(_mapping(record.get(\"postcondition\")).get(\"criteria\")):\n        value = _mapping(entry).get(\"id\")\n        if _non_empty_str(value) and value not in criterion_ids:\n            criterion_ids.append(value)\n\n    passing: set[str] = set()\n    for index, entry in enumerate(checks):\n        entry_map = _mapping(entry)\n        criterion_id = entry_map.get(\"criterion_id\")\n        if _non_empty_str(criterion_id) and criterion_id not in criterion_ids:\n            problems.append(\n                f\"checks[{index}].criterion_id: unknown criterion id: {criterion_id}\"\n            )\n        if entry_map.get(\"status\") == \"pass\" and _non_empty_str(criterion_id):\n            passing.add(criterion_id)\n\n    if _mapping(record.get(\"verdict\")).get(\"postcondition_met\") is True:\n        for criterion_id in criterion_ids:\n            if criterion_id not in passing:\n                problems.append(\n                    f\"verdict.postcondition_met: uncovered criterion {criterion_id} \"\n                    \"has no passing check\"\n                )\n\n    return problems\n\n--- new file reference/python/scripts/validate_execution_record.py ---\n#!/usr/bin/env python3\n\"\"\"Validate an executed-transition record against its schema and the repository.\n\nUsage:\n\n    python validate_execution_record.py <record.json> [--repo <dir>]\n\nThe schema check is only half of it: this command also resolves every\nreference, re-derives every input hash, resolves every git revision (using\n--repo) and checks criterion coverage. Exit 0 means no problems, 1 means the\nrecord has problems, 2 means the record file could not be read.\n\"\"\"\nfrom __future__ import annotations\n\nimport argparse\nimport json\nimport sys\nfrom pathlib import Path\n\n# Make cap module importable when running as script\nsys.path.insert(0, str(Path(__file__).resolve().parent.parent))\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nCAP_ROOT = Path(__file__).resolve().parents[3]\n\n\ndef main() -> int:\n    parser = argparse.ArgumentParser(\n        description=\"Validate an executed-transition record.\",\n    )\n    parser.add_argument(\"record\", help=\"Path to the executed-transition record JSON file\")\n    parser.add_argument(\n        \"--repo\",\n        default=None,\n        help=\"Repository directory used to resolve the record's revisions\",\n    )\n    args = parser.parse_args()\n\n    try:\n        record = json.loads(Path(args.record).read_text(encoding=\"utf-8-sig\"))\n    except (OSError, ValueError) as exc:\n        print(f\"{args.record}: cannot read record: {exc}\")\n        return 2\n\n    repo_dir = Path(args.repo) if args.repo else None\n    problems = validate_execution_record(record, base_dir=CAP_ROOT, repo_dir=repo_dir)\n\n    if not problems:\n        print(\"OK\")\n        return 0\n    for problem in problems:\n        print(problem)\n    return 1\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n\n--- new file reference/python/tests/test_execution_record_validator.py ---\n\"\"\"Executable tests for the executed-transition record validator.\n\nThe schema tests (test_transition_execution_schema.py) pin the SHAPE of an\nexecuted-transition record. These tests pin the RESOLUTION the schema cannot\nperform: every reference names an existing file, every input hash re-derives,\nevery revision resolves in the repository, and every criterion is covered by a\ncheck when the verdict claims the postcondition was met.\n\n    SCHEMA-VALID != RESOLVED\n\nA record whose references, hashes and revisions all point nowhere is still\nschema-valid; the validator added here is what reports it. Each rule below has\na test that mutates a copy of the worked example and confirms the validator\nnames the offence, plus the control that the pristine example is sound.\n\"\"\"\nfrom __future__ import annotations\n\nimport json\nimport subprocess\nimport sys\nfrom pathlib import Path\n\nsys.path.insert(0, str(Path(__file__).resolve().parent.parent))\n\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nROOT = Path(__file__).resolve().parents[3]\nEXAMPLE_PATH = ROOT / \"examples\" / \"transition_execution_record_example.json\"\nSCRIPT = ROOT / \"reference\" / \"python\" / \"scripts\" / \"validate_execution_record.py\"\n\nUNKNOWN_REVISION = \"deadbeef\" * 5\n\n\ndef _load_example() -> dict:\n    return json.loads(EXAMPLE_PATH.read_text(encoding=\"utf-8-sig\"))\n\n\ndef _problems(record: dict, repo_dir: Path | None = None) -> list[str]:\n    return validate_execution_record(record, base_dir=ROOT, repo_dir=repo_dir)\n\n\ndef _named(problems: list[str], needle: str) -> list[str]:\n    return [problem for problem in problems if needle in problem]\n\n\n# -- control: the worked example resolves --\n\n\ndef test_example_resolves_with_repo():\n    assert _problems(_load_example(), repo_dir=ROOT) == []\n\n\ndef test_example_resolves_without_repo():\n    assert _problems(_load_example()) == []\n\n\n# -- references: every ref must name an existing file --\n\n\ndef test_unresolvable_candidate_ref_is_named():\n    record = _load_example()\n    record[\"candidate\"][\"candidate_ref\"] = \"examples/no_such_candidate.json\"\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"candidate_ref\") and _named(\n        problems, \"examples/no_such_candidate.json\"\n    ), problems\n\n\ndef test_unresolvable_receipt_ref_is_named():\n    record = _load_example()\n    record[\"execution\"][\"receipt_ref\"] = (\n        \"examples/transition_execution_record/no_such_receipt.json\"\n    )\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"receipt_ref\") and _named(\n        problems, \"examples/transition_execution_record/no_such_receipt.json\"\n    ), problems\n\n\ndef test_unresolvable_check_result_ref_is_named():\n    record = _load_example()\n    record[\"checks\"][0][\"result_ref\"] = (\n        \"examples/transition_execution_record/no_such_check_result.txt\"\n    )\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"result_ref\") and _named(\n        problems, \"examples/transition_execution_record/no_such_check_result.txt\"\n    ), problems\n\n\ndef test_unresolvable_input_ref_is_named():\n    record = _load_example()\n    record[\"execution\"][\"inputs\"][0][\"ref\"] = \"examples/no_such_input.json\"\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"ref\") and _named(\n        problems, \"examples/no_such_input.json\"\n    ), problems\n\n\n# -- hashes: the recorded sha256 must re-derive --\n\n\ndef test_wrong_input_sha256_is_named():\n    record = _load_example()\n    ref = record[\"execution\"][\"inputs\"][0][\"ref\"]\n    record[\"execution\"][\"inputs\"][0][\"sha256\"] = \"0\" * 64\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"sha256\") and _named(problems, ref), problems\n\n\n# -- revisions: each revision must resolve in the repository --\n\n\ndef test_unknown_revision_before_is_named():\n    record = _load_example()\n    record[\"object\"][\"revision_before\"] = UNKNOWN_REVISION\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"revision\") and _named(problems, UNKNOWN_REVISION), problems\n\n\ndef test_unknown_revision_after_is_named():\n    record = _load_example()\n    unknown = \"1\" * 40\n    record[\"object\"][\"revision_after\"] = unknown\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"revision\") and _named(problems, unknown), problems\n\n\ndef test_unknown_revision_checked_is_named():\n    record = _load_example()\n    unknown = \"2\" * 40\n    record[\"checks\"][0][\"revision_checked\"] = unknown\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"revision\") and _named(problems, unknown), problems\n\n\ndef test_unknown_revisions_are_ignored_without_repo():\n    \"\"\"Without a repository there is nothing to resolve revisions against.\"\"\"\n    record = _load_example()\n    record[\"object\"][\"revision_before\"] = UNKNOWN_REVISION\n    record[\"object\"][\"revision_after\"] = \"1\" * 40\n    record[\"observation_after\"][\"revision_after\"] = \"2\" * 40\n    record[\"checks\"][0][\"revision_checked\"] = \"3\" * 40\n    assert _problems(record) == []\n\n\n# -- coverage: checks name real criteria and cover a met postcondition --\n\n\ndef test_uncovered_criterion_is_named_when_postcondition_met():\n    record = _load_example()\n    assert record[\"verdict\"][\"postcondition_met\"] is True\n    record[\"postcondition\"][\"criteria\"].append(\n        {\n            \"id\": \"c2\",\n            \"statement\": \"A second criterion that no check ever covered.\",\n            \"check_command\": \"python -m pytest -q reference/python/tests/test_example.py\",\n        }\n    )\n    problems = _problems(record, repo_dir=ROOT)\n    coverage = _named(problems, \"postcondition_met\")\n    assert _named(coverage, \"c2\"), problems\n    assert not _named(coverage, \"c1\"), problems\n\n\ndef test_uncovered_criterion_is_not_reported_when_postcondition_not_met():\n    \"\"\"The coverage rule is conditional: an unmet postcondition is a verdict,\n    not a resolution defect.\"\"\"\n    record = _load_example()\n    record[\"verdict\"][\"postcondition_met\"] = False\n    record[\"postcondition\"][\"criteria\"].append(\n        {\n            \"id\": \"c2\",\n            \"statement\": \"A second criterion that no check ever covered.\",\n            \"check_command\": \"python -m pytest -q reference/python/tests/test_example.py\",\n        }\n    )\n    assert _problems(record, repo_dir=ROOT) == []\n\n\ndef test_check_naming_unknown_criterion_is_named():\n    record = _load_example()\n    record[\"checks\"][0][\"criterion_id\"] = \"c9\"\n    problems = _problems(record, repo_dir=ROOT)\n    assert _named(problems, \"unknown\") and _named(problems, \"c9\"), problems\n\n\n# -- bad records are reported, never raised --\n\n\ndef test_schema_violation_is_reported_not_raised():\n    record = _load_example()\n    record[\"unexpected_field\"] = \"x\"\n    problems = _problems(record, repo_dir=ROOT)\n    assert problems\n    assert _named(problems, \"unexpected_field\"), problems\n\n\ndef test_empty_record_yields_problems():\n    problems = validate_execution_record({}, base_dir=ROOT)\n    assert problems\n    assert all(isinstance(problem, str) for problem in problems)\n\n\ndef test_non_object_record_yields_problems():\n    problems = validate_execution_record([\"not\", \"a\", \"record\"], base_dir=ROOT)\n    assert problems\n\n\n# -- CLI --\n\n\ndef _run_cli(*args: str) -> subprocess.CompletedProcess:\n    return subprocess.run(\n        [sys.executable, str(SCRIPT), *args],\n        capture_output=True,\n        text=True,\n        encoding=\"utf-8\",\n        errors=\"replace\",\n        cwd=ROOT,\n    )\n\n\ndef test_cli_exits_zero_and_prints_ok_on_the_example():\n    completed = _run_cli(str(EXAMPLE_PATH), \"--repo\", \".\")\n    assert completed.returncode == 0, completed.stdout + completed.stderr\n    assert completed.stdout.strip() == \"OK\"\n\n\ndef test_cli_names_candidate_ref_on_a_broken_copy(tmp_path):\n    \"\"\"References stay relative to the repository root, so the broken copy\n    keeps the example's refs and breaks exactly one of them.\"\"\"\n    record = _load_example()\n    record[\"candidate\"][\"candidate_ref\"] = \"examples/no_such_candidate.json\"\n    broken = tmp_path / \"broken_transition_execution_record.json\"\n    broken.write_text(json.dumps(record, indent=2), encoding=\"utf-8\")\n\n    completed = _run_cli(str(broken))\n    assert completed.returncode != 0, completed.stdout + completed.stderr\n    assert \"candidate_ref\" in completed.stdout, completed.stdout\n\n\ndef test_cli_exits_two_on_an_unreadable_record(tmp_path):\n    completed = _run_cli(str(tmp_path / \"no_such_record.json\"))\n    assert completed.returncode == 2, completed.stdout + completed.stderr\n    assert completed.stdout.strip(), \"an unreadable record must print one problem\"\n"
+    },
+    {
+     "path": "oracle_c2.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Ephemeral oracle for cap-execution-record-05b: the reference-resolving validator and its CLI.\nAssumes spec/transition_execution.schema.json and examples/transition_execution_record_example.json exist\n(added by 05a). Run from the repository root; exit 0 iff every assertion holds.\"\"\"\nimport copy\nimport json\nimport pathlib\nimport subprocess\nimport sys\n\nsys.path.insert(0, \"reference/python\")\nfrom cap.execution_record import validate_execution_record  # noqa: E402\n\nROOT = pathlib.Path(\".\").resolve()\nex = json.loads((ROOT / \"examples\" / \"transition_execution_record_example.json\").read_text(encoding=\"utf-8-sig\"))\n\n# 1. the example is sound: no problems, with and without the git check\nassert validate_execution_record(ex, ROOT, ROOT) == [], validate_execution_record(ex, ROOT, ROOT)\nassert validate_execution_record(ex, ROOT, None) == []\n\n# 2. the operator's probe: an unresolvable reference passes the schema but the validator names it\nbad = copy.deepcopy(ex); bad[\"candidate\"][\"candidate_ref\"] = \"examples/does_not_exist.json\"\nprobs = validate_execution_record(bad, ROOT, ROOT)\nassert probs and any(\"candidate_ref\" in p and \"does_not_exist\" in p for p in probs), probs\nbad = copy.deepcopy(ex); bad[\"execution\"][\"receipt_ref\"] = \"examples/nope.json\"\nassert any(\"receipt_ref\" in p for p in validate_execution_record(bad, ROOT, ROOT))\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"result_ref\"] = \"examples/nope.txt\"\nassert any(\"result_ref\" in p for p in validate_execution_record(bad, ROOT, ROOT))\nbad = copy.deepcopy(ex); bad[\"execution\"][\"inputs\"][0][\"ref\"] = \"examples/nope.json\"\nassert any(\"nope.json\" in p for p in validate_execution_record(bad, ROOT, ROOT))\n\n# 3. a wrong input hash is named\nbad = copy.deepcopy(ex); bad[\"execution\"][\"inputs\"][0][\"sha256\"] = \"0\" * 64\nassert any(\"sha256\" in p for p in validate_execution_record(bad, ROOT, ROOT))\n\n# 4. unknown revisions are named when a repo is given, and not checked when it is not\nbad = copy.deepcopy(ex); bad[\"object\"][\"revision_after\"] = \"0\" * 40\nassert any(\"revision\" in p for p in validate_execution_record(bad, ROOT, ROOT))\nassert validate_execution_record(bad, ROOT, None) == []\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"revision_checked\"] = \"0\" * 40\nassert any(\"revision\" in p for p in validate_execution_record(bad, ROOT, ROOT))\nbad = copy.deepcopy(ex); bad[\"object\"][\"revision_before\"] = \"0\" * 40\nassert any(\"revision\" in p for p in validate_execution_record(bad, ROOT, ROOT))\n\n# 5. criterion coverage and identity\nbad = copy.deepcopy(ex)\nbad[\"postcondition\"][\"criteria\"].append({\"id\": \"c_extra\", \"statement\": \"an uncovered criterion\", \"check_command\": \"true\"})\nassert any(\"c_extra\" in p for p in validate_execution_record(bad, ROOT, ROOT))\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"criterion_id\"] = \"c_nonexistent\"\nassert any(\"c_nonexistent\" in p for p in validate_execution_record(bad, ROOT, ROOT))\n\n# 6. schema errors become problems, never exceptions\nbad = copy.deepcopy(ex); bad[\"extra\"] = 1\nassert validate_execution_record(bad, ROOT, ROOT), \"schema violation must be reported\"\nassert isinstance(validate_execution_record({}, ROOT, ROOT), list)\nassert validate_execution_record({}, ROOT, ROOT)\n\n# 7. the CLI: 0 on the example, non-zero on a broken copy, prints OK / problems\nr = subprocess.run([sys.executable, \"reference/python/scripts/validate_execution_record.py\",\n                    \"examples/transition_execution_record_example.json\", \"--repo\", \".\"],\n                   capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\")\nassert r.returncode == 0, r.stdout + r.stderr\nassert \"OK\" in r.stdout\ntmp = ROOT / \"examples\" / \"_oracle_tmp_broken_record.json\"\ntry:\n    broken = copy.deepcopy(ex); broken[\"candidate\"][\"candidate_ref\"] = \"examples/does_not_exist.json\"\n    tmp.write_text(json.dumps(broken), encoding=\"utf-8\")\n    r2 = subprocess.run([sys.executable, \"reference/python/scripts/validate_execution_record.py\", str(tmp), \"--repo\", \".\"],\n                        capture_output=True, text=True, encoding=\"utf-8\", errors=\"replace\")\n    assert r2.returncode != 0\n    assert \"candidate_ref\" in (r2.stdout + r2.stderr)\nfinally:\n    if tmp.exists():\n        tmp.unlink()\n\nprint(\"oracle_c2: all assertions hold\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c2.py\",\n  \"exit\": 0,\n  \"tail\": \"oracle_c2: all assertions hold\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"........................................                                 [100%]\\n40 passed in 1.85s\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_schemas_valid.py reference/python/tests/test_adjustment_layer_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"..............................................                           [100%]\\n46 passed in 0.82s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

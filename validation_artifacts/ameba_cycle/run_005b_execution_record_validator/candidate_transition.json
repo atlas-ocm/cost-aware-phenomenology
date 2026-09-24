@@ -1,0 +1,175 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-24T18-47Z_execution_binding_gap",
+    "observed_state": {
+      "id": "obs_no_binding_for_executed_transitions",
+      "summary": "Schemas describe expected evidence and verdicts; nothing binds an executed transition to its object revision, executor call and resolvable check results; references are never resolved",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T18-47Z_execution_binding_gap#obs_release_gate_schema",
+        "mirror_frame:mirror_frame_2026-09-24T18-47Z_execution_binding_gap#obs_run_records_prose_only"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_schemas_model_expectation_not_execution",
+      "hypothesis": "The layer schemas were written as contracts of expectation (what should be looked for) and of judgement (pass / block), never as records of an execution; resolvability was left to readers",
+      "source": "human_report",
+      "confidence": 0.9,
+      "evidence_refs": [
+        "operator analysis and probe of 2026-09-24",
+        "spec/release_gate.schema.json",
+        "spec/adjustment_layer.schema.json#expected_evidence_after_apply"
+      ],
+      "uncertainty": [
+        "whether an extension of release_gate.schema.json would have been preferred over a separate record (chosen: separate, because a release verdict and an execution record are different objects and the existing example must keep validating)"
+      ],
+      "status": "likely"
+    },
+    "desired_state": {
+      "id": "target_executed_transition_bound_and_checkable",
+      "goal": "One machine-checkable record per executed transition, with every reference, input hash, git revision and criterion coverage resolved by code, so that 'the required state exists' and 'this execution led to it' are both established or both absent",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle (example resolves; unresolvable ref passes the schema but fails the validator; wrong hash, unknown revisions, uncovered criterion, unknown criterion rejected; pass needs exit 0; postcondition_met needs all checks passing; provenance needs receipt and hashed inputs; money explicit; identity flag required; CLI exit codes) exits 0",
+        "test_transition_execution_schema.py and test_schemas_valid.py exit 0",
+        "test_adjustment_layer_schema.py and test_mirror_layer_schema.py exit 0 (no existing schema changed)",
+        "the full suite exits 0",
+        "new files only: the schema, cap/execution_record.py, the CLI script, the example and its two stand-ins, the test module; no tracked file modified"
+      ],
+      "forbidden_outcomes": [
+        "changing release_gate, mirror or adjustment schemas in this step",
+        "a validator that raises on a bad record instead of listing problems",
+        "a record that can be postcondition_met with a failing or absent check",
+        "estimates written as measurements, or money defaulted to a number"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure",
+      "the driver does not edit code, tests or spec; the oracle stays outside the tree and is red on the baseline",
+      "real records for runs 002 and 004 are written by the driver afterwards from kept artifacts and validated with the new validator; they are evidence, not oracles"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_existing_layer_schemas_unchanged",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-24T18-48Z_execution_record",
+    "from_state": "expectations and verdicts only; references unresolved; run records prose-linked",
+    "inferred_cause": "cause_schemas_model_expectation_not_execution",
+    "to_state": "spec/transition_execution.schema.json + cap/execution_record.py (resolving validator) + CLI + example + tests; real records for runs 004 and 002 validated against the tree",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Write the oracle from the operator's four steps and probe; run it the router's way on the clean tree; expect ModuleNotFoundError",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-execution-record-05) that creates the schema, the validator, the CLI, the example with two stand-in files and the test module; three declared checks",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Additive: no existing schema or module changes; the record and the resolver are the missing binding"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model; driver adjudication on the diff and the full suite; then the driver writes the real records for runs 004 and 002 and validates them with the new validator against the tree and git",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; the real records are evidence produced after the change, not part of its oracle"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_existing_layer_schemas_unchanged",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.1,
+      "loop_risk": 0.15,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "medium",
+      "verification_cost": "medium",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the execution-record commit on the research branch (all new files)",
+        "rerun test_schemas_valid.py to confirm the schema set is back to the previous count"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the declared pytest checks and the full suite exit 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git shows only new files",
+        "kind": "diff"
+      },
+      {
+        "claim": "the real records for runs 004 and 002 pass validate_execution_record.py --repo .",
+        "kind": "runtime_observation"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-24T18:48:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-24T18-48Z_execution_record",
+    "reasons": [
+      "The gap is reproduced by the operator's probe on the repository's own example; the route is additive and leaves every existing contract intact",
+      "loop_risk is the highest estimated axis: a schema-plus-validator task has many named parts and a cheap worker may miss one; three declared checks and the oracle guard it",
+      "Verifier and driver adjudication required; the real records are produced afterwards and are evidence"
+    ],
+    "alternatives": [
+      "Extend release_gate.schema.json with execution binding (rejected for this step: a release verdict and an execution record are different objects; the existing example must keep validating)",
+      "Keep prose READMEs as the binding (rejected: unresolvable by code, which is the gap)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 005, Adjustment step. Proposed before the worker ran (written while the route was executing, before its result was known)."
+}

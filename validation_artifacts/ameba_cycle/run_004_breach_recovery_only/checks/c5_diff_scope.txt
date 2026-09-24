@@ -1,0 +1,26 @@
+# check c5: diff scope 2be76e6..989a7e2
+$ git diff --stat 2be76e6 989a7e2
+ 02_subsystems/operator_admissibility.md          |  18 +++-
+ 02_subsystems/telemetry_gating.md                |  39 +++++---
+ reference/python/cap/budget_calculus.py          |  84 +++++++++++++---
+ reference/python/cap/operator_alphabet.py        |  20 ++++
+ reference/python/tests/test_budget_calculus.py   | 120 +++++++++++++++++++----
+ reference/python/tests/test_operator_alphabet.py |  17 +++-
+ spec/operator_alphabet.json                      |   3 +-
+ 7 files changed, 244 insertions(+), 57 deletions(-)
+$ git diff 2be76e6 989a7e2 -- spec/operator_alphabet.json
+diff --git a/spec/operator_alphabet.json b/spec/operator_alphabet.json
+index 90a48f0..1e376dc 100644
+--- a/spec/operator_alphabet.json
++++ b/spec/operator_alphabet.json
+@@ -243,7 +243,8 @@
+     },
+     {
+       "name": "Recovery-Only",
+-      "description": "Budget Recovery active; only Fixation, Hold, Cleanup permitted."
++      "description": "Budget Recovery active; only Fixation, Hold, Cleanup permitted.",
++      "permitted_operators": ["Fixation", "Hold", "Cleanup"]
+     }
+   ],
+   "risk_tolerance_factors": {
+exit=0

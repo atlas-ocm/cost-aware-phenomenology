@@ -1,0 +1,8 @@
+# check c4: diff scope 336af16..8d23161
+$ git diff --stat 336af16 8d23161
+ reference/python/cap/execution_record.py           | 230 +++++++++++++++++++
+ .../python/scripts/validate_execution_record.py    |  57 +++++
+ .../tests/test_execution_record_validator.py       | 246 +++++++++++++++++++++
+ 3 files changed, 533 insertions(+)
+$ git diff --diff-filter=M --name-only 336af16 8d23161   (modified tracked files; expected: none)
+exit=0

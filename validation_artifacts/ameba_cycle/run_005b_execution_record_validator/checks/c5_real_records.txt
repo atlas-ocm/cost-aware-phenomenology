@@ -1,0 +1,8 @@
+# check c5 of run 005b: the real execution records of runs 004 and 002, built from kept artifacts, validated by the CLI of this revision
+$ python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_004_breach_recovery_only/transition_execution_record.json --repo .
+OK
+cli_exit=0
+$ python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/transition_execution_record.json --repo .
+OK
+cli_exit=0
+exit=0

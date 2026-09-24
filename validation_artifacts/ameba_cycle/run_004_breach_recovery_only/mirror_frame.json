@@ -1,0 +1,158 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-24T18-35Z_breach_recovery_decision",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "user",
+      "claims": [
+        "Operator decision (2026-09-24): Breach means the transition into recovery; the Recovery-Only budget gate of spec/operator_alphabet.json (Fixation, Hold, Cleanup) is the existing basis",
+        "At Breach ordinary chains are forbidden; only the three recovery operators may be considered, each within the actual budget together with the active operators",
+        "The numbers 20 / 10 / 15 of cgm_07 are example values, not universal weights; a missing budget is never replaced by 100",
+        "The test 'Breach permits any zero-risk operator' encodes a wrong simplification and is to be replaced; a numeric ceiling without operator identity is insufficient",
+        "Run 003 F3 transcribed 'Cleanup 15' as 'Boundary 15'; keep the original result and add a separate correction"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-24T18:36:00Z",
+          "claim": "HEAD after the run 003 correction commit; tree clean",
+          "value": "2be76e6 (on 7b24b6a, 90e1c72, bbbc26c, aa6048f, 602fa63, e65b9af4)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_cgm_07_text",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:33:00Z",
+          "claim": "operator names in cgm_07 checked on the UTF-8 bytes",
+          "value": "Фиксация (Fixation), Пауза/Hold, Очистка (Cleanup) present; Граница (Boundary) absent",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_alphabet_recovery_only",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:33:00Z",
+          "claim": "spec/operator_alphabet.json budget_gates entry Recovery-Only",
+          "value": "description 'Budget Recovery active; only Fixation, Hold, Cleanup permitted.'; no machine-readable operator list; telemetry_states Breach: 'Active chains must be stopped or moved into Recovery.'",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_code_breach_zero",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:33:00Z",
+          "claim": "budget_calculus.py at bbbc26c",
+          "value": "TELEMETRY_MAX_RISK['breach'] == 0; operator_admissibility has no operator argument; test_breach_permits_only_zero_risk asserts risk 0 admissible and risk 1 blocked at breach",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_validator_breach_rule",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T18:33:00Z",
+          "claim": "validator.py Breach consistency rule",
+          "value": "telemetry_state == Breach requires budget_gate == Recovery-Only (already enforced on COM-Log documents)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T18:37:00Z",
+          "claim": "driver's oracle (outside the tree) run the router's way on the clean tree",
+          "value": "exit 1: ImportError: cannot import name 'BREACH_BUDGET_GATE' from 'cap.budget_calculus'; the two other declared checks pass on the baseline (87 passed; 21 passed)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_recovery_only_is_existing_seam",
+          "claim": "The Recovery-Only gate already exists in the alphabet and the validator already ties Breach to it; what is missing is a machine-readable operator list and a rule that takes the operator identity",
+          "derived_from": ["obs_alphabet_recovery_only", "obs_validator_breach_rule", "obs_code_breach_zero"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_numeric_contract_mirrors_subsystem_docs", "anchor_alphabet_is_operator_source_of_truth"],
+      "policies": ["policy_missing_inputs_never_positive", "policy_existing_definitions_unchanged"],
+      "specs": ["spec/operator_alphabet.json", "02_subsystems/telemetry_gating.md", "02_subsystems/operator_admissibility.md"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-24T18:36:00Z",
+        "claim": "HEAD commit",
+        "value": "2be76e6",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red",
+        "source": "tool_result",
+        "observed_at": "2026-09-24T18:37:00Z",
+        "claim": "ephemeral oracle on the baseline",
+        "value": "exit 1, ImportError BREACH_BUDGET_GATE",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "risk_tolerance_factors carrier",
+        "reason": "spec/operator_alphabet.json carries 0.4 / 0.7 / 1.0 while observer_budget.md and MODE_RTF_RANGE carry ranges; which is canonical is not decided (found while reading the alphabet for this run)"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "contradiction",
+        "path": "reference/python/cap/budget_calculus.py",
+        "declared": "Breach = Recovery-Only with operator identity",
+        "observed": "Breach = numeric ceiling 0 without operator identity",
+        "severity": "blocking",
+        "reason": "The operator's decision is the declared state; the code encodes the superseded table line"
+      }
+    ],
+    "created_at": "2026-09-24T18:37:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at 2be76e6",
+    "reasons": [
+      "The declared state is an operator decision that the code does not yet implement",
+      "The existing seam (Recovery-Only gate in the alphabet, validator's Breach rule) supports the decision; a machine-readable list and operator identity in the rule are the gap"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "alphabet lists Fixation/Hold/Cleanup in prose only; code ceiling breach=0; oracle red with ImportError on the clean tree"
+  },
+  "notes": "Run 004, Mirror step. The declared state comes from the operator (source: user), which is the one case where a declaration is the authority for what the code should do; it is still not treated as observed."
+}

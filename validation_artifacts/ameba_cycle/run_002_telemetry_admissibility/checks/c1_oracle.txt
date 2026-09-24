@@ -1,0 +1,4 @@
+# check c1: the packet oracle of run 002, re-run by the driver at bbbc26c in a detached worktree (/f/VibeCoding/CAP-wt-tmp-bbbc26c)
+$ python -B validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/oracle_admissibility.py
+oracle_admissibility: all assertions hold
+exit=0

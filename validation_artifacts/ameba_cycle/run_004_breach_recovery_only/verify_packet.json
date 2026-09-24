@@ -1,0 +1,280 @@
+[
+ {
+  "id": "cap-recovery-only-03-verify",
+  "packet": {
+   "question": "Does this diff implement the operator's Breach = Recovery-Only decision exactly: a machine-readable permitted_operators list on the Recovery-Only budget gate in spec/operator_alphabet.json (and nothing else changed there); budget_gate_permitted_operators(gate) in cap/operator_alphabet.py raising ValueError for gates without a list; in cap/budget_calculus.py TELEMETRY_MAX_RISK without a breach key, BREACH_BUDGET_GATE = 'Recovery-Only', max_permitted_risk returning None for breach, recovery_only_operators() sourced from the alphabet, and operator_admissibility(operator, risk_weight, active_operator_risks, allowed_total_risk, telemetry_state) returning not_computed for any None input before validation, blocked_recovery_only for a non-recovery operator at breach regardless of weight, the budget check for recovery operators at breach, the unchanged ceiling-then-budget rule elsewhere, and ValueError for invalid present inputs; with the old zero-risk-at-breach test replaced and the tests updated, and no docs, examples, other spec files or new files touched?",
+   "postcondition": {
+    "value": "The driver's oracle (evidence carrier oracle_recovery.py) exits 0; test_budget_calculus.py exits 0; test_operator_alphabet.py, test_schemas_valid.py, test_falsifiability_gates.py and test_com_log_schema.py exit 0; the diff touches only spec/operator_alphabet.json, cap/operator_alphabet.py, cap/budget_calculus.py, tests/test_budget_calculus.py and tests/test_operator_alphabet.py; existing functions other than the named ones are unchanged; the numbers 20/10/15 do not appear as module constants."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_recovery.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_recovery.py\", line 15, in <module>\n    from cap.budget_calculus import (  # noqa: E402\nImportError: cannot import name 'BREACH_BUDGET_GATE' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference/python\\cap\\budget_calculus.py)",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_recovery.py\", line 15, in <module>\n    from cap.budget_calculus import (  # noqa: E402\nImportError: cannot import name 'BREACH_BUDGET_GATE' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference/python\\cap\\budget_calculus.py)\n",
+      "stdout_chars": 0,
+      "stderr_chars": 412,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_budget_calculus.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 82%]\n...............                                                          [100%]\n87 passed in 0.09s",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [ 82%]\n...............                                                          [100%]\n87 passed in 0.09s\n",
+      "stderr_tail": "",
+      "stdout_chars": 179,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_operator_alphabet.py",
+       "reference/python/tests/test_schemas_valid.py",
+       "reference/python/tests/test_falsifiability_gates.py",
+       "reference/python/tests/test_com_log_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": ".....................                                                    [100%]\n21 passed in 0.71s",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": ".....................                                                    [100%]\n21 passed in 0.71s\n",
+      "stderr_tail": "",
+      "stdout_chars": 99,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 57.44,
+     "turns": 14,
+     "output_tokens": 9535,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_recovery.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_recovery: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_recovery: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 37,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n89 passed in 0.22s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 80%]\n.................                                                        [100%]\n89 passed in 0.22s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_operator_alphabet.py",
+        "reference/python/tests/test_schemas_valid.py",
+        "reference/python/tests/test_falsifiability_gates.py",
+        "reference/python/tests/test_com_log_schema.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": "ld\", \"Cleanup\"}\n        )\n>       with pytest.raises(ValueError):\n             ^^^^^^\nE       NameError: name 'pytest' is not defined\n\nreference\\python\\tests\\test_operator_alphabet.py:52: NameError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_operator_alphabet.py::test_budget_gate_permitted_operators\n1 failed, 21 passed in 0.81s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "...F..................                                                   [100%]\n================================== FAILURES ===================================\n____________________ test_budget_gate_permitted_operators _____________________\n\n    def test_budget_gate_permitted_operators():\n        assert budget_gate_permitted_operators(\"Recovery-Only\") == frozenset(\n            {\"Fixation\", \"Hold\", \"Cleanup\"}\n        )\n>       with pytest.raises(ValueError):\n             ^^^^^^\nE       NameError: name 'pytest' is not defined\n\nreference\\python\\tests\\test_operator_alphabet.py:52: NameError\n=========================== short test summary info ===========================\nFAILED reference/python/tests/test_operator_alphabet.py::test_budget_gate_permitted_operators\n1 failed, 21 passed in 0.81s\n",
+       "stderr_tail": "",
+       "stdout_chars": 796,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 131.53,
+     "turns": 55,
+     "output_tokens": 25094,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_recovery.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_recovery: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_recovery: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 37,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.21s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 79%]\n...................                                                      [100%]\n91 passed in 0.21s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_operator_alphabet.py",
+        "reference/python/tests/test_schemas_valid.py",
+        "reference/python/tests/test_falsifiability_gates.py",
+        "reference/python/tests/test_com_log_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "......................                                                   [100%]\n22 passed in 0.70s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "......................                                                   [100%]\n22 passed in 0.70s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 0), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Replaced the numeric Breach ceiling in the CAP numeric contract with the Recovery-Only mode from the operator alphabet and updated the admissibility rule to enforce operator identity during a breach.' -> postcondition False",
+     "step 6: cheap attempt set aside (6e7b4e56267000f93d39bddbbb10bef05cf58d90)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered 'Replaced the numeric Breach ceiling with operator-identity Recovery-Only gating: spec/operator_alphabet.json now lists permitted_operators for Recovery-Only, operator_alphabet.py exposes budget_gate_permitted_operators, budget_calculus.py drops the breach ceiling (max_permitted_risk returns None), adds BREACH_BUDGET_GATE and recovery_only_operators, and gives operator_admissibility the operator-first signature with not_computed, blocked_recovery_only, blocked_by_telemetry, blocked_by_budget, admissible, plus updated tests.' -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " reference/python/cap/budget_calculus.py          |  84 +++++++++++++---\n reference/python/cap/operator_alphabet.py        |  20 ++++\n reference/python/tests/test_budget_calculus.py   | 120 +++++++++++++++++++----\n reference/python/tests/test_operator_alphabet.py |  17 +++-\n spec/operator_alphabet.json                      |   3 +-\n 5 files changed, 207 insertions(+), 37 deletions(-)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "reference/python/cap/budget_calculus.py\nreference/python/cap/operator_alphabet.py\nreference/python/tests/test_budget_calculus.py\nreference/python/tests/test_operator_alphabet.py\nspec/operator_alphabet.json\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "(none)"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/reference/python/cap/budget_calculus.py b/reference/python/cap/budget_calculus.py\nindex 6b8d500..38b6466 100644\n--- a/reference/python/cap/budget_calculus.py\n+++ b/reference/python/cap/budget_calculus.py\n@@ -15,6 +15,8 @@ from __future__ import annotations\n \n from typing import Iterable, Literal, Sequence\n \n+from .operator_alphabet import budget_gate_permitted_operators, operator_names\n+\n \n RiskZone = Literal[\"conservation\", \"nominal\", \"expansion\", \"not_recommended\"]\n BudgetState = Literal[\"full\", \"partial\", \"depleted\", \"critical\"]\n@@ -31,14 +33,18 @@ RISK_NOT_RECOMMENDED_THRESHOLD: int = 90\n \n \n # telemetry_gating.md Risk Throttling table: maximum permitted RiskWeight\n-# per TelemetryState (percent).\n+# per TelemetryState (percent). Breach is deliberately absent: it is not a\n+# numeric ceiling but the transition into recovery, where the Recovery-Only\n+# budget gate (spec/operator_alphabet.json) selects by operator identity.\n TELEMETRY_MAX_RISK: dict[str, int] = {\n     \"clean\": 90,\n     \"loaded\": 60,\n     \"overheating\": 30,\n-    \"breach\": 0,\n }\n \n+# spec/operator_alphabet.json budget_gates entry that governs Breach.\n+BREACH_BUDGET_GATE: str = \"Recovery-Only\"\n+\n \n # observer_budget.md budget-state bands (percent).\n BUDGET_BANDS: dict[str, tuple[float, float]] = {\n@@ -150,13 +156,19 @@ def is_cycle_admissible(\n     )\n \n \n-def max_permitted_risk(telemetry_state: str) -> int:\n+def max_permitted_risk(telemetry_state: str) -> int | None:\n     \"\"\"Maximum permitted RiskWeight (percent) for a TelemetryState.\n \n     Encodes the Risk Throttling table in 02_subsystems/telemetry_gating.md:\n-    Clean 90, Loaded 60, Overheating 30, Breach 0 (Pause only). An unknown\n-    state has no ceiling to look up and is rejected rather than defaulted.\n+    Clean 90, Loaded 60, Overheating 30. Breach has no numeric ceiling and\n+    returns None: 02_subsystems/operator_admissibility.md and the\n+    Budget Recovery Protocol make Breach the transition into recovery, where\n+    the Recovery-Only budget gate (spec/operator_alphabet.json) decides by\n+    operator identity rather than by a risk threshold. An unknown state has\n+    no ceiling to look up and is rejected rather than defaulted.\n     \"\"\"\n+    if telemetry_state == \"breach\":\n+        return None\n     try:\n         return TELEMETRY_MAX_RISK[telemetry_state]\n     except (KeyError, TypeError):\n@@ -165,31 +177,75 @@ def max_permitted_risk(telemetry_state: str) -> int:\n         ) from None\n \n \n+def recovery_only_operators() -> frozenset[str]:\n+    \"\"\"Operators permitted by the Breach budget gate, from the alphabet.\n+\n+    Sourced from spec/operator_alphabet.json's Recovery-Only gate rather than\n+    restated here, so the permitted set has a single authority.\n+    \"\"\"\n+    return budget_gate_permitted_operators(BREACH_BUDGET_GATE)\n+\n+\n def operator_admissibility(\n-    risk_weight: float,\n-    active_operator_risks: Sequence[float],\n-    allowed_total_risk: float,\n-    telemetry_state: str,\n+    operator: str | None,\n+    risk_weight: float | None,\n+    active_operator_risks: Sequence[float] | None,\n+    allowed_total_risk: float | None,\n+    telemetry_state: str | None,\n ) -> str:\n-    \"\"\"Combined telemetry-and-budget gate for a candidate operator.\n+    \"\"\"Combined operator-identity, telemetry-and-budget gate.\n \n     Encodes \"The Admissibility Rule\" in 02_subsystems/operator_admissibility.md\n-    (the numeric part): first the risk throttle, then the budget gate. Both\n-    use <= admits, > blocks, exactly like is_cycle_admissible.\n+    (the numeric part) together with the Breach decision: which operator is\n+    proposed, not only how heavy it is. Both numeric gates use <= admits,\n+    > blocks, exactly like is_cycle_admissible.\n+\n+    Missing inputs never produce a positive result: if any of the five inputs\n+    is None the verdict is \"not_computed\", before any validation.\n+\n+    At telemetry_state \"breach\" there is no numeric ceiling (see\n+    max_permitted_risk). The operator identity decides first: an operator\n+    outside recovery_only_operators() is \"blocked_recovery_only\" even at risk\n+    0. A permitted operator must still fit the actual budget:\n+\n+    - operator not in recovery_only_operators() -> \"blocked_recovery_only\"\n+    - total_risk(active + [risk_weight]) > allowed_total_risk\n+      -> \"blocked_by_budget\"\n+    - otherwise -> \"admissible\"\n+\n+    Otherwise (clean/loaded/overheating): the risk throttle runs first, then\n+    the same budget gate:\n \n     - risk_weight > max_permitted_risk(telemetry_state) -> \"blocked_by_telemetry\"\n     - total_risk(active + [risk_weight]) > allowed_total_risk\n       -> \"blocked_by_budget\"\n     - otherwise -> \"admissible\"\n     \"\"\"\n+    if (\n+        operator is None\n+        or risk_weight is None\n+        or active_operator_risks is None\n+        or allowed_total_risk is None\n+        or telemetry_state is None\n+    ):\n+        return \"not_computed\"\n+    if operator not in operator_names():\n+        raise ValueError(f\"unknown operator: {operator!r}\")\n     if not (0 <= risk_weight <= 100):\n         raise ValueError(f\"risk_weight must be in [0, 100], got {risk_weight}\")\n     if allowed_total_risk < 0:\n         raise ValueError(\n             f\"allowed_total_risk must be non-negative, got {allowed_total_risk}\"\n         )\n-    if risk_weight > max_permitted_risk(telemetry_state):\n-        return \"blocked_by_telemetry\"\n+    if telemetry_state not in (\"clean\", \"loaded\", \"overheating\", \"breach\"):\n+        raise ValueError(f\"unknown telemetry_state: {telemetry_state!r}\")\n+    if telemetry_state == \"breach\":\n+        if operator not in recovery_only_operators():\n+            return \"blocked_recovery_only\"\n+    else:\n+        ceiling = max_permitted_risk(telemetry_state)\n+        if ceiling is not None and risk_weight > ceiling:\n+            return \"blocked_by_telemetry\"\n     proposed = list(active_operator_risks) + [risk_weight]\n     if total_risk(proposed) > allowed_total_risk:\n         return \"blocked_by_budget\"\ndiff --git a/reference/python/cap/operator_alphabet.py b/reference/python/cap/operator_alphabet.py\nindex 63a87d9..a3cb84a 100644\n--- a/reference/python/cap/operator_alphabet.py\n+++ b/reference/python/cap/operator_alphabet.py\n@@ -28,3 +28,23 @@ def is_risk_in_typical_range(operator: str, risk_weight: int) -> bool:\n         return False\n     low, high = op[\"risk_weight_range_percent\"]\n     return low <= risk_weight <= high\n+\n+\n+def budget_gate_permitted_operators(gate_name: str) -> frozenset[str]:\n+    \"\"\"Permitted operator names for a budget gate, sourced from the alphabet.\n+\n+    Reads the gate's explicit ``permitted_operators`` list from\n+    spec/operator_alphabet.json. An unknown gate name, or an entry that\n+    states its operators only in prose, is rejected: the set is never\n+    guessed from the description.\n+    \"\"\"\n+    alphabet = load_operator_alphabet()\n+    for gate in alphabet[\"budget_gates\"]:\n+        if gate[\"name\"] == gate_name:\n+            permitted = gate.get(\"permitted_operators\")\n+            if not isinstance(permitted, list):\n+                raise ValueError(\n+                    f\"budget gate {gate_name!r} has no permitted_operators list\"\n+                )\n+            return frozenset(permitted)\n+    raise ValueError(f\"unknown budget gate: {gate_name!r}\")\ndiff --git a/reference/python/tests/test_budget_calculus.py b/reference/python/tests/test_budget_calculus.py\nindex 9b2167e..9663a92 100644\n--- a/reference/python/tests/test_budget_calculus.py\n+++ b/reference/python/tests/test_budget_calculus.py\n@@ -20,6 +20,7 @@ import pytest\n sys.path.insert(0, str(Path(__file__).resolve().parent.parent))\n \n from cap.budget_calculus import (\n+    BREACH_BUDGET_GATE,\n     BUDGET_BANDS,\n     MODE_PREFERRED_ZONE,\n     MODE_RTF_RANGE,\n@@ -37,8 +38,10 @@ from cap.budget_calculus import (\n     mode_rtf_default,\n     operator_admissibility,\n     permitted_risk_zones_for_budget,\n+    recovery_only_operators,\n     total_risk,\n )\n+from cap.operator_alphabet import budget_gate_permitted_operators\n \n \n # -- Risk-zone classification --\n@@ -339,23 +342,39 @@ def test_telemetry_max_risk_matches_doc():\n         \"clean\": 90,\n         \"loaded\": 60,\n         \"overheating\": 30,\n-        \"breach\": 0,\n     }\n \n \n @pytest.mark.parametrize(\n     \"state,ceiling\",\n-    [(\"clean\", 90), (\"loaded\", 60), (\"overheating\", 30), (\"breach\", 0)],\n+    [(\"clean\", 90), (\"loaded\", 60), (\"overheating\", 30)],\n )\n def test_max_permitted_risk_matches_doc(state, ceiling):\n     assert max_permitted_risk(state) == ceiling\n \n \n+def test_max_permitted_risk_is_none_at_breach():\n+    \"\"\"Breach is not a numeric ceiling: it is the recovery transition.\"\"\"\n+    assert max_permitted_risk(\"breach\") is None\n+\n+\n def test_max_permitted_risk_rejects_unknown_state():\n     with pytest.raises(ValueError):\n         max_permitted_risk(\"hypothetical\")\n \n \n+# -- Recovery-Only gate (Breach) --\n+\n+\n+def test_recovery_only_operators_from_alphabet():\n+    expected = frozenset({\"Fixation\", \"Hold\", \"Cleanup\"})\n+    assert recovery_only_operators() == expected\n+    assert BREACH_BUDGET_GATE == \"Recovery-Only\"\n+    assert recovery_only_operators() == budget_gate_permitted_operators(\n+        BREACH_BUDGET_GATE\n+    )\n+\n+\n # -- Combined admissibility (operator_admissibility.md The Admissibility Rule) --\n \n \n@@ -365,10 +384,14 @@ def test_cgm_03_risk_throttle_downgrade():\n     AllowedTotalRisk of 30; a further 25 breaches the budget gate.\"\"\"\n     state = \"overheating\"\n     allowed = 30.0\n-    assert operator_admissibility(80, [], allowed, state) == \"blocked_by_telemetry\"\n-    assert operator_admissibility(10, [], allowed, state) == \"admissible\"\n-    assert operator_admissibility(20, [10], allowed, state) == \"admissible\"\n-    assert operator_admissibility(25, [10, 20], allowed, state) == (\n+    assert operator_admissibility(\"Inversion\", 80, [], allowed, state) == (\n+        \"blocked_by_telemetry\"\n+    )\n+    assert operator_admissibility(\"Hold\", 10, [], allowed, state) == \"admissible\"\n+    assert operator_admissibility(\"Fixation\", 20, [10], allowed, state) == (\n+        \"admissible\"\n+    )\n+    assert operator_admissibility(\"Boundary\", 25, [10, 20], allowed, state) == (\n         \"blocked_by_budget\"\n     )\n \n@@ -379,24 +402,57 @@ def test_operator_admissibility_worked_example():\n     the budget; adding 50 on top exceeds it.\"\"\"\n     state = \"loaded\"\n     allowed = 60.0\n-    assert operator_admissibility(80, [], allowed, state) == \"blocked_by_telemetry\"\n-    assert operator_admissibility(25, [], allowed, state) == \"admissible\"\n-    assert operator_admissibility(35, [25], allowed, state) == \"admissible\"\n-    assert operator_admissibility(50, [25, 35], allowed, state) == (\n+    assert operator_admissibility(\"Inversion\", 80, [], allowed, state) == (\n+        \"blocked_by_telemetry\"\n+    )\n+    assert operator_admissibility(\"Boundary\", 25, [], allowed, state) == (\n+        \"admissible\"\n+    )\n+    assert operator_admissibility(\"Boundary\", 35, [25], allowed, state) == (\n+        \"admissible\"\n+    )\n+    assert operator_admissibility(\"Break\", 50, [25, 35], allowed, state) == (\n         \"blocked_by_budget\"\n     )\n \n \n-def test_breach_permits_only_zero_risk():\n-    assert operator_admissibility(0, [], 100.0, \"breach\") == \"admissible\"\n-    assert operator_admissibility(1, [], 100.0, \"breach\") == (\n-        \"blocked_by_telemetry\"\n+def test_breach_recovery_only_corrected_cgm_07():\n+    \"\"\"Corrected cgm_07: at Breach only the Recovery-Only stabilizers\n+    (Fixation 20, Hold 10, Cleanup 15) are admissible while they fit the\n+    budget; a permitted operator still has to fit AllowedTotalRisk.\"\"\"\n+    state = \"breach\"\n+    assert operator_admissibility(\"Fixation\", 20, [], 45.0, state) == \"admissible\"\n+    assert operator_admissibility(\"Hold\", 10, [20], 45.0, state) == \"admissible\"\n+    assert operator_admissibility(\"Cleanup\", 15, [20, 10], 45.0, state) == (\n+        \"admissible\"\n+    )\n+    assert operator_admissibility(\"Cleanup\", 15, [20, 10], 30.0, state) == (\n+        \"blocked_by_budget\"\n+    )\n+\n+\n+def test_breach_blocks_non_recovery_operators_by_identity():\n+    \"\"\"At Breach the operator identity decides, not a numeric ceiling.\"\"\"\n+    state = \"breach\"\n+    assert operator_admissibility(\"Boundary\", 15, [], 45.0, state) == (\n+        \"blocked_recovery_only\"\n+    )\n+    assert operator_admissibility(\"Inversion\", 80, [], 45.0, state) == (\n+        \"blocked_recovery_only\"\n+    )\n+\n+\n+def test_breach_zero_risk_still_needs_recovery_identity():\n+    \"\"\"No numeric ceiling at Breach means zero risk is not automatically\n+    admissible: a non-recovery operator stays blocked_recovery_only.\"\"\"\n+    assert operator_admissibility(\"Boundary\", 0, [], 45.0, \"breach\") == (\n+        \"blocked_recovery_only\"\n     )\n \n \n def test_telemetry_is_checked_before_budget():\n     \"\"\"Even with a generous budget, the telemetry ceiling blocks first.\"\"\"\n-    assert operator_admissibility(80, [], 100.0, \"overheating\") == (\n+    assert operator_admissibility(\"Inversion\", 80, [], 100.0, \"overheating\") == (\n         \"blocked_by_telemetry\"\n     )\n \n@@ -404,16 +460,38 @@ def test_telemetry_is_checked_before_budget():\n def test_equality_at_ceiling_and_budget_is_admissible():\n     \"\"\"<= admits on both gates: risk_weight == ceiling and TotalRisk ==\n     AllowedTotalRisk are both admissible.\"\"\"\n-    assert operator_admissibility(30, [], 100.0, \"overheating\") == \"admissible\"\n-    assert operator_admissibility(10, [20], 30.0, \"clean\") == \"admissible\"\n+    assert operator_admissibility(\"Boundary\", 30, [], 100.0, \"overheating\") == (\n+        \"admissible\"\n+    )\n+    assert operator_admissibility(\"Hold\", 10, [20], 30.0, \"clean\") == \"admissible\"\n+\n+\n+def test_operator_admissibility_not_computed_for_each_missing_input():\n+    \"\"\"A missing input never produces a positive result, before validation.\"\"\"\n+    base = {\n+        \"operator\": \"Fixation\",\n+        \"risk_weight\": 20,\n+        \"active_operator_risks\": [],\n+        \"allowed_total_risk\": 45.0,\n+        \"telemetry_state\": \"breach\",\n+    }\n+    for key in base:\n+        missing = dict(base)\n+        missing[key] = None\n+        assert operator_admissibility(**missing) == \"not_computed\", key\n+    # Missing-ness wins over validation: an unknown state with a missing\n+    # operator is not_computed, not a ValueError.\n+    assert operator_admissibility(None, 20, [], 45.0, \"nonsense\") == \"not_computed\"\n \n \n def test_operator_admissibility_rejects_bad_inputs():\n     with pytest.raises(ValueError):\n-        operator_admissibility(-1, [], 100.0, \"clean\")\n+        operator_admissibility(\"Hold\", -1, [], 100.0, \"clean\")\n+    with pytest.raises(ValueError):\n+        operator_admissibility(\"Hold\", 101, [], 100.0, \"clean\")\n     with pytest.raises(ValueError):\n-        operator_admissibility(101, [], 100.0, \"clean\")\n+        operator_admissibility(\"Hold\", 10, [], -1.0, \"clean\")\n     with pytest.raises(ValueError):\n-        operator_admissibility(10, [], -1.0, \"clean\")\n+        operator_admissibility(\"Hold\", 10, [], 100.0, \"unknown_state\")\n     with pytest.raises(ValueError):\n-        operator_admissibility(10, [], 100.0, \"unknown_state\")\n+        operator_admissibility(\"NoSuchOperator\", 10, [], 100.0, \"clean\")\ndiff --git a/reference/python/tests/test_operator_alphabet.py b/reference/python/tests/test_operator_alphabet.py\nindex c745c18..5a8b266 100644\n--- a/reference/python/tests/test_operator_alphabet.py\n+++ b/reference/python/tests/test_operator_alphabet.py\n@@ -4,9 +4,16 @@ from __future__ import annotations\n import sys\n from pathlib import Path\n \n+import pytest\n+\n sys.path.insert(0, str(Path(__file__).resolve().parent.parent))\n \n-from cap.operator_alphabet import get_operator, is_risk_in_typical_range, operator_names\n+from cap.operator_alphabet import (\n+    budget_gate_permitted_operators,\n+    get_operator,\n+    is_risk_in_typical_range,\n+    operator_names,\n+)\n \n \n def test_thirteen_operators():\n@@ -37,3 +44,11 @@ def test_risk_in_range():\n     assert is_risk_in_typical_range(\"Fixation\", 15) is True\n     assert is_risk_in_typical_range(\"Fixation\", 80) is False\n     assert is_risk_in_typical_range(\"Inversion\", 75) is True\n+\n+\n+def test_recovery_only_gate_permitted_operators():\n+    assert budget_gate_permitted_operators(\"Recovery-Only\") == frozenset(\n+        {\"Fixation\", \"Hold\", \"Cleanup\"}\n+    )\n+    with pytest.raises(ValueError):\n+        budget_gate_permitted_operators(\"Allowed\")\ndiff --git a/spec/operator_alphabet.json b/spec/operator_alphabet.json\nindex 90a48f0..1e376dc 100644\n--- a/spec/operator_alphabet.json\n+++ b/spec/operator_alphabet.json\n@@ -243,7 +243,8 @@\n     },\n     {\n       \"name\": \"Recovery-Only\",\n-      \"description\": \"Budget Recovery active; only Fixation, Hold, Cleanup permitted.\"\n+      \"description\": \"Budget Recovery active; only Fixation, Hold, Cleanup permitted.\",\n+      \"permitted_operators\": [\"Fixation\", \"Hold\", \"Cleanup\"]\n     }\n   ],\n   \"risk_tolerance_factors\": {\n"
+    },
+    {
+     "path": "oracle_recovery.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Ephemeral, packet-local oracle for cap-recovery-only-03 (driver-written, outside the tree).\n\nAssertions come from: the operator's decision of 2026-09-24 (Breach = Recovery-Only, operator identity\nrequired, missing inputs never positive, the zero-risk simplification removed); spec/operator_alphabet.json\nbudget_gates \"Recovery-Only\" (\"only Fixation, Hold, Cleanup permitted\"); 02_subsystems/telemetry_gating.md\n(ceilings Clean 90 / Loaded 60 / Overheating 30); 02_subsystems/operator_admissibility.md (telemetry check\nbefore budget; <= admits); validation_artifacts/com_grammar case cgm_03 and the corrected cgm_07\n(Fixation 20, Hold 10, Cleanup 15 as the case's example values).\nRun from the repository root. Exit 0 iff every assertion holds.\n\"\"\"\nimport json\nimport sys\n\nsys.path.insert(0, \"reference/python\")\nfrom cap.budget_calculus import (  # noqa: E402\n    BREACH_BUDGET_GATE,\n    TELEMETRY_MAX_RISK,\n    max_permitted_risk,\n    operator_admissibility,\n    recovery_only_operators,\n)\nfrom cap.operator_alphabet import budget_gate_permitted_operators  # noqa: E402\n\n# 1. the Recovery-Only operator set is machine-readable in the alphabet and matches its description\nalphabet = json.load(open(\"spec/operator_alphabet.json\", encoding=\"utf-8\"))\ngate = next(g for g in alphabet[\"budget_gates\"] if g[\"name\"] == \"Recovery-Only\")\nassert gate[\"permitted_operators\"] == [\"Fixation\", \"Hold\", \"Cleanup\"], gate\nassert budget_gate_permitted_operators(\"Recovery-Only\") == frozenset({\"Fixation\", \"Hold\", \"Cleanup\"})\nassert recovery_only_operators() == frozenset({\"Fixation\", \"Hold\", \"Cleanup\"})\nassert BREACH_BUDGET_GATE == \"Recovery-Only\"\n# other gates without a machine-readable list are refused, not guessed\ntry:\n    budget_gate_permitted_operators(\"Allowed\")\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError(\"a gate without permitted_operators must raise ValueError\")\n\n# 2. Breach has no numeric ceiling; it is a mode\nassert \"breach\" not in TELEMETRY_MAX_RISK\nassert TELEMETRY_MAX_RISK == {\"clean\": 90, \"loaded\": 60, \"overheating\": 30}, TELEMETRY_MAX_RISK\nassert max_permitted_risk(\"breach\") is None\nassert max_permitted_risk(\"overheating\") == 30\ntry:\n    max_permitted_risk(\"sunny\")\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError(\"unknown state must raise ValueError\")\n\n# 3. acceptance: an admissible stabilizer at Breach with enough budget passes the numeric check\nassert operator_admissibility(\"Fixation\", 20, [10], 45, \"breach\") == \"admissible\"\nassert operator_admissibility(\"Cleanup\", 15, [20, 10], 45, \"breach\") == \"admissible\"   # 45 == 45 admits\n\n# 4. acceptance: an operator outside Recovery-Only is blocked even with a small weight\nassert operator_admissibility(\"Boundary\", 15, [], 100, \"breach\") == \"blocked_recovery_only\"\nassert operator_admissibility(\"Inversion\", 80, [], 100, \"breach\") == \"blocked_recovery_only\"\nassert operator_admissibility(\"Reframe\", 10, [], 100, \"breach\") == \"blocked_recovery_only\"\n\n# 5. acceptance: a stabilizer over budget is blocked\nassert operator_admissibility(\"Cleanup\", 15, [20, 10], 30, \"breach\") == \"blocked_by_budget\"\n\n# 6. acceptance: missing inputs never give a positive result\nassert operator_admissibility(\"Fixation\", 20, [10], None, \"breach\") == \"not_computed\"\nassert operator_admissibility(\"Fixation\", 20, None, 45, \"breach\") == \"not_computed\"\nassert operator_admissibility(\"Fixation\", None, [], 45, \"breach\") == \"not_computed\"\nassert operator_admissibility(None, 20, [], 45, \"breach\") == \"not_computed\"\nassert operator_admissibility(\"Fixation\", 20, [], 45, None) == \"not_computed\"\n\n# 7. non-Breach behaviour unchanged, now with operator identity: cgm_03 and the worked example\nassert operator_admissibility(\"Inversion\", 80, [], 30, \"overheating\") == \"blocked_by_telemetry\"\nassert operator_admissibility(\"Hold\", 10, [], 30, \"overheating\") == \"admissible\"\nassert operator_admissibility(\"Fixation\", 20, [10], 30, \"overheating\") == \"admissible\"\nassert operator_admissibility(\"Fixation\", 25, [10], 30, \"overheating\") == \"blocked_by_budget\"\nassert operator_admissibility(\"Inversion\", 80, [], 60, \"loaded\") == \"blocked_by_telemetry\"\nassert operator_admissibility(\"Fixation\", 25, [], 60, \"loaded\") == \"admissible\"\nassert operator_admissibility(\"Boundary\", 35, [25], 60, \"loaded\") == \"admissible\"\nassert operator_admissibility(\"Break\", 50, [25, 35], 60, \"loaded\") == \"blocked_by_budget\"\nassert operator_admissibility(\"Boundary\", 15, [], 100, \"clean\") == \"admissible\"      # no whitelist outside Breach\nassert operator_admissibility(\"Inversion\", 80, [], 100, \"overheating\") == \"blocked_by_telemetry\"  # ceiling before budget\n\n# 8. the old simplification is gone: a zero-risk non-recovery operator is still blocked at Breach\nassert operator_admissibility(\"Boundary\", 0, [], 100, \"breach\") == \"blocked_recovery_only\"\n\n# 9. invalid (present but wrong) inputs are refused with ValueError, not reported as not_computed\nfor bad in ({\"operator\": \"Teleport\"}, {\"risk_weight\": 101}, {\"allowed_total_risk\": -1}, {\"telemetry_state\": \"sunny\"}):\n    kw = {\"operator\": \"Fixation\", \"risk_weight\": 20, \"active_operator_risks\": [],\n          \"allowed_total_risk\": 45, \"telemetry_state\": \"clean\"}\n    kw.update(bad)\n    try:\n        operator_admissibility(**kw)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"expected ValueError for %r\" % (bad,))\n\nprint(\"oracle_recovery: all assertions hold\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_recovery.py\",\n  \"exit\": 0,\n  \"tail\": \"oracle_recovery: all assertions hold\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py\",\n  \"exit\": 0,\n  \"tail\": \"........................................................................ [ 79%]\\n...................                                                      [100%]\\n91 passed in 0.18s\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_operator_alphabet.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_falsifiability_gates.py reference/python/tests/test_com_log_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"......................                                                   [100%]\\n22 passed in 0.70s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

@@ -1,0 +1,178 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-24T18-35Z_breach_recovery_decision",
+    "observed_state": {
+      "id": "obs_breach_encoded_as_zero_ceiling",
+      "summary": "budget_calculus.py encodes Breach as a numeric ceiling of 0 without operator identity; the alphabet's Recovery-Only gate lists its operators only in prose",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T18-35Z_breach_recovery_decision#obs_code_breach_zero",
+        "mirror_frame:mirror_frame_2026-09-24T18-35Z_breach_recovery_decision#obs_alphabet_recovery_only"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_table_line_encoded_literally",
+      "hypothesis": "bbbc26c encoded the Risk Throttling table literally (Breach 0%), which run 003 showed to contradict the Breach row, the Budget Recovery paragraph and cgm_07; the operator resolved the reading as Recovery-Only",
+      "source": "human_report",
+      "confidence": 0.95,
+      "evidence_refs": [
+        "validation_artifacts/ameba_cycle/run_003_numeric_coverage/README.md#F3",
+        "operator decision of 2026-09-24"
+      ],
+      "uncertainty": [],
+      "status": "confirmed"
+    },
+    "desired_state": {
+      "id": "target_breach_recovery_only_executable",
+      "goal": "At Breach the numeric contract admits only Recovery-Only operators that fit the budget with the active operators, reads that operator set from the alphabet, takes the operator identity as input, returns not_computed for missing inputs, and the superseded zero-risk test is replaced",
+      "kind": "reconcile_conflict",
+      "success_criteria": [
+        "the driver's oracle (alphabet list, Breach mode, cgm_03 and corrected cgm_07 values, missing inputs, ValueError cases) exits 0",
+        "test_budget_calculus.py exits 0 with the replaced and added tests",
+        "test_operator_alphabet.py, test_schemas_valid.py, test_falsifiability_gates.py, test_com_log_schema.py exit 0",
+        "the full suite exits 0",
+        "the diff is limited to spec/operator_alphabet.json (one added key), cap/operator_alphabet.py, cap/budget_calculus.py and the two test files"
+      ],
+      "forbidden_outcomes": [
+        "duplicating the Recovery-Only set as a constant in code instead of reading the alphabet",
+        "turning 20 / 10 / 15 into module constants",
+        "substituting 100 for a missing budget",
+        "keeping the zero-risk-at-Breach simplification",
+        "changing docs, examples or other spec files in this step"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure",
+      "the driver does not edit code, tests or spec; the oracle stays outside the tree and is red on the baseline",
+      "existing module tests and the alphabet/schema/validator tests are declared checks, so damage to existing definitions cannot pass"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_alphabet_is_operator_source_of_truth",
+        "level": "L1-C",
+        "status": "compatible"
+      },
+      {
+        "id": "anchor_existing_numeric_contract",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-24T18-38Z_breach_recovery_only",
+    "from_state": "Breach = numeric ceiling 0, no operator identity, zero-risk simplification in tests",
+    "inferred_cause": "cause_table_line_encoded_literally",
+    "to_state": "Breach = Recovery-Only mode read from the alphabet; operator_admissibility(operator, ...) with blocked_recovery_only and not_computed; docs aligned by the driver afterwards",
+    "mode": "reconcile",
+    "route": [
+      {
+        "order": 1,
+        "action": "Write the oracle from the operator's acceptance list, the alphabet and the corrected cases; run it the router's way on the clean tree; expect ImportError",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "The oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-recovery-only-03) with three declared checks: the oracle, the module tests, and the alphabet/schema/validator tests",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Existing seams (alphabet gate, validator rule) carry the decision; the change is a small reconciliation of code with them"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model; driver adjudication on the diff, the full suite and check_repo.ps1; driver aligns the two subsystem docs afterwards",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; docs are not execution-affecting"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_existing_numeric_contract",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.1,
+      "regression_risk": 0.3,
+      "loop_risk": 0.1,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "medium",
+      "implementation_cost": "medium",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the reconciliation commit on the research branch",
+        "rerun test_budget_calculus.py and test_operator_alphabet.py to confirm the previous counts"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "all three declared pytest checks exit 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the full suite exits 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git diff names only the five expected files and the alphabet gains exactly one key",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-24T18:38:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-24T18-38Z_breach_recovery_only",
+    "reasons": [
+      "The decision is given and the existing seams support it; the route is a reconciliation of code with the alphabet, not a new mechanism",
+      "regression_risk is the highest axis (an existing signature changes and a test is replaced); three declared checks guard it",
+      "Route is reversible; no irreversible step; verifier and driver adjudication required"
+    ],
+    "alternatives": [
+      "Keep a numeric Breach ceiling (rejected by the operator: identity of the operator is required)",
+      "Hardcode {Fixation, Hold, Cleanup} in budget_calculus (rejected: the alphabet is the source; a list in code would drift)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 004, Adjustment step. Mode reconcile: two carriers of the Breach rule disagreed and the operator chose which one the code follows. Proposed before the worker ran."
+}

@@ -22,6 +22,8 @@ Each run directory holds:
 | `verify_packet.json` | a deterministic packet builder (no model) | — |
 | `nomcp_verdict_receipt.json` | the NoMCP verifier runner, verbatim | — |
 | `README.md` | the driver: the five items the brief asks to keep, plus costs and the Adjustment | — |
+| `transition_execution_record.json` | the driver, from the artifacts above and the checks re-run at the obtained revision | `spec/transition_execution.schema.json` + `scripts/validate_execution_record.py --repo .` |
+| `checks/*.txt` | the driver: outputs of each criterion's check at the obtained revision, in a detached worktree | referenced by the record |
 
 No new schema was introduced: execution and verdict receipts are kept as the
 executor and verifier wrote them, because `adjustment_layer.schema.json`
@@ -38,7 +40,19 @@ Runs:
   evidence-only run (no transition): what the numeric gate can decide from
   the 25 pack cases; files are `coverage.json`, `gate_outputs.json`,
   `README.md`. Found the Breach ceiling contradiction and the
-  candidate-vs-gate vocabulary gap; both left as open decisions.
+  candidate-vs-gate vocabulary gap; both decided by the operator the same
+  evening (see runs 004 and 005 and `CAP_CLOUD_HANDOFF.md` §5).
+- [`run_004_breach_recovery_only/`](./run_004_breach_recovery_only/README.md) —
+  operator decision executed: Breach = Recovery-Only by operator identity;
+  second measured escalation (Gemma missed an import); commit `989a7e2`; first
+  execution record with checks re-run at the revision.
+- [`run_005a_execution_record_schema/`](./run_005a_execution_record_schema/README.md)
+  and [`run_005b_execution_record_validator/`](./run_005b_execution_record_validator/README.md)
+  — the executed-transition record schema and its resolving validator, routed
+  and verified the same way after the unsplit task failed twice (relay ceiling;
+  fallback wall); each half has its own execution record.
+- `prepared/com_log_link/` — the next bounded coding step (candidate step ↔
+  COM-Log record), packet, oracle and verify stage prepared and not executed.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet

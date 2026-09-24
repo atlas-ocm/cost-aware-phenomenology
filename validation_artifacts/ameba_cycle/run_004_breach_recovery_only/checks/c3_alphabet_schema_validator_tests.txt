@@ -1,0 +1,5 @@
+# check c3: alphabet / schema / validator tests at 989a7e2 (/f/VibeCoding/CAP-wt-tmp-989a7e2)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests/test_operator_alphabet.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_falsifiability_gates.py reference/python/tests/test_com_log_schema.py
+......................                                                   [100%]
+22 passed in 0.76s
+exit=0

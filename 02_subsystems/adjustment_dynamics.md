@@ -311,6 +311,26 @@ Verdict / mode consistency:
 - `route_requires_reconcile` forces `mode` in
   `{reconcile, retcon, rollback, quarantine}`.
 
+## Execution Record
+
+A CandidateTransition says what should be observed after apply; it does not
+establish that anything was applied. Once a candidate has been executed, the
+transition is bound to its object and revisions, its executor call, its
+re-observation and the per-criterion check results by a separate record:
+[`../spec/transition_execution.schema.json`](../spec/transition_execution.schema.json),
+resolved (references, input hashes, git revisions, criterion coverage) by
+[`../reference/python/cap/execution_record.py`](../reference/python/cap/execution_record.py)
+and the CLI
+[`../reference/python/scripts/validate_execution_record.py`](../reference/python/scripts/validate_execution_record.py).
+The record separates two questions: *does the required state exist now?*
+(`verdict.postcondition_met`, every criterion has a passing check at the
+obtained revision) and *which execution led to it?*
+(`verdict.provenance_established`, a receipt and hashed inputs). Estimated
+costs stay on the candidate; measured costs live on the record and are never
+summed with them. JSON Schema alone accepts a `pass` whose references do not
+exist; the validator does not. Real records:
+[`../validation_artifacts/ameba_cycle/`](../validation_artifacts/ameba_cycle/README.md).
+
 ## Where to Read Next
 
 - [`../04_extensions/looking_glass.md`](../04_extensions/looking_glass.md) — the upstream-diagnosis half of the chain

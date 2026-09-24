@@ -1,0 +1,156 @@
+{
+  "schema_version": "0.1",
+  "record_id": "exec_2026-09-24_run_002_telemetry_admissibility",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "aa6048f194e5de5a6bd987e782f55fbe84e626c8",
+    "revision_after": "bbbc26c11e1da5cd767624cf39f011848481b29c"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-24T18-02Z_telemetry_admissibility",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-24T18-00Z_telemetry_ceiling_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle (docs table, cgm_03, the worked example, Breach pause-only as the table then read, ordering, equality, ValueError cases) exits 0",
+        "check_command": "python -B validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/oracle_admissibility.py"
+      },
+      {
+        "id": "c2",
+        "statement": "test_budget_calculus.py exits 0 including new tests for the same cases",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py"
+      },
+      {
+        "id": "c3",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c4",
+        "statement": "the diff is limited to budget_calculus.py and test_budget_calculus.py and is additive",
+        "check_command": "git diff --stat aa6048f bbbc26c; git diff --numstat aa6048f bbbc26c -- reference/python/cap/budget_calculus.py reference/python/tests/test_budget_calculus.py"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); one native Workflow with one nomcp-haiku relay per stage",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/coding_packet.json",
+        "sha256": "0fcb8ff8b20ccc2f5ef31949faccc78d9dba113354f668d3d5df16117b5ca612"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/oracle_admissibility.py",
+        "sha256": "7ff085fa13e746da6abf940f1666f7e3bf9c749f142ea89900264fd6ad4a7d80"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-24T18:54:00Z",
+    "revision_after": "bbbc26c11e1da5cd767624cf39f011848481b29c",
+    "summary": "Re-observed retroactively in a detached worktree at bbbc26c (F:/VibeCoding/CAP-wt-tmp-bbbc26c, removed afterwards): clean tree; the run-002 oracle exits 0 against the code as it was then; module tests 87 passed; full suite 936 passed, 2 skipped; diff aa6048f..bbbc26c touches budget_calculus.py and test_budget_calculus.py (additive) plus the two driver-aligned docs of the same commit"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/oracle_admissibility.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c1_oracle.txt",
+      "revision_checked": "bbbc26c11e1da5cd767624cf39f011848481b29c"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c2_module_tests.txt",
+      "revision_checked": "bbbc26c11e1da5cd767624cf39f011848481b29c"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c3_full_suite.txt",
+      "revision_checked": "bbbc26c11e1da5cd767624cf39f011848481b29c"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "git diff --stat aa6048f bbbc26c; git diff --numstat aa6048f bbbc26c -- reference/python/cap/budget_calculus.py reference/python/tests/test_budget_calculus.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c4_diff_scope.txt",
+      "revision_checked": "bbbc26c11e1da5cd767624cf39f011848481b29c"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "test_budget_calculus.py exits 0 with new tests added",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c2_module_tests.txt"
+    },
+    {
+      "claim": "the full suite exits 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c3_full_suite.txt"
+    },
+    {
+      "claim": "git diff is additive and limited to the two files",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/checks/c4_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected: the cheap tier closes an additive change with named signatures. Observed: gemma4:31b-cloud satisfied the oracle but deleted MODE_RTF_RANGE and MODE_PREFERRED_ZONE; the existing module tests refused it (ImportError); the router set the attempt aside (stash 33843e76, local only) and deepseek-v4.1-flash:cloud closed it. No CAP-level Adjustment; the router's fixed policy applied.",
+      "The postcondition of this run encoded the Breach = 0 table line; run 003 later showed that line to contradict the docs and cgm_07, and run 004 replaced it by the operator's Recovery-Only decision. The record therefore certifies that the transition met the postcondition as defined at the time, not that the postcondition was right."
+    ],
+    "adjustment_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/candidate_transition.json"
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 11670,
+      "worker_turns": 24,
+      "worker_wall_s": 51.99,
+      "verifier_wall_s": 30.0,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files; the checks are retroactive (the format did not exist when the transition ran) and the receipts from the time are referenced",
+      "Provenance: the packet and the oracle are hashed inputs, the router receipt is referenced, the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs are the receipts' measured values for the closing attempt; money is unknown"
+    ]
+  },
+  "notes": "Run 002 execution record, produced retroactively from the artifacts kept at the time, at the operator's request to bind that run's receipts to its candidate and its checked tree. The adjustment_ref points to run 004, which superseded this run's Breach reading."
+}

@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.1",
+  "record_id": "exec_2026-09-24_run_005a_execution_record_schema",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "989a7e24a332274ea885127b6e44d6276d1e8c14",
+    "revision_after": "336af161a7c8fb8660b31592e82adc676cb1b012"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-24T18-48Z_execution_record",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-24T18-47Z_execution_binding_gap",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle for the schema half (schema validity and $id, example validates, references exist, input sha256 equals the file's real hash, named revisions and flags, exactly two stand-in files, the listed schema-level rejections and acceptances, the documented unresolvable-reference boundary) exits 0",
+        "check_command": "python -B validation_artifacts/ameba_cycle/run_005a_execution_record_schema/oracle_c1.py"
+      },
+      {
+        "id": "c2",
+        "statement": "test_transition_execution_schema.py, test_schemas_valid.py, test_adjustment_layer_schema.py and test_mirror_layer_schema.py exit 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_transition_execution_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_mirror_layer_schema.py"
+      },
+      {
+        "id": "c3",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c4",
+        "statement": "new files only (schema, example, two stand-ins, test module); no tracked file modified",
+        "check_command": "git diff --stat 989a7e2 336af16; git diff --diff-filter=M --name-only 989a7e2 336af16"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); one native Workflow with one nomcp-haiku relay per stage",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/coding_packet.json",
+        "sha256": "9b0f0bd6e444daaf049a2b9f45dc3149752f555e313a0e5e994f6dee8874905d"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/oracle_c1.py",
+        "sha256": "90b4e25ac825d80a5325beda21d2ee2370697c6025cbd0c026f744d931331ec7"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-24T19:33:00Z",
+    "revision_after": "336af161a7c8fb8660b31592e82adc676cb1b012",
+    "summary": "Re-observed in a detached worktree at 336af16 (F:/VibeCoding/CAP-wt-tmp-336af16, removed afterwards): clean tree; oracle_c1 exits 0; schema tests pass; full suite 961 passed, 2 skipped; diff 989a7e2..336af16 adds five files and modifies none"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/run_005a_execution_record_schema/oracle_c1.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c1_oracle.txt",
+      "revision_checked": "336af161a7c8fb8660b31592e82adc676cb1b012"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_transition_execution_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_mirror_layer_schema.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c2_schema_tests.txt",
+      "revision_checked": "336af161a7c8fb8660b31592e82adc676cb1b012"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c3_full_suite.txt",
+      "revision_checked": "336af161a7c8fb8660b31592e82adc676cb1b012"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "git diff --stat 989a7e2 336af16; git diff --diff-filter=M --name-only 989a7e2 336af16",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c4_diff_scope.txt",
+      "revision_checked": "336af161a7c8fb8660b31592e82adc676cb1b012"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "the declared pytest checks and the full suite exit 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c3_full_suite.txt"
+    },
+    {
+      "claim": "git shows only new files",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/checks/c4_diff_scope.txt"
+    },
+    {
+      "claim": "the real records for runs 004 and 002 pass validate_execution_record.py --repo .",
+      "kind": "runtime_observation",
+      "status": "not_checked"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected: one bounded task closes at the cheap tier or the fallback. Observed on the unsplit task: a relay-hosted route was killed at the 600 s tool ceiling (no receipt; orphaned stash; Verify opened on the relay's return and found nothing), then a detached route's fallback hit its own 600 s wall (EXCEPTION). Adjustment by the driver: run detached, split into halves, give the cheap worker the input file's byte hash as an environment fact. On this half gemma4:31b-cloud missed the hash (46 turns, 56.1 s, EXCEPTION run) and then the stand-in file ending (10 turns, 34.9 s), both set aside; deepseek-v4.1-flash:cloud closed it (38 turns, 90.3 s). No oracle was weakened; no code was written by the driver."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_005a_execution_record_schema/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 21688,
+      "worker_turns": 38,
+      "worker_wall_s": 90.34,
+      "verifier_wall_s": 38.8,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files",
+      "Provenance: the packet and the oracle are hashed inputs, the router receipt is referenced, the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs are the receipts' measured values for the closing attempt; the unsplit route that failed before this one is recorded under failed_route/ and not summed here; money is unknown"
+    ]
+  },
+  "notes": "Run 005a: the schema half of the executed-transition record, after the unsplit task (failed_route/) exceeded the fallback worker's 600 s wall. The candidate is shared with run 005b."
+}

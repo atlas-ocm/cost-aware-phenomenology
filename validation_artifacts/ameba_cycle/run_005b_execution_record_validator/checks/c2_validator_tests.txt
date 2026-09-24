@@ -1,0 +1,6 @@
+# check c2: validator and schema tests at 8d23161 (/f/VibeCoding/CAP-wt-tmp-05b)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests/test_execution_record_validator.py reference/python/tests/test_transition_execution_schema.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_adjustment_layer_schema.py
+........................................................................ [ 83%]
+..............                                                           [100%]
+86 passed in 3.01s
+exit=0

@@ -1,0 +1,4 @@
+# check c1: the packet oracle of run 005b, re-run by the driver at 8d23161 in a detached worktree (/f/VibeCoding/CAP-wt-tmp-05b)
+$ python -B validation_artifacts/ameba_cycle/run_005b_execution_record_validator/oracle_c2.py
+oracle_c2: all assertions hold
+exit=0

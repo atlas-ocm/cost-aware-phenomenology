@@ -1,0 +1,6 @@
+# check c2: module tests at 989a7e2 (/f/VibeCoding/CAP-wt-tmp-989a7e2)
+$ python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py
+........................................................................ [ 79%]
+...................                                                      [100%]
+91 passed in 0.22s
+exit=0

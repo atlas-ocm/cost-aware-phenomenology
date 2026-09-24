@@ -13,8 +13,8 @@ its hash is reported in the local Driver's final message, not here.
 | base | `origin/main` = `e65b9af4b28d3c97950c667448a32c24adc44a0e` — identical to the revision the architect read; `git fetch --prune` confirmed no newer remote commit |
 | research branch | `research/ameba-executable-cycle`, created from that base in a separate worktree (`F:/VibeCoding/CAP-wt-ameba-cycle`) |
 | why a separate worktree | the maintainer's checkout `F:/VibeCoding/Shard-Theory/CAP` is on `main`, 28 commits ahead of `origin/main` (AICE / evidence docs, none touching `reference/python/cap` or `02_subsystems`) and carries uncommitted AICE candidate work; it was left untouched, and those 28 commits are **not** on this branch |
-| verified code revision | `bbbc26c` (`feat(budget): ...`): full suite `936 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 in 46 s |
-| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then the handoff commit `90e1c72` (this file, the brief copy, the run records, docs updates); then the run 003 commit (evidence record, docs flag, this update) |
+| verified code revision | `8d23161` (execution record): full suite `981 passed, 2 skipped`; `scripts/check_repo.ps1` exit 0 (see §2.7). Earlier verified points: `bbbc26c` (936 passed, 2 skipped), `989a7e2` (941 passed, 2 skipped) |
+| commits on the branch (oldest first) | `602fa63` test(layout), `aa6048f` docs(budget), `bbbc26c` feat(budget), then `90e1c72` handoff, `7b24b6a` run 003, `2be76e6` run 003 correction, `989a7e2` feat(budget) Breach = Recovery-Only, `336af16` feat(spec) execution-record schema, `8d23161` feat(cap) execution-record validator, then the records commit (runs 004 and 005, execution records for runs 002 and 004, the prepared COM-Log link packet, this update) |
 
 Naming: the repository had no branch convention (only `main` had ever
 existed); `research/<topic>` follows the brief's wording and the
@@ -91,6 +91,44 @@ prose says "partial" (behaviour consistent), and cannot touch `cgm_06`
 Breach contradiction as open next to its Numeric Contract. Nothing was
 changed to make either side green.
 
+### 2.6 `989a7e2` — Breach is Recovery-Only, decided by operator identity
+
+Operator decision of 2026-09-24 executed and verified (run 004). The alphabet's
+`Recovery-Only` gate carries a machine-readable `permitted_operators` list;
+`operator_alphabet.budget_gate_permitted_operators` reads it (no guessing from
+prose); `TELEMETRY_MAX_RISK` has no breach key; `max_permitted_risk("breach")`
+is `None`; `operator_admissibility(operator, risk_weight, active_operator_risks,
+allowed_total_risk, telemetry_state)` returns `not_computed` for any missing
+input, `blocked_recovery_only` for a non-recovery operator at Breach whatever
+its weight, the budget check for recovery operators, the unchanged
+ceiling-then-budget rule elsewhere. The zero-risk-at-Breach test is gone. Docs
+aligned by the driver. Authored by `deepseek-v4.1-flash:cloud` after
+`gemma4:31b-cloud` failed on a missing `import pytest`; verdict `ACCEPT` by
+`glm-5.3-flash:cloud`. Record: `run_004_breach_recovery_only/`.
+
+### 2.7 `336af16` + `8d23161` — the executed-transition record (the binding the operator asked for)
+
+The operator's probe showed that a Release Gate `pass` with unresolvable
+references and a Mirror Frame without any `evidence_ref` both pass JSON Schema.
+`spec/transition_execution.schema.json` binds one executed transition: object
+and revisions before/after, the candidate and its postcondition defined before
+execution, the actor / tool / hashed inputs / receipt, the re-observation,
+per-criterion checks with result references (a `pass` needs exit 0; a
+`postcondition_met` record needs every check passing), divergence fed back,
+measured costs apart from estimates (`money` is `"unknown"` or a number),
+`identity_independently_verified` explicit. `cap/execution_record.py`
+resolves every reference, input hash, git revision and criterion coverage and
+returns problems instead of raising; `scripts/validate_execution_record.py` is
+the CLI; the boundary "schema accepts, validator rejects" is a test. Real
+records: `run_004_breach_recovery_only/transition_execution_record.json` and,
+retroactively, `run_002_telemetry_admissibility/transition_execution_record.json`,
+each with its checks re-run by the driver at the obtained revision in a
+detached worktree and the outputs kept as files (`checks/`). Records of the
+change itself: `run_005a_execution_record_schema/` and
+`run_005b_execution_record_validator/` (the unsplit task failed twice first: a
+relay-hosted route killed at the 600 s tool ceiling, then a detached route whose
+fallback hit its own 600 s wall; see the 005a README and `failed_route/`).
+
 ## 3. Exact commands, dependencies, inputs and outputs
 
 Environment used locally: Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0
@@ -111,6 +149,10 @@ python reference/python/scripts/run_proxy_policy_pack.py --print-md  # Passed: 8
 python reference/python/scripts/demo_llm_proxy_policy.py --counter-source
 python reference/python/cap_lite.py
 python reference/python/scripts/run_llm_dialogue_benchmark.py --print-md
+
+# executed-transition records: every reference, hash, revision and criterion must resolve
+python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_004_breach_recovery_only/transition_execution_record.json --repo .
+python reference/python/scripts/validate_execution_record.py validation_artifacts/ameba_cycle/run_002_telemetry_admissibility/transition_execution_record.json --repo .
 ```
 
 The full script (`.\scripts\check_repo.ps1`) also renders prompt manifests,
@@ -169,12 +211,15 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   3–5 of admissibility (no inputs); a downgrade-sequence / candidate selector
   (no reproduced failure asks for it yet); a cycle runner script (would be a
   mechanism ahead of a failure); vendoring the external packs (private).
-- Open after run 003, operator decision, not a coding task: which reading of
-  Breach is intended (ceiling 0% = Pause only, or the conservation band with a
-  stabilizer whitelist); and whether a `CandidateTransition` should carry the
-  gate's inputs (RiskWeight percent, telemetry state, AllowedTotalRisk) or a
-  mapping from its [0, 1] risk axes is defined. The test and oracle of
-  `bbbc26c` encode the table line and inherit the contradiction.
+- Decided by the operator on 2026-09-24 and executed: Breach = Recovery-Only
+  by operator identity (`989a7e2`). Decided and prepared but not executed: the
+  six risk axes and the cost bands stay; no conversion to percent; the gate's
+  inputs come from a linked COM-Log record and the cycle state; the RiskWeight's
+  source and estimate status are recorded; missing inputs give `not_computed`
+  (packet, oracle and verify stage under `prepared/com_log_link/`).
+- Decided by the operator the same evening and executed: the executed-transition
+  record with a reference-resolving validator (§2.7) is the binding every future
+  run must produce; a numeric gate may be part of it, the binding comes first.
 - Open: which RiskToleranceFactor carrier is canonical: `observer_budget.md` +
   `MODE_RTF_RANGE` (0.5-0.7 / 0.7-0.85 / 0.85-0.95) or `spec/operator_alphabet.json`
   `risk_tolerance_factors` (0.4 / 0.7 / 1.0). Not decided here.
@@ -198,8 +243,8 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   no price exposed); served-model identity is the executing CLI's report, not
   an independent probe; whether the cloud platform can run the NoMCP shim
   (it cannot: local Ollama and a local checkout — see §8).
-- Local-only state that is not on the branch: Gemma's set-aside attempt
-  (stash `33843e76` in the local worktree); the raw scratch receipts (copied
+- Local-only state that is not on the branch: Gemma's set-aside attempts
+  (stashes `33843e76`, `6e7b4e56` and the run-005 one, in the local worktree); the raw scratch receipts (copied
   into the run records); the Workflow transcripts; the 28 unpushed commits on
   the maintainer's `main`.
 
@@ -216,19 +261,27 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    met and constraints violated; unverified completion claims; interventions,
    retries, regressions, rollbacks; time and tokens in their own units; new
    evidence produced). Two runs of one change is a probe, not a result.
-3. Run 003 is done locally (see §2.5). It leaves an OPERATOR DECISION, not a
-   coding task: which reading of Breach is intended. Do not change
-   `TELEMETRY_MAX_RISK`, the docs, the test or the oracle to make either side
-   green before that is decided; both readings and what each would change
-   are in the run 003 README (F3).
-4. Vocabulary gap to close before the gate can act inside the cycle (run 003,
-   F6): a `CandidateTransition` carries six risk axes in [0, 1] and five
-   ordinal cost bands and no telemetry state or AllowedTotalRisk; the gate
-   consumes a RiskWeight percent, a telemetry state and an AllowedTotalRisk.
-   Decide from the next real runs whether the candidate carries the gate's
-   inputs or a mapping is defined; either is a schema change and goes through
-   the ordinary coding route with the schema tests as the postcondition.
-5. Then decide, from data, whether Adjustment's route-level BudgetGate
+3. Done: Breach = Recovery-Only (`989a7e2`, run 004) and the executed-transition
+   record (§2.7, runs 005a and 005b). Every further run must produce a
+   `transition_execution_record.json` that passes
+   `validate_execution_record.py --repo .`; a run without one is not a
+   verified transition, whatever its README says.
+4. Next bounded coding step, prepared and not executed: the COM-Log link
+   (`validation_artifacts/ameba_cycle/prepared/com_log_link/`: `coding_packet.json`
+   is the task text and declared checks, `oracle_link.py` the postcondition,
+   `verify_stage.py` the packet builder). Acceptance, from the operator: an
+   admissible stabilizer at Breach within budget passes the numeric check; an
+   operator outside Recovery-Only is blocked even with a small weight; a
+   stabilizer over budget is blocked; missing inputs never give a positive
+   result; at least one candidate passes the whole chain to a verified
+   postcondition, recorded as an execution record. A numeric pass is still not
+   full admissibility (items 3–5 unchecked).
+5. Then the main question, now answerable: does Adjustment help choose a
+   cheaper reachable transition and reach a verified result? Fix the baseline
+   path first (item 2), run the next real change both ways, and compare the
+   two execution records on the brief's five axes. A green gate alone does
+   not answer it.
+6. Still open from data: whether Adjustment's route-level BudgetGate
    (`adjustment_dynamics.md` §Budget Gate) should be code, or whether the
    per-operator gate is sufficient.
 

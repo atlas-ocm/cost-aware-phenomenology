@@ -1,0 +1,169 @@
+{
+  "schema_version": "0.1",
+  "record_id": "exec_2026-09-24_run_004_breach_recovery_only",
+  "object": {
+    "kind": "repo",
+    "identifier": "https://github.com/atlas-ocm/cost-aware-phenomenology.git, branch research/ameba-executable-cycle (executed in the local worktree F:/VibeCoding/CAP-wt-ameba-cycle)",
+    "revision_before": "2be76e6ee36cc1f25b013fb5bcfea6d13e9dffb7",
+    "revision_after": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+  },
+  "candidate": {
+    "candidate_id": "adj_candidate_2026-09-24T18-38Z_breach_recovery_only",
+    "candidate_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/candidate_transition.json",
+    "mirror_frame_before_id": "mirror_frame_2026-09-24T18-35Z_breach_recovery_decision",
+    "mirror_frame_before_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/mirror_frame.json"
+  },
+  "postcondition": {
+    "defined_before_execution": true,
+    "criteria": [
+      {
+        "id": "c1",
+        "statement": "the driver's oracle (alphabet list, Breach mode, cgm_03 and corrected cgm_07 values, missing inputs, ValueError cases) exits 0",
+        "check_command": "python -B validation_artifacts/ameba_cycle/run_004_breach_recovery_only/oracle_recovery.py"
+      },
+      {
+        "id": "c2",
+        "statement": "test_budget_calculus.py exits 0 with the replaced and added tests",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py"
+      },
+      {
+        "id": "c3",
+        "statement": "test_operator_alphabet.py, test_schemas_valid.py, test_falsifiability_gates.py, test_com_log_schema.py exit 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_operator_alphabet.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_falsifiability_gates.py reference/python/tests/test_com_log_schema.py"
+      },
+      {
+        "id": "c4",
+        "statement": "the full suite exits 0",
+        "check_command": "python -m pytest -q -p no:cacheprovider reference/python/tests"
+      },
+      {
+        "id": "c5",
+        "statement": "the diff is limited to spec/operator_alphabet.json (one added key), cap/operator_alphabet.py, cap/budget_calculus.py and the two test files (plus the driver's doc alignment in the same commit)",
+        "check_command": "git diff --stat 2be76e6 989a7e2; git diff 2be76e6 989a7e2 -- spec/operator_alphabet.json"
+      }
+    ]
+  },
+  "execution": {
+    "actor": {
+      "role": "fallback_coder",
+      "model_requested": "deepseek-v4.1-flash:cloud",
+      "model_served": "deepseek-v4.1-flash:cloud",
+      "identity_source": "claude_cli_modelUsage",
+      "identity_independently_verified": false
+    },
+    "tool": "NoMCP router (nomcp.py coding -> experiments/escalation_e2e.py -> claude -p against Ollama); one native Workflow with one nomcp-haiku relay per stage",
+    "inputs": [
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/coding_packet.json",
+        "sha256": "1b81607c861e39ad9bcfc557c4cdf7eee0910bbc369a3c3494d75fa19602218a"
+      },
+      {
+        "ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/oracle_recovery.py",
+        "sha256": "834d9c559bdd01de90b9ac6f3d61817208125c30c117bc37c0e9ee9b45efc7ea"
+      }
+    ],
+    "receipt_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/nomcp_coding_receipt.json",
+    "decision": "FALLBACK_PASS",
+    "attempts": 2
+  },
+  "observation_after": {
+    "observed_at": "2026-09-24T18:52:00Z",
+    "revision_after": "989a7e24a332274ea885127b6e44d6276d1e8c14",
+    "summary": "Re-observed in a detached worktree at 989a7e2 (F:/VibeCoding/CAP-wt-tmp-989a7e2, removed afterwards): clean tree; oracle exits 0; module tests 91 passed; alphabet/schema/validator tests 22 passed; full suite 941 passed, 2 skipped; diff 2be76e6..989a7e2 touches the five candidate files plus the two driver-aligned docs, and the alphabet gains exactly the permitted_operators key"
+  },
+  "checks": [
+    {
+      "criterion_id": "c1",
+      "command": "python -B validation_artifacts/ameba_cycle/run_004_breach_recovery_only/oracle_recovery.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c1_oracle.txt",
+      "revision_checked": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+    },
+    {
+      "criterion_id": "c2",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c2_module_tests.txt",
+      "revision_checked": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+    },
+    {
+      "criterion_id": "c3",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests/test_operator_alphabet.py reference/python/tests/test_schemas_valid.py reference/python/tests/test_falsifiability_gates.py reference/python/tests/test_com_log_schema.py",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c3_alphabet_schema_validator_tests.txt",
+      "revision_checked": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+    },
+    {
+      "criterion_id": "c4",
+      "command": "python -m pytest -q -p no:cacheprovider reference/python/tests",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c4_full_suite.txt",
+      "revision_checked": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+    },
+    {
+      "criterion_id": "c5",
+      "command": "git diff --stat 2be76e6 989a7e2; git diff 2be76e6 989a7e2 -- spec/operator_alphabet.json",
+      "exit_code": 0,
+      "status": "pass",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c5_diff_scope.txt",
+      "revision_checked": "989a7e24a332274ea885127b6e44d6276d1e8c14"
+    }
+  ],
+  "expected_evidence_results": [
+    {
+      "claim": "the oracle exits 0 on the changed tree",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c1_oracle.txt"
+    },
+    {
+      "claim": "all three declared pytest checks exit 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c3_alphabet_schema_validator_tests.txt"
+    },
+    {
+      "claim": "the full suite exits 0",
+      "kind": "test_result",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c4_full_suite.txt"
+    },
+    {
+      "claim": "git diff names only the five expected files and the alphabet gains exactly one key",
+      "kind": "diff",
+      "status": "observed",
+      "result_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/checks/c5_diff_scope.txt"
+    }
+  ],
+  "divergence": {
+    "expected_vs_observed": [
+      "Expected: the cheap tier closes the change. Observed: gemma4:31b-cloud passed the oracle and the module tests but failed the alphabet tests on a missing 'import pytest' (NameError); the router set the attempt aside (stash 6e7b4e56, local only) and deepseek-v4.1-flash:cloud closed it in 55 turns. No CAP-level Adjustment was needed; the router's fixed policy applied.",
+      "The commit that carries this transition also carries driver-authored doc alignment in 02_subsystems (not part of the candidate route); c5's stat therefore lists seven files, five from the executor and two from the driver."
+    ],
+    "adjustment_ref": null
+  },
+  "costs": {
+    "estimated_ref": "validation_artifacts/ameba_cycle/run_004_breach_recovery_only/candidate_transition.json",
+    "measured": {
+      "worker_output_tokens": 25094,
+      "worker_turns": 55,
+      "worker_wall_s": 131.53,
+      "verifier_wall_s": 43.0,
+      "money": "unknown"
+    }
+  },
+  "verdict": {
+    "postcondition_met": true,
+    "provenance_established": true,
+    "reasons": [
+      "Every criterion has a passing check re-run by the driver at the obtained revision in an isolated worktree, with the outputs kept as files",
+      "Provenance: the packet and the oracle are hashed inputs, the router receipt is referenced, the served model identity is the executing CLI's report and is marked as not independently verified",
+      "Costs are the receipts' measured values for the closing attempt; the set-aside attempt's cost is in the receipt but not summed here; money is unknown"
+    ]
+  },
+  "notes": "Run 004 execution record. The first record in this format; the format itself was added in run 005, so this record was produced after the transition it describes, from artifacts kept at the time. Items 3-5 of admissibility remain unchecked by any code."
+}

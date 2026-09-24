@@ -1,0 +1,281 @@
+[
+ {
+  "id": "cap-execution-record-05a-verify",
+  "packet": {
+   "question": "Does this change add exactly three things and nothing else: spec/transition_execution.schema.json (Draft 2020-12, $id urn:cap:schema:transition-execution:v0.1, additionalProperties false on every object, the required fields and enums as specified, and the two root if/then invariants: postcondition_met true implies every check has status pass; provenance_established true implies receipt_ref present and at least one input), examples/transition_execution_record_example.json with its two stand-in files under examples/transition_execution_record/ (references that exist, the real sha256 of the referenced input file, the named revisions, identity_independently_verified false, money \"unknown\"), and reference/python/tests/test_transition_execution_schema.py covering the listed cases including the documented boundary that an unresolvable candidate_ref still passes the schema; with no existing file modified, no helper scripts left in the repository, and the declared checks passing on the current tree?",
+   "postcondition": {
+    "value": "The driver's oracle (evidence carrier oracle_c1.py: schema validity and $id, example validates, references exist, input sha256 equals the file's real hash, revisions and identity flags as named, exactly two stand-in files, and every listed schema-level rejection and acceptance) exits 0; the two declared pytest checks exit 0; git shows only new files: the schema, the example JSON, the two stand-in files and the test module; no tracked file is modified and no other file (such as a hash helper script) exists in the tree."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c1.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c1.py\", line 14, in <module>\n    assert schema_path.is_file(), \"spec/transition_execution.schema.json missing\"\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: spec/transition_execution.schema.json missing",
+      "check_index": 0,
+      "timed_out": false,
+      "stdout_tail": "",
+      "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c1.py\", line 14, in <module>\n    assert schema_path.is_file(), \"spec/transition_execution.schema.json missing\"\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: spec/transition_execution.schema.json missing\n",
+      "stdout_chars": 0,
+      "stderr_chars": 376,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_transition_execution_schema.py",
+       "reference/python/tests/test_schemas_valid.py"
+      ],
+      "exit": 4,
+      "ok": false,
+      "tail": "no tests ran in 0.00s\nERROR: file or directory not found: reference/python/tests/test_transition_execution_schema.py",
+      "check_index": 1,
+      "timed_out": false,
+      "stdout_tail": "\nno tests ran in 0.00s\n",
+      "stderr_tail": "ERROR: file or directory not found: reference/python/tests/test_transition_execution_schema.py\n\n",
+      "stdout_chars": 23,
+      "stderr_chars": 96,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_adjustment_layer_schema.py",
+       "reference/python/tests/test_mirror_layer_schema.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.37s",
+      "check_index": 2,
+      "timed_out": false,
+      "stdout_tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.37s\n",
+      "stderr_tail": "",
+      "stdout_chars": 179,
+      "stderr_chars": 0,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "tail_limit_chars": 4000
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 34.94,
+     "turns": 10,
+     "output_tokens": 6406,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c1.py"
+       ],
+       "exit": 1,
+       "ok": false,
+       "tail": " recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c1.py\", line 52, in <module>\n    assert (stand / \"check_result_c1.txt\").read_text(encoding=\"utf-8\").rstrip().endswith(\"1 passed\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "",
+       "stderr_tail": "Traceback (most recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_c1.py\", line 52, in <module>\n    assert (stand / \"check_result_c1.txt\").read_text(encoding=\"utf-8\").rstrip().endswith(\"1 passed\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+       "stdout_chars": 0,
+       "stderr_chars": 416,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_transition_execution_schema.py",
+        "reference/python/tests/test_schemas_valid.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": ".................                                                        [100%]\n17 passed in 1.21s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": ".................                                                        [100%]\n17 passed in 1.21s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "reference/python/tests/test_mirror_layer_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.40s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.40s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 90.34,
+     "turns": 38,
+     "output_tokens": 21688,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c1.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_c1: all assertions hold",
+       "check_index": 0,
+       "timed_out": false,
+       "stdout_tail": "oracle_c1: all assertions hold\n",
+       "stderr_tail": "",
+       "stdout_chars": 31,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_transition_execution_schema.py",
+        "reference/python/tests/test_schemas_valid.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "......................                                                   [100%]\n22 passed in 0.70s",
+       "check_index": 1,
+       "timed_out": false,
+       "stdout_tail": "......................                                                   [100%]\n22 passed in 0.70s\n",
+       "stderr_tail": "",
+       "stdout_chars": 99,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_adjustment_layer_schema.py",
+        "reference/python/tests/test_mirror_layer_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.38s",
+       "check_index": 2,
+       "timed_out": false,
+       "stdout_tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.38s\n",
+       "stderr_tail": "",
+       "stdout_chars": 179,
+       "stderr_chars": 0,
+       "stdout_truncated": false,
+       "stderr_truncated": false,
+       "tail_limit_chars": 4000
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 4), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Added JSON Schema for EXECUTED-transition records, a worked example with supporting artifact files, and comprehensive schema-level tests.' -> postcondition False",
+     "step 6: cheap attempt set aside (04481adc65184258d77c5b50cf2091d4551548df)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered \"Added spec/transition_execution.schema.json (Draft 2020-12, urn:cap:schema:transition-execution:v0.1, additionalProperties:false everywhere, allOf if/then for postcondition_met and provenance_established), the UTF-8 worked example examples/transition_execution_record_example.json with examples/transition_execution_record/{executor_receipt.json,check_result_c1.txt}, and reference/python/tests/test_transition_execution_schema.py; the given sha256 is used verbatim and the test compares it to sha256 of the referenced file's raw bytes.\" -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": "(empty)"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "(empty)"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "examples/transition_execution_record/check_result_c1.txt\nexamples/transition_execution_record/executor_receipt.json\nexamples/transition_execution_record_example.json\nreference/python/tests/test_transition_execution_schema.py\nspec/transition_execution.schema.json\n"
+    },
+    {
+     "path": "git diff",
+     "content": "(empty)"
+    },
+    {
+     "path": "new files (untracked) full content",
+     "content": "\n--- new file examples/transition_execution_record/check_result_c1.txt ---\n============================= test session starts =============================\ncollected 1 item\n\nreference/python/tests/test_example.py .                                 [100%]\n\n1 passed\n--- new file examples/transition_execution_record/executor_receipt.json ---\n{\n  \"run_id\": \"run_example_transition_001\",\n  \"decision\": \"apply_candidate\",\n  \"model_requested\": \"example-model-requested\",\n  \"model_served\": \"example-model-served\"\n}\n\n--- new file examples/transition_execution_record_example.json ---\n{\n  \"schema_version\": \"0.1\",\n  \"record_id\": \"transition_execution_record_example_2026-05-18T13_00_00\",\n  \"object\": {\n    \"kind\": \"repo\",\n    \"identifier\": \"f:/VibeCoding/Shard-Theory\",\n    \"revision_before\": \"e65b9af4b28d3c97950c667448a32c24adc44a0e\",\n    \"revision_after\": \"602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"\n  },\n  \"candidate\": {\n    \"candidate_id\": \"adj_candidate_example_transition\",\n    \"candidate_ref\": \"examples/adjustment_candidate_transition_example.json\",\n    \"mirror_frame_before_id\": \"mirror_frame_example_before\",\n    \"mirror_frame_before_ref\": \"examples/mirror_frame_example.json\"\n  },\n  \"postcondition\": {\n    \"defined_before_execution\": true,\n    \"criteria\": [\n      {\n        \"id\": \"c1\",\n        \"statement\": \"The candidate's regression test suite passes after the change.\",\n        \"check_command\": \"python -m pytest -q reference/python/tests/test_example.py\"\n      }\n    ]\n  },\n  \"execution\": {\n    \"actor\": {\n      \"role\": \"executor\",\n      \"model_requested\": \"example-model-requested\",\n      \"model_served\": \"example-model-served\",\n      \"identity_source\": \"claude_cli_modelUsage\",\n      \"identity_independently_verified\": false\n    },\n    \"tool\": \"pytest\",\n    \"inputs\": [\n      {\n        \"ref\": \"examples/adjustment_candidate_transition_example.json\",\n        \"sha256\": \"76f0fdbab02bcc165e233664c37f5400510461a2dd6bb821f443f76335f6a0b5\"\n      }\n    ],\n    \"decision\": \"apply_candidate\",\n    \"attempts\": 1,\n    \"receipt_ref\": \"examples/transition_execution_record/executor_receipt.json\",\n    \"started_at\": \"2026-05-18T13:00:00.000Z\",\n    \"finished_at\": \"2026-05-18T13:00:05.000Z\"\n  },\n  \"observation_after\": {\n    \"observed_at\": \"2026-05-18T13:00:06.000Z\",\n    \"revision_after\": \"602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\",\n    \"summary\": \"Re-observed the object after the candidate was applied.\",\n    \"mirror_frame_after_ref\": \"examples/mirror_frame_example.json\"\n  },\n  \"checks\": [\n    {\n      \"criterion_id\": \"c1\",\n      \"command\": \"python -m pytest -q reference/python/tests/test_example.py\",\n      \"exit_code\": 0,\n      \"status\": \"pass\",\n      \"result_ref\": \"examples/transition_execution_record/check_result_c1.txt\",\n      \"revision_checked\": \"602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"\n    }\n  ],\n  \"expected_evidence_results\": [\n    {\n      \"claim\": \"The candidate's regression test suite passes after the change.\",\n      \"kind\": \"test_result\",\n      \"status\": \"observed\",\n      \"result_ref\": \"examples/transition_execution_record/check_result_c1.txt\"\n    }\n  ],\n  \"divergence\": {\n    \"expected_vs_observed\": [],\n    \"adjustment_ref\": null\n  },\n  \"costs\": {\n    \"estimated_ref\": \"examples/adjustment_candidate_transition_example.json\",\n    \"measured\": {\n      \"worker_output_tokens\": 1234,\n      \"worker_turns\": 3,\n      \"worker_wall_s\": 42.5,\n      \"verifier_wall_s\": 12.0,\n      \"money\": \"unknown\"\n    }\n  },\n  \"verdict\": {\n    \"postcondition_met\": true,\n    \"provenance_established\": true,\n    \"reasons\": [\n      \"Criterion c1 passed at the re-observed revision.\"\n    ]\n  },\n  \"notes\": \"Worked example of an executed-transition record: a pre-defined postcondition with one criterion, one hashed input, a stored receipt, and a passing check at the re-observed revision.\"\n}\n\n--- new file reference/python/tests/test_transition_execution_schema.py ---\n\"\"\"Tests for the Transition Execution Record schema.\n\nCovers the worked example plus the schema-level invariants of an\nEXECUTED-transition record: a postcondition defined before execution,\nprovenance that requires a stored receipt and hashed inputs, checks that\nmust agree with their exit codes, and measured costs kept apart from\nestimates. Each invariant has a negative test that confirms the schema\nrejects the violation.\n\"\"\"\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport jsonschema\n\nROOT = Path(__file__).resolve().parents[3]\nSCHEMA_PATH = ROOT / \"spec\" / \"transition_execution.schema.json\"\nEXAMPLE_PATH = ROOT / \"examples\" / \"transition_execution_record_example.json\"\n\n\ndef _load_schema():\n    return json.loads(SCHEMA_PATH.read_text(encoding=\"utf-8\"))\n\n\ndef _load_example():\n    return json.loads(EXAMPLE_PATH.read_text(encoding=\"utf-8-sig\"))\n\n\ndef _validator():\n    return jsonschema.Draft202012Validator(_load_schema())\n\n\ndef test_schema_is_valid_draft_2020_12():\n    jsonschema.Draft202012Validator.check_schema(_load_schema())\n\n\ndef test_schema_id_is_the_expected_urn():\n    assert _load_schema()[\"$id\"] == \"urn:cap:schema:transition-execution:v0.1\"\n\n\ndef test_worked_example_passes():\n    errors = sorted(_validator().iter_errors(_load_example()), key=lambda e: list(e.path))\n    assert not errors, [e.message for e in errors]\n\n\ndef test_example_input_sha256_matches_referenced_file():\n    case = _load_example()\n    entry = case[\"execution\"][\"inputs\"][0]\n    target = ROOT / entry[\"ref\"]\n    digest = hashlib.sha256(target.read_bytes()).hexdigest()\n    assert entry[\"sha256\"] == digest\n\n\n# -- before: postcondition defined before execution --\n\n\ndef test_defined_before_execution_must_be_true():\n    case = _load_example()\n    case[\"postcondition\"][\"defined_before_execution\"] = False\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"postcondition.defined_before_execution must be const true\"\n\n\ndef test_empty_criteria_rejected():\n    case = _load_example()\n    case[\"postcondition\"][\"criteria\"] = []\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"postcondition.criteria minItems:1\"\n\n\n# -- during: actor identity --\n\n\ndef test_identity_independently_verified_is_required():\n    case = _load_example()\n    del case[\"execution\"][\"actor\"][\"identity_independently_verified\"]\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"execution.actor.identity_independently_verified is required\"\n\n\ndef test_malformed_sha256_rejected():\n    case = _load_example()\n    case[\"execution\"][\"inputs\"][0][\"sha256\"] = \"not-a-sha256\"\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"execution.inputs[].sha256 must be 64 lowercase hex characters\"\n\n\n# -- after: checks agree with their exit codes --\n\n\ndef test_passing_check_with_nonzero_exit_code_rejected():\n    case = _load_example()\n    case[\"checks\"][0][\"exit_code\"] = 1\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"a check with status pass must have exit_code 0\"\n\n\ndef test_unknown_check_status_rejected():\n    case = _load_example()\n    case[\"checks\"][0][\"status\"] = \"skipped\"\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"check.status enum must not include 'skipped'\"\n\n\n# -- verdict-driven invariants --\n\n\ndef test_postcondition_met_true_with_failing_check_rejected():\n    case = _load_example()\n    case[\"checks\"][0][\"status\"] = \"fail\"\n    case[\"checks\"][0][\"exit_code\"] = 1\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"postcondition_met=true requires every check status to be pass\"\n\n\ndef test_provenance_established_true_without_receipt_ref_rejected():\n    case = _load_example()\n    del case[\"execution\"][\"receipt_ref\"]\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"provenance_established=true requires execution.receipt_ref\"\n\n\ndef test_provenance_established_true_with_empty_inputs_rejected():\n    case = _load_example()\n    case[\"execution\"][\"inputs\"] = []\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"provenance_established=true requires execution.inputs minItems:1\"\n\n\n# -- feedback: measured costs apart from estimates --\n\n\ndef test_missing_measured_money_rejected():\n    case = _load_example()\n    del case[\"costs\"][\"measured\"][\"money\"]\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"costs.measured.money is required\"\n\n\ndef test_unknown_money_string_rejected():\n    case = _load_example()\n    case[\"costs\"][\"measured\"][\"money\"] = \"cheap\"\n    errors = list(_validator().iter_errors(case))\n    assert errors, \"costs.measured.money must be 'unknown' or a number\"\n\n\ndef test_money_unknown_accepted():\n    case = _load_example()\n    case[\"costs\"][\"measured\"][\"money\"] = \"unknown\"\n    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n    assert not errors, [e.message for e in errors]\n\n\ndef test_money_number_accepted():\n    case = _load_example()\n    case[\"costs\"][\"measured\"][\"money\"] = 0.42\n    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n    assert not errors, [e.message for e in errors]\n\n\n# -- structure guards --\n\n\ndef test_additional_property_at_root_rejected():\n    case = _load_example()\n    case[\"unexpected_field\"] = \"x\"\n    errors = list(_validator().iter_errors(case))\n    assert errors\n\n\ndef test_additional_property_in_check_rejected():\n    case = _load_example()\n    case[\"checks\"][0][\"extra\"] = \"x\"\n    errors = list(_validator().iter_errors(case))\n    assert errors\n\n\ndef test_unresolvable_candidate_ref_still_passes_schema():\n    \"\"\"Boundary: the schema constrains shape, not resolvability. A\n    candidate_ref that points at no file is still schema-valid; resolving\n    it is a validator's job, added separately.\"\"\"\n    case = _load_example()\n    case[\"candidate\"][\"candidate_ref\"] = \"examples/does_not_exist_candidate.json\"\n    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))\n    assert not errors, [e.message for e in errors]\n\n--- new file spec/transition_execution.schema.json ---\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"$id\": \"urn:cap:schema:transition-execution:v0.1\",\n  \"title\": \"CAP Transition Execution Record\",\n  \"description\": \"Schema for an EXECUTED-transition record. A transition is bound across four steps: before - the observed state, the object revision, the candidate, and a postcondition that was defined before execution; during - the actor, the tool, the hashed inputs, and the stored receipt; after - re-observation of the object and per-criterion checks that carry result references; feedback - divergence between expectation and observation plus measured costs kept apart from estimates.\",\n  \"type\": \"object\",\n  \"required\": [\n    \"schema_version\",\n    \"record_id\",\n    \"object\",\n    \"candidate\",\n    \"postcondition\",\n    \"execution\",\n    \"observation_after\",\n    \"checks\",\n    \"expected_evidence_results\",\n    \"divergence\",\n    \"costs\",\n    \"verdict\"\n  ],\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"schema_version\": {\n      \"const\": \"0.1\"\n    },\n    \"record_id\": {\n      \"type\": \"string\",\n      \"minLength\": 1\n    },\n    \"object\": {\n      \"$ref\": \"#/$defs/object\"\n    },\n    \"candidate\": {\n      \"$ref\": \"#/$defs/candidate\"\n    },\n    \"postcondition\": {\n      \"$ref\": \"#/$defs/postcondition\"\n    },\n    \"execution\": {\n      \"$ref\": \"#/$defs/execution\"\n    },\n    \"observation_after\": {\n      \"$ref\": \"#/$defs/observation_after\"\n    },\n    \"checks\": {\n      \"type\": \"array\",\n      \"minItems\": 1,\n      \"items\": {\n        \"$ref\": \"#/$defs/check\"\n      }\n    },\n    \"expected_evidence_results\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"$ref\": \"#/$defs/expected_evidence_result\"\n      }\n    },\n    \"divergence\": {\n      \"$ref\": \"#/$defs/divergence\"\n    },\n    \"costs\": {\n      \"$ref\": \"#/$defs/costs\"\n    },\n    \"verdict\": {\n      \"$ref\": \"#/$defs/verdict\"\n    },\n    \"notes\": {\n      \"type\": \"string\"\n    }\n  },\n  \"allOf\": [\n    {\n      \"$comment\": \"postcondition_met=true requires every check to have status 'pass'.\",\n      \"if\": {\n        \"properties\": {\n          \"verdict\": {\n            \"properties\": {\n              \"postcondition_met\": {\n                \"const\": true\n              }\n            },\n            \"required\": [\n              \"postcondition_met\"\n            ]\n          }\n        },\n        \"required\": [\n          \"verdict\"\n        ]\n      },\n      \"then\": {\n        \"properties\": {\n          \"checks\": {\n            \"items\": {\n              \"properties\": {\n                \"status\": {\n                  \"const\": \"pass\"\n                }\n              },\n              \"required\": [\n                \"status\"\n              ]\n            }\n          }\n        }\n      }\n    },\n    {\n      \"$comment\": \"provenance_established=true requires a stored receipt_ref and at least one hashed input.\",\n      \"if\": {\n        \"properties\": {\n          \"verdict\": {\n            \"properties\": {\n              \"provenance_established\": {\n                \"const\": true\n              }\n            },\n            \"required\": [\n              \"provenance_established\"\n            ]\n          }\n        },\n        \"required\": [\n          \"verdict\"\n        ]\n      },\n      \"then\": {\n        \"properties\": {\n          \"execution\": {\n            \"required\": [\n              \"receipt_ref\"\n            ],\n            \"properties\": {\n              \"inputs\": {\n                \"minItems\": 1\n              }\n            }\n          }\n        }\n      }\n    }\n  ],\n  \"$defs\": {\n    \"object\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"kind\",\n        \"identifier\",\n        \"revision_before\",\n        \"revision_after\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"kind\": {\n          \"type\": \"string\",\n          \"enum\": [\n            \"repo\",\n            \"file\",\n            \"runtime\",\n            \"memory_store\",\n            \"other\"\n          ]\n        },\n        \"identifier\": {\n          \"type\": \"string\"\n        },\n        \"revision_before\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"revision_after\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      }\n    },\n    \"candidate\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"candidate_id\",\n        \"candidate_ref\",\n        \"mirror_frame_before_id\",\n        \"mirror_frame_before_ref\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"candidate_id\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"candidate_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"mirror_frame_before_id\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"mirror_frame_before_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      }\n    },\n    \"postcondition\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"defined_before_execution\",\n        \"criteria\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"defined_before_execution\": {\n          \"const\": true\n        },\n        \"criteria\": {\n          \"type\": \"array\",\n          \"minItems\": 1,\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"id\",\n              \"statement\",\n              \"check_command\"\n            ],\n            \"additionalProperties\": false,\n            \"properties\": {\n              \"id\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"statement\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"check_command\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              }\n            }\n          }\n        }\n      }\n    },\n    \"execution\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"actor\",\n        \"tool\",\n        \"inputs\",\n        \"decision\",\n        \"attempts\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"actor\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"role\",\n            \"model_requested\",\n            \"model_served\",\n            \"identity_source\",\n            \"identity_independently_verified\"\n          ],\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"role\": {\n              \"type\": \"string\"\n            },\n            \"model_requested\": {\n              \"type\": \"string\"\n            },\n            \"model_served\": {\n              \"type\": \"string\"\n            },\n            \"identity_source\": {\n              \"type\": \"string\"\n            },\n            \"identity_independently_verified\": {\n              \"type\": \"boolean\"\n            }\n          }\n        },\n        \"tool\": {\n          \"type\": \"string\"\n        },\n        \"inputs\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"required\": [\n              \"ref\",\n              \"sha256\"\n            ],\n            \"additionalProperties\": false,\n            \"properties\": {\n              \"ref\": {\n                \"type\": \"string\",\n                \"minLength\": 1\n              },\n              \"sha256\": {\n                \"type\": \"string\",\n                \"pattern\": \"^[0-9a-f]{64}$\"\n              }\n            }\n          }\n        },\n        \"decision\": {\n          \"type\": \"string\"\n        },\n        \"attempts\": {\n          \"type\": \"integer\",\n          \"minimum\": 1\n        },\n        \"receipt_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"started_at\": {\n          \"type\": \"string\"\n        },\n        \"finished_at\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n    \"observation_after\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"observed_at\",\n        \"revision_after\",\n        \"summary\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"observed_at\": {\n          \"type\": \"string\"\n        },\n        \"revision_after\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"summary\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"mirror_frame_after_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      }\n    },\n    \"check\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"criterion_id\",\n        \"command\",\n        \"exit_code\",\n        \"status\",\n        \"result_ref\",\n        \"revision_checked\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"criterion_id\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"command\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"exit_code\": {\n          \"type\": \"integer\"\n        },\n        \"status\": {\n          \"type\": \"string\",\n          \"enum\": [\n            \"pass\",\n            \"fail\",\n            \"not_run\"\n          ]\n        },\n        \"result_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"revision_checked\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      },\n      \"allOf\": [\n        {\n          \"$comment\": \"A check reported as pass must have exit_code 0.\",\n          \"if\": {\n            \"properties\": {\n              \"status\": {\n                \"const\": \"pass\"\n              }\n            },\n            \"required\": [\n              \"status\"\n            ]\n          },\n          \"then\": {\n            \"properties\": {\n              \"exit_code\": {\n                \"const\": 0\n              }\n            }\n          }\n        }\n      ]\n    },\n    \"expected_evidence_result\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"claim\",\n        \"kind\",\n        \"status\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"claim\": {\n          \"type\": \"string\"\n        },\n        \"kind\": {\n          \"type\": \"string\",\n          \"enum\": [\n            \"test_result\",\n            \"log\",\n            \"diff\",\n            \"file_reference\",\n            \"external_source\",\n            \"human_statement\",\n            \"runtime_observation\",\n            \"prior_anchor\"\n          ]\n        },\n        \"status\": {\n          \"type\": \"string\",\n          \"enum\": [\n            \"observed\",\n            \"not_observed\",\n            \"not_checked\"\n          ]\n        },\n        \"result_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        }\n      }\n    },\n    \"divergence\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"expected_vs_observed\",\n        \"adjustment_ref\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"expected_vs_observed\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n        \"adjustment_ref\": {\n          \"type\": [\n            \"string\",\n            \"null\"\n          ]\n        }\n      }\n    },\n    \"costs\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"estimated_ref\",\n        \"measured\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"estimated_ref\": {\n          \"type\": \"string\",\n          \"minLength\": 1\n        },\n        \"measured\": {\n          \"type\": \"object\",\n          \"required\": [\n            \"worker_output_tokens\",\n            \"worker_turns\",\n            \"worker_wall_s\",\n            \"verifier_wall_s\",\n            \"money\"\n          ],\n          \"additionalProperties\": false,\n          \"properties\": {\n            \"worker_output_tokens\": {\n              \"type\": [\n                \"integer\",\n                \"null\"\n              ]\n            },\n            \"worker_turns\": {\n              \"type\": [\n                \"integer\",\n                \"null\"\n              ]\n            },\n            \"worker_wall_s\": {\n              \"type\": [\n                \"number\",\n                \"null\"\n              ]\n            },\n            \"verifier_wall_s\": {\n              \"type\": [\n                \"number\",\n                \"null\"\n              ]\n            },\n            \"money\": {\n              \"oneOf\": [\n                {\n                  \"const\": \"unknown\"\n                },\n                {\n                  \"type\": \"number\"\n                }\n              ]\n            }\n          }\n        }\n      }\n    },\n    \"verdict\": {\n      \"type\": \"object\",\n      \"required\": [\n        \"postcondition_met\",\n        \"provenance_established\",\n        \"reasons\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"postcondition_met\": {\n          \"type\": \"boolean\"\n        },\n        \"provenance_established\": {\n          \"type\": \"boolean\"\n        },\n        \"reasons\": {\n          \"type\": \"array\",\n          \"minItems\": 1,\n          \"items\": {\n            \"type\": \"string\"\n          }\n        }\n      }\n    }\n  }\n}\n"
+    },
+    {
+     "path": "oracle_c1.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Ephemeral oracle for cap-execution-record-05a: the schema, the example and the schema-level invariants only.\nNo validator is required here. Run from the repository root; exit 0 iff every assertion holds.\"\"\"\nimport copy\nimport hashlib\nimport json\nimport pathlib\nimport sys\n\nsys.path.insert(0, \"reference/python\")\nimport jsonschema  # noqa: E402\n\nROOT = pathlib.Path(\".\").resolve()\nschema_path = ROOT / \"spec\" / \"transition_execution.schema.json\"\nassert schema_path.is_file(), \"spec/transition_execution.schema.json missing\"\nschema = json.loads(schema_path.read_text(encoding=\"utf-8\"))\njsonschema.Draft202012Validator.check_schema(schema)\nassert schema.get(\"$id\") == \"urn:cap:schema:transition-execution:v0.1\", schema.get(\"$id\")\nV = jsonschema.Draft202012Validator(schema)\nex_path = ROOT / \"examples\" / \"transition_execution_record_example.json\"\nex = json.loads(ex_path.read_text(encoding=\"utf-8-sig\"))\n\n# 1. the example validates; its references exist; its input hash is the real hash; its revisions are the named ones\nassert not list(V.iter_errors(ex)), [e.message for e in V.iter_errors(ex)]\nfor ref in (ex[\"candidate\"][\"candidate_ref\"], ex[\"candidate\"][\"mirror_frame_before_ref\"], ex[\"execution\"][\"receipt_ref\"],\n            ex[\"costs\"][\"estimated_ref\"]):\n    assert (ROOT / ref).is_file(), ref\nassert ex[\"candidate\"][\"candidate_ref\"] == \"examples/adjustment_candidate_transition_example.json\"\nassert ex[\"candidate\"][\"mirror_frame_before_ref\"] == \"examples/mirror_frame_example.json\"\nassert ex[\"execution\"][\"receipt_ref\"] == \"examples/transition_execution_record/executor_receipt.json\"\nassert ex[\"costs\"][\"estimated_ref\"] == ex[\"candidate\"][\"candidate_ref\"]\nassert len(ex[\"execution\"][\"inputs\"]) >= 1\nfor item in ex[\"execution\"][\"inputs\"]:\n    assert (ROOT / item[\"ref\"]).is_file(), item\n    assert hashlib.sha256((ROOT / item[\"ref\"]).read_bytes()).hexdigest() == item[\"sha256\"], (\"sha256 mismatch\", item[\"ref\"])\nassert len(ex[\"checks\"]) >= 1\nfor chk in ex[\"checks\"]:\n    assert (ROOT / chk[\"result_ref\"]).is_file(), chk\n    assert chk[\"revision_checked\"] == \"602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"\nassert ex[\"object\"][\"revision_before\"] == \"e65b9af4b28d3c97950c667448a32c24adc44a0e\"\nassert ex[\"object\"][\"revision_after\"] == \"602fa63a42ac51b66af3f8d4157b1f1d9ceead8a\"\nassert ex[\"observation_after\"][\"revision_after\"] == ex[\"object\"][\"revision_after\"]\nassert ex[\"execution\"][\"actor\"][\"identity_independently_verified\"] is False\nassert ex[\"execution\"][\"actor\"][\"identity_source\"] == \"claude_cli_modelUsage\"\nassert ex[\"costs\"][\"measured\"][\"money\"] == \"unknown\"\nassert ex[\"verdict\"][\"postcondition_met\"] is True and ex[\"verdict\"][\"provenance_established\"] is True\ncrit_ids = {c[\"id\"] for c in ex[\"postcondition\"][\"criteria\"]}\nassert {c[\"criterion_id\"] for c in ex[\"checks\"]} <= crit_ids\nstand = ROOT / \"examples\" / \"transition_execution_record\"\nassert sorted(p.name for p in stand.iterdir()) == [\"check_result_c1.txt\", \"executor_receipt.json\"], sorted(p.name for p in stand.iterdir())\nrcpt = json.loads((stand / \"executor_receipt.json\").read_text(encoding=\"utf-8-sig\"))\nassert {\"run_id\", \"decision\", \"model_requested\", \"model_served\"} <= set(rcpt)\nassert (stand / \"check_result_c1.txt\").read_text(encoding=\"utf-8\").rstrip().endswith(\"1 passed\")\n\n# 2. schema-level invariants\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"status\"] = \"fail\"; bad[\"checks\"][0][\"exit_code\"] = 1; bad[\"verdict\"][\"postcondition_met\"] = True\nassert list(V.iter_errors(bad)), \"postcondition_met true with a failing check must be rejected\"\nbad = copy.deepcopy(ex); bad[\"execution\"].pop(\"receipt_ref\", None); bad[\"verdict\"][\"provenance_established\"] = True\nassert list(V.iter_errors(bad)), \"provenance_established true without receipt_ref must be rejected\"\nbad = copy.deepcopy(ex); bad[\"execution\"][\"inputs\"] = []; bad[\"verdict\"][\"provenance_established\"] = True\nassert list(V.iter_errors(bad)), \"provenance_established true with no inputs must be rejected\"\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"exit_code\"] = 1\nassert list(V.iter_errors(bad)), \"a passing check with exit_code 1 must be rejected\"\nbad = copy.deepcopy(ex); bad[\"postcondition\"][\"defined_before_execution\"] = False\nassert list(V.iter_errors(bad)), \"defined_before_execution false must be rejected\"\nbad = copy.deepcopy(ex); del bad[\"costs\"][\"measured\"][\"money\"]\nassert list(V.iter_errors(bad)), \"missing money must be rejected\"\nok = copy.deepcopy(ex); ok[\"costs\"][\"measured\"][\"money\"] = 0.25\nassert not list(V.iter_errors(ok)), \"a numeric money must be accepted\"\nbad = copy.deepcopy(ex); bad[\"costs\"][\"measured\"][\"money\"] = \"cheap\"\nassert list(V.iter_errors(bad)), \"money 'cheap' must be rejected\"\nbad = copy.deepcopy(ex); del bad[\"execution\"][\"actor\"][\"identity_independently_verified\"]\nassert list(V.iter_errors(bad)), \"identity_independently_verified is required\"\nbad = copy.deepcopy(ex); bad[\"extra\"] = 1\nassert list(V.iter_errors(bad)), \"additionalProperties false at root\"\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"extra\"] = 1\nassert list(V.iter_errors(bad)), \"additionalProperties false in a check\"\nbad = copy.deepcopy(ex); bad[\"checks\"][0][\"status\"] = \"maybe\"\nassert list(V.iter_errors(bad)), \"status enum\"\nbad = copy.deepcopy(ex); bad[\"execution\"][\"inputs\"][0][\"sha256\"] = \"xyz\"\nassert list(V.iter_errors(bad)), \"sha256 pattern\"\nbad = copy.deepcopy(ex); bad[\"postcondition\"][\"criteria\"] = []\nassert list(V.iter_errors(bad)), \"criteria minItems 1\"\nbad = copy.deepcopy(ex); bad[\"schema_version\"] = \"0.2\"\nassert list(V.iter_errors(bad)), \"schema_version const\"\n# an unresolvable reference is NOT a schema concern (documented boundary): the schema accepts it\nbad = copy.deepcopy(ex); bad[\"candidate\"][\"candidate_ref\"] = \"examples/does_not_exist.json\"\nassert not list(V.iter_errors(bad)), \"the schema alone cannot resolve references; that is the validator's job\"\n\nprint(\"oracle_c1: all assertions hold\")\n"
+    },
+    {
+     "path": "recheck: the declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_c1.py\",\n  \"exit\": 0,\n  \"tail\": \"oracle_c1: all assertions hold\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_transition_execution_schema.py reference/python/tests/test_schemas_valid.py\",\n  \"exit\": 0,\n  \"tail\": \"......................                                                   [100%]\\n22 passed in 0.72s\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_adjustment_layer_schema.py reference/python/tests/test_mirror_layer_schema.py\",\n  \"exit\": 0,\n  \"tail\": \"........................................................................ [ 96%]\\n...                                                                      [100%]\\n75 passed in 0.37s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

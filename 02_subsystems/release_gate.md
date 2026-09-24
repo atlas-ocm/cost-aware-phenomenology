@@ -11,6 +11,14 @@ canonicalize state on its own; it emits a verdict that an executor consults.
 
 > Release Gate guards the transition from possible to permitted.
 
+A gate verdict is a judgement about a candidate; it does not by itself bind a
+verdict to the object revision that was checked, the executor call, or the
+check outputs, and JSON Schema accepts a `pass` whose evidence references do
+not resolve. For an executed transition that binding is the execution record
+([`../spec/transition_execution.schema.json`](../spec/transition_execution.schema.json),
+validated with reference resolution by
+[`../reference/python/scripts/validate_execution_record.py`](../reference/python/scripts/validate_execution_record.py)).
+
 The model may propose. The verifier may inspect. The Release Gate decides
 whether the candidate has the right to be released. Physical action that
 is irreversible or destructive still requires a separate authorization

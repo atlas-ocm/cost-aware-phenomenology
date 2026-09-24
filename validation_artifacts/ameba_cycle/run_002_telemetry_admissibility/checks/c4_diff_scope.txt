@@ -1,0 +1,11 @@
+# check c4: diff scope aa6048f..bbbc26c
+$ git diff --stat aa6048f bbbc26c
+ 02_subsystems/operator_admissibility.md        | 24 +++++++
+ 02_subsystems/telemetry_gating.md              | 19 ++++++
+ reference/python/cap/budget_calculus.py        | 56 ++++++++++++++++
+ reference/python/tests/test_budget_calculus.py | 91 ++++++++++++++++++++++++++
+ 4 files changed, 190 insertions(+)
+$ git diff --numstat aa6048f bbbc26c -- reference/python/cap/budget_calculus.py reference/python/tests/test_budget_calculus.py
+56	0	reference/python/cap/budget_calculus.py
+91	0	reference/python/tests/test_budget_calculus.py
+exit=0
