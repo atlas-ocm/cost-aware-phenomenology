@@ -399,3 +399,17 @@ def test_hold_verdict_with_mode_hold_is_valid():
     ]
     errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))
     assert not errors, [e.message for e in errors]
+
+
+def test_route_step_with_com_log_ref_validates():
+    case = _load_example()
+    case["candidate"]["route"][1]["com_log_ref"] = "com_log:2026-09-24:step2"
+    errors = sorted(_validator().iter_errors(case), key=lambda e: list(e.path))
+    assert not errors, [e.message for e in errors]
+
+
+def test_route_step_with_empty_com_log_ref_is_rejected():
+    case = _load_example()
+    case["candidate"]["route"][1]["com_log_ref"] = ""
+    errors = list(_validator().iter_errors(case))
+    assert errors, "an empty com_log_ref must be rejected (minLength: 1)"

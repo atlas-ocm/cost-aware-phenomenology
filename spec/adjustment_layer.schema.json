@@ -670,6 +670,11 @@
         "reason": {
           "type": "string",
           "minLength": 1
+        },
+        "com_log_ref": {
+          "type": "string",
+          "minLength": 1,
+          "$comment": "Reference to the COM-Log record that carries this step's numeric gate inputs (operator, risk_weight_percent, telemetry_state, allowed_total_risk_percent)."
         }
       }
     },
