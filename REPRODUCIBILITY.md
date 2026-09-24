@@ -36,7 +36,14 @@ scaffold, deterministic proxy release gate, and deterministic rewrite shaper:
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider reference/python/tests
 ```
 
-Expected output: all tests pass (currently 47 tests across 12 test files).
+Expected output: all tests pass. Two parametrized tests read the private
+Looking-Glass and Latent Cause case packs from `<parent of the repository>/Patch`
+when that directory exists (the maintainer's layout); on a standalone clone they
+are reported as `2 skipped`, and `validate_extension_case_packs.py` prints
+`[warn] pack missing` with `0/0 passed` for those packs. That is the expected
+result on a clone, not a failure. The test modules resolve `spec/` and
+`examples/` from the repository root, so the checkout directory may have any
+name.
 
 ## Run CAP Lite middleware demo
 

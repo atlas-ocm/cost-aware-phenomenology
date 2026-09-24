@@ -1,0 +1,16 @@
+[
+  {
+    "task_id": "cap-layout-01",
+    "variant": "coding",
+    "repo": "F:/VibeCoding/CAP-wt-ameba-cycle",
+    "question": "Two test modules fail with FileNotFoundError when this repository is checked out under a directory that is not named CAP.\n\nEnvironment: the current working directory is the repository root; it contains spec/, examples/ and reference/python/tests/. A test file directly inside reference/python/tests/ is four levels below the repository root, so Path(__file__).resolve().parents[3] is the repository root. reference/python/tests/test_adjustment_layer_schema.py already does exactly this: ROOT = Path(__file__).resolve().parents[3], SCHEMA_PATH = ROOT / 'spec' / ..., EXAMPLE_PATH = ROOT / 'examples' / .... That is the convention to follow.\n\nThe two failing modules are reference/python/tests/test_looking_glass_schema.py and reference/python/tests/test_latent_cause_reconstruction_schema.py. Each computes REPO_ROOT = Path(__file__).resolve().parents[4] and CAP_ROOT = REPO_ROOT / 'CAP', then reads its schema from CAP_ROOT / 'spec' / ... and its worked example from CAP_ROOT / 'examples' / .... REPO_ROOT / 'CAP' exists only when the checkout directory is literally named CAP; here it is not, so every test in both modules fails inside _load_schema() and _load_example().\n\nRequired change: in both modules, resolve the schema path and the example path from the repository root derived from the file's own position (parents[3]), not through a directory named CAP. Keep the external case packs resolved exactly as they are now: REPO_ROOT / 'Patch' / ... where REPO_ROOT is the parent directory of the repository root. Those packs live outside this repository and are optional; the existing _collect_case_paths() already returns nothing when their directories do not exist, and that behaviour must stay. Change nothing else: no other file, no change to spec/ or examples/, no new files, no change to which cases are collected.\n\nDone means: from the repository root, python -m pytest -q -p no:cacheprovider reference/python/tests/test_looking_glass_schema.py reference/python/tests/test_latent_cause_reconstruction_schema.py exits 0. Right now it reports 30 failed, 2 skipped.",
+    "checks": [
+      {
+        "cmd": ["python", "-m", "pytest", "-q", "-p", "no:cacheprovider", "reference/python/tests/test_looking_glass_schema.py", "reference/python/tests/test_latent_cause_reconstruction_schema.py"],
+        "timeout": 300
+      }
+    ],
+    "seam": null,
+    "expect": {}
+  }
+]

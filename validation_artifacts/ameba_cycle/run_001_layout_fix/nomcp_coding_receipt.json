@@ -1,0 +1,83 @@
+{
+  "task_id": "cap-layout-01",
+  "variant": "coding",
+  "baseline": [
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_looking_glass_schema.py",
+        "reference/python/tests/test_latent_cause_reconstruction_schema.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "_items\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_family_locked_to_latent_cause_reconstruction\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_additional_property_at_root_rejected\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_additional_property_in_ground_truth_rejected\n30 failed, 2 skipped in 0.96s"
+    }
+  ],
+  "first_attempt": {
+    "model": "gemma4:31b-cloud",
+    "answer": "Fixed FileNotFoundError in test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py by resolving repository root using parents[3] and updating paths to spec, examples, and Patch directories.",
+    "wall_s": 4.77,
+    "turns": 6,
+    "output_tokens": 666,
+    "model_requested": "gemma4:31b-cloud",
+    "model_served": "gemma4:31b-cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "postcondition": true,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_looking_glass_schema.py",
+          "reference/python/tests/test_latent_cause_reconstruction_schema.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "..s..............s..............                                         [100%]\n30 passed, 2 skipped in 0.20s"
+      }
+    ],
+    "worktree": {
+      "diffstat": ".../python/tests/test_latent_cause_reconstruction_schema.py   |  9 ++++-----\n reference/python/tests/test_looking_glass_schema.py           | 11 +++++------\n 2 files changed, 9 insertions(+), 11 deletions(-)",
+      "untracked": [],
+      "touched": [
+        "reference/python/tests/test_latent_cause_reconstruction_schema.py",
+        "reference/python/tests/test_looking_glass_schema.py"
+      ]
+    },
+    "protected_touched": []
+  },
+  "seam_used": false,
+  "fallback_used": false,
+  "handoff": null,
+  "decision": "CHEAP_PASS",
+  "final_answer": "Fixed FileNotFoundError in test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py by resolving repository root using parents[3] and updating paths to spec, examples, and Patch directories.",
+  "final_postcondition": true,
+  "trail": [
+    "step 0: baseline [('python', 1)]",
+    "step 1-2: gemma4 answered 'Fixed FileNotFoundError in test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py by resolving repository root using parents[3] and updating paths to spec, examples, and Patch directories.' -> postcondition True",
+    "step 3: postcondition met, stop"
+  ],
+  "run_id": "run-f9430e733ef741422917026052aafb81",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\tasks.json",
+      "size": 2514,
+      "sha256": "558805d700c0a950011aa1dee66ddab3485580f4766027ba3f97194b69911c2a",
+      "saved": "inputs/558805d700c0a950011aa1dee66ddab3485580f4766027ba3f97194b69911c2a"
+    },
+    "check_files": null
+  },
+  "run_receipt": "runs/run-f9430e733ef741422917026052aafb81/cap-layout-01.json",
+  "run_summary": "runs/run-f9430e733ef741422917026052aafb81/summary.json",
+  "total_wall_s": 6.78
+}

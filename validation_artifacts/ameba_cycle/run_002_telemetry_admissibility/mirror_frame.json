@@ -1,0 +1,146 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-24T18-00Z_telemetry_ceiling_gap",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "system",
+      "claims": [
+        "(source: the repository's own documentation) 02_subsystems/telemetry_gating.md, Risk Throttling: the maximum permitted RiskWeight is Clean 90 / Loaded 60 / Overheating 30 / Breach 0 and the ceiling is never overridden",
+        "02_subsystems/operator_admissibility.md, The Admissibility Rule: an operator is checked against the telemetry ceiling first, then cycle.TotalRisk + RiskWeight > AllowedTotalRisk blocks it",
+        "02_subsystems/transition_cost.md and observer_budget.md, Numeric Contract: the numeric defaults of the subsystems are encoded in reference/python/cap/budget_calculus.py"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-24T18:00:00Z",
+          "claim": "HEAD commit after the layout fix and the docs correction",
+          "value": "aa6048f (on 602fa63 on e65b9af4); working tree clean",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_suite_green",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T17:59:00Z",
+          "claim": "full unit-test suite in the research worktree",
+          "value": "924 passed, 2 skipped; exit 0",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_no_telemetry_code",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T17:52:00Z",
+          "claim": "grep -rn -i 'overheating|max_permitted_risk|admissib|telemetry_state' reference/python/cap reference/python/cap_lite.py",
+          "value": "matches only is_cycle_admissible (budget-only) in budget_calculus.py, the Breach/Recovery-Only consistency check in validator.py, and a golden COM-Log in falsifiability_gates.py; no ceiling table and no combined rule",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_cgm_03_expectation",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T17:52:00Z",
+          "claim": "validation_artifacts/com_grammar/cases/cgm_03_risk_throttle_downgrade_applied.json",
+          "value": "constraints telemetry_state Overheating, allowed_total_risk 30%; expected: Inversion 80% blocked, downgrade to Hold 10% then Fixation 20%",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_oracle_red_on_baseline",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T18:00:00Z",
+          "claim": "driver's ephemeral oracle (outside the tree) run the router's way on the clean tree",
+          "value": "exit 1: ImportError: cannot import name 'TELEMETRY_MAX_RISK' from 'cap.budget_calculus'; the second declared check (test_budget_calculus.py) passes on the baseline: 75 passed",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_gap_is_missing_code_not_wrong_code",
+          "claim": "The documented ceiling and rule have no counterpart in the numeric contract; nothing existing computes cgm_03, so the direct path is insufficient and an additive implementation is the minimal route",
+          "derived_from": ["obs_no_telemetry_code", "obs_cgm_03_expectation", "obs_oracle_red_on_baseline"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_numeric_contract_mirrors_subsystem_docs"],
+      "policies": ["policy_existing_definitions_unchanged"],
+      "specs": ["02_subsystems/telemetry_gating.md", "02_subsystems/operator_admissibility.md"]
+    },
+    "observations": [
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-24T18:00:00Z",
+        "claim": "HEAD commit",
+        "value": "aa6048f",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_oracle_red_on_baseline",
+        "source": "tool_result",
+        "observed_at": "2026-09-24T18:00:00Z",
+        "claim": "ephemeral oracle on the baseline",
+        "value": "exit 1, ImportError TELEMETRY_MAX_RISK",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "items 3-5 of the admissibility rule",
+        "reason": "preconditions, SplitPoint alignment and reversibility under telemetry need inputs no artifact supplies; out of scope for a numeric contract"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [],
+    "diffs": [
+      {
+        "kind": "missing",
+        "path": "reference/python/cap/budget_calculus.py",
+        "declared": "telemetry ceiling table and telemetry-then-budget admissibility rule",
+        "observed": "budget-only gate (is_cycle_admissible, cycle_decision)",
+        "severity": "warning",
+        "reason": "Documented behaviour with no executable counterpart; the cycle cannot compute the next admissible transition under a telemetry state"
+      }
+    ],
+    "created_at": "2026-09-24T18:01:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at aa6048f",
+    "reasons": [
+      "Both subsystem docs declare a numeric rule that the numeric contract module does not contain",
+      "The gap is reproduced by an oracle built from the docs and an existing COM Grammar case, red on the baseline for a named reason"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "suite green at aa6048f; grep finds no telemetry ceiling in reference/python/cap; cgm_03 expects a telemetry-blocked downgrade; the driver's oracle fails with ImportError on the clean tree"
+  },
+  "notes": "Run 002, Mirror step. Observed by the local Driver with git, grep and python only."
+}

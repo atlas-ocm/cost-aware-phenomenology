@@ -1,0 +1,184 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-24T17-40Z_cap_research_worktree",
+    "observed_state": {
+      "id": "obs_suite_red_in_renamed_checkout",
+      "summary": "At e65b9af4 in a checkout not named CAP, 30 tests in test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py fail with FileNotFoundError; the repository's reproducibility check exits 1 at the unit-test step",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T17-40Z_cap_research_worktree#obs_pytest_baseline",
+        "mirror_frame:mirror_frame_2026-09-24T17-40Z_cap_research_worktree#obs_check_repo_baseline"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_dir_name_assumption",
+      "hypothesis": "Both modules compute CAP_ROOT = parents[4] / 'CAP', which resolves only when the checkout directory is literally named CAP inside a parent checkout; spec/ and examples/ are at the repository root (parents[3]), as the neighbouring test_adjustment_layer_schema.py already assumes",
+      "source": "test_failure",
+      "confidence": 0.95,
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T17-40Z_cap_research_worktree#obs_path_resolution_source",
+        "reference/python/tests/test_adjustment_layer_schema.py:17"
+      ],
+      "uncertainty": [
+        "whether any other test or script carries the same assumption (a grep found parents[4] only in modules one directory deeper, where it is the repository root)"
+      ],
+      "status": "likely"
+    },
+    "desired_state": {
+      "id": "target_suite_green_in_any_checkout",
+      "goal": "The two modules resolve spec/ and examples/ from the repository root regardless of the checkout directory name; the full suite and check_repo.ps1 pass in the research worktree",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "pytest on the two modules exits 0 in the research worktree (baseline: 30 failed, 2 skipped)",
+        "the full suite exits 0 in the research worktree (baseline: 30 failed, 894 passed, 2 skipped)",
+        "with the external Patch packs reachable at <parent>/Patch the two modules still collect and pass all 32 external cases",
+        "the diff is limited to the two test modules"
+      ],
+      "forbidden_outcomes": [
+        "changing spec/ or examples/ to match a wrong path",
+        "weakening or deleting any test assertion",
+        "hard-coding the external packs' absolute location",
+        "any other file changed"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure",
+      "the driver does not edit test code (orchestrator write boundary)",
+      "the postcondition is an existing repository check, red on the baseline for the named reason",
+      "no push before the checkpoint is verified"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_external_patch_packs_optional",
+        "level": "L1-C",
+        "status": "compatible"
+      },
+      {
+        "id": "anchor_tests_resolve_paths_from_repo_root",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      },
+      {
+        "id": "boundary_publish_only_verified_checkpoint",
+        "kind": "external_publication"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-24T17-50Z_layout_fix",
+    "from_state": "suite red in any checkout not named CAP; reproducibility check unusable as an oracle",
+    "inferred_cause": "cause_dir_name_assumption",
+    "to_state": "both modules resolve spec/ and examples/ from parents[3]; external packs stay optional at REPO_ROOT.parent / Patch; suite green in the research worktree",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Validate the declared check on the clean baseline exactly as the router runs it (subprocess, cwd = repository root): expect exit 1 with 30 failed, 2 skipped",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "The oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-layout-01): cheap_coder Gemma4 edits the two test modules under a packet that names the environment and the required resolution; the router re-runs the declared check as the postcondition",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Minimal sufficient route: the cause is two path constants; no new mechanism is needed"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict on the diff plus a recheck by one admitted verifier that is not the coding model; driver adjudication on the diff, the full suite and the neighbour case with the external packs reachable through a temporary junction",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review: the actor that produced the change is not its verifier"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_external_patch_packs_optional",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.05,
+      "regression_risk": 0.1,
+      "loop_risk": 0.05,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "low",
+      "implementation_cost": "low",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "low"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the fix commit on the research branch",
+        "rerun the two modules to confirm the pre-change failure returns"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the two modules exit 0 in the research worktree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the full suite exits 0 in the research worktree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "with the external packs reachable, all 32 external cases are collected and pass",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git diff names only the two test modules",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-24T17:50:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-24T17-50Z_layout_fix",
+    "reasons": [
+      "Cause is likely and fully explains the observed failure",
+      "Route is two path constants in two test files; reversible; low cost on every axis",
+      "An existing repository check is the postcondition and is red on the baseline for the named reason",
+      "Verifier and driver adjudication required before commit; no irreversible step"
+    ],
+    "alternatives": [
+      "Rename the checkout to CAP (rejected: leaves the assumption in the repository and would fail again in the cloud)",
+      "Move the external packs into the repository (rejected: they are private material of the parent checkout; the tests already treat them as optional)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 001, Adjustment step. Proposed by the local Driver before any worker ran; execution, observed result and postcondition are recorded separately in this run directory (nomcp_coding_receipt.json, nomcp_verdict_receipt.json, README.md) because the CandidateTransition schema deliberately carries no executor fields (ADJ-09)."
+}

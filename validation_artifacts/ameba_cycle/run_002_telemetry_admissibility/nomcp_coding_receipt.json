@@ -1,0 +1,173 @@
+{
+  "task_id": "cap-admissibility-02",
+  "variant": "coding",
+  "baseline": [
+    {
+      "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_admissibility.py\", line 17, in <module>\n    from cap.budget_calculus import (  # noqa: E402\nImportError: cannot import name 'TELEMETRY_MAX_RISK' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference/python\\cap\\budget_calculus.py)"
+    },
+    {
+      "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.08s"
+    }
+  ],
+  "first_attempt": {
+    "model": "gemma4:31b-cloud",
+    "answer": "Added TELEMETRY_MAX_RISK, max_permitted_risk, and operator_admissibility to budget_calculus.py and corresponding tests to test_budget_calculus.py.",
+    "wall_s": 15.89,
+    "turns": 8,
+    "output_tokens": 2595,
+    "model_requested": "gemma4:31b-cloud",
+    "model_served": "gemma4:31b-cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "postcondition": false,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "oracle_admissibility: all assertions hold"
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_budget_calculus.py"
+        ],
+        "exit": 2,
+        "ok": false,
+        "tail": "s import (\nE   ImportError: cannot import name 'MODE_PREFERRED_ZONE' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference\\python\\cap\\budget_calculus.py)\n=========================== short test summary info ===========================\nERROR reference/python/tests/test_budget_calculus.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.39s"
+      }
+    ],
+    "worktree": {
+      "diffstat": "reference/python/cap/budget_calculus.py        |  65 +++++++++++++---\n reference/python/tests/test_budget_calculus.py | 100 +++++++++++++++++++++++++\n 2 files changed, 155 insertions(+), 10 deletions(-)",
+      "untracked": [],
+      "touched": [
+        "reference/python/cap/budget_calculus.py",
+        "reference/python/tests/test_budget_calculus.py"
+      ]
+    },
+    "protected_touched": [],
+    "stash": "33843e7635d6a68de17ee34883823ea058b9c6c2",
+    "prestate_restore": {
+      "removed": [],
+      "drifted": [
+        "reference/python/cap/__pycache__/budget_calculus.cpython-312.pyc",
+        "reference/python/tests/__pycache__/test_budget_calculus.cpython-312-pytest-9.0.0.pyc"
+      ]
+    }
+  },
+  "seam_used": false,
+  "fallback_used": true,
+  "handoff": {
+    "keys": [
+      "failed_answer",
+      "postcondition",
+      "question"
+    ],
+    "bytes": 4288
+  },
+  "fallback_attempt": {
+    "model": "deepseek-v4.1-flash:cloud",
+    "answer": "Added TELEMETRY_MAX_RISK, max_permitted_risk(), and operator_admissibility() to reference/python/cap/budget_calculus.py and covered them with invariants in reference/python/tests/test_budget_calculus.py (imports updated), without touching any existing code, constant, test, or doc.",
+    "wall_s": 51.99,
+    "turns": 24,
+    "output_tokens": 11670,
+    "model_requested": "deepseek-v4.1-flash:cloud",
+    "model_served": "deepseek-v4.1-flash:cloud",
+    "provider": "firstParty",
+    "model_identity_status": "ESTABLISHED",
+    "postcondition": true,
+    "checks": [
+      {
+        "cmd": [
+          "python",
+          "-B",
+          "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "oracle_admissibility: all assertions hold"
+      },
+      {
+        "cmd": [
+          "python",
+          "-m",
+          "pytest",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "reference/python/tests/test_budget_calculus.py"
+        ],
+        "exit": 0,
+        "ok": true,
+        "tail": "........................................................................ [ 82%]\n...............                                                          [100%]\n87 passed in 0.14s"
+      }
+    ],
+    "worktree": {
+      "diffstat": "reference/python/cap/budget_calculus.py        | 56 ++++++++++++++++\n reference/python/tests/test_budget_calculus.py | 91 ++++++++++++++++++++++++++\n 2 files changed, 147 insertions(+)",
+      "untracked": [],
+      "touched": [
+        "reference/python/cap/budget_calculus.py",
+        "reference/python/tests/test_budget_calculus.py"
+      ]
+    },
+    "protected_touched": []
+  },
+  "decision": "FALLBACK_PASS",
+  "final_answer": "Added TELEMETRY_MAX_RISK, max_permitted_risk(), and operator_admissibility() to reference/python/cap/budget_calculus.py and covered them with invariants in reference/python/tests/test_budget_calculus.py (imports updated), without touching any existing code, constant, test, or doc.",
+  "final_postcondition": true,
+  "trail": [
+    "step 0: baseline [('python', 1), ('python', 0)]",
+    "step 1-2: gemma4 answered 'Added TELEMETRY_MAX_RISK, max_permitted_risk, and operator_admissibility to budget_calculus.py and corresponding tests to test_budget_calculus.py.' -> postcondition False",
+    "step 6: cheap attempt set aside (33843e7635d6a68de17ee34883823ea058b9c6c2)",
+    "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+    "step 6: deepseek-v4.1-flash answered 'Added TELEMETRY_MAX_RISK, max_permitted_risk(), and operator_admissibility() to reference/python/cap/budget_calculus.py and covered them with invariants in reference/python/tests/test_budget_calculus.py (imports updated), without touching any existing code, constant, test, or doc.' -> postcondition True"
+  ],
+  "run_id": "run-db975c598b4691792e5641aab0d9461c",
+  "inputs": {
+    "packet": {
+      "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\tasks2.json",
+      "size": 4619,
+      "sha256": "0fcb8ff8b20ccc2f5ef31949faccc78d9dba113354f668d3d5df16117b5ca612",
+      "saved": "inputs/0fcb8ff8b20ccc2f5ef31949faccc78d9dba113354f668d3d5df16117b5ca612"
+    },
+    "check_files": [
+      {
+        "declared": "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py",
+        "source": "C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_admissibility.py",
+        "size": 3221,
+        "sha256": "7ff085fa13e746da6abf940f1666f7e3bf9c749f142ea89900264fd6ad4a7d80",
+        "saved": "inputs/7ff085fa13e746da6abf940f1666f7e3bf9c749f142ea89900264fd6ad4a7d80"
+      }
+    ]
+  },
+  "run_receipt": "runs/run-db975c598b4691792e5641aab0d9461c/cap-admissibility-02.json",
+  "run_summary": "runs/run-db975c598b4691792e5641aab0d9461c/summary.json",
+  "total_wall_s": 71.25
+}

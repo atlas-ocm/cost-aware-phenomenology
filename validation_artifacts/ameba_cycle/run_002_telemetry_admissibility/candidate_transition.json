@@ -1,0 +1,174 @@
+{
+  "schema_version": "0.1",
+  "input": {
+    "mirror_frame_id": "mirror_frame_2026-09-24T18-00Z_telemetry_ceiling_gap",
+    "observed_state": {
+      "id": "obs_telemetry_rule_not_executable",
+      "summary": "The telemetry ceiling table and the telemetry-then-budget admissibility rule exist only as prose; budget_calculus.py gates by budget alone, so cgm_03 cannot be computed",
+      "evidence_refs": [
+        "mirror_frame:mirror_frame_2026-09-24T18-00Z_telemetry_ceiling_gap#obs_no_telemetry_code",
+        "mirror_frame:mirror_frame_2026-09-24T18-00Z_telemetry_ceiling_gap#obs_oracle_red_on_baseline"
+      ]
+    },
+    "inferred_cause": {
+      "id": "cause_numeric_contract_incomplete",
+      "hypothesis": "The numeric contract commit (2296b52) encoded transition_cost.md and observer_budget.md but not telemetry_gating.md or operator_admissibility.md; the ceiling and the combined rule were never implemented",
+      "source": "manual_analysis",
+      "confidence": 0.9,
+      "evidence_refs": [
+        "git show --stat 2296b52",
+        "02_subsystems/telemetry_gating.md#Risk Throttling",
+        "02_subsystems/operator_admissibility.md#The Admissibility Rule"
+      ],
+      "uncertainty": [
+        "whether the authors intended the ceiling to stay prose-only (no statement either way was found)"
+      ],
+      "status": "likely"
+    },
+    "desired_state": {
+      "id": "target_telemetry_rule_executable",
+      "goal": "budget_calculus.py computes the telemetry ceiling and the numeric admissibility verdict for a candidate operator, so the cycle can decide 'next admissible transition' under a telemetry state",
+      "kind": "repair_damaged_invariant",
+      "success_criteria": [
+        "the driver's oracle (docs table, cgm_03, the worked example, Breach pause-only, ordering, equality, ValueError cases) exits 0",
+        "reference/python/tests/test_budget_calculus.py exits 0 including new tests for the same cases",
+        "the full suite exits 0",
+        "the diff is limited to budget_calculus.py and test_budget_calculus.py and is additive"
+      ],
+      "forbidden_outcomes": [
+        "changing or removing any existing function, constant or test",
+        "encoding items 3-5 of the rule with invented inputs",
+        "weakening the oracle to accept an implementation",
+        "new files or new mechanisms"
+      ]
+    },
+    "constraints": [
+      "the change is authored by the NoMCP cheap_coder first; DeepSeek V4.1 only on a measured failure",
+      "the driver does not edit code or tests; the oracle stays outside the tree and is validated red on the baseline first",
+      "the second declared check is the existing module test, so a change that damages existing definitions cannot pass"
+    ],
+    "anchors": [
+      {
+        "id": "anchor_existing_numeric_contract",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "boundaries": [
+      {
+        "id": "boundary_repo_identity",
+        "kind": "repo_identity"
+      }
+    ],
+    "timing": "normal_flow"
+  },
+  "candidate": {
+    "id": "adj_candidate_2026-09-24T18-02Z_telemetry_admissibility",
+    "from_state": "budget-only gate; telemetry ceiling and combined rule are prose",
+    "inferred_cause": "cause_numeric_contract_incomplete",
+    "to_state": "TELEMETRY_MAX_RISK, max_permitted_risk and operator_admissibility exist in budget_calculus.py with tests; docs gain a Numeric Contract section naming what is and is not encoded",
+    "mode": "repair",
+    "route": [
+      {
+        "order": 1,
+        "action": "Write the oracle from the docs and cgm_03; run it the router's way on the clean tree; expect ImportError",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "An oracle must be red for the named reason before any worker runs"
+      },
+      {
+        "order": 2,
+        "action": "Route one NoMCP coding task (cap-admissibility-02) with two declared checks: the oracle and the existing module tests",
+        "mutability": "candidate_patch",
+        "reversibility": "reversible",
+        "reason": "Additive change to an existing extension point; no new module"
+      },
+      {
+        "order": 3,
+        "action": "Independent verdict by an admitted verifier that is not the coding model; driver adjudication on the diff, the full suite and check_repo.ps1; driver adds the docs Numeric Contract sections",
+        "mutability": "read_only",
+        "reversibility": "reversible",
+        "reason": "No self-review; docs are not execution-affecting"
+      }
+    ],
+    "affected_anchors": [
+      {
+        "id": "anchor_existing_numeric_contract",
+        "level": "L1-C",
+        "status": "compatible"
+      }
+    ],
+    "affected_boundaries": [],
+    "risk": {
+      "boundary_risk": 0.05,
+      "anchor_conflict_risk": 0.1,
+      "regression_risk": 0.2,
+      "loop_risk": 0.1,
+      "contamination_risk": 0.05,
+      "irreversible_risk": 0.0
+    },
+    "cost": {
+      "token_cost": "low",
+      "implementation_cost": "low",
+      "verification_cost": "low",
+      "rollback_cost": "low",
+      "semantic_cost": "medium"
+    },
+    "rollback_plan": {
+      "steps": [
+        "git revert the feature commit on the research branch",
+        "rerun test_budget_calculus.py to confirm 75 passed again"
+      ],
+      "estimated_cost": "low",
+      "irreversible_components": []
+    },
+    "expected_evidence_after_apply": [
+      {
+        "claim": "the oracle exits 0 on the changed tree",
+        "kind": "test_result"
+      },
+      {
+        "claim": "test_budget_calculus.py exits 0 with new tests added",
+        "kind": "test_result"
+      },
+      {
+        "claim": "the full suite exits 0",
+        "kind": "test_result"
+      },
+      {
+        "claim": "git diff is additive and limited to the two files",
+        "kind": "diff"
+      }
+    ],
+    "requires_verifier": true,
+    "requires_release_gate": true,
+    "requires_human_authorization": false,
+    "created_at": "2026-09-24T18:02:00Z"
+  },
+  "verdict": {
+    "verdict": "route_found",
+    "candidate_id": "adj_candidate_2026-09-24T18-02Z_telemetry_admissibility",
+    "reasons": [
+      "The gap is documented behaviour with no executable counterpart; an additive implementation on the existing module is the minimal sufficient route",
+      "Two authorized checks exist: an oracle built from the docs and a real case, and the module's existing tests",
+      "Regression risk is the highest axis because the module is shared; the existing tests are the guard"
+    ],
+    "alternatives": [
+      "Encode the whole five-item rule (rejected: items 3-5 need inputs no artifact supplies; would invent fixtures)",
+      "A new module or cycle runner (rejected: no reproduced failure asks for it)"
+    ]
+  },
+  "policy": {
+    "require_mirror_frame": true,
+    "require_explicit_desired_state": true,
+    "allow_unverified_cause_as_fact": false,
+    "prefer_minimal_route": true,
+    "allow_boundary_violation": false,
+    "require_rollback_for_mutating_route": true,
+    "require_verifier_for_code_or_memory_change": true,
+    "require_release_gate_for_canonical_change": true,
+    "require_human_for_irreversible": true,
+    "forbid_loop_retry_without_new_evidence": true
+  },
+  "notes": "Run 002, Adjustment step. Proposed before any worker ran. The regression_risk estimate turned out to be the axis that fired: the cheap worker damaged existing definitions and the existing tests caught it (see README.md, section 5)."
+}

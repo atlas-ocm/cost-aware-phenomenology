@@ -1,0 +1,148 @@
+[
+ {
+  "id": "cap-admissibility-02-verify",
+  "packet": {
+   "question": "Does this diff add TELEMETRY_MAX_RISK, max_permitted_risk(telemetry_state) and operator_admissibility(risk_weight, active_operator_risks, allowed_total_risk, telemetry_state) to reference/python/cap/budget_calculus.py exactly as 02_subsystems/telemetry_gating.md (Risk Throttling table: clean 90, loaded 60, overheating 30, breach 0) and 02_subsystems/operator_admissibility.md (telemetry ceiling checked first, then TotalRisk + RiskWeight > AllowedTotalRisk blocks by budget; <= admits) specify, with tests appended to reference/python/tests/test_budget_calculus.py, without changing any existing function, constant, test, doc, schema or example, and without adding files?",
+   "postcondition": {
+    "value": "The driver's oracle (evidence carrier oracle_admissibility.py, whose assertions come from the docs and from validation_artifacts/com_grammar case cgm_03) exits 0; reference/python/tests/test_budget_calculus.py exits 0 including the new tests; the diff touches only budget_calculus.py and test_budget_calculus.py; existing definitions are unchanged; the new functions raise ValueError on out-of-range risk, negative allowed_total_risk and unknown telemetry state."
+   },
+   "reported": {
+    "decision": "FALLBACK_PASS",
+    "fallback_used": true,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-B",
+       "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "recent call last):\n  File \"C:\\Users\\ATLAS\\AppData\\Local\\Temp\\claude\\F--VibeCoding-Shard-Theory-CAP\\e06389ae-3494-471d-bd9d-01c8dc698a03\\scratchpad\\oracle_admissibility.py\", line 17, in <module>\n    from cap.budget_calculus import (  # noqa: E402\nImportError: cannot import name 'TELEMETRY_MAX_RISK' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference/python\\cap\\budget_calculus.py)"
+     },
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_budget_calculus.py"
+      ],
+      "exit": 0,
+      "ok": true,
+      "tail": "........................................................................ [ 96%]\n...                                                                      [100%]\n75 passed in 0.08s"
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 15.89,
+     "turns": 8,
+     "output_tokens": 2595,
+     "postcondition": false,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_admissibility: all assertions hold"
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 2,
+       "ok": false,
+       "tail": "s import (\nE   ImportError: cannot import name 'MODE_PREFERRED_ZONE' from 'cap.budget_calculus' (F:\\VibeCoding\\CAP-wt-ameba-cycle\\reference\\python\\cap\\budget_calculus.py)\n=========================== short test summary info ===========================\nERROR reference/python/tests/test_budget_calculus.py\n!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.39s"
+      }
+     ]
+    },
+    "fallback_attempt": {
+     "model_requested": "deepseek-v4.1-flash:cloud",
+     "model_served": "deepseek-v4.1-flash:cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 51.99,
+     "turns": 24,
+     "output_tokens": 11670,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-B",
+        "C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "oracle_admissibility: all assertions hold"
+      },
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_budget_calculus.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "........................................................................ [ 82%]\n...............                                                          [100%]\n87 passed in 0.14s"
+      }
+     ]
+    },
+    "trail": [
+     "step 0: baseline [('python', 1), ('python', 0)]",
+     "step 1-2: gemma4 answered 'Added TELEMETRY_MAX_RISK, max_permitted_risk, and operator_admissibility to budget_calculus.py and corresponding tests to test_budget_calculus.py.' -> postcondition False",
+     "step 6: cheap attempt set aside (33843e7635d6a68de17ee34883823ea058b9c6c2)",
+     "step 4: seam lookup = NONE (declared by the task; discovery is out of scope)",
+     "step 6: deepseek-v4.1-flash answered 'Added TELEMETRY_MAX_RISK, max_permitted_risk(), and operator_admissibility() to reference/python/cap/budget_calculus.py and covered them with invariants in reference/python/tests/test_budget_calculus.py (imports updated), without touching any existing code, constant, test, or doc.' -> postcondition True"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " reference/python/cap/budget_calculus.py        | 56 ++++++++++++++++\n reference/python/tests/test_budget_calculus.py | 91 ++++++++++++++++++++++++++\n 2 files changed, 147 insertions(+)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "reference/python/cap/budget_calculus.py\nreference/python/tests/test_budget_calculus.py\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "(none)"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/reference/python/cap/budget_calculus.py b/reference/python/cap/budget_calculus.py\nindex 23cd262..6b8d500 100644\n--- a/reference/python/cap/budget_calculus.py\n+++ b/reference/python/cap/budget_calculus.py\n@@ -30,6 +30,16 @@ RISK_BANDS: dict[str, tuple[int, int]] = {\n RISK_NOT_RECOMMENDED_THRESHOLD: int = 90\n \n \n+# telemetry_gating.md Risk Throttling table: maximum permitted RiskWeight\n+# per TelemetryState (percent).\n+TELEMETRY_MAX_RISK: dict[str, int] = {\n+    \"clean\": 90,\n+    \"loaded\": 60,\n+    \"overheating\": 30,\n+    \"breach\": 0,\n+}\n+\n+\n # observer_budget.md budget-state bands (percent).\n BUDGET_BANDS: dict[str, tuple[float, float]] = {\n     \"critical\": (0.0, 30.0),\n@@ -140,6 +150,52 @@ def is_cycle_admissible(\n     )\n \n \n+def max_permitted_risk(telemetry_state: str) -> int:\n+    \"\"\"Maximum permitted RiskWeight (percent) for a TelemetryState.\n+\n+    Encodes the Risk Throttling table in 02_subsystems/telemetry_gating.md:\n+    Clean 90, Loaded 60, Overheating 30, Breach 0 (Pause only). An unknown\n+    state has no ceiling to look up and is rejected rather than defaulted.\n+    \"\"\"\n+    try:\n+        return TELEMETRY_MAX_RISK[telemetry_state]\n+    except (KeyError, TypeError):\n+        raise ValueError(\n+            f\"unknown telemetry_state: {telemetry_state!r}\"\n+        ) from None\n+\n+\n+def operator_admissibility(\n+    risk_weight: float,\n+    active_operator_risks: Sequence[float],\n+    allowed_total_risk: float,\n+    telemetry_state: str,\n+) -> str:\n+    \"\"\"Combined telemetry-and-budget gate for a candidate operator.\n+\n+    Encodes \"The Admissibility Rule\" in 02_subsystems/operator_admissibility.md\n+    (the numeric part): first the risk throttle, then the budget gate. Both\n+    use <= admits, > blocks, exactly like is_cycle_admissible.\n+\n+    - risk_weight > max_permitted_risk(telemetry_state) -> \"blocked_by_telemetry\"\n+    - total_risk(active + [risk_weight]) > allowed_total_risk\n+      -> \"blocked_by_budget\"\n+    - otherwise -> \"admissible\"\n+    \"\"\"\n+    if not (0 <= risk_weight <= 100):\n+        raise ValueError(f\"risk_weight must be in [0, 100], got {risk_weight}\")\n+    if allowed_total_risk < 0:\n+        raise ValueError(\n+            f\"allowed_total_risk must be non-negative, got {allowed_total_risk}\"\n+        )\n+    if risk_weight > max_permitted_risk(telemetry_state):\n+        return \"blocked_by_telemetry\"\n+    proposed = list(active_operator_risks) + [risk_weight]\n+    if total_risk(proposed) > allowed_total_risk:\n+        return \"blocked_by_budget\"\n+    return \"admissible\"\n+\n+\n def permitted_risk_zones_for_budget(\n     budget_state: BudgetState,\n ) -> frozenset[RiskZone]:\ndiff --git a/reference/python/tests/test_budget_calculus.py b/reference/python/tests/test_budget_calculus.py\nindex 5c0c4a7..9b2167e 100644\n--- a/reference/python/tests/test_budget_calculus.py\n+++ b/reference/python/tests/test_budget_calculus.py\n@@ -25,14 +25,17 @@ from cap.budget_calculus import (\n     MODE_RTF_RANGE,\n     RISK_BANDS,\n     RISK_NOT_RECOMMENDED_THRESHOLD,\n+    TELEMETRY_MAX_RISK,\n     allowed_total_risk,\n     classify_budget_state,\n     classify_risk_zone,\n     cycle_decision,\n     importance_does_not_change_budget,\n     is_cycle_admissible,\n+    max_permitted_risk,\n     mode_preferred_zone,\n     mode_rtf_default,\n+    operator_admissibility,\n     permitted_risk_zones_for_budget,\n     total_risk,\n )\n@@ -326,3 +329,91 @@ def test_budget_bands_are_well_ordered():\n     full_low, full_high = BUDGET_BANDS[\"full\"]\n     assert crit_low <= crit_high <= dep_low <= dep_high\n     assert dep_high <= par_low <= par_high <= full_low <= full_high\n+\n+\n+# -- Telemetry risk ceiling (telemetry_gating.md Risk Throttling) --\n+\n+\n+def test_telemetry_max_risk_matches_doc():\n+    assert TELEMETRY_MAX_RISK == {\n+        \"clean\": 90,\n+        \"loaded\": 60,\n+        \"overheating\": 30,\n+        \"breach\": 0,\n+    }\n+\n+\n+@pytest.mark.parametrize(\n+    \"state,ceiling\",\n+    [(\"clean\", 90), (\"loaded\", 60), (\"overheating\", 30), (\"breach\", 0)],\n+)\n+def test_max_permitted_risk_matches_doc(state, ceiling):\n+    assert max_permitted_risk(state) == ceiling\n+\n+\n+def test_max_permitted_risk_rejects_unknown_state():\n+    with pytest.raises(ValueError):\n+        max_permitted_risk(\"hypothetical\")\n+\n+\n+# -- Combined admissibility (operator_admissibility.md The Admissibility Rule) --\n+\n+\n+def test_cgm_03_risk_throttle_downgrade():\n+    \"\"\"cgm_03: Overheating caps risk at 30. The 80% operator is blocked by\n+    telemetry; the 10 -> 20 downgrade sequence fits the ceiling and the\n+    AllowedTotalRisk of 30; a further 25 breaches the budget gate.\"\"\"\n+    state = \"overheating\"\n+    allowed = 30.0\n+    assert operator_admissibility(80, [], allowed, state) == \"blocked_by_telemetry\"\n+    assert operator_admissibility(10, [], allowed, state) == \"admissible\"\n+    assert operator_admissibility(20, [10], allowed, state) == \"admissible\"\n+    assert operator_admissibility(25, [10, 20], allowed, state) == (\n+        \"blocked_by_budget\"\n+    )\n+\n+\n+def test_operator_admissibility_worked_example():\n+    \"\"\"operator_admissibility.md worked example: Loaded telemetry caps risk\n+    at 60 with AllowedTotalRisk 60. 80 is throttled; 25 -> 35 stays inside\n+    the budget; adding 50 on top exceeds it.\"\"\"\n+    state = \"loaded\"\n+    allowed = 60.0\n+    assert operator_admissibility(80, [], allowed, state) == \"blocked_by_telemetry\"\n+    assert operator_admissibility(25, [], allowed, state) == \"admissible\"\n+    assert operator_admissibility(35, [25], allowed, state) == \"admissible\"\n+    assert operator_admissibility(50, [25, 35], allowed, state) == (\n+        \"blocked_by_budget\"\n+    )\n+\n+\n+def test_breach_permits_only_zero_risk():\n+    assert operator_admissibility(0, [], 100.0, \"breach\") == \"admissible\"\n+    assert operator_admissibility(1, [], 100.0, \"breach\") == (\n+        \"blocked_by_telemetry\"\n+    )\n+\n+\n+def test_telemetry_is_checked_before_budget():\n+    \"\"\"Even with a generous budget, the telemetry ceiling blocks first.\"\"\"\n+    assert operator_admissibility(80, [], 100.0, \"overheating\") == (\n+        \"blocked_by_telemetry\"\n+    )\n+\n+\n+def test_equality_at_ceiling_and_budget_is_admissible():\n+    \"\"\"<= admits on both gates: risk_weight == ceiling and TotalRisk ==\n+    AllowedTotalRisk are both admissible.\"\"\"\n+    assert operator_admissibility(30, [], 100.0, \"overheating\") == \"admissible\"\n+    assert operator_admissibility(10, [20], 30.0, \"clean\") == \"admissible\"\n+\n+\n+def test_operator_admissibility_rejects_bad_inputs():\n+    with pytest.raises(ValueError):\n+        operator_admissibility(-1, [], 100.0, \"clean\")\n+    with pytest.raises(ValueError):\n+        operator_admissibility(101, [], 100.0, \"clean\")\n+    with pytest.raises(ValueError):\n+        operator_admissibility(10, [], -1.0, \"clean\")\n+    with pytest.raises(ValueError):\n+        operator_admissibility(10, [], 100.0, \"unknown_state\")\n"
+    },
+    {
+     "path": "oracle_admissibility.py (driver's ephemeral check, outside the tree)",
+     "content": "\"\"\"Ephemeral, packet-local oracle for cap-admissibility-02 (driver-written, outside the tree).\n\nEvery assertion is taken from existing repository text, not from any implementation:\n- 02_subsystems/telemetry_gating.md, \"Risk Throttling\" table: Clean 90 / Loaded 60 / Overheating 30 / Breach 0.\n- 02_subsystems/operator_admissibility.md, \"The Admissibility Rule\": the telemetry ceiling is checked first,\n  then cycle.TotalRisk + RiskWeight(operator) > AllowedTotalRisk blocks by budget.\n- validation_artifacts/com_grammar/cases/cgm_03_risk_throttle_downgrade_applied.json: Inversion 80% under\n  Overheating with AllowedTotalRisk 30% is blocked; Hold 10% then Fixation 20% are admissible (30 = ceiling).\n- operator_admissibility.md worked example: Loaded, AllowedTotalRisk 60: Inversion 80 blocked (80 > 60);\n  Fixation 25 + Boundary 35 = 60 admissible; a further 50 would exceed the budget.\n- telemetry_gating.md Breach row: Pause only.\nRun from the repository root. Exit 0 iff every assertion holds.\n\"\"\"\nimport sys\n\nsys.path.insert(0, \"reference/python\")\nfrom cap.budget_calculus import (  # noqa: E402\n    TELEMETRY_MAX_RISK,\n    max_permitted_risk,\n    operator_admissibility,\n)\n\nassert TELEMETRY_MAX_RISK == {\"clean\": 90, \"loaded\": 60, \"overheating\": 30, \"breach\": 0}, TELEMETRY_MAX_RISK\nassert max_permitted_risk(\"clean\") == 90\nassert max_permitted_risk(\"loaded\") == 60\nassert max_permitted_risk(\"overheating\") == 30\nassert max_permitted_risk(\"breach\") == 0\n\n# cgm_03: telemetry-blocked downgrade to a two-operator sequence at the ceiling\nassert operator_admissibility(80, [], 30, \"overheating\") == \"blocked_by_telemetry\"\nassert operator_admissibility(10, [], 30, \"overheating\") == \"admissible\"\nassert operator_admissibility(20, [10], 30, \"overheating\") == \"admissible\"\nassert operator_admissibility(25, [10], 30, \"overheating\") == \"blocked_by_budget\"\n\n# worked example: Loaded telemetry, AllowedTotalRisk 60\nassert operator_admissibility(80, [], 60, \"loaded\") == \"blocked_by_telemetry\"\nassert operator_admissibility(25, [], 60, \"loaded\") == \"admissible\"\nassert operator_admissibility(35, [25], 60, \"loaded\") == \"admissible\"\nassert operator_admissibility(50, [25, 35], 60, \"loaded\") == \"blocked_by_budget\"\n\n# Breach: pause only\nassert operator_admissibility(10, [], 30, \"breach\") == \"blocked_by_telemetry\"\nassert operator_admissibility(0, [], 30, \"breach\") == \"admissible\"\n\n# ordering: the telemetry ceiling is checked before the budget gate\nassert operator_admissibility(80, [], 100, \"overheating\") == \"blocked_by_telemetry\"\n\n# equality at the ceiling and at the budget is admissible (<=), as in the existing is_cycle_admissible\nassert operator_admissibility(60, [], 60, \"loaded\") == \"admissible\"\n\n# invalid inputs are refused, matching the module's existing ValueError discipline\nfor bad in ({\"risk_weight\": 101}, {\"telemetry_state\": \"sunny\"}, {\"allowed_total_risk\": -1}):\n    kw = {\"risk_weight\": 10, \"active_operator_risks\": [], \"allowed_total_risk\": 30, \"telemetry_state\": \"clean\"}\n    kw.update(bad)\n    try:\n        operator_admissibility(**kw)\n    except ValueError:\n        pass\n    else:\n        raise AssertionError(\"expected ValueError for %r\" % (bad,))\n\nprint(\"oracle_admissibility: all assertions hold\")\n"
+    },
+    {
+     "path": "recheck: both declared checks re-run by this stage on the current tree",
+     "content": "[\n {\n  \"cmd\": \"python -B C:/Users/ATLAS/AppData/Local/Temp/claude/F--VibeCoding-Shard-Theory-CAP/e06389ae-3494-471d-bd9d-01c8dc698a03/scratchpad/oracle_admissibility.py\",\n  \"exit\": 0,\n  \"tail\": \"oracle_admissibility: all assertions hold\"\n },\n {\n  \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_budget_calculus.py\",\n  \"exit\": 0,\n  \"tail\": \"........................................................................ [ 82%]\\n...............                                                          [100%]\\n87 passed in 0.09s\"\n }\n]"
+    }
+   ]
+  }
+ }
+]

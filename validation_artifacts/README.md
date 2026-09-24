@@ -32,6 +32,12 @@ outputs from current benchmark surfaces.
   - first live two-model run included under `model_outputs/`
   - no LLM calls in the scorer itself
 
+- `ameba_cycle/` - recorded runs of the executable transition cycle applied
+  to this repository itself: a Mirror Frame and a CandidateTransition in the
+  existing schemas plus verbatim executor and verifier receipts per run.
+  Research-only trajectories, not benchmark evidence; see
+  [`ameba_cycle/README.md`](./ameba_cycle/README.md).
+
 See:
 
 - [`llm_dialogue_proxy/benchmark_report.md`](./llm_dialogue_proxy/benchmark_report.md)

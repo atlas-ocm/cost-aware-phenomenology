@@ -1,0 +1,216 @@
+{
+  "schema_version": "0.1",
+  "frame": {
+    "id": "mirror_frame_2026-09-24T17-40Z_cap_research_worktree",
+    "subject": {
+      "kind": "repo",
+      "identifier": "F:/VibeCoding/CAP-wt-ameba-cycle (git worktree of atlas-ocm/cost-aware-phenomenology, branch research/ameba-executable-cycle)"
+    },
+    "declared_state": {
+      "source": "system",
+      "claims": [
+        "(source: the repository's own documentation) REPRODUCIBILITY.md: the unit-test command's expected output is 'all tests pass'",
+        "README.md validation status and scripts/check_repo.ps1: the reproducibility check passes on a checkout of this repository",
+        "CLAIMS.md: schema consistency and artifact integrity are supported by the current validation"
+      ]
+    },
+    "observed_state": {
+      "facts": [
+        {
+          "id": "obs_branch",
+          "source": "git",
+          "observed_at": "2026-09-24T17:38:00Z",
+          "claim": "current branch",
+          "value": "research/ameba-executable-cycle (new, created from origin/main)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_head",
+          "source": "git",
+          "observed_at": "2026-09-24T17:38:00Z",
+          "claim": "HEAD commit",
+          "value": "e65b9af4b28d3c97950c667448a32c24adc44a0e",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_origin_main",
+          "source": "git",
+          "observed_at": "2026-09-24T17:35:00Z",
+          "claim": "origin/main after git fetch --prune",
+          "value": "e65b9af4b28d3c97950c667448a32c24adc44a0e (identical to the revision the architect read)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_local_main_ahead",
+          "source": "git",
+          "observed_at": "2026-09-24T17:35:00Z",
+          "claim": "local main in F:/VibeCoding/Shard-Theory/CAP relative to origin/main",
+          "value": "ahead 28 (docs/evidence/AICE commits, none touching reference/python/cap or 02_subsystems) plus uncommitted AICE candidate work; left untouched",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_worktree_clean",
+          "source": "git",
+          "observed_at": "2026-09-24T17:38:00Z",
+          "claim": "git status --porcelain in the research worktree",
+          "value": "(empty)",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_pytest_baseline",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T17:41:00Z",
+          "claim": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q -p no:cacheprovider reference/python/tests (Python 3.12.10, pytest 9.0.0, jsonschema 4.26.0)",
+          "value": "30 failed, 894 passed, 2 skipped in 44.39s; exit 1; every failure is FileNotFoundError for F:/VibeCoding/CAP/spec/... or F:/VibeCoding/CAP/examples/... raised from test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_check_repo_baseline",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T17:42:00Z",
+          "claim": ".\\scripts\\check_repo.ps1 in the research worktree",
+          "value": "exit 1 after 45 s: 'validation step failed: unit tests (exit code 1)'; compileall and dependency import steps passed before it",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_extension_packs_outside_repo",
+          "source": "tool_result",
+          "observed_at": "2026-09-24T17:43:00Z",
+          "claim": "python reference/python/scripts/validate_extension_case_packs.py in the research worktree",
+          "value": "exit 0 but '[warn] pack missing: F:/VibeCoding/Patch/...' three times and '0/0 passed' for Looking-Glass and Latent Cause packs; the same script from F:/VibeCoding/Shard-Theory/CAP reports 17/17 and 15/15 because those packs live in the private parent checkout, not in this repository",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        },
+        {
+          "id": "obs_path_resolution_source",
+          "source": "filesystem",
+          "observed_at": "2026-09-24T17:46:00Z",
+          "claim": "path constants in the two failing test modules",
+          "value": "REPO_ROOT = Path(__file__).resolve().parents[4]; CAP_ROOT = REPO_ROOT / 'CAP'; SCHEMA_PATH and EXAMPLE_PATH read from CAP_ROOT; the neighbouring test_adjustment_layer_schema.py uses ROOT = parents[3]",
+          "confidence": 1.0,
+          "freshness": "fresh",
+          "mutability": "read_only"
+        }
+      ],
+      "derived_facts": [
+        {
+          "id": "derived_failure_is_layout_dependent",
+          "claim": "The 30 failures depend on the checkout directory being named CAP inside a parent checkout; they are not a defect in spec/ or examples/, which exist at the repository root",
+          "derived_from": ["obs_pytest_baseline", "obs_path_resolution_source", "obs_extension_packs_outside_repo"]
+        },
+        {
+          "id": "derived_cloud_would_reproduce_failure",
+          "claim": "A cloud clone will not be named CAP inside a parent named Shard-Theory, so the standard check would fail there for the same reason before any research work starts",
+          "derived_from": ["derived_failure_is_layout_dependent"]
+        },
+        {
+          "id": "derived_declared_vs_observed",
+          "claim": "The declared 'all tests pass' holds only in the original checkout layout; in this checkout it is contradicted by observation",
+          "derived_from": ["obs_pytest_baseline", "obs_check_repo_baseline"]
+        }
+      ]
+    },
+    "expected_state": {
+      "anchors": ["anchor_reproducibility_check_passes_on_any_checkout"],
+      "policies": ["policy_external_case_packs_are_optional_inputs"],
+      "specs": ["REPRODUCIBILITY.md"]
+    },
+    "observations": [
+      {
+        "id": "obs_branch",
+        "source": "git",
+        "observed_at": "2026-09-24T17:38:00Z",
+        "claim": "current branch",
+        "value": "research/ameba-executable-cycle",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_head",
+        "source": "git",
+        "observed_at": "2026-09-24T17:38:00Z",
+        "claim": "HEAD commit",
+        "value": "e65b9af4b28d3c97950c667448a32c24adc44a0e",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      },
+      {
+        "id": "obs_pytest_baseline",
+        "source": "tool_result",
+        "observed_at": "2026-09-24T17:41:00Z",
+        "claim": "full unit-test suite result",
+        "value": "30 failed, 894 passed, 2 skipped",
+        "confidence": 1.0,
+        "freshness": "fresh",
+        "mutability": "read_only"
+      }
+    ],
+    "unknowns": [
+      {
+        "path": "cloud clone directory name",
+        "reason": "Not observable locally; only known to differ from CAP-inside-Shard-Theory"
+      },
+      {
+        "path": "money cost of the model calls",
+        "reason": "The local models are served through an Ollama cloud subscription that exposes no per-call price; only tokens, turns and wall time are observable"
+      }
+    ],
+    "contradictions": [],
+    "boundary_signals": [
+      {
+        "boundary": "external",
+        "reason": "17 Looking-Glass and 15 Latent Cause cases live in the private parent checkout (Shard-Theory/Patch) and are unreachable from a standalone clone; the tests and the validator treat them as optional"
+      }
+    ],
+    "diffs": [
+      {
+        "kind": "contradiction",
+        "path": "reference/python/tests/test_looking_glass_schema.py, reference/python/tests/test_latent_cause_reconstruction_schema.py",
+        "declared": "all tests pass",
+        "observed": "30 failed with FileNotFoundError on a sibling directory named CAP",
+        "severity": "blocking",
+        "reason": "The declared state holds only for one checkout layout; the standard check cannot be used as an oracle for any other change until this is repaired"
+      }
+    ],
+    "created_at": "2026-09-24T17:47:00Z"
+  },
+  "policy": {
+    "allow_mutation": false,
+    "require_source_for_every_observation": true,
+    "allow_declared_as_observed": false,
+    "mark_stale_after_ms": 600000,
+    "require_repo_identity_for_code": true,
+    "require_session_identity_for_memory": true,
+    "require_url_identity_for_browser": true
+  },
+  "verdict": {
+    "verdict": "mismatch",
+    "subject": "F:/VibeCoding/CAP-wt-ameba-cycle at e65b9af4",
+    "reasons": [
+      "Declared 'all tests pass' is contradicted by 30 failures in this checkout",
+      "The failure is fully explained by a directory-name assumption in two test modules, so it is repairable inside the repository",
+      "Until repaired, the repository's own reproducibility check cannot serve as the postcondition for any further change"
+    ],
+    "recommended_next_action": "proceed_to_adjustment",
+    "confidence": 0.95,
+    "evidence_summary": "git: clean worktree at e65b9af4 == origin/main; pytest: 30 failed / 894 passed / 2 skipped, all FileNotFoundError under F:/VibeCoding/CAP/; check_repo.ps1 exit 1 at the unit-test step; the two modules resolve CAP_ROOT = parents[4] / 'CAP' while the neighbouring module uses parents[3]"
+  },
+  "notes": "Run 001 of the executable-cycle study, Mirror step. Observed by the local Driver (Claude Fable 5.1) with git and pytest only; no model produced any observation. Timestamps are UTC at minute precision from the session log."
+}

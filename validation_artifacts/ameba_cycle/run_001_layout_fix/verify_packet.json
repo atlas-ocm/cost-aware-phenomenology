@@ -1,0 +1,89 @@
+[
+ {
+  "id": "cap-layout-01-verify",
+  "packet": {
+   "question": "Does this diff make reference/python/tests/test_looking_glass_schema.py and reference/python/tests/test_latent_cause_reconstruction_schema.py resolve their schema and worked-example paths from the repository root derived from the test file's own position (parents[3]) instead of through a sibling directory literally named CAP, while (a) leaving the optional external case packs resolved as REPO_ROOT / 'Patch' / ... with REPO_ROOT = the parent directory of the repository root and still skipped when absent, and (b) changing nothing else in the repository?",
+   "postcondition": {
+    "value": "The two named test modules exit 0 under pytest in a checkout whose directory is not named CAP (baseline on the same tree: 30 failed, 2 skipped); the only files changed are those two test modules; the external Patch packs are still collected from the parent directory of the repository root when present and skipped when absent; no test assertion, schema or example semantics changed."
+   },
+   "reported": {
+    "decision": "CHEAP_PASS",
+    "fallback_used": false,
+    "seam_used": false,
+    "final_postcondition": true,
+    "baseline_checks": [
+     {
+      "cmd": [
+       "python",
+       "-m",
+       "pytest",
+       "-q",
+       "-p",
+       "no:cacheprovider",
+       "reference/python/tests/test_looking_glass_schema.py",
+       "reference/python/tests/test_latent_cause_reconstruction_schema.py"
+      ],
+      "exit": 1,
+      "ok": false,
+      "tail": "_items\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_family_locked_to_latent_cause_reconstruction\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_additional_property_at_root_rejected\nFAILED reference/python/tests/test_latent_cause_reconstruction_schema.py::test_additional_property_in_ground_truth_rejected\n30 failed, 2 skipped in 0.96s"
+     }
+    ],
+    "first_attempt": {
+     "model_requested": "gemma4:31b-cloud",
+     "model_served": "gemma4:31b-cloud",
+     "provider": "firstParty",
+     "model_identity_status": "ESTABLISHED",
+     "wall_s": 4.77,
+     "turns": 6,
+     "output_tokens": 666,
+     "postcondition": true,
+     "checks": [
+      {
+       "cmd": [
+        "python",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "reference/python/tests/test_looking_glass_schema.py",
+        "reference/python/tests/test_latent_cause_reconstruction_schema.py"
+       ],
+       "exit": 0,
+       "ok": true,
+       "tail": "..s..............s..............                                         [100%]\n30 passed, 2 skipped in 0.20s"
+      }
+     ]
+    },
+    "fallback_attempt": null,
+    "trail": [
+     "step 0: baseline [('python', 1)]",
+     "step 1-2: gemma4 answered 'Fixed FileNotFoundError in test_looking_glass_schema.py and test_latent_cause_reconstruction_schema.py by resolving repository root using parents[3] and updating paths to spec, examples, and Patch directories.' -> postcondition True",
+     "step 3: postcondition met, stop"
+    ]
+   },
+   "evidence": [
+    {
+     "path": "git diff --stat",
+     "content": " .../python/tests/test_latent_cause_reconstruction_schema.py   |  9 ++++-----\n reference/python/tests/test_looking_glass_schema.py           | 11 +++++------\n 2 files changed, 9 insertions(+), 11 deletions(-)\n"
+    },
+    {
+     "path": "git diff --name-only",
+     "content": "reference/python/tests/test_latent_cause_reconstruction_schema.py\nreference/python/tests/test_looking_glass_schema.py\n"
+    },
+    {
+     "path": "git ls-files --others --exclude-standard",
+     "content": "(none)"
+    },
+    {
+     "path": "git diff",
+     "content": "diff --git a/reference/python/tests/test_latent_cause_reconstruction_schema.py b/reference/python/tests/test_latent_cause_reconstruction_schema.py\nindex 2780864..ef300c3 100644\n--- a/reference/python/tests/test_latent_cause_reconstruction_schema.py\n+++ b/reference/python/tests/test_latent_cause_reconstruction_schema.py\n@@ -22,11 +22,10 @@ from pathlib import Path\n import jsonschema\n import pytest\n \n-REPO_ROOT = Path(__file__).resolve().parents[4]\n-CAP_ROOT = REPO_ROOT / \"CAP\"\n-SCHEMA_PATH = CAP_ROOT / \"spec\" / \"latent_cause_reconstruction.schema.json\"\n-EXAMPLE_PATH = CAP_ROOT / \"examples\" / \"latent_cause_reconstruction_case_example.json\"\n-CASES_DIR = REPO_ROOT / \"Patch\" / \"latent_cause_reconstruction_cases\"\n+REPO_ROOT = Path(__file__).resolve().parents[3]\n+SCHEMA_PATH = REPO_ROOT / \"spec\" / \"latent_cause_reconstruction.schema.json\"\n+EXAMPLE_PATH = REPO_ROOT / \"examples\" / \"latent_cause_reconstruction_case_example.json\"\n+CASES_DIR = REPO_ROOT.parent / \"Patch\" / \"latent_cause_reconstruction_cases\"\n \n \n def _load_schema():\ndiff --git a/reference/python/tests/test_looking_glass_schema.py b/reference/python/tests/test_looking_glass_schema.py\nindex 24965ea..73d8a1f 100644\n--- a/reference/python/tests/test_looking_glass_schema.py\n+++ b/reference/python/tests/test_looking_glass_schema.py\n@@ -21,12 +21,11 @@ from pathlib import Path\n import jsonschema\n import pytest\n \n-REPO_ROOT = Path(__file__).resolve().parents[4]\n-CAP_ROOT = REPO_ROOT / \"CAP\"\n-SCHEMA_PATH = CAP_ROOT / \"spec\" / \"looking_glass.schema.json\"\n-EXAMPLE_PATH = CAP_ROOT / \"examples\" / \"looking_glass_case_example.json\"\n-MAIN_CASES_DIR = REPO_ROOT / \"Patch\" / \"adjoint_looking_glass_layer_cases\"\n-HOLDOUT_CASES_DIR = REPO_ROOT / \"Patch\" / \"adjoint_looking_glass_layer_holdout_cases\"\n+REPO_ROOT = Path(__file__).resolve().parents[3]\n+SCHEMA_PATH = REPO_ROOT / \"spec\" / \"looking_glass.schema.json\"\n+EXAMPLE_PATH = REPO_ROOT / \"examples\" / \"looking_glass_case_example.json\"\n+MAIN_CASES_DIR = REPO_ROOT.parent / \"Patch\" / \"adjoint_looking_glass_layer_cases\"\n+HOLDOUT_CASES_DIR = REPO_ROOT.parent / \"Patch\" / \"adjoint_looking_glass_layer_holdout_cases\"\n \n \n def _load_schema():\n"
+    },
+    {
+     "path": "recheck: declared check re-run by this stage on the current tree",
+     "content": "{\n \"cmd\": \"python -m pytest -q -p no:cacheprovider reference/python/tests/test_looking_glass_schema.py reference/python/tests/test_latent_cause_reconstruction_schema.py\",\n \"exit\": 0,\n \"tail\": \"..s..............s..............                                         [100%]\\n30 passed, 2 skipped in 0.23s\"\n}"
+    }
+   ]
+  }
+ }
+]
