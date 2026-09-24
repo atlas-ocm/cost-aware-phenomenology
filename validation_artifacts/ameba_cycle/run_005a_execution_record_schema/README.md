@@ -105,3 +105,15 @@ and are not summed with them. Money: unknown.
   would normalise it on staging anyway. The record is internally consistent
   and not bound to the executed bytes; the binding rule prepared in run 007
   refuses it, as intended. Left as written.
+- correction_004 (same date, after the review of `8bc15b5`): the executed
+  bytes of the packet are now on the branch as
+  `coding_packet.executed.08111685.json` (the router's retained copy from
+  its out dir, `inputs/<sha>`), with a `-text` entry in `.gitattributes` for
+  that exact path so neither staging nor checkout converts its line
+  endings; blob and fresh-checkout bytes verified (8,296 bytes, sha256
+  `08111685...`). The driver's `tasks5a.json` is byte-identical (same sha)
+  and is not duplicated. The record above is kept unchanged as the negative
+  control of binding rule 4(c): it pins the detection of the mismatch, not a
+  permanent refusal of this run; a corrected record that references the
+  stored executed bytes may pass and would be a separate file, with this
+  correction history kept here.

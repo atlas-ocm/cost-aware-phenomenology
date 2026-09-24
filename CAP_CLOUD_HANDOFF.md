@@ -254,9 +254,10 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   review of `26535dc`: keep the docs + `MODE_RTF_RANGE` policy as canonical
   (Conservative 0.5-0.7, Nominal 0.7-0.85, Expansion 0.85-0.95), align the
   alphabet with it and name one source of the values; an engineering-policy
-  choice that keeps current behaviour, not a proof of the numbers. Not
-  executed: the alphabet change is a spec mutation for the ordinary coding
-  route, after the operator confirms.
+  choice that keeps current behaviour, not a proof of the numbers; the values
+  are to be marked as engineering-assigned. Repeated by the reviewer of
+  `8bc15b5`. Not executed: the alphabet change is a spec mutation for the
+  ordinary coding route, after the operator confirms.
 - Decided after the review of `26535dc` (run 007): costs of a transition are
   the whole route (every attempt, baseline, checks, verifier), not the closing
   attempt; the records keep the closing attempt until the schema has a place
@@ -318,8 +319,11 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
    2) requires each negative case to be refused with its named problem and
    keeps three positive controls (unmodified example; router-shaped receipt
    whose fields match; short SHA of the same commit). Acceptance: every
-   expectation of the oracle holds, run 006 still resolves, run 005a is
-   refused by rule 4(c) (documented, intended). A green run means the named
+   expectation of the oracle holds, run 006 still resolves, the original record
+   of run 005a is refused by rule 4(c) (documented, intended: the negative
+   control pins the detection of the byte mismatch, not a permanent refusal
+   of that run; a corrected record that references the stored executed bytes
+   may pass and is a separate file). A green run means the named
    links between the record and its stored carriers are checked; it does not
    establish full provenance of the execution.
    Follow-up after it lands: a schema field for whole-route costs. Route it as
@@ -387,6 +391,10 @@ sha256 `08111685...`, the receipt's `inputs.packet.sha256`): the router keeps
 its copy under the out dir it was given, `<scratchpad>/out_coding/inputs/<sha>`
 (`inputs.packet.saved` is relative to that out dir, confirmed by the NoMCP
 session), and that copy plus the driver's `tasks5a.json` were copied unchanged
-to `F:/VibeCoding/CAP-retained-inputs/`. They cannot be stored byte-identical
-on the branch without a `.gitattributes` exception (`* text=auto eol=lf`
-normalises them), which is the operator's call.
+to `F:/VibeCoding/CAP-retained-inputs/`. On the reviewer's recommendation the
+router copy is now also on the branch as
+`run_005a_execution_record_schema/coding_packet.executed.08111685.json` with a
+`-text` entry in `.gitattributes` for that exact path (the general
+`* text=auto eol=lf` rule stays); blob and fresh-checkout bytes verified
+(8,296 bytes, sha256 `08111685...`), so the cloud has the original without
+depending on a local disk.

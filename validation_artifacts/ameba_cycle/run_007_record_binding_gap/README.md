@@ -50,7 +50,10 @@ receipt is JSON that mentions the decision and the served model. Two findings:
   (`* text=auto eol=lf`) on staging anyway. The record is internally consistent
   and is not bound to the bytes the executor consumed; rule 4 below refuses it,
   which is the intended behaviour. Recorded as correction_003 in that run's
-  README; the record is left as written.
+  README; the record is left as written. After the review of `8bc15b5` the
+  executed bytes are stored beside it with a `-text` attribute
+  (correction_004); the negative control pins the detection of the mismatch,
+  not a permanent refusal of the run.
 - the shipped example's stand-in result file has no `exit=` line and its
   stand-in receipt does not mention the hashed input; both are updated by the
   binding step (the packet says exactly how).
