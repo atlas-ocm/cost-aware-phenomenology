@@ -29,7 +29,7 @@ AllowedTotalRisk = ObserverUsableBudget × RiskToleranceFactor
 
 Where:
 
-- **TotalRisk** = sum of `RiskWeight × P(failure)` across all operators in the cycle
+- **TotalRisk** = sum of `RiskWeight` across all active operators in the cycle. `RiskWeight` is already the probability-weighted cost band defined in [`transition_cost.md`](./transition_cost.md); no separate `P(failure)` factor exists in the numeric contract, the worked example, or the COM-Log schema, all of which bound the plain sum
 - **ObserverUsableBudget** = current usable fraction of nominal capacity
 - **RiskToleranceFactor** = a 0–1 multiplier representing how much of the available budget the observer is willing to commit (default ~0.7–0.9 depending on mode)
 
