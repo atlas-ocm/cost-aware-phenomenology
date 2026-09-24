@@ -51,8 +51,9 @@ Runs:
   — the executed-transition record schema and its resolving validator, routed
   and verified the same way after the unsplit task failed twice (relay ceiling;
   fallback wall); each half has its own execution record.
-- `prepared/com_log_link/` — the next bounded coding step (candidate step ↔
-  COM-Log record), packet, oracle and verify stage prepared and not executed.
+- [`run_006_com_log_link/`](./run_006_com_log_link/README.md) — the candidate
+  step ↔ COM-Log link with risk-weight provenance (operator's item 2), executed
+  from the packet kept under `prepared/com_log_link/`; execution record included.
 
 What these records are not: they are not benchmark evidence, not a
 comparison against a baseline path (that comparison is defined but not yet

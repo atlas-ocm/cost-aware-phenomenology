@@ -222,7 +222,7 @@ over `reference/python`, `spec/`, `02_subsystems/`, `04_extensions/` at
   (no reproduced failure asks for it yet); a cycle runner script (would be a
   mechanism ahead of a failure); vendoring the external packs (private).
 - Decided by the operator on 2026-09-24 and executed: Breach = Recovery-Only
-  by operator identity (`989a7e2`). Decided and prepared but not executed: the
+  by operator identity (`989a7e2`). Decided and executed in run 006 (§2.8): the
   six risk axes and the cost bands stay; no conversion to percent; the gate's
   inputs come from a linked COM-Log record and the cycle state; the RiskWeight's
   source and estimate status are recorded; missing inputs give `not_computed`
